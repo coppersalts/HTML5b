@@ -4,6 +4,8 @@ const height = 540;
 const pixelRatio = 2;
 var ctx;
 
+var pmouseIsPressed = false;
+
 var menu = 0;
 
 var buttonWatch5a = new button(670, 308, 264, 27.5, 5, '#fff', '#d4d4d4', '#b8b8b8', 'WATCH BFDIA 5a');
@@ -38,10 +40,12 @@ function draw() {
 		buttonExplore.show();
 		buttonExplore.update();
 
-		if (buttonContinueGame.pressed()){
+		if (buttonContinueGame.relesed()){
 			menu = 1;
 		}
 	}
+
+	pmouseIsPressed = mouseIsPressed
 }
 
 function button(x, y, w, h, cr, fillNormal, fillHover, fillPress, text) {
@@ -56,6 +60,8 @@ function button(x, y, w, h, cr, fillNormal, fillHover, fillPress, text) {
 	this.w = w;
 	this.h = h;
 	this.text = text;
+
+	this.held = false;
 
 	this.show = function() {
 		ctx.beginPath();
@@ -75,28 +81,44 @@ function button(x, y, w, h, cr, fillNormal, fillHover, fillPress, text) {
 
 	this.update = function(){
 		this.hover();
+		if(this.pressed()){
+			this.held = true;
+		} else if(!mouseIsPressed){
+			this.held = false;
+		}
 	}
 
 	this.hover = function() {
-		if (this.hovering()){
+		if (this.hovering(mouseX, mouseY)){
 			this.fill = this.fillHover;
 			if(mouseIsPressed){
 				this.fill = this.fillPress;
 			}
+		} else if(this.held && !this.hovering(mouseX, mouseY)){
+			this.fill = this.fillHover;
 		} else {
 			this.fill = this.fillNormal;
 		}
 	}
 
-	this.hovering = function(){
-		return mouseX>this.x && mouseX<this.x+this.w && mouseY>this.y && mouseY<this.y+this.h;
+	this.hovering = function(x, y){
+		return x>this.x && x<this.x+this.w && y>this.y && y<this.y+this.h;
 	}
 
 	this.pressed = function(){
-		return this.hovering() && mouseIsPressed;
+		return this.hovering(mouseX, mouseY) && mouseIsPressed;
 	}
-	this.relesed = false;
+
+	this.ppressed = function(){
+		return this.hovering(pmouseX, pmouseY) && pmouseIsPressed;
+	}
+
+	this.relesed = function(){
+		return this.ppressed() && !this.pressed() && !this.held;
+	}
 }
+
+// https://www.youtube.com/watch?v=4q77g4xo9ic
 
 setup();
 draw();
