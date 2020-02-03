@@ -3,6 +3,7 @@ const width = 960;
 const height = 540;
 const pixelRatio = 2;
 var ctx;
+const fontFamily = 'Helvetica'
 
 var pmouseIsPressed = false;
 
@@ -58,6 +59,14 @@ function draw() {
 		}
 
 		ctx.drawImage(menu0img, 0, 0, width, height);
+
+		ctx.font = '32px '+fontFamily;
+		ctx.fillStyle = '#fff';
+		ctx.textAlign = 'right';
+		ctx.textBaseline = 'top';
+		ctx.fillText('By Cary Huang', width-10, 10);
+		ctx.font = '16px '+fontFamily;
+		ctx.fillText('Music By Michael Huang', width-10, 46);
 	}
 
 	ctx.fillStyle = 'rgba(255,255,255,'+flashEffect+')';
@@ -92,10 +101,11 @@ function button(x, y, w, h, cr, fillNormal, fillHover, fillPress, text, fontSize
 		ctx.lineTo(this.x - this.cr, this.y);
 		ctx.fill();
 
-		ctx.font = 'bold '+fontSize+'px Helvetica';
+		ctx.font = 'bold '+fontSize+'px '+fontFamily;
 		ctx.fillStyle = '#666';
 		ctx.textAlign = 'center';
-		ctx.fillText(this.text, this.x + (this.w/2), this.y + (this.h*0.9));
+		ctx.textBaseline = 'middle';
+		ctx.fillText(this.text, this.x + (this.w/2), this.y + (this.h/2));
 	}
 
 	this.update = function() {
