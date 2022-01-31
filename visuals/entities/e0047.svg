@@ -1,0 +1,50 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="21px" height="55px" viewBox="-10.5 -55 21 55">
+<defs>
+<g id="Layer0_0_FILL">
+<path fill="#CCCCCC" stroke="none" d="
+M -7 -44.65
+L -7 -42.15 7 -42.15 7 -44.65 -7 -44.65
+M -7 -12.35
+L -7 -10.3 7 -10.3 7 -12.35 -7 -12.35 Z"/>
+
+<path fill="#FFFFFF" stroke="none" d="
+M -8.75 -44.65
+L -7 -44.65 7 -44.65 8.65 -44.65 10 -54.5 -10 -54.5 -8.75 -44.65
+M -7 -10.3
+L -8.75 -10.3 -10 -0.5 10 -0.5 8.65 -10.3 7 -10.3 -7 -10.3
+M -7 -42.15
+L -7 -12.35 7 -12.35 7 -42.15 -7 -42.15
+M -3.45 -15.45
+L -3.45 -40.55 -3.45 -15.45
+M 3.85 -15.45
+L 3.85 -40.55 3.85 -15.45
+M 0 -15.45
+L 0 -40.55 0 -15.45 Z"/>
+</g>
+
+<path id="Layer0_0_1_STROKES" stroke="#666666" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M -7 -12.35
+L -7 -42.15 -7 -44.65 -8.75 -44.65 -10 -54.5 10 -54.5 8.65 -44.65 7 -44.65 7 -42.15 7 -12.35 7 -10.3 8.65 -10.3 10 -0.5 -10 -0.5 -8.75 -10.3 -7 -10.3 -7 -12.35 Z
+M 7 -44.65
+L -7 -44.65
+M 7 -10.3
+L -7 -10.3"/>
+
+<path id="Layer0_0_2_STROKES" stroke="#CCCCCC" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M -3.45 -15.45
+L -3.45 -40.55
+M 3.85 -15.45
+L 3.85 -40.55
+M 0 -15.45
+L 0 -40.55"/>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Layer0_0_FILL"/>
+
+<use xlink:href="#Layer0_0_1_STROKES"/>
+
+<use xlink:href="#Layer0_0_2_STROKES"/>
+</g>
+</svg>

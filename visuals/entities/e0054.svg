@@ -1,0 +1,53 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="50px" height="25px" viewBox="-25 -25 50 25">
+<defs>
+<g id="Symbol_511_0_Layer1_0_FILL">
+<path fill="#CCCCCC" stroke="none" d="
+M 24.5 -4.65
+L 24.5 -20.35
+Q 24.5 -24.5 19.5 -24.5
+L -19.5 -24.5
+Q -24.5 -24.5 -24.5 -20.35
+L -24.5 -4.65
+Q -24.5 -0.5 -19.5 -0.5
+L 19.5 -0.5
+Q 24.5 -0.5 24.5 -4.65 Z"/>
+</g>
+
+<g id="Symbol_511_0_Layer0_0_FILL">
+<path fill="#A5CBF1" stroke="none" d="
+M 18.4 -7.15
+L 18.4 -17.85
+Q 18.4 -20.7 14.65 -20.65
+L -14.6 -20.65
+Q -18.35 -20.7 -18.35 -17.85
+L -18.35 -7.15
+Q -18.35 -4.35 -14.6 -4.35
+L 14.65 -4.35
+Q 18.4 -4.35 18.4 -7.15 Z"/>
+</g>
+
+<path id="Symbol_511_0_Layer1_0_1_STROKES" stroke="#666666" stroke-width="1" stroke-linejoin="miter" stroke-linecap="square" stroke-miterlimit="3" fill="none" d="
+M 24.5 -20.35
+Q 24.5 -24.5 19.5 -24.5
+L -19.5 -24.5
+Q -24.5 -24.5 -24.5 -20.35
+L -24.5 -4.65
+Q -24.5 -0.5 -19.5 -0.5
+L 19.5 -0.5
+Q 24.5 -0.5 24.5 -4.65
+L 24.5 -20.35 Z"/>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_511_0_Layer1_0_FILL"/>
+
+<use xlink:href="#Symbol_511_0_Layer1_0_1_STROKES"/>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_511_0_Layer0_0_FILL"/>
+</g>
+</g>
+</svg>

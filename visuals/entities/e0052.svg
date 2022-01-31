@@ -1,0 +1,32 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="91px" height="10px" viewBox="-45.5 -10 91 10">
+<defs>
+<g id="Symbol_509_0_Layer1_0_FILL">
+<path fill="#D9D98C" stroke="none" d="
+M 45 -0.5
+L 45 -9.5 -45 -9.5 -45 -0.5 45 -0.5 Z"/>
+</g>
+
+<g id="Symbol_509_0_Layer0_0_FILL">
+<path fill="#000066" stroke="none" d="
+M 42 -3
+L 42 -7 -42 -7 -42 -3 42 -3 Z"/>
+</g>
+
+<path id="Symbol_509_0_Layer1_0_1_STROKES" stroke="#5F5F1F" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 45 -0.5
+L -45 -0.5 -45 -9.5 45 -9.5 45 -0.5 Z"/>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_509_0_Layer1_0_FILL"/>
+
+<use xlink:href="#Symbol_509_0_Layer1_0_1_STROKES"/>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_509_0_Layer0_0_FILL"/>
+</g>
+</g>
+</svg>

@@ -1,0 +1,18 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="64px" height="80px" viewBox="0 0 64 80">
+<defs>
+<g id="Symbol_257_0_Layer0_0_FILL">
+<path fill="#000000" stroke="none" d="
+M 10.6 24.75
+Q 6.75 24.05 3.1 25.6
+L 2 0.1 0 0.1 -0.9 32.1 18 32.15
+Q 16.75 25.95 10.6 24.75 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 0.98590087890625, -0.0017852783203125, -0.247314453125, 1.00592041015625, 31.95,39.8) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_257_0_Layer0_0_FILL"/>
+</g>
+</g>
+</svg>

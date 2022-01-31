@@ -1,0 +1,38 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
+<defs>
+<g id="Layer0_0_FILL">
+<path fill="#7A633D" stroke="none" d="
+M 0 27
+L 30 27 30 20 0 20 0 27
+M 30 7
+L 30 0 0 0 0 7 30 7
+M 30 17
+L 30 10 0 10 0 17 30 17 Z"/>
+
+<path fill="#55452A" stroke="none" d="
+M 0 27
+L 0 30 30 30 30 27 0 27
+M 30 20
+L 30 17 0 17 0 20 30 20
+M 30 10
+L 30 7 0 7 0 10 30 10 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Layer0_0_FILL"/>
+</g>
+
+<g id="tileBorder" transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g id="ambientShadow2" transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g id="a1" transform="matrix( 0, -1, 1, 0, 15,15) "/>
+
+<g id="a0" transform="matrix( -1, 0, 0, -1, 15,15) "/>
+
+<g id="a3" transform="matrix( 0, 1, -1, 0, 15,15) "/>
+
+<g id="a2" transform="matrix( 1, 0, 0, 1, 15,15) "/>
+</g>
+</g>
+</svg>

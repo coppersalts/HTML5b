@@ -1,0 +1,50 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
+<defs>
+<radialGradient id="Gradient_1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( 0.7071067811865475, 0.7071067811865475, 0.7071067811865475, -0.7071067811865475, 15,15) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+
+<stop  offset="100%" stop-color="#000000"/>
+</radialGradient>
+
+<radialGradient id="Gradient_2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( -0.7071067811865475, -0.7071067811865475, -0.7071067811865475, 0.7071067811865475, 15,15) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+
+<stop  offset="100%" stop-color="#000000"/>
+</radialGradient>
+
+<radialGradient id="Gradient_3" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( -0.7071067811865475, 0.7071067811865475, -0.7071067811865475, -0.7071067811865475, 15,15) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+
+<stop  offset="100%" stop-color="#000000"/>
+</radialGradient>
+
+<radialGradient id="Gradient_4" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( 0.7071067811865475, -0.7071067811865475, 0.7071067811865475, 0.7071067811865475, 15,15) " spreadMethod="pad">
+<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+
+<stop  offset="100%" stop-color="#000000"/>
+</radialGradient>
+
+<g id="Layer0_0_FILL">
+<path fill="url(#Gradient_1)" stroke="none" d="
+M 30 15
+L 15 15 15 30 30 30 30 15 Z"/>
+
+<path fill="url(#Gradient_2)" stroke="none" d="
+M 0 15
+L 15 15 15 0 0 0 0 15 Z"/>
+
+<path fill="url(#Gradient_3)" stroke="none" d="
+M 15 15
+L 0 15 0 30 15 30 15 15 Z"/>
+
+<path fill="url(#Gradient_4)" stroke="none" d="
+M 30 15
+L 30 0 15 0 15 15 30 15 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Layer0_0_FILL"/>
+</g>
+</svg>

@@ -1,0 +1,16 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
+<defs>
+<g id="Symbol_9_0_Layer0_0_FILL">
+<path fill="#505050" stroke="none" d="
+M 30 -15
+L 0 -15 0 45 30 45 30 -15 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 0.5, 0,7.5) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_9_0_Layer0_0_FILL"/>
+</g>
+</g>
+</svg>

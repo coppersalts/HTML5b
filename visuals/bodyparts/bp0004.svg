@@ -1,0 +1,16 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="11px" height="36px" viewBox="0 0 11 36">
+<defs>
+<g id="Body_Parts_Eyes_Eye_Closed_3_0_Layer0_0_FILL">
+<path fill="#000000" stroke="none" d="
+M -3.75 -1.7
+Q -2.821484375 -12.32578125 -0.35 -12.35 2.7228515625 -12.319140625 3.2 -1.15 3.42109375 4.96796875 3.4 5.05 3.6388671875 6.8912109375 4.45 4.55 5.5578125 1.090625 4.45 -7.6 3.2802734375 -17.475 -0.25 -17.5 -3.749609375 -17.469921875 -4.95 -7.4 -5.9322265625 1.20859375 -5.05 4.4 -4.5197265625 6.3607421875 -4.25 4.3 -3.9388671875 0.77578125 -3.75 -1.7 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 5.5,18) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Body_Parts_Eyes_Eye_Closed_3_0_Layer0_0_FILL"/>
+</g>
+</g>
+</svg>

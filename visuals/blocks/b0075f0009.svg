@@ -1,0 +1,56 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="60px" viewBox="0 -15 30 60">
+<defs>
+<path id="Symbol_144_8_Layer1_0_1_STROKES" stroke="#FFFF00" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 3.35 0.25
+L 1.15 -5.2 -1.8 -12.5
+M 1.15 -5.2
+L 7.6 -9.6 10.6 -6.85
+M -0.5 -10.25
+L 4.65 -13.3 3.65 -19.05
+M -10.65 -3.5
+L -9.05 -5.8 -12.05 -9.6 -15.65 -4.5
+M 1.85 -2.1
+L -3.4 -0.1 -7.3 -8.35 -9.05 -5.8
+M -11.3 9
+L -11.3 14.5 -5.85 15.05 -1.4 15.45 -0.55 13.25 -1.35 7.45 -4.55 8.15
+M -4.55 7.75
+L -10.55 2 -16.9 5.9
+M -5.85 15.05
+L -7.85 23.1 -2.1 27.2
+M -1.4 15.45
+L -2.3 17.75
+M 12.2 13.9
+L 8.35 11.9 8.5 10.65 1.7 14.9
+M 2.45 1.65
+L 9.2 4.25 8.5 10.65
+M 3.35 0.25
+L -0.8 4.5 4.2 6.15 -1.35 7.45"/>
+
+<path id="Symbol_148_8_Layer0_0_1_STROKES" stroke="#00FFFF" stroke-width="6" stroke-linejoin="round" stroke-linecap="butt" fill="none" d="
+M -1.6 -12.5
+Q 0.45 -4.45 -1.6 2.4 -4.1 10.1 -1.6 17.25"/>
+
+<path id="Symbol_152_8_Layer0_0_1_STROKES" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" stroke-linecap="butt" fill="none" d="
+M -1.6 -12.5
+Q 0.45 -4.45 -1.6 2.4 -4.1 10.1 -1.6 17.25"/>
+</defs>
+
+<g transform="matrix( 0.606292724609375, 0, 0, 0.9954681396484375, 15.9,14) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_144_8_Layer1_0_1_STROKES"/>
+</g>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 16.8,12.75) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_148_8_Layer0_0_1_STROKES"/>
+</g>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 16.8,12.75) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_152_8_Layer0_0_1_STROKES"/>
+</g>
+</g>
+</svg>

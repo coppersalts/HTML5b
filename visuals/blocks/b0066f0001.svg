@@ -1,0 +1,40 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="34.1px" height="37.75px" viewBox="-2.1 -7.75 34.1 37.75">
+<defs>
+<linearGradient id="Gradient_1" gradientUnits="userSpaceOnUse" x1="0" y1="12.8" x2="0" y2="-12.8" spreadMethod="pad">
+<stop  offset="0%" stop-color="#FFE991"/>
+
+<stop  offset="100%" stop-color="#FFECA3" stop-opacity="0"/>
+</linearGradient>
+
+<filter id="Filter_1" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.86 0" result="result1"/>
+</filter>
+
+<g id="Symbol_165_0_Layer0_0_FILL">
+<path fill="url(#Gradient_1)" stroke="none" d="
+M 5.55 12.4
+L 12.8 -12.35 -12.8 -12.35 -5.35 12.4 5.55 12.4 Z"/>
+</g>
+
+<g id="Symbol_93_0_Layer0_0_FILL">
+<path fill="#333333" stroke="none" d="
+M 30 30
+L 30 0 0 0 0 30 30 30 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 1.33154296875, 0, 0, 1.3636322021484375, 14.95,9.1) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use filter="url(#Filter_1)" xlink:href="#Symbol_165_0_Layer0_0_FILL"/>
+</g>
+</g>
+</g>
+
+<g transform="matrix( 0.5333251953125, 0, 0, 0.133331298828125, 7,26) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_93_0_Layer0_0_FILL"/>
+</g>
+</g>
+</svg>

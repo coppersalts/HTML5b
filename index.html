@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
 	<title>5b - Battle for Dream Island</title>
-	<meta name="description" content="A puzzle platformer in the world of Battle for Dream Island." />
-	<meta charset="utf-8" />
+	<meta name="description" content="A puzzle platformer in the world of Battle for Dream Island."/>
+	<meta charset="utf-8"/>
 	<!--<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />-->
-	<link rel="stylesheet" href="style.css" type="text/css" />
-	<script src="libraries/p5.min.js"></script>
+	<link rel="stylesheet" href="style.css" type="text/css"/>
+	<script type="text/javascript" src="data/levels.js"></script>
+	<script type="text/javascript" src="Character.js"></script>
+	<script type="text/javascript" src="5b.js"></script>
 </head>
-<body>
-
+<body onload="setup()">
 <div id="center">
+	<canvas width="960" height="540" id="cnv"></canvas>
 	<p>An HTML5 port of Cary Huang's <a href="http://bfdi.tv/5b/">BFDIA 5b</a>.</p>
 </div>
-<script src="5b.js"></script>
 </body>
 </html>

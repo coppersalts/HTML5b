@@ -1,0 +1,38 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30.75px" height="30.75px" viewBox="-15.4 -30.35 30.75 30.75">
+<defs>
+<g id="Symbol_478_0_Layer1_0_FILL">
+<path fill="#333333" stroke="none" d="
+M 3.9 -27.35
+L 3.2 -26.95 0.05 -39.55 -3.4 -28 -19.7 -39.9 -7.4 -24.05 -7 -23.35 -19.55 -20.2 -8 -16.75 -19.9 -0.5 -4.05 -12.8 -3.4 -13.1 -0.25 -0.55 3.2 -12.1 19.45 -0.25 7.15 -16.1 6.8 -16.75 19.45 -19.9 7.9 -23.35 19.75 -39.65 3.9 -27.35 Z"/>
+</g>
+
+<g id="Symbol_478_0_Layer0_0_FILL">
+<path fill="#666666" stroke="none" d="
+M 10 -20
+Q 9.95 -24.15 7 -27.1 4.1 -30 0 -30 -4.15 -30 -7.1 -27.1 -10 -24.15 -10 -20 -10 -15.9 -7.1 -13 -4.15 -10.05 0 -10 4.1 -10.05 7 -13 9.95 -15.9 10 -20 Z"/>
+</g>
+
+<path id="Symbol_478_0_Layer1_0_1_STROKES" stroke="#000000" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 3.9 -27.35
+L 3.2 -26.95 0.05 -39.55 -3.4 -28 -19.7 -39.9 -7.4 -24.05 -7 -23.35 -19.55 -20.2 -8 -16.75 -19.9 -0.5 -4.05 -12.8 -3.4 -13.1 -0.25 -0.55 3.2 -12.1 19.45 -0.25 7.15 -16.1 6.8 -16.75 19.45 -19.9 7.9 -23.35 19.75 -39.65 3.9 -27.35 Z"/>
+
+<path id="Symbol_478_0_Layer0_0_1_STROKES" stroke="#000000" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 10 -20
+Q 9.95 -15.9 7 -13 4.1 -10.05 0 -10 -4.15 -10.05 -7.1 -13 -10 -15.9 -10 -20 -10 -24.15 -7.1 -27.1 -4.15 -30 0 -30 4.1 -30 7 -27.1 9.95 -24.15 10 -20 Z"/>
+</defs>
+
+<g transform="matrix( 0.756622314453125, 0, 0, 0.756622314453125, 0.05,0.2) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_478_0_Layer1_0_FILL"/>
+
+<use xlink:href="#Symbol_478_0_Layer1_0_1_STROKES"/>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Symbol_478_0_Layer0_0_FILL"/>
+
+<use xlink:href="#Symbol_478_0_Layer0_0_1_STROKES"/>
+</g>
+</g>
+</svg>
