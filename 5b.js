@@ -15,7 +15,7 @@ var _frameCount = 0;
 var qTimer = 0;
 
 var levelsString = "";
-var levelCount = 52;
+var levelCount = 53;
 var f = 19;
 var levels = new Array(levelCount);
 var startLocations = new Array(levelCount);
@@ -182,7 +182,7 @@ for (var _loc3_ = 0; _loc3_ < levelCount; _loc3_++) {
 	mdao[_loc3_] = mdao2;
 	levelStart += 8;
 }
-var musicSound = new Audio('data/music hq betterloop.wav');
+var musicSound = new Audio('data/music.mp3');
 
 // [15] - animated?
 // [16] - animation frames
@@ -3811,6 +3811,7 @@ function drawCutScene() {
 		ctx.fillRect(bubLoc.x+10, bubLoc.y+10, 80, 80);
 	}
 	ctx.fillStyle = '#000000';
+	ctx.textAlign = 'left'
 	ctx.font = '21px Helvetica';
 	wrapText(csText, bubLoc.x+textx, bubLoc.y+4.25, textwidth, 25);
 }
