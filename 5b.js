@@ -182,7 +182,7 @@ for (var _loc3_ = 0; _loc3_ < levelCount; _loc3_++) {
 	mdao[_loc3_] = mdao2;
 	levelStart += 8;
 }
-var musicSound = new Audio('data/music.mp3');
+var musicSound = new Audio('data/music hq betterloop.wav');
 
 // [15] - animated?
 // [16] - animation frames
@@ -1592,6 +1592,9 @@ svgHPRCBubble[0].src = 'visuals/ui/hprcbubble/hprcbubble0001.svg';
 svgHPRCBubble[1] = new Image();
 svgHPRCBubble[1].src = 'visuals/ui/hprcbubble/hprcbubble0002.svg';
 
+var svgCSBubble = new Image();
+svgCSBubble.src = 'visuals/ui/csbubble/dia.svg';
+
 //TODO: optimize this at some point
 var svgCharsVB = new Array(charD.length);
 var xhr = new Array(charD.length);
@@ -1866,7 +1869,24 @@ function linebreakText(text, x, y, lineheight) {
 	}
 }
 
-
+//https://thewebdev.info/2021/08/28/how-to-wrap-text-in-a-canvas-element-with-javascript/
+function wrapText(text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  for (const [index, w] of words.entries()) {
+    const testLine = line + w + ' ';
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && index > 0) {
+      ctx.fillText(line, x, y);
+      line = w + ' ';
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line, x, y);
+}
 
 
 
@@ -3779,9 +3799,20 @@ function displayLine(level, line)
 	csText = dialogueText[level][line];
 }
 function drawCutScene() {
+	var bubLoc = {x:(cwidth-bubWidth)/2,y:bubMargin};
+	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y)
+	var textwidth = 386.55;
+	var textx = 106.7;
+	if (dialogueChar[currentLevel][Math.min(cutSceneLine, dialogueChar[currentLevel].length-1)]==99) {
+		textwidth = 488.25;
+		textx = 4.25;
+	} else {
+		ctx.fillStyle = '#ce6fce';
+		ctx.fillRect(bubLoc.x+10, bubLoc.y+10, 80, 80);
+	}
 	ctx.fillStyle = '#000000';
-	ctx.font = '21px Helvetica'
-	ctx.fillText(csText, 0, 0);
+	ctx.font = '21px Helvetica';
+	wrapText(csText, bubLoc.x+textx, bubLoc.y+4.25, textwidth, 25);
 }
 function startDeath(i)
 {
