@@ -1,8 +1,8 @@
 
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="69px" height="69px" viewBox="-21 -21 69 69">
 <defs>
 <filter id="Filter_1" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0" result="result1"/>
+<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.16 0" result="result1"/>
 </filter>
 
 <g id="Symbol_233_0_Layer2_0_FILL">
@@ -183,16 +183,16 @@ Q 11.4 11.75 11.4 10.8
 L 11.5 10.45 Z"/>
 </g>
 
-<path id="Layer1_0_1_STROKES" stroke="#FFFFFF" stroke-width="0.5" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
-M -16.95 13.3
-Q -16.95 0.65 -8.05 -8.35 0.95 -17.3 13.65 -17.3 26.35 -17.3 35.25 -8.35 44.25 0.65 44.25 13.3 44.25 26 35.25 34.9 26.35 43.9 13.65 43.9 0.95 43.9 -8.05 34.9 -16.95 26 -16.95 13.3 Z"/>
+<path id="Layer1_0_1_STROKES" stroke="#FFFFFF" stroke-width="0.2" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 13.65 47.45
+Q -0.55 47.45 -10.6 37.45 -20.5 27.5 -20.5 13.3 -20.5 -0.85 -10.6 -10.9 -0.55 -20.85 13.65 -20.85 27.85 -20.85 37.75 -10.9 47.8 -0.85 47.8 13.3 47.8 27.5 37.75 37.45 27.85 47.45 13.65 47.45 Z"/>
 
-<path id="Layer0_0_1_STROKES" stroke="#FFFFFF" stroke-width="2.35" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
-M -7.85 13.45
-Q -7.85 4.55 -1.65 -1.75 4.65 -8 13.55 -8 22.45 -8 28.65 -1.75 34.95 4.55 34.95 13.45 34.95 22.35 28.65 28.55 22.45 34.85 13.55 34.85 4.65 34.85 -1.65 28.55 -7.85 22.35 -7.85 13.45 Z"/>
+<path id="Layer0_0_1_STROKES" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M -11 13.4
+Q -11 3.2 -3.85 -4.05 3.4 -11.2 13.6 -11.2 23.8 -11.2 30.95 -4.05 38.15 3.2 38.15 13.4 38.15 23.65 30.95 30.75 23.8 38 13.6 38 3.4 38 -3.85 30.75 -11 23.65 -11 13.4 Z"/>
 </defs>
 
-<g transform="matrix( 1.3395233154296875, 0, 0, 1.3395233154296875, -5.1,-4.8) ">
+<g transform="matrix( 1.3731842041015625, 0, 0, 1.3731842041015625, -5.6,-5.2) ">
 <g transform="matrix( 1, 0, 0, 1, 0,0) ">
 <use filter="url(#Filter_1)" xlink:href="#Symbol_233_0_Layer2_0_FILL"/>
 </g>

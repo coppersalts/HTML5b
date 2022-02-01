@@ -859,6 +859,29 @@ svgHPRCCrank.src = 'visuals/entities/e0035crank.svg';
 
 var svgCoin = new Image();
 svgCoin.src = 'visuals/wintoken.svg';
+var svgCoinGet = [];
+svgCoinGet[0] = new Image();
+svgCoinGet[0].src = 'visuals/wtgetf0000.svg';
+svgCoinGet[1] = new Image();
+svgCoinGet[1].src = 'visuals/wtgetf0001.svg';
+svgCoinGet[2] = new Image();
+svgCoinGet[2].src = 'visuals/wtgetf0002.svg';
+svgCoinGet[3] = new Image();
+svgCoinGet[3].src = 'visuals/wtgetf0003.svg';
+svgCoinGet[4] = new Image();
+svgCoinGet[4].src = 'visuals/wtgetf0004.svg';
+svgCoinGet[5] = new Image();
+svgCoinGet[5].src = 'visuals/wtgetf0005.svg';
+svgCoinGet[6] = new Image();
+svgCoinGet[6].src = 'visuals/wtgetf0006.svg';
+svgCoinGet[7] = new Image();
+svgCoinGet[7].src = 'visuals/wtgetf0007.svg';
+svgCoinGet[8] = new Image();
+svgCoinGet[8].src = 'visuals/wtgetf0008.svg';
+svgCoinGet[9] = new Image();
+svgCoinGet[9].src = 'visuals/wtgetf0009.svg';
+svgCoinGet[10] = new Image();
+svgCoinGet[10].src = 'visuals/wtgetf0010.svg';
 
 for (var i = 0; i < imgBgs.length; i++) {
 	imgBgs[i] = new Image();
@@ -1619,6 +1642,9 @@ function addTileMovieClip(x, y) {
 			ctx.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7)/100, 1), 0);
 			ctx.drawImage(svgCoin, -15, -15, 30, 30);
 			ctx.restore();
+		} else if (tileFrames[y][x].cf < svgCoinGet.length) {
+			ctx.drawImage(svgCoinGet[tileFrames[y][x].cf], x*30-21, y*30-21);
+			tileFrames[y][x].cf++;
 		}
 	} else if (blockProperties[_loc5_][0] || blockProperties[_loc5_][1] || blockProperties[_loc5_][2] || blockProperties[_loc5_][3]) {
 		ctx.fillStyle = '#00ff99';
