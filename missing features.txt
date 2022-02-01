@@ -4,7 +4,6 @@
 - the alpha is wrong on the ambient shadows
 - parts of the character models
 - the rest of the character models
-- heater death fire
 - death flashing
 - animated entities
 - HPRC cranking arms
@@ -12,5 +11,6 @@
 - the little flash of light when you switch characters
 - the metal tile borders
 - door lights
+- autosave
 
 - the level editor (I'll do this last)

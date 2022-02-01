@@ -1,6 +1,7 @@
 // TODO: rename _locn_ variables.
 // TODO: implement depths
 // TODO: look up the difference between var and let.
+// TODO: go through all the todo's I've put throughout this file.
 
 var canvas;
 var ctx;
@@ -417,7 +418,8 @@ var charModels = [
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
-		firemat: {a:-0.45697021484375,b:0.0060882568359375,c:0.0076904296875,d:0.5772552490234375,tx:-2.3,ty:-51.8}
+		firemat: {a:-0.45697021484375,b:0.0060882568359375,c:0.0076904296875,d:0.5772552490234375,tx:-2.3,ty:-51.8},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0.05,ty:0.6}
 	},
 	{
 		torsoX: 1.15,
@@ -425,6 +427,7 @@ var charModels = [
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
 		firemat: {a:-0.4046630859375,b:0.0060882568359375,c:0.006805419921875,d:0.5772552490234375,tx:1.05,ty:-51.05},
+		charimgmat: {a:0.12158203125,b:-0.0020751953125,c:0.0037384033203125,d:0.12152099609375,tx:0.1,ty:0.4},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.2847747802734375,b:-0.0040130615234375,c:0.0086822509765625,d:0.285064697265625,tx:0.35,ty:-26.65}},
@@ -522,6 +525,7 @@ var charModels = [
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
 		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:2.05,ty:0},
+		charimgmat: {a:0.14532470703125,b:-0.00250244140625,c:0.00445556640625,d:0.1452484130859375,tx:-0.3,ty:0.5},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.319091796875,b:-0.0054779052734375,c:0.009796142578125,d:0.3189697265625,tx:0.35,ty:-26.65}},
@@ -575,6 +579,7 @@ var charModels = [
 		legx: [-2.45, 5.1],
 		legy: [-11.25,-11.25],
 		firemat: {a:-0.1956634521484375,b:0.0030975341796875,c:0.0032806396484375,d:0.2937164306640625,tx:1.05,ty:-94},
+		charimgmat: {a:0.1161346435546875,b:0,c:0,d:0.1161346435546875,tx:-0.15,ty:0.2},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.05,ty:-41.75}},
@@ -664,7 +669,8 @@ var charModels = [
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
 		firemat: {a:-0.16912841796875,b:0.0142822265625,c:0.031341552734375,d:0.6383819580078125,tx:-3.65,ty:-58.2},
-		frames: []
+		charimgmat: {a:0.10894775390625,b:-0.003753662109375,c:0.003753662109375,d:0.10894775390625,tx:-0.2,ty:-1.4},
+		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
 		torsoX: -0.7,
@@ -672,6 +678,7 @@ var charModels = [
 		legx: [-5.1, 10.85],
 		legy: [-11.25,-11.25],
 		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:1.8,ty:-4.75},
+		charimgmat: {a:0.126861572265625,b:0,c:0,d:0.126861572265625,tx:-0.1,ty:-0.3},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:0.4,ty:-39.1}}
@@ -723,7 +730,8 @@ var charModels = [
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
 		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:-0.2,ty:0.05},
-		frames: []
+		charimgmat: {a:0.116455078125,b:0,c:0,d:0.116455078125,tx:0.4,ty:20.05},
+		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
 		torsoX: 1.15,
@@ -731,7 +739,8 @@ var charModels = [
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
 		firemat: {a:1.8939666748046875,b:0,c:0,d:1.1790008544921875,tx:2.05,ty:0},
-		frames: []
+		charimgmat: {a:-0.06329345703125,b:0,c:0,d:0.0632781982421875,tx:-0.6,ty:18.65},
+		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
 		torsoX: 1.15,
@@ -739,7 +748,8 @@ var charModels = [
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
 		firemat: {a:0.757598876953125,b:0,c:0,d:1,tx:2.3,ty:-2.5},
-		frames: []
+		charimgmat: {a:-0.112091064453125,b:0,c:0,d:0.112091064453125,tx:8.05,ty:-5.8},
+		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
 		firemat: {},
@@ -1023,7 +1033,7 @@ var svgChars = new Array(charD.length);
 var svgBodyParts = [];
 
 // var svgHPRCBubble = new Array(4);
-var svgHPRCBubble = new Array(2);
+var svgHPRCBubble = new Array(3);
 var svgCSBubble = new Image();
 svgCSBubble.src = 'visuals/ui/csbubble/dia.svg';
 var svgHPRCCrank = new Image();
@@ -2117,7 +2127,9 @@ function drawCharacters() {
 			if (HPRCBubbleFrame == 1) {
 				ctx.drawImage(svgHPRCBubble[0], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-128+bounceY(9, 30));
 			} else if (HPRCBubbleFrame == 2) {
-				ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-150);
+				ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[1].width/2, char[_loc1_].y-150);
+			} else if (HPRCBubbleFrame == 3) {
+				ctx.drawImage(svgHPRCBubble[2], char[_loc1_].x-svgHPRCBubble[2].width/2, char[_loc1_].y-150);
 			}
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
 		}
@@ -3327,12 +3339,19 @@ function drawCutScene() {
 	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y)
 	var textwidth = 386.55;
 	var textx = 106.7;
-	if (dialogueChar[currentLevel][Math.min(cutSceneLine, dialogueChar[currentLevel].length-1)]==99) {
+	var currdiachar = dialogueChar[currentLevel][Math.min(cutSceneLine, dialogueChar[currentLevel].length-1)]
+	if (currdiachar==99) {
 		textwidth = 488.25;
 		textx = 4.25;
 	} else {
 		ctx.fillStyle = '#ce6fce';
 		ctx.fillRect(bubLoc.x+10, bubLoc.y+10, 80, 80);
+		ctx.save();
+		var charimg = svgChars[char[currdiachar].id];
+		var charimgmat = charModels[char[currdiachar].id].charimgmat;
+		ctx.transform(charimgmat.a*2.6,charimgmat.b,charimgmat.c,charimgmat.d*2.6,charimgmat.tx+bubLoc.x+50,charimgmat.ty+bubLoc.y+50);
+		ctx.drawImage(charimg, -charimg.width/2, -charimg.height/2);
+		ctx.restore();
 	}
 	ctx.fillStyle = '#000000';
 	ctx.textAlign = 'left'
@@ -3685,12 +3704,10 @@ function recoverCycle(i, dire)
 		// HPRCBubble.charImage.gotoAndStop(4);
 		if(dire == 0)
 		{
-			HPRCBubbleFrame = 0;
 			// HPRCBubble.charImage.anim.gotoAndStop(1);
 		}
 		else
 		{
-			// HPRCBubbleFrame = 4;
 			// HPRCBubble.charImage.anim.gotoAndPlay(dire * 8 + 10);
 		}
 		// HPRCBubble.charImage.anim.charBody.gotoAndStop(char[recover2].id + 1);
