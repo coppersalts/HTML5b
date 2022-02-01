@@ -23,3 +23,4 @@ Uncaught TypeError: Cannot set properties of undefined (setting 'vy')
     at draw (5b.js:4659:6)
     5b.js:3319 Uncaught TypeError: Cannot read properties of undefined (reading '1')
     at safeToStandAt (5b.js:3319:32)
+the game crashes when a submerged object hits the bottom of the level

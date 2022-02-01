@@ -1,5 +1,6 @@
 // TODO: rename _locn_ variables.
 // TODO: implement depths
+// TODO: look up the difference between var and let.
 
 var canvas;
 var ctx;
@@ -190,26 +191,26 @@ var musicSound = new Audio('data/music.mp3');
 // [18] - loop frames
 var blockProperties = [
 // tile0
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
 [true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
 [true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
 [true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
 [true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 // tile1
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
 [true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,14,false,[0,1,2,3,4,5,6,7,8,9,10,11,12,13]],
 [true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
 [true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 [true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,true],
-[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,12,true,[]],
+[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
 [true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
 // tile2
 [true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
@@ -254,7 +255,7 @@ var blockProperties = [
 [true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,3,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,9,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
 // tile6
 [true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
@@ -278,13 +279,13 @@ var blockProperties = [
 [false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
 [true,true,true,true,true,true,true,true,true,false,false,0,1,false,false,false,1,false],
 // tile8
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
 [false,true,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
 [false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
+[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,0,false],
 [false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
+[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,0,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
@@ -301,10 +302,10 @@ var blockProperties = [
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 // tile10
 [false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
 [false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
@@ -312,30 +313,30 @@ var blockProperties = [
 [false,false,false,false,false,false,false,false,true,false,false,12,0,false,false,false,1,false],
 // tile11
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
 // tile12
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
 // tile13
 [false,false,false,false,false,false,false,false,false,false,false,0,1,false,true,false,1,false],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false]];
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false]];
 var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54],[65,61,60,62,63,64],[],[],[14,16,83,85]];
 var charD = [
 [28,45.4,0.45,27,0.8,false,1],
@@ -816,784 +817,86 @@ function addCommas(i) {
 
 
 
+// https://grabthiscode.com/javascript/check-if-file-exists-javascript
+function doesFileExist(urlToFile) {
+	var xhr = new XMLHttpRequest();
+	xhr.open('HEAD', urlToFile, false);
+	xhr.send();	
+	return xhr.status !== 404;
+}
 
 
 
 
-
-
-
-
-
-
-
-
-// TODO: make these load automatically.
 
 var imgBgs = new Array(12);
-imgBgs[0] = new Image();
-imgBgs[0].src = 'visuals/bg/bg0000.png';
-imgBgs[1] = new Image();
-imgBgs[1].src = 'visuals/bg/bg0001.png';
-imgBgs[2] = new Image();
-imgBgs[2].src = 'visuals/bg/bg0002.png';
-imgBgs[3] = new Image();
-imgBgs[3].src = 'visuals/bg/bg0003.png';
-imgBgs[4] = new Image();
-imgBgs[4].src = 'visuals/bg/bg0004.png';
-imgBgs[5] = new Image();
-imgBgs[5].src = 'visuals/bg/bg0005.png';
-imgBgs[6] = new Image();
-imgBgs[6].src = 'visuals/bg/bg0006.png';
-imgBgs[7] = new Image();
-imgBgs[7].src = 'visuals/bg/bg0007.png';
-imgBgs[8] = new Image();
-imgBgs[8].src = 'visuals/bg/bg0008.png';
-imgBgs[9] = new Image();
-imgBgs[9].src = 'visuals/bg/bg0009.png';
-imgBgs[10] = new Image();
-imgBgs[10].src = 'visuals/bg/bg0010.png';
-imgBgs[11] = new Image();
-imgBgs[11].src = 'visuals/bg/bg0011.png';
 
 var svgTiles = new Array(blockProperties.length);
-svgTiles[1] = new Image();
-svgTiles[1].src = 'visuals/blocks/b0001.svg';
-svgTiles[2] = new Image();
-svgTiles[2].src = 'visuals/blocks/b0002.svg';
-svgTiles[3] = new Image();
-svgTiles[3].src = 'visuals/blocks/b0003.svg';
-svgTiles[4] = new Image();
-svgTiles[4].src = 'visuals/blocks/b0004.svg';
-svgTiles[5] = new Image();
-svgTiles[5].src = 'visuals/blocks/b0005.svg';
-svgTiles[9] = new Image();
-svgTiles[9].src = 'visuals/blocks/b0009.svg';
-
-svgTiles[10] = new Image();
-svgTiles[10].src = 'visuals/blocks/b0010.svg';
-svgTiles[11] = new Image();
-svgTiles[11].src = 'visuals/blocks/b0011.svg';
-svgTiles[13] = new Array(14);
-svgTiles[13][0] = new Image();
-svgTiles[13][0].src = 'visuals/blocks/b0013f0000.svg';
-svgTiles[13][1] = new Image();
-svgTiles[13][1].src = 'visuals/blocks/b0013f0001.svg';
-svgTiles[13][2] = new Image();
-svgTiles[13][2].src = 'visuals/blocks/b0013f0002.svg';
-svgTiles[13][3] = new Image();
-svgTiles[13][3].src = 'visuals/blocks/b0013f0003.svg';
-svgTiles[13][4] = new Image();
-svgTiles[13][4].src = 'visuals/blocks/b0013f0004.svg';
-svgTiles[13][5] = new Image();
-svgTiles[13][5].src = 'visuals/blocks/b0013f0005.svg';
-svgTiles[13][6] = new Image();
-svgTiles[13][6].src = 'visuals/blocks/b0013f0006.svg';
-svgTiles[13][7] = new Image();
-svgTiles[13][7].src = 'visuals/blocks/b0013f0007.svg';
-svgTiles[13][8] = new Image();
-svgTiles[13][8].src = 'visuals/blocks/b0013f0008.svg';
-svgTiles[13][9] = new Image();
-svgTiles[13][9].src = 'visuals/blocks/b0013f0009.svg';
-svgTiles[13][10] = new Image();
-svgTiles[13][10].src = 'visuals/blocks/b0013f0010.svg';
-svgTiles[13][11] = new Image();
-svgTiles[13][11].src = 'visuals/blocks/b0013f0011.svg';
-svgTiles[13][12] = new Image();
-svgTiles[13][12].src = 'visuals/blocks/b0013f0012.svg';
-svgTiles[13][13] = new Image();
-svgTiles[13][13].src = 'visuals/blocks/b0013f0013.svg';
-svgTiles[14] = new Array(12);
-svgTiles[14][0] = new Image();
-svgTiles[14][0].src = 'visuals/blocks/b0014f0000.svg';
-svgTiles[14][1] = new Image();
-svgTiles[14][1].src = 'visuals/blocks/b0014f0001.svg';
-svgTiles[14][2] = new Image();
-svgTiles[14][2].src = 'visuals/blocks/b0014f0002.svg';
-svgTiles[14][3] = new Image();
-svgTiles[14][3].src = 'visuals/blocks/b0014f0003.svg';
-svgTiles[14][4] = new Image();
-svgTiles[14][4].src = 'visuals/blocks/b0014f0004.svg';
-svgTiles[14][5] = new Image();
-svgTiles[14][5].src = 'visuals/blocks/b0014f0005.svg';
-svgTiles[14][6] = new Image();
-svgTiles[14][6].src = 'visuals/blocks/b0014f0006.svg';
-svgTiles[14][7] = new Image();
-svgTiles[14][7].src = 'visuals/blocks/b0014f0007.svg';
-svgTiles[14][8] = new Image();
-svgTiles[14][8].src = 'visuals/blocks/b0014f0008.svg';
-svgTiles[14][9] = new Image();
-svgTiles[14][9].src = 'visuals/blocks/b0014f0009.svg';
-svgTiles[14][10] = new Image();
-svgTiles[14][10].src = 'visuals/blocks/b0014f0010.svg';
-svgTiles[14][11] = new Image();
-svgTiles[14][11].src = 'visuals/blocks/b0014f0011.svg';
-svgTiles[16] = new Array(12);
-svgTiles[16][0] = new Image();
-svgTiles[16][0].src = 'visuals/blocks/b0016f0000.svg';
-svgTiles[16][1] = new Image();
-svgTiles[16][1].src = 'visuals/blocks/b0016f0001.svg';
-svgTiles[16][2] = new Image();
-svgTiles[16][2].src = 'visuals/blocks/b0016f0002.svg';
-svgTiles[16][3] = new Image();
-svgTiles[16][3].src = 'visuals/blocks/b0016f0003.svg';
-svgTiles[16][4] = new Image();
-svgTiles[16][4].src = 'visuals/blocks/b0016f0004.svg';
-svgTiles[16][5] = new Image();
-svgTiles[16][5].src = 'visuals/blocks/b0016f0005.svg';
-svgTiles[16][6] = new Image();
-svgTiles[16][6].src = 'visuals/blocks/b0016f0006.svg';
-svgTiles[16][7] = new Image();
-svgTiles[16][7].src = 'visuals/blocks/b0016f0007.svg';
-svgTiles[16][8] = new Image();
-svgTiles[16][8].src = 'visuals/blocks/b0016f0008.svg';
-svgTiles[16][9] = new Image();
-svgTiles[16][9].src = 'visuals/blocks/b0016f0009.svg';
-svgTiles[16][10] = new Image();
-svgTiles[16][10].src = 'visuals/blocks/b0016f0010.svg';
-svgTiles[16][11] = new Image();
-svgTiles[16][11].src = 'visuals/blocks/b0016f0011.svg';
-svgTiles[17] = new Image();
-svgTiles[17].src = 'visuals/blocks/b0017.svg';
-svgTiles[18] = new Image();
-svgTiles[18].src = 'visuals/blocks/b0018.svg';
-svgTiles[19] = new Image();
-svgTiles[19].src = 'visuals/blocks/b0019.svg';
-
-svgTiles[20] = new Image();
-svgTiles[20].src = 'visuals/blocks/b0020.svg';
-svgTiles[21] = new Image();
-svgTiles[21].src = 'visuals/blocks/b0021.svg';
-svgTiles[22] = new Image();
-svgTiles[22].src = 'visuals/blocks/b0022.svg';
-svgTiles[23] = new Image();
-svgTiles[23].src = 'visuals/blocks/b0023.svg';
-svgTiles[24] = new Image();
-svgTiles[24].src = 'visuals/blocks/b0024.svg';
-svgTiles[25] = new Image();
-svgTiles[25].src = 'visuals/blocks/b0025.svg';
-svgTiles[26] = new Image();
-svgTiles[26].src = 'visuals/blocks/b0026.svg';
-svgTiles[27] = new Image();
-svgTiles[27].src = 'visuals/blocks/b0027.svg';
-svgTiles[28] = new Image();
-svgTiles[28].src = 'visuals/blocks/b0028.svg';
-svgTiles[29] = new Image();
-svgTiles[29].src = 'visuals/blocks/b0029.svg';
-
-svgTiles[30] = new Image();
-svgTiles[30].src = 'visuals/blocks/b0030.svg';
-svgTiles[31] = new Image();
-svgTiles[31].src = 'visuals/blocks/b0031.svg';
-svgTiles[32] = new Image();
-svgTiles[32].src = 'visuals/blocks/b0032.svg';
-svgTiles[33] = new Image();
-svgTiles[33].src = 'visuals/blocks/b0033.svg';
-svgTiles[34] = new Image();
-svgTiles[34].src = 'visuals/blocks/b0034.svg';
-svgTiles[35] = new Image();
-svgTiles[35].src = 'visuals/blocks/b0035.svg';
-svgTiles[36] = new Image();
-svgTiles[36].src = 'visuals/blocks/b0036.svg';
-svgTiles[37] = new Image();
-svgTiles[37].src = 'visuals/blocks/b0037.svg';
-svgTiles[38] = new Image();
-svgTiles[38].src = 'visuals/blocks/b0038.svg';
-svgTiles[39] = new Image();
-svgTiles[39].src = 'visuals/blocks/b0039.svg';
-
-
-svgTiles[40] = new Array(5);
-svgTiles[40][0] = new Image();
-svgTiles[40][0].src = 'visuals/blocks/b0040f0000.svg';
-svgTiles[40][1] = new Image();
-svgTiles[40][1].src = 'visuals/blocks/b0040f0001.svg';
-svgTiles[40][2] = new Image();
-svgTiles[40][2].src = 'visuals/blocks/b0040f0002.svg';
-svgTiles[40][3] = new Image();
-svgTiles[40][3].src = 'visuals/blocks/b0040f0003.svg';
-svgTiles[40][4] = new Image();
-svgTiles[40][4].src = 'visuals/blocks/b0040f0004.svg';
-svgTiles[41] = new Array(5);
-svgTiles[41][0] = new Image();
-svgTiles[41][0].src = 'visuals/blocks/b0041f0000.svg';
-svgTiles[41][1] = new Image();
-svgTiles[41][1].src = 'visuals/blocks/b0041f0001.svg';
-svgTiles[41][2] = new Image();
-svgTiles[41][2].src = 'visuals/blocks/b0041f0002.svg';
-svgTiles[41][3] = new Image();
-svgTiles[41][3].src = 'visuals/blocks/b0041f0003.svg';
-svgTiles[41][4] = new Image();
-svgTiles[41][4].src = 'visuals/blocks/b0041f0004.svg';
-svgTiles[42] = new Image();
-svgTiles[42].src = 'visuals/blocks/b0042.svg';
-svgTiles[43] = new Image();
-svgTiles[43].src = 'visuals/blocks/b0043.svg';
-svgTiles[44] = new Image();
-svgTiles[44].src = 'visuals/blocks/b0044.svg';
-svgTiles[45] = new Image();
-svgTiles[45].src = 'visuals/blocks/b0045.svg';
-svgTiles[46] = new Image();
-svgTiles[46].src = 'visuals/blocks/b0046.svg';
-svgTiles[47] = new Image();
-svgTiles[47].src = 'visuals/blocks/b0047.svg';
-svgTiles[48] = new Image();
-svgTiles[48].src = 'visuals/blocks/b0048.svg';
-svgTiles[49] = new Array(3);
-svgTiles[49][0] = new Image();
-svgTiles[49][0].src = 'visuals/blocks/b0049f0000.svg';
-svgTiles[49][1] = new Image();
-svgTiles[49][1].src = 'visuals/blocks/b0049f0001.svg';
-svgTiles[49][2] = new Image();
-svgTiles[49][2].src = 'visuals/blocks/b0049f0002.svg';
-
-svgTiles[50] = new Image();
-svgTiles[50].src = 'visuals/blocks/b0050.svg';
-svgTiles[51] = new Image();
-svgTiles[51].src = 'visuals/blocks/b0051.svg';
-svgTiles[52] = new Image();
-svgTiles[52].src = 'visuals/blocks/b0052.svg';
-svgTiles[53] = new Image();
-svgTiles[53].src = 'visuals/blocks/b0053.svg';
-svgTiles[54] = new Image();
-svgTiles[54].src = 'visuals/blocks/b0054.svg';
-svgTiles[55] = new Image();
-svgTiles[55].src = 'visuals/blocks/b0055.svg';
-svgTiles[56] = new Image();
-svgTiles[56].src = 'visuals/blocks/b0056.svg';
-svgTiles[57] = new Image();
-svgTiles[57].src = 'visuals/blocks/b0057.svg';
-svgTiles[58] = new Image();
-svgTiles[58].src = 'visuals/blocks/b0058.svg';
-
-svgTiles[60] = new Image();
-svgTiles[60].src = 'visuals/blocks/b0060.svg';
-svgTiles[61] = new Image();
-svgTiles[61].src = 'visuals/blocks/b0061.svg';
-svgTiles[62] = new Image();
-svgTiles[62].src = 'visuals/blocks/b0062.svg';
-svgTiles[63] = new Image();
-svgTiles[63].src = 'visuals/blocks/b0063.svg';
-svgTiles[64] = new Image();
-svgTiles[64].src = 'visuals/blocks/b0064.svg';
-svgTiles[65] = new Image();
-svgTiles[65].src = 'visuals/blocks/b0065.svg';
-svgTiles[66] = new Array(2);
-svgTiles[66][0] = new Image();
-svgTiles[66][0].src = 'visuals/blocks/b0066f0000.svg';
-svgTiles[66][1] = new Image();
-svgTiles[66][1].src = 'visuals/blocks/b0066f0001.svg';
-svgTiles[67] = new Image();
-svgTiles[67].src = 'visuals/blocks/b0067.svg';
-svgTiles[68] = new Image();
-svgTiles[68].src = 'visuals/blocks/b0068.svg';
-svgTiles[69] = new Image();
-svgTiles[69].src = 'visuals/blocks/b0069.svg';
-
-svgTiles[70] = new Image();
-svgTiles[70].src = 'visuals/blocks/b0070.svg';
-svgTiles[71] = new Array(5);
-svgTiles[71][0] = new Image();
-svgTiles[71][0].src = 'visuals/blocks/b0071f0000.svg';
-svgTiles[71][1] = new Image();
-svgTiles[71][1].src = 'visuals/blocks/b0071f0001.svg';
-svgTiles[71][2] = new Image();
-svgTiles[71][2].src = 'visuals/blocks/b0071f0002.svg';
-svgTiles[71][3] = new Image();
-svgTiles[71][3].src = 'visuals/blocks/b0071f0003.svg';
-svgTiles[71][4] = new Image();
-svgTiles[71][4].src = 'visuals/blocks/b0071f0004.svg';
-svgTiles[72] = new Image();
-svgTiles[72].src = 'visuals/blocks/b0072.svg';
-svgTiles[73] = new Image();
-svgTiles[73].src = 'visuals/blocks/b0073.svg';
-svgTiles[74] = new Array(30);
-svgTiles[74][0] = new Image();
-svgTiles[74][0].src = 'visuals/blocks/b0074f0000.svg';
-svgTiles[74][1] = new Image();
-svgTiles[74][1].src = 'visuals/blocks/b0074f0001.svg';
-svgTiles[74][2] = new Image();
-svgTiles[74][2].src = 'visuals/blocks/b0074f0002.svg';
-svgTiles[74][3] = new Image();
-svgTiles[74][3].src = 'visuals/blocks/b0074f0003.svg';
-svgTiles[74][4] = new Image();
-svgTiles[74][4].src = 'visuals/blocks/b0074f0004.svg';
-svgTiles[74][5] = new Image();
-svgTiles[74][5].src = 'visuals/blocks/b0074f0005.svg';
-svgTiles[74][6] = new Image();
-svgTiles[74][6].src = 'visuals/blocks/b0074f0006.svg';
-svgTiles[74][7] = new Image();
-svgTiles[74][7].src = 'visuals/blocks/b0074f0007.svg';
-svgTiles[74][8] = new Image();
-svgTiles[74][8].src = 'visuals/blocks/b0074f0008.svg';
-svgTiles[74][9] = new Image();
-svgTiles[74][9].src = 'visuals/blocks/b0074f0009.svg';
-svgTiles[74][10] = new Image();
-svgTiles[74][10].src = 'visuals/blocks/b0074f0010.svg';
-svgTiles[74][11] = new Image();
-svgTiles[74][11].src = 'visuals/blocks/b0074f0011.svg';
-svgTiles[74][12] = new Image();
-svgTiles[74][12].src = 'visuals/blocks/b0074f0012.svg';
-svgTiles[74][13] = new Image();
-svgTiles[74][13].src = 'visuals/blocks/b0074f0013.svg';
-svgTiles[74][14] = new Image();
-svgTiles[74][14].src = 'visuals/blocks/b0074f0014.svg';
-svgTiles[74][15] = new Image();
-svgTiles[74][15].src = 'visuals/blocks/b0074f0015.svg';
-svgTiles[74][16] = new Image();
-svgTiles[74][16].src = 'visuals/blocks/b0074f0016.svg';
-svgTiles[74][17] = new Image();
-svgTiles[74][17].src = 'visuals/blocks/b0074f0017.svg';
-svgTiles[74][18] = new Image();
-svgTiles[74][18].src = 'visuals/blocks/b0074f0018.svg';
-svgTiles[74][19] = new Image();
-svgTiles[74][19].src = 'visuals/blocks/b0074f0019.svg';
-svgTiles[74][20] = new Image();
-svgTiles[74][20].src = 'visuals/blocks/b0074f0020.svg';
-svgTiles[74][21] = new Image();
-svgTiles[74][21].src = 'visuals/blocks/b0074f0021.svg';
-svgTiles[74][22] = new Image();
-svgTiles[74][22].src = 'visuals/blocks/b0074f0022.svg';
-svgTiles[74][23] = new Image();
-svgTiles[74][23].src = 'visuals/blocks/b0074f0023.svg';
-svgTiles[74][24] = new Image();
-svgTiles[74][24].src = 'visuals/blocks/b0074f0024.svg';
-svgTiles[74][25] = new Image();
-svgTiles[74][25].src = 'visuals/blocks/b0074f0025.svg';
-svgTiles[74][26] = new Image();
-svgTiles[74][26].src = 'visuals/blocks/b0074f0026.svg';
-svgTiles[74][27] = new Image();
-svgTiles[74][27].src = 'visuals/blocks/b0074f0027.svg';
-svgTiles[74][28] = new Image();
-svgTiles[74][28].src = 'visuals/blocks/b0074f0028.svg';
-svgTiles[74][29] = new Image();
-svgTiles[74][29].src = 'visuals/blocks/b0074f0029.svg';
-svgTiles[75] = new Array(20);
-svgTiles[75][0] = new Image();
-svgTiles[75][0].src = 'visuals/blocks/b0075f0000.svg';
-svgTiles[75][1] = new Image();
-svgTiles[75][1].src = 'visuals/blocks/b0075f0001.svg';
-svgTiles[75][2] = new Image();
-svgTiles[75][2].src = 'visuals/blocks/b0075f0002.svg';
-svgTiles[75][3] = new Image();
-svgTiles[75][3].src = 'visuals/blocks/b0075f0003.svg';
-svgTiles[75][4] = new Image();
-svgTiles[75][4].src = 'visuals/blocks/b0075f0004.svg';
-svgTiles[75][5] = new Image();
-svgTiles[75][5].src = 'visuals/blocks/b0075f0005.svg';
-svgTiles[75][6] = new Image();
-svgTiles[75][6].src = 'visuals/blocks/b0075f0006.svg';
-svgTiles[75][7] = new Image();
-svgTiles[75][7].src = 'visuals/blocks/b0075f0007.svg';
-svgTiles[75][8] = new Image();
-svgTiles[75][8].src = 'visuals/blocks/b0075f0008.svg';
-svgTiles[75][9] = new Image();
-svgTiles[75][9].src = 'visuals/blocks/b0075f0009.svg';
-svgTiles[75][10] = new Image();
-svgTiles[75][10].src = 'visuals/blocks/b0075f0010.svg';
-svgTiles[75][11] = new Image();
-svgTiles[75][11].src = 'visuals/blocks/b0075f0011.svg';
-svgTiles[75][12] = new Image();
-svgTiles[75][12].src = 'visuals/blocks/b0075f0012.svg';
-svgTiles[75][13] = new Image();
-svgTiles[75][13].src = 'visuals/blocks/b0075f0013.svg';
-svgTiles[75][14] = new Image();
-svgTiles[75][14].src = 'visuals/blocks/b0075f0014.svg';
-svgTiles[75][15] = new Image();
-svgTiles[75][15].src = 'visuals/blocks/b0075f0015.svg';
-svgTiles[75][16] = new Image();
-svgTiles[75][16].src = 'visuals/blocks/b0075f0016.svg';
-svgTiles[75][17] = new Image();
-svgTiles[75][17].src = 'visuals/blocks/b0075f0017.svg';
-svgTiles[75][18] = new Image();
-svgTiles[75][18].src = 'visuals/blocks/b0075f0018.svg';
-svgTiles[75][19] = new Image();
-svgTiles[75][19].src = 'visuals/blocks/b0075f0019.svg';
-svgTiles[76] = new Array(20);
-svgTiles[76][0] = new Image();
-svgTiles[76][0].src = 'visuals/blocks/b0076f0000.svg';
-svgTiles[76][1] = new Image();
-svgTiles[76][1].src = 'visuals/blocks/b0076f0001.svg';
-svgTiles[76][2] = new Image();
-svgTiles[76][2].src = 'visuals/blocks/b0076f0002.svg';
-svgTiles[76][3] = new Image();
-svgTiles[76][3].src = 'visuals/blocks/b0076f0003.svg';
-svgTiles[76][4] = new Image();
-svgTiles[76][4].src = 'visuals/blocks/b0076f0004.svg';
-svgTiles[76][5] = new Image();
-svgTiles[76][5].src = 'visuals/blocks/b0076f0005.svg';
-svgTiles[76][6] = new Image();
-svgTiles[76][6].src = 'visuals/blocks/b0076f0006.svg';
-svgTiles[76][7] = new Image();
-svgTiles[76][7].src = 'visuals/blocks/b0076f0007.svg';
-svgTiles[76][8] = new Image();
-svgTiles[76][8].src = 'visuals/blocks/b0076f0008.svg';
-svgTiles[76][9] = new Image();
-svgTiles[76][9].src = 'visuals/blocks/b0076f0009.svg';
-svgTiles[76][10] = new Image();
-svgTiles[76][10].src = 'visuals/blocks/b0076f0010.svg';
-svgTiles[76][11] = new Image();
-svgTiles[76][11].src = 'visuals/blocks/b0076f0011.svg';
-svgTiles[76][12] = new Image();
-svgTiles[76][12].src = 'visuals/blocks/b0076f0012.svg';
-svgTiles[76][13] = new Image();
-svgTiles[76][13].src = 'visuals/blocks/b0076f0013.svg';
-svgTiles[76][14] = new Image();
-svgTiles[76][14].src = 'visuals/blocks/b0076f0014.svg';
-svgTiles[76][15] = new Image();
-svgTiles[76][15].src = 'visuals/blocks/b0076f0015.svg';
-svgTiles[76][16] = new Image();
-svgTiles[76][16].src = 'visuals/blocks/b0076f0016.svg';
-svgTiles[76][17] = new Image();
-svgTiles[76][17].src = 'visuals/blocks/b0076f0017.svg';
-svgTiles[76][18] = new Image();
-svgTiles[76][18].src = 'visuals/blocks/b0076f0018.svg';
-svgTiles[76][19] = new Image();
-svgTiles[76][19].src = 'visuals/blocks/b0076f0019.svg';
-svgTiles[77] = new Image();
-svgTiles[77].src = 'visuals/blocks/b0077.svg';
-svgTiles[78] = new Image();
-svgTiles[78].src = 'visuals/blocks/b0078.svg';
-svgTiles[79] = new Image();
-svgTiles[79].src = 'visuals/blocks/b0079.svg';
-
-
-svgTiles[81] = new Image();
-svgTiles[81].src = 'visuals/blocks/b0081.svg';
-svgTiles[82] = new Image();
-svgTiles[82].src = 'visuals/blocks/b0082.svg';
-svgTiles[83] = new Array(12);
-svgTiles[83][0] = new Image();
-svgTiles[83][0].src = 'visuals/blocks/b0083f0000.svg';
-svgTiles[83][1] = new Image();
-svgTiles[83][1].src = 'visuals/blocks/b0083f0001.svg';
-svgTiles[83][2] = new Image();
-svgTiles[83][2].src = 'visuals/blocks/b0083f0002.svg';
-svgTiles[83][3] = new Image();
-svgTiles[83][3].src = 'visuals/blocks/b0083f0003.svg';
-svgTiles[83][4] = new Image();
-svgTiles[83][4].src = 'visuals/blocks/b0083f0004.svg';
-svgTiles[83][5] = new Image();
-svgTiles[83][5].src = 'visuals/blocks/b0083f0005.svg';
-svgTiles[83][6] = new Image();
-svgTiles[83][6].src = 'visuals/blocks/b0083f0006.svg';
-svgTiles[83][7] = new Image();
-svgTiles[83][7].src = 'visuals/blocks/b0083f0007.svg';
-svgTiles[83][8] = new Image();
-svgTiles[83][8].src = 'visuals/blocks/b0083f0008.svg';
-svgTiles[83][9] = new Image();
-svgTiles[83][9].src = 'visuals/blocks/b0083f0009.svg';
-svgTiles[83][10] = new Image();
-svgTiles[83][10].src = 'visuals/blocks/b0083f0010.svg';
-svgTiles[83][11] = new Image();
-svgTiles[83][11].src = 'visuals/blocks/b0083f0011.svg';
-svgTiles[85] = new Array(12);
-svgTiles[85][0] = new Image();
-svgTiles[85][0].src = 'visuals/blocks/b0085f0000.svg';
-svgTiles[85][1] = new Image();
-svgTiles[85][1].src = 'visuals/blocks/b0085f0001.svg';
-svgTiles[85][2] = new Image();
-svgTiles[85][2].src = 'visuals/blocks/b0085f0002.svg';
-svgTiles[85][3] = new Image();
-svgTiles[85][3].src = 'visuals/blocks/b0085f0003.svg';
-svgTiles[85][4] = new Image();
-svgTiles[85][4].src = 'visuals/blocks/b0085f0004.svg';
-svgTiles[85][5] = new Image();
-svgTiles[85][5].src = 'visuals/blocks/b0085f0005.svg';
-svgTiles[85][6] = new Image();
-svgTiles[85][6].src = 'visuals/blocks/b0085f0006.svg';
-svgTiles[85][7] = new Image();
-svgTiles[85][7].src = 'visuals/blocks/b0085f0007.svg';
-svgTiles[85][8] = new Image();
-svgTiles[85][8].src = 'visuals/blocks/b0085f0008.svg';
-svgTiles[85][9] = new Image();
-svgTiles[85][9].src = 'visuals/blocks/b0085f0009.svg';
-svgTiles[85][10] = new Image();
-svgTiles[85][10].src = 'visuals/blocks/b0085f0010.svg';
-svgTiles[85][11] = new Image();
-svgTiles[85][11].src = 'visuals/blocks/b0085f0011.svg';
-svgTiles[87] = new Image();
-svgTiles[87].src = 'visuals/blocks/b0087.svg';
-svgTiles[88] = new Image();
-svgTiles[88].src = 'visuals/blocks/b0088.svg';
-svgTiles[89] = new Image();
-svgTiles[89].src = 'visuals/blocks/b0089.svg';
-
-svgTiles[90] = new Image();
-svgTiles[90].src = 'visuals/blocks/b0090.svg';
-svgTiles[91] = new Image();
-svgTiles[91].src = 'visuals/blocks/b0091.svg';
-svgTiles[92] = new Image();
-svgTiles[92].src = 'visuals/blocks/b0092.svg';
-svgTiles[93] = new Image();
-svgTiles[93].src = 'visuals/blocks/b0093.svg';
-svgTiles[94] = new Image();
-svgTiles[94].src = 'visuals/blocks/b0094.svg';
-svgTiles[95] = new Image();
-svgTiles[95].src = 'visuals/blocks/b0095.svg';
-svgTiles[96] = new Image();
-svgTiles[96].src = 'visuals/blocks/b0096.svg';
-svgTiles[97] = new Image();
-svgTiles[97].src = 'visuals/blocks/b0097.svg';
-svgTiles[98] = new Image();
-svgTiles[98].src = 'visuals/blocks/b0098.svg';
-svgTiles[99] = new Image();
-svgTiles[99].src = 'visuals/blocks/b0099.svg';
-
-svgTiles[100] = new Image();
-svgTiles[100].src = 'visuals/blocks/b0100.svg';
-svgTiles[102] = new Image();
-svgTiles[102].src = 'visuals/blocks/b0102.svg';
-svgTiles[103] = new Image();
-svgTiles[103].src = 'visuals/blocks/b0103.svg';
-svgTiles[105] = new Image();
-svgTiles[105].src = 'visuals/blocks/b0105.svg';
-svgTiles[106] = new Image();
-svgTiles[106].src = 'visuals/blocks/b0106.svg';
-svgTiles[107] = new Image();
-svgTiles[107].src = 'visuals/blocks/b0107.svg';
-svgTiles[108] = new Image();
-svgTiles[108].src = 'visuals/blocks/b0108.svg';
-svgTiles[109] = new Image();
-svgTiles[109].src = 'visuals/blocks/b0109.svg';
-
-svgTiles[110] = new Image();
-svgTiles[110].src = 'visuals/blocks/b0110.svg';
-
-svgTiles[130] = new Image();
-svgTiles[130].src = 'visuals/blocks/b0130.svg';
-svgTiles[131] = new Image();
-svgTiles[131].src = 'visuals/blocks/b0131.svg';
-
 var svgLevers = new Array(6);
-svgLevers[0] = new Image();
-svgLevers[0].src = 'visuals/blocks/b00lever.svg';
-svgLevers[1] = new Image();
-svgLevers[1].src = 'visuals/blocks/b01lever.svg';
-svgLevers[2] = new Image();
-svgLevers[2].src = 'visuals/blocks/b02lever.svg';
-svgLevers[5] = new Image();
-svgLevers[5].src = 'visuals/blocks/b05lever.svg';
-
-
-var svgShadows = new Array(16);
-svgShadows[0] = new Image();
-svgShadows[0].src = 'visuals/shadows/s0000.svg';
-svgShadows[1] = new Image();
-svgShadows[1].src = 'visuals/shadows/s0001.svg';
-svgShadows[2] = new Image();
-svgShadows[2].src = 'visuals/shadows/s0002.svg';
-svgShadows[3] = new Image();
-svgShadows[3].src = 'visuals/shadows/s0003.svg';
-svgShadows[4] = new Image();
-svgShadows[4].src = 'visuals/shadows/s0004.svg';
-svgShadows[5] = new Image();
-svgShadows[5].src = 'visuals/shadows/s0005.svg';
-svgShadows[6] = new Image();
-svgShadows[6].src = 'visuals/shadows/s0006.svg';
-svgShadows[7] = new Image();
-svgShadows[7].src = 'visuals/shadows/s0007.svg';
-svgShadows[8] = new Image();
-svgShadows[8].src = 'visuals/shadows/s0008.svg';
-svgShadows[9] = new Image();
-svgShadows[9].src = 'visuals/shadows/s0009.svg';
-svgShadows[10] = new Image();
-svgShadows[10].src = 'visuals/shadows/s0010.svg';
-svgShadows[11] = new Image();
-svgShadows[11].src = 'visuals/shadows/s0011.svg';
-svgShadows[12] = new Image();
-svgShadows[12].src = 'visuals/shadows/s0012.svg';
-svgShadows[13] = new Image();
-svgShadows[13].src = 'visuals/shadows/s0013.svg';
-svgShadows[14] = new Image();
-svgShadows[14].src = 'visuals/shadows/s0014.svg';
-svgShadows[15] = new Image();
-svgShadows[15].src = 'visuals/shadows/s0015.svg';
-svgShadows[16] = new Image();
-svgShadows[16].src = 'visuals/shadows/s0016.svg';
-svgShadows[17] = new Image();
-svgShadows[17].src = 'visuals/shadows/s0017.svg';
-svgShadows[18] = new Image();
-svgShadows[18].src = 'visuals/shadows/s0018.svg';
-
-var svgTileBorders = new Array(16);
-svgTileBorders[0] = new Image();
-svgTileBorders[0].src = 'visuals/borders/tb0000.svg';
-svgTileBorders[1] = new Image();
-svgTileBorders[1].src = 'visuals/borders/tb0001.svg';
-svgTileBorders[2] = new Image();
-svgTileBorders[2].src = 'visuals/borders/tb0002.svg';
-svgTileBorders[3] = new Image();
-svgTileBorders[3].src = 'visuals/borders/tb0003.svg';
-svgTileBorders[4] = new Image();
-svgTileBorders[4].src = 'visuals/borders/tb0004.svg';
-svgTileBorders[5] = new Image();
-svgTileBorders[5].src = 'visuals/borders/tb0005.svg';
-svgTileBorders[6] = new Image();
-svgTileBorders[6].src = 'visuals/borders/tb0006.svg';
-svgTileBorders[7] = new Image();
-svgTileBorders[7].src = 'visuals/borders/tb0007.svg';
-svgTileBorders[8] = new Image();
-svgTileBorders[8].src = 'visuals/borders/tb0008.svg';
-svgTileBorders[9] = new Image();
-svgTileBorders[9].src = 'visuals/borders/tb0009.svg';
-svgTileBorders[10] = new Image();
-svgTileBorders[10].src = 'visuals/borders/tb0010.svg';
-svgTileBorders[11] = new Image();
-svgTileBorders[11].src = 'visuals/borders/tb0011.svg';
-svgTileBorders[12] = new Image();
-svgTileBorders[12].src = 'visuals/borders/tb0012.svg';
-svgTileBorders[13] = new Image();
-svgTileBorders[13].src = 'visuals/borders/tb0013.svg';
-svgTileBorders[14] = new Image();
-svgTileBorders[14].src = 'visuals/borders/tb0014.svg';
-svgTileBorders[15] = new Image();
-svgTileBorders[15].src = 'visuals/borders/tb0015.svg';
-svgTileBorders[16] = new Image();
-svgTileBorders[16].src = 'visuals/borders/tb0016.svg';
-svgTileBorders[17] = new Image();
-svgTileBorders[17].src = 'visuals/borders/tb0017.svg';
-svgTileBorders[18] = new Image();
-svgTileBorders[18].src = 'visuals/borders/tb0018.svg';
-
+var svgShadows = new Array(19);
+var svgTileBorders = new Array(19);
 
 var svgChars = new Array(charD.length);
-svgChars[1] = new Image();
-svgChars[1].src = 'visuals/entities/e0001.svg';
-svgChars[3] = new Image();
-svgChars[3].src = 'visuals/entities/e0003.svg';
-svgChars[5] = new Image();
-svgChars[5].src = 'visuals/entities/e0005.svg';
-svgChars[35] = new Image();
-svgChars[35].src = 'visuals/entities/e0035.svg';
-svgChars[36] = new Image();
-svgChars[36].src = 'visuals/entities/e0036.svg';
-svgChars[37] = new Image();
-svgChars[37].src = 'visuals/entities/e0037.svg';
-svgChars[38] = new Image();
-svgChars[38].src = 'visuals/entities/e0038.svg';
-svgChars[39] = new Image();
-svgChars[39].src = 'visuals/entities/e0039.svg';
-svgChars[40] = new Image();
-svgChars[40].src = 'visuals/entities/e0040.svg';
-svgChars[41] = new Image();
-svgChars[41].src = 'visuals/entities/e0041.svg';
-svgChars[42] = new Image();
-svgChars[42].src = 'visuals/entities/e0042.svg';
-svgChars[43] = new Image();
-svgChars[43].src = 'visuals/entities/e0043.svg';
-svgChars[44] = new Image();
-svgChars[44].src = 'visuals/entities/e0044.svg';
-svgChars[46] = new Image();
-svgChars[46].src = 'visuals/entities/e0046.svg';
-svgChars[47] = new Image();
-svgChars[47].src = 'visuals/entities/e0047.svg';
-svgChars[48] = new Image();
-svgChars[48].src = 'visuals/entities/e0048.svg';
-svgChars[52] = new Image();
-svgChars[52].src = 'visuals/entities/e0052.svg';
-svgChars[53] = new Image();
-svgChars[53].src = 'visuals/entities/e0053.svg';
-svgChars[54] = new Image();
-svgChars[54].src = 'visuals/entities/e0054.svg';
-
 var svgBodyParts = [];
-svgBodyParts.push(new Image());
-svgBodyParts[0].src = 'visuals/bodyparts/bp0000.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[1].src = 'visuals/bodyparts/bp0001.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[2].src = 'visuals/bodyparts/bp0002.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[3].src = 'visuals/bodyparts/bp0003.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[4].src = 'visuals/bodyparts/bp0004.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[5].src = 'visuals/bodyparts/bp0005.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[6].src = 'visuals/bodyparts/bp0006.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[7].src = 'visuals/bodyparts/bp0007.svg';
 
-svgBodyParts.push(new Image());
-svgBodyParts[8].src = 'visuals/bodyparts/wc0000.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[9].src = 'visuals/bodyparts/wc0001.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[10].src = 'visuals/bodyparts/wc0002.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[11].src = 'visuals/bodyparts/wc0003.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[12].src = 'visuals/bodyparts/wc0004.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[13].src = 'visuals/bodyparts/wc0005.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[14].src = 'visuals/bodyparts/wc0006.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[15].src = 'visuals/bodyparts/wc0007.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[16].src = 'visuals/bodyparts/wc0008.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[17].src = 'visuals/bodyparts/wc0009.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[18].src = 'visuals/bodyparts/wc0010.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[19].src = 'visuals/bodyparts/wc0011.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[20].src = 'visuals/bodyparts/wc0012.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[21].src = 'visuals/bodyparts/wc0013.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[22].src = 'visuals/bodyparts/wc0014.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[23].src = 'visuals/bodyparts/wc0015.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[24].src = 'visuals/bodyparts/wc0016.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[25].src = 'visuals/bodyparts/wc0017.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[26].src = 'visuals/bodyparts/wc0018.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[27].src = 'visuals/bodyparts/wc0019.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[28].src = 'visuals/bodyparts/wc0020.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[29].src = 'visuals/bodyparts/wc0021.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[30].src = 'visuals/bodyparts/wc0022.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[31].src = 'visuals/bodyparts/wc0023.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[32].src = 'visuals/bodyparts/wc0024.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[33].src = 'visuals/bodyparts/wc0025.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[34].src = 'visuals/bodyparts/wc0026.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[35].src = 'visuals/bodyparts/wc0027.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[36].src = 'visuals/bodyparts/bp0036.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[37].src = 'visuals/bodyparts/bp0037.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[38].src = 'visuals/bodyparts/bp0038.svg';
-svgBodyParts.push(new Image());
-svgBodyParts[39].src = 'visuals/bodyparts/bp0039.svg';
+// var svgHPRCBubble = new Array(4);
+var svgHPRCBubble = new Array(2);
+var svgCSBubble = new Image();
+svgCSBubble.src = 'visuals/ui/csbubble/dia.svg';
+var svgHPRCCrank = new Image();
+svgHPRCCrank.src = 'visuals/entities/e0035crank.svg';
+
+for (var i = 0; i < imgBgs.length; i++) {
+	imgBgs[i] = new Image();
+	imgBgs[i].src = 'visuals/bg/bg' + i.toString(10).padStart(4, '0') + '.png';
+}
+for (var i = 0; i < blockProperties.length; i++) {
+	var id = i.toString(10).padStart(4, '0');
+	if (blockProperties[i][16] < 1) continue;
+	else if (blockProperties[i][16] == 1) {
+		svgTiles[i] = new Image();
+		svgTiles[i].src = 'visuals/blocks/b' + id + '.svg';
+	} else {
+		svgTiles[i] = new Array(blockProperties[i][16]);
+		for (var j = 0; j < svgTiles[i].length; j++) {
+			svgTiles[i][j] = new Image();
+			svgTiles[i][j].src = 'visuals/blocks/b' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg';;
+		}
+	}
+}
+for (var i = 0; i < svgLevers.length; i++) {
+	var filename = 'visuals/blocks/b' + i.toString(10).padStart(2, '0') + 'lever.svg';
+	if (doesFileExist(filename)) {
+		svgLevers[i] = new Image();
+		svgLevers[i].src = filename;
+	}
+}
+for (var i = 0; i < svgShadows.length; i++) {
+	svgShadows[i] = new Image();
+	svgShadows[i].src = 'visuals/shadows/s' + i.toString(10).padStart(4, '0') + '.svg';
+}
+for (var i = 0; i < svgTileBorders.length; i++) {
+	svgTileBorders[i] = new Image();
+	svgTileBorders[i].src = 'visuals/borders/tb' + i.toString(10).padStart(4, '0') + '.svg';
+}
+for (var i = 0; i < svgChars.length; i++) {
+	var filename = 'visuals/entities/e' + i.toString(10).padStart(4, '0') + '.svg';
+	if (doesFileExist(filename)) {
+		svgChars[i] = new Image();
+		svgChars[i].src = filename;
+	}
+}
+for (var i = 0; i < svgHPRCBubble.length; i++) {
+	svgHPRCBubble[i] = new Image();
+	svgHPRCBubble[i].src = 'visuals/ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg';
+}
+for (var i = 0; doesFileExist('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg'); i++) {
+	svgBodyParts[i] = new Image();
+	svgBodyParts[i].src = 'visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg';
+}
 
 var wcFrames = [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
 var legFrames = [6,7,wcFrames];
-
-svgHPRCCrank = new Image();
-svgHPRCCrank.src = 'visuals/entities/e0035crank.svg';
-
-var svgHPRCBubble = new Array(4);
-svgHPRCBubble[0] = new Image();
-svgHPRCBubble[0].src = 'visuals/ui/hprcbubble/hprcbubble0001.svg';
-svgHPRCBubble[1] = new Image();
-svgHPRCBubble[1].src = 'visuals/ui/hprcbubble/hprcbubble0002.svg';
-
-var svgCSBubble = new Image();
-svgCSBubble.src = 'visuals/ui/csbubble/dia.svg';
 
 //TODO: optimize this at some point
 var svgCharsVB = new Array(charD.length);
