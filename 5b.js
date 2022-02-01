@@ -2201,22 +2201,22 @@ function setBody(i)
 		if(_loc3_[0] > _loc3_[1] && _loc3_[1] >= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = (_loc3_[0] * _loc8_)/90;
-			char[i].leg2skew = (_loc3_[0] * _loc8_)/90;
+			char[i].leg1skew = _loc3_[0]/90;
+			char[i].leg2skew = _loc3_[0]/90;
 			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
 			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
 		} else if(_loc3_[0] > _loc3_[1] && _loc3_[0] <= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = (_loc3_[1] * _loc8_)/90;
-			char[i].leg2skew = (_loc3_[1] * _loc8_)/90;
+			char[i].leg1skew = _loc3_[1]/90;
+			char[i].leg2skew = _loc3_[1]/90;
 			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
 			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
 		} else if(_loc3_[0] < 0 && _loc3_[1] > 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = (_loc3_[0] * _loc8_)/90;
-			char[i].leg2skew = (_loc3_[1] * _loc8_)/90;
+			char[i].leg1skew = _loc3_[0]/90;
+			char[i].leg2skew = _loc3_[1]/90;
 			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
 			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
 		} else if(_loc3_[1] > 0 && _loc3_[0] == 0) {
@@ -2743,7 +2743,7 @@ function yOff(i)
 function solidAt(x, y)
 {
 	var _loc1_ = getBlockTypeAt(x,y);
-	return blockProperties[_loc1_][0] && blockProperties[_loc1_][1] && blockProperties[_loc1_][2] && blockProperties[_loc1_][3];
+	return (typeof _loc1_ === 'number')?(blockProperties[_loc1_][0] && blockProperties[_loc1_][1] && blockProperties[_loc1_][2] && blockProperties[_loc1_][3]):true;
 }
 function solidCeiling(x, y)
 {
@@ -2752,7 +2752,7 @@ function solidCeiling(x, y)
 function safeToStandAt(x, y)
 {
 	var _loc1_ = getBlockTypeAt(x,y);
-	return blockProperties[_loc1_][1] && !blockProperties[_loc1_][5] && _loc1_ != 14 && _loc1_ != 16 && _loc1_ != 83 && _loc1_ != 85;
+	return (typeof _loc1_ === 'number')?(blockProperties[_loc1_][1] && !blockProperties[_loc1_][5] && _loc1_ != 14 && _loc1_ != 16 && _loc1_ != 83 && _loc1_ != 85):true;
 }
 function getBlockTypeAt(x, y) {
 	return thisLevel[Math.floor(y / 30)][Math.floor(x / 30)];

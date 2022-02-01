@@ -6,21 +6,13 @@ layer background blocks behind other blocks (and implement block depths in gener
 you can still move when recovering
 fix the fonts.
 the music loops badly.
-the leg skewing is kinda broken.
-dialog does not play after getting a win token
 
 known bugs:
 when jumping while running against a wall you can jump through deadly blocks without dying
 stopCarrierY breaks sometimes
-sometimes we get an error when we hit the edge (5b.js:3318:32)
 you can change your direction while dying
 after switching characters, it can sometimes mess up the layering of some of carried objects.
 Uncaught TypeError: Cannot set properties of undefined (setting 'vy')
     at stopCarrierY (5b.js:3567:30
-   5b.js:3319 Uncaught TypeError: Cannot read properties of undefined (reading '1')
-    at safeToStandAt (5b.js:3319:32)
-    at setBody (5b.js:2749:19)
-    at draw (5b.js:4659:6)
-    5b.js:3319 Uncaught TypeError: Cannot read properties of undefined (reading '1')
-    at safeToStandAt (5b.js:3319:32)
+   5b.js:3319
 the game crashes when a submerged object hits the bottom of the level
