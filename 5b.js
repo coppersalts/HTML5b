@@ -3000,11 +3000,13 @@ function stopCarrierY(i, y, canCornerHang)
 				putDown(char[i].carriedBy);
 			}
 		}
-		char[char[i].carriedBy].vy = 0;
-		char[char[i].carriedBy].y = y + yOff(i);
-		if(newTileDown(char[i].carriedBy) && verticalProp(char[i].carriedBy,1,1,char[char[i].carriedBy].x,char[char[i].carriedBy].y))
-		{
-			char[char[i].carriedBy].y = Math.floor(char[char[i].carriedBy].y / 30) * 30;
+		if (char[i].carriedBy != -1) {
+			char[char[i].carriedBy].vy = 0;
+			char[char[i].carriedBy].y = y + yOff(i);
+			if(newTileDown(char[i].carriedBy) && verticalProp(char[i].carriedBy,1,1,char[char[i].carriedBy].x,char[char[i].carriedBy].y))
+			{
+				char[char[i].carriedBy].y = Math.floor(char[char[i].carriedBy].y / 30) * 30;
+			}
 		}
 	}
 }
@@ -3626,7 +3628,6 @@ function draw() {
 				csPress = false;
 				if (cutScene == 2) cutScene = 3;
 			}
-			drawCutScene();
 		} else {
 			if (control < 10000) {
 				// if (levelChar["char" + control].burst._currentframe == 2) {
@@ -4311,6 +4312,9 @@ function draw() {
 		shakeX = 0;
 		shakeY = 0;
 	} else if (menuScreen == 3) {
+		if (cutScene == 1 || cutScene == 2) {
+			drawCutScene();
+		}
 		drawLevelButtons();
 	}
 	if (white_alpha > 0) {
