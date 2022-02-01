@@ -416,13 +416,15 @@ var charModels = [
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		firemat: {a:-0.45697021484375,b:0.0060882568359375,c:0.0076904296875,d:0.5772552490234375,tx:-2.3,ty:-51.8}
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
+		firemat: {a:-0.4046630859375,b:0.0060882568359375,c:0.006805419921875,d:0.5772552490234375,tx:1.05,ty:-51.05},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.2847747802734375,b:-0.0040130615234375,c:0.0086822509765625,d:0.285064697265625,tx:0.35,ty:-26.65}},
@@ -519,6 +521,7 @@ var charModels = [
 		torsoY: -4.6,
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
+		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:2.05,ty:0},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.319091796875,b:-0.0054779052734375,c:0.009796142578125,d:0.3189697265625,tx:0.35,ty:-26.65}},
@@ -571,6 +574,7 @@ var charModels = [
 		torsoY: -8.95,
 		legx: [-2.45, 5.1],
 		legy: [-11.25,-11.25],
+		firemat: {a:-0.1956634521484375,b:0.0030975341796875,c:0.0032806396484375,d:0.2937164306640625,tx:1.05,ty:-94},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.05,ty:-41.75}},
@@ -659,6 +663,7 @@ var charModels = [
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
+		firemat: {a:-0.16912841796875,b:0.0142822265625,c:0.031341552734375,d:0.6383819580078125,tx:-3.65,ty:-58.2},
 		frames: []
 	},
 	{
@@ -666,6 +671,7 @@ var charModels = [
 		torsoY: -3,
 		legx: [-5.1, 10.85],
 		legy: [-11.25,-11.25],
+		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:1.8,ty:-4.75},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:0.4,ty:-39.1}}
@@ -716,6 +722,7 @@ var charModels = [
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
+		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:-0.2,ty:0.05},
 		frames: []
 	},
 	{
@@ -723,6 +730,7 @@ var charModels = [
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
+		firemat: {a:1.8939666748046875,b:0,c:0,d:1.1790008544921875,tx:2.05,ty:0},
 		frames: []
 	},
 	{
@@ -730,50 +738,153 @@ var charModels = [
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
+		firemat: {a:0.757598876953125,b:0,c:0,d:1,tx:2.3,ty:-2.5},
 		frames: []
 	},
 	{
-		torsoX: 1.15,
-		torsoY: -8.95,
-		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25],
-		frames: []
+		firemat: {},
 	},
 	{
-		torsoX: 1.15,
-		torsoY: -8.95,
-		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25],
-		frames: []
+		firemat: {},
 	},
 	{
-		torsoX: 1.15,
-		torsoY: -8.95,
-		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25],
-		frames: []
+		firemat: {},
 	},
 	{
-		torsoX: 1.15,
-		torsoY: -8.95,
-		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25],
-		frames: []
+		firemat: {},
 	},
 	{
-		torsoX: 1.15,
-		torsoY: -8.95,
-		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25],
-		frames: []
+		firemat: {},
 	},
 	{
-		torsoX: 1.15,
-		torsoY: -8.95,
-		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25],
-		frames: []
-	}
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {},
+	},
+	{
+		firemat: {a:-0.34619140625,b:0.0040283203125,c:0.0058135986328125,d:0.3830718994140625,tx:-1.25,ty:-27.6},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
+	{
+		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+	},
 ];
 var names = ["Ruby","Book","Ice Cube","Match","Pencil","Bubble"];
 var selectedTab = 0;
@@ -920,29 +1031,10 @@ svgHPRCCrank.src = 'visuals/entities/e0035crank.svg';
 
 var svgCoin = new Image();
 svgCoin.src = 'visuals/wintoken.svg';
-var svgCoinGet = [];
-svgCoinGet[0] = new Image();
-svgCoinGet[0].src = 'visuals/wtgetf0000.svg';
-svgCoinGet[1] = new Image();
-svgCoinGet[1].src = 'visuals/wtgetf0001.svg';
-svgCoinGet[2] = new Image();
-svgCoinGet[2].src = 'visuals/wtgetf0002.svg';
-svgCoinGet[3] = new Image();
-svgCoinGet[3].src = 'visuals/wtgetf0003.svg';
-svgCoinGet[4] = new Image();
-svgCoinGet[4].src = 'visuals/wtgetf0004.svg';
-svgCoinGet[5] = new Image();
-svgCoinGet[5].src = 'visuals/wtgetf0005.svg';
-svgCoinGet[6] = new Image();
-svgCoinGet[6].src = 'visuals/wtgetf0006.svg';
-svgCoinGet[7] = new Image();
-svgCoinGet[7].src = 'visuals/wtgetf0007.svg';
-svgCoinGet[8] = new Image();
-svgCoinGet[8].src = 'visuals/wtgetf0008.svg';
-svgCoinGet[9] = new Image();
-svgCoinGet[9].src = 'visuals/wtgetf0009.svg';
-svgCoinGet[10] = new Image();
-svgCoinGet[10].src = 'visuals/wtgetf0010.svg';
+var svgCoinGet = new Array(11);
+var svgFire = new Array(18);
+var svgIceCubeMelt = new Image();
+svgIceCubeMelt.src = 'visuals/effects/icecubemelt.svg';
 
 for (var i = 0; i < imgBgs.length; i++) {
 	imgBgs[i] = new Image();
@@ -991,6 +1083,14 @@ for (var i = 0; i < svgHPRCBubble.length; i++) {
 for (var i = 0; doesFileExist('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg'); i++) {
 	svgBodyParts[i] = new Image();
 	svgBodyParts[i].src = 'visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg';
+}
+for (var i = 0; i < svgCoinGet.length; i++) {
+	svgCoinGet[i] = new Image();
+	svgCoinGet[i].src = 'visuals/wtgetf' + i.toString(10).padStart(4, '0') + '.svg';
+}
+for (var i = 0; i < svgFire.length; i++) {
+	svgFire[i] = new Image();
+	svgFire[i].src = 'visuals/effects/fire' + i.toString(10).padStart(4, '0') + '.svg';
 }
 
 var wcFrames = [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
@@ -2020,6 +2120,17 @@ function drawCharacters() {
 				ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-150);
 			}
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
+		}
+
+		if(char[_loc1_].temp >= 50) {
+			ctx.save();
+			var fireImg = svgFire[_frameCount%svgFire.length];
+			if (char[_loc1_].id == 2) fireImg = svgIceCubeMelt;
+			else ctx.globalAlpha = 0.57;
+			var firemat = charModels[char[_loc1_].id].firemat;
+			ctx.transform(firemat.a,firemat.b,firemat.c,firemat.d,firemat.tx+char[_loc1_].x,firemat.ty+char[_loc1_].y);
+			ctx.drawImage(fireImg, -fireImg.width/2, -fireImg.height/2);
+			ctx.restore();
 		}
 	}
 }
@@ -3250,10 +3361,11 @@ function startDeath(i)
 		// levelChar["char" + i].leg2.leg.gotoAndStop(50);
 		// levelChar["char" + i].charBody.gotoAndStop(8 + Math.ceil(char[i].dire / 2));
 		clearTint(i);
-		if(char[i].temp >= 50)
-		{
+		// if(char[i].temp >= 50)
+		// {
+			//svgFire
 			// levelChar["char" + i].fire.gotoAndStop(2);
-		}
+		// }
 	}
 }
 function blinkDeath(i)

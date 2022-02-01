@@ -11,5 +11,6 @@
 - getting the entity and blocks to layer correctly
 - the little flash of light when you switch characters
 - the metal tile borders
+- door lights
 
 - the level editor (I'll do this last)
