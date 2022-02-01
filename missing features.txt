@@ -1,0 +1,15 @@
+- parts of the HPRCBubble UI
+- parts of the csBubble UI
+- the trees, wall of text, and stopped one-way conveyer blocks
+- the alpha is wrong on the ambient shadows
+- parts of the character models
+- the rest of the character models
+- heater death fire
+- death flashing
+- animated entities
+- HPRC cranking arms
+- getting the entity and blocks to layer correctly
+- the little flash of light when you switch characters
+- the metal tile borders
+
+- the level editor (I'll do this last)
