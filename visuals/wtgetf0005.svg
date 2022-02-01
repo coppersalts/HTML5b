@@ -1,6 +1,10 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
 <defs>
+<filter id="Filter_1" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.36 0" result="result1"/>
+</filter>
+
 <g id="Symbol_233_0_Layer2_0_FILL">
 <path fill="#007700" stroke="none" d="
 M 26 3.95
@@ -178,19 +182,35 @@ L 13.25 17.05 12.1 14.05
 Q 11.4 11.75 11.4 10.8
 L 11.5 10.45 Z"/>
 </g>
+
+<path id="Layer1_0_1_STROKES" stroke="#FFFFFF" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M -13.35 13.3
+Q -13.35 2.1 -5.55 -5.85 2.4 -13.7 13.65 -13.7 24.9 -13.7 32.7 -5.85 40.65 2.1 40.65 13.3 40.65 24.55 32.7 32.4 24.9 40.3 13.65 40.3 2.4 40.3 -5.55 32.4 -13.35 24.55 -13.35 13.3 Z"/>
+
+<path id="Layer0_0_1_STROKES" stroke="#FFFFFF" stroke-width="2.85" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M -4.75 13.45
+Q -4.75 5.85 0.55 0.5 5.95 -4.8 13.5 -4.75 21.1 -4.8 26.4 0.5 31.75 5.85 31.75 13.45 31.75 21.05 26.4 26.35 21.1 31.75 13.5 31.75 5.95 31.75 0.55 26.35 -4.75 21.05 -4.75 13.45 Z"/>
 </defs>
 
-<g transform="matrix( 0.9990997314453125, 0, 0, 0.9990997314453125, 0,1.3) ">
+<g transform="matrix( 1.2983551025390625, 0, 0, 1.2983551025390625, -4.45,-4.2) ">
 <g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_233_0_Layer2_0_FILL"/>
+<use filter="url(#Filter_1)" xlink:href="#Symbol_233_0_Layer2_0_FILL"/>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_233_0_Layer1_0_FILL"/>
+<use filter="url(#Filter_1)" xlink:href="#Symbol_233_0_Layer1_0_FILL"/>
 </g>
 
 <g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_233_0_Layer0_0_FILL"/>
+<use filter="url(#Filter_1)" xlink:href="#Symbol_233_0_Layer0_0_FILL"/>
 </g>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Layer1_0_1_STROKES"/>
+</g>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use xlink:href="#Layer0_0_1_STROKES"/>
 </g>
 </svg>

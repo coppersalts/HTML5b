@@ -207,7 +207,7 @@ var blockProperties = [
 [false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
 [true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,14,false,[0,1,2,3,4,5,6,7,8,9,10,11,12,13]],
 [true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
 [true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 [true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,true],
 [false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
@@ -302,10 +302,10 @@ var blockProperties = [
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 // tile10
 [false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
 [false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
@@ -502,7 +502,8 @@ var charModels = [
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 0.4,
@@ -596,7 +597,8 @@ var charModels = [
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: -0.7,
@@ -652,55 +654,64 @@ var charModels = [
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	},
 	{
 		torsoX: 1.15,
 		torsoY: -8.95,
 		legx: [-5.55, 8.8],
-		legy: [-11.25,-11.25]
+		legy: [-11.25,-11.25],
+		frames: []
 	}
 ];
 var names = ["Ruby","Book","Ice Cube","Match","Pencil","Bubble"];
@@ -845,6 +856,9 @@ var svgCSBubble = new Image();
 svgCSBubble.src = 'visuals/ui/csbubble/dia.svg';
 var svgHPRCCrank = new Image();
 svgHPRCCrank.src = 'visuals/entities/e0035crank.svg';
+
+var svgCoin = new Image();
+svgCoin.src = 'visuals/wintoken.svg';
 
 for (var i = 0; i < imgBgs.length; i++) {
 	imgBgs[i] = new Image();
@@ -1596,9 +1610,16 @@ function addTileMovieClip(x, y) {
 	else if (_loc5_ == 6) {
 		ctx.fillStyle = '#505050';
 		ctx.fillRect((x-1)*30, (y-3)*30, 60, 120);
-	} else if (_loc5_ == 12 && !gotThisCoin) {
-		ctx.fillStyle = '#00ff00';
-		ctx.fillRect(x*30, y*30, 30, 30);
+	} else if (_loc5_ == 12) {
+		if (!gotThisCoin) {
+			ctx.save();
+			ctx.translate(x*30+15, y*30+15);
+			var wtrot = Math.sin((_frameCount*Math.PI)/20)*0.5235987756;
+			ctx.transform(Math.cos(wtrot),-Math.sin(wtrot),Math.sin(wtrot),Math.cos(wtrot),0,0);
+			ctx.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7)/100, 1), 0);
+			ctx.drawImage(svgCoin, -15, -15, 30, 30);
+			ctx.restore();
+		}
 	} else if (blockProperties[_loc5_][0] || blockProperties[_loc5_][1] || blockProperties[_loc5_][2] || blockProperties[_loc5_][3]) {
 		ctx.fillStyle = '#00ff99';
 		ctx.fillRect(x*30, y*30, 30, 30);
@@ -2685,8 +2706,7 @@ function somewhereSubmerged(i)
 		var _loc1_ = _loc6_;
 		while(_loc1_ <= _loc4_)
 		{
-			if(blockProperties[thisLevel[_loc1_][_loc5_]][14])
-			{
+			if (!outOfRange(_loc5_, _loc1_) && blockProperties[thisLevel[_loc1_][_loc5_]][14]) {
 				if(_loc1_ == _loc4_)
 				{
 					if(_loc3_ == 0)
@@ -3488,6 +3508,57 @@ function toggleSound() {
 		musicSound.play();
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4326,338 +4397,3 @@ function draw() {
 
 	_frameCount++;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// var canvas;
-// const cwidth = 960;
-// const cheight = 540;
-// const pixelRatio = 2;
-// var ctx;
-// const fontFamily = 'Helvetica'
-
-// var pmouseIsPressed = false;
-
-// var loadedLevels;
-// const lvlCount = 133;
-// var menu = 0;
-// var levelStatuses = new Array(lvlCount);
-// var levelButtons = new Array(lvlCount);
-// var flashEffect = 1;
-// var m1Scroll = 0;
-
-// var menu0img = new Image();
-
-// var buttonWatch5a = new button(670, 308, 264, 27.5, 5, '#fff', '#d4d4d4', '#b8b8b8', 'WATCH BFDIA 5a', 30);
-// var buttonNewGame = new button(670, 353, 264, 27.5, 5, '#fff', '#d4d4d4', '#b8b8b8', 'NEW GAME', 30);
-// var buttonContinueGame = new button(670, 398, 264, 27.5, 5, '#fff', '#d4d4d4', '#b8b8b8', 'CONTINUE GAME', 30);
-// var buttonLevelCreator = new button(670, 443, 264, 27.5, 5, '#fff', '#d4d4d4', '#b8b8b8', 'LEVEL CREATOR', 30);
-// var buttonExplore = new button(670, 488, 264, 27.5, 5, '#939393', '#868686', '#7e7e7e', 'EXPLORE', 30);
-
-// function preload() {
-// 	//loadedLevels = loadStrings("data/levels.txt");
-// }
-
-// function setup() {
-// 	ctx = canvas.getContext('2d');
-
-// 	menu0img.onload = function() {ctx.drawImage(menu0img, 0, 0);}
-// 	menu0img.src = 'imgs/menu0.png';
-
-// 	for (var i = 0; i < lvlCount; i++) {
-// 		levelStatuses[i] = 0;
-// 		levelButtons[i] = new levelButton(i);
-// 	}
-// 	levelStatuses[0] = 3;
-// 	levelStatuses[1] = 2;
-// 	levelStatuses[2] = 1;
-// 	console.log(loadedLevels);
-// }
-
-// function draw() {
-// 	requestAnimationFrame(draw);
-
-// 	if (menu == 0) {
-// 		// Background
-// 		ctx.fillStyle = '#666';
-// 		ctx.fillRect(0, 0, cwidth, cheight);
-
-// 		buttonWatch5a.show();
-// 		buttonWatch5a.update();
-// 		buttonNewGame.show();
-// 		buttonNewGame.update();
-// 		buttonContinueGame.show();
-// 		buttonContinueGame.update();
-// 		buttonLevelCreator.show();
-// 		buttonLevelCreator.update();
-// 		buttonExplore.show();
-// 		buttonExplore.update();
-
-// 		if (buttonContinueGame.relesed()) {
-// 			menu = 1;
-// 		}
-// 		if (buttonWatch5a.relesed()) {
-// 			window.open('https://www.youtube.com/watch?v=4q77g4xo9ic');
-// 		}
-// 		if (buttonLevelCreator.relesed()) {
-// 			window.open('https://zolo101.github.io/BFDIA5bLevelEditor/');
-// 		}
-
-// 		ctx.drawImage(menu0img, 0, 0, cwidth, cheight);
-
-// 		ctx.font = '32px '+fontFamily;
-// 		ctx.fillStyle = '#fff';
-// 		ctx.textAlign = 'right';
-// 		ctx.textBaseline = 'top';
-// 		ctx.fillText('By Cary Huang', cwidth-10, 10);
-// 		ctx.font = '16px '+fontFamily;
-// 		ctx.fillText('Music By Michael Huang', cwidth-10, 46);
-// 	} else if (menu == 1) {
-// 		ctx.fillStyle = '#777';
-// 		ctx.fillRect(0, 0, cwidth, cheight);
-
-// 		ctx.translate(0, m1Scroll);
-
-// 		for (var i=0; i<lvlCount; i++) {
-// 			levelButtons[i].show();
-// 			if (levelStatuses[i] != 0) {levelButtons[i].update();}
-// 		}
-// 	}
-
-// 	ctx.fillStyle = 'rgba(255,255,255,'+flashEffect+')';
-// 	ctx.fillRect(0, 0, cwidth, cheight);
-// 	if (flashEffect>0) flashEffect-=0.001;
-// 	pmouseIsPressed = mouseIsPressed
-// }
-
-// function mouseWheel (event) {
-// 	if (menu == 1) {
-// 		m1Scroll -= event.delta;
-// 		return false;
-// 	}
-// }
-
-// function button(x, y, w, h, cr, fillNormal, fillHover, fillPress, text, fontSize) {
-// 	this.fillNormal = fillNormal;
-// 	this.fillHover = fillHover;
-// 	this.fillPress = fillPress;
-
-// 	this.fill = this.fillNormal;
-// 	this.cr = cr;
-// 	this.x = x;
-// 	this.y = y;
-// 	this.w = w;
-// 	this.h = h;
-// 	this.text = text;
-
-// 	this.held = false;
-
-// 	this.show = function() {
-// 		ctx.beginPath();
-// 		ctx.fillStyle = this.fill;
-// 		ctx.arc(this.x, this.y, this.cr, Math.PI, Math.PI * 1.5, false);
-// 		ctx.arc(this.x + this.w, this.y, this.cr, Math.PI * 1.5, Math.PI * 2, false);
-// 		ctx.arc(this.x + this.w, this.y + this.h, this.cr, Math.PI * 2, Math.PI * 2.5, false);
-// 		ctx.arc(this.x, this.y+ this.h, this.cr, Math.PI * 2.5, Math.PI * 3, false);
-// 		ctx.lineTo(this.x - this.cr, this.y);
-// 		ctx.fill();
-
-// 		ctx.font = 'bold '+fontSize+'px '+fontFamily;
-// 		ctx.fillStyle = '#666';
-// 		ctx.textAlign = 'center';
-// 		ctx.textBaseline = 'middle';
-// 		ctx.fillText(this.text, this.x+this.w/2, this.y+this.h*1.1/2);
-// 	}
-
-// 	this.update = function() {
-// 		this.hover();
-// 		if (this.pressed()) {
-// 			this.held = true;
-// 		} else if (!mouseIsPressed) {
-// 			this.held = false;
-// 		}
-// 	}
-
-// 	this.hover = function() {
-// 		if (this.hovering(mouseX, mouseY)) {
-// 			this.fill = this.fillHover;
-// 			if (mouseIsPressed) {
-// 				this.fill = this.fillPress;
-// 			}
-// 		} else if (this.held && !this.hovering(mouseX, mouseY)) {
-// 			this.fill = this.fillHover;
-// 		} else {
-// 			this.fill = this.fillNormal;
-// 		}
-// 	}
-
-// 	this.hovering = function(x, y) {
-// 		return x>=this.x && x<=this.x+this.w && y>=this.y && y<=this.y+this.h;
-// 	}
-
-// 	this.pressed = function() {
-// 		return this.hovering(mouseX, mouseY) && mouseIsPressed;
-// 	}
-
-// 	this.ppressed = function() {
-// 		return this.hovering(pmouseX, pmouseY) && pmouseIsPressed;
-// 	}
-
-// 	this.relesed = function() {
-// 		return this.ppressed() && !this.pressed() && !this.held;
-// 	}
-// }
-
-// function levelButton (place) {
-// 	this.place = place;
-// 	this.text = zeroFill(place+1, 3);
-
-// 	this.fill = '#585858';
-// 	this.x = 110*(place%8) + 45;
-// 	this.y = 6.2*(Math.floor(place/8)*8);
-// 	this.w = 100;
-// 	this.h = 40;
-// 	this.held = false;
-
-// 	this.show = function() {
-// 		ctx.fillStyle = this.fill;
-// 		ctx.lineWidth = 2;
-// 		ctx.fillRect(this.x, this.y, this.w, this.h);
-// 		ctx.strokeRect(this.x, this.y, this.w, this.h);
-
-// 		ctx.font = 'bold 45px '+fontFamily;
-// 		ctx.fillStyle = '#000';
-// 		ctx.textAlign = 'center';
-// 		ctx.textBaseline = 'middle';
-// 		ctx.fillText(this.text, this.x + (this.w/2), this.y + (this.h/2));
-// 	}
-
-// 	this.update = function() {
-// 		this.hover();
-// 		if (this.pressed()) {
-// 			this.held = true;
-// 		} else if (!mouseIsPressed) {
-// 			this.held = false;
-// 		}
-// 		if (levelStatuses[place] != 0) {
-// 			if (this.relesed()) {
-// 				menu = 2;
-// 			}
-// 		}
-// 	}
-
-// 	this.hover = function() {
-// 		var fillNormal = '#585858';
-// 		if (levelStatuses[place] == 1) {
-// 			fillNormal = '#ff8000';
-// 			fillHover = '#ffaa55';
-// 			fillPress = '#d56a01';
-// 		} else if (levelStatuses[place] == 2) {
-// 			fillNormal = '#efe303';
-// 			fillHover = '#ffff99';
-// 			fillPress = '#c6bc03';
-// 		} else if (levelStatuses[place] == 3) {
-// 			fillNormal = '#00cc00';
-// 			fillHover = '#22ff22';
-// 			fillPress = '#00a201';
-// 		}
-
-// 		if (this.hovering(mouseX, mouseY)) {
-// 			this.fill = fillHover;
-// 			if (mouseIsPressed) {
-// 				this.fill = fillPress;
-// 			}
-// 		} else if (this.held && !this.hovering(mouseX, mouseY)) {
-// 			this.fill = fillHover;
-// 		} else {
-// 			this.fill = fillNormal;
-// 		}
-// 	}
-
-// 	this.hovering = function(x, y) {
-// 		return x>=this.x && x<=this.x+this.w && (y-m1Scroll)>=this.y && (y-m1Scroll)<=this.y+this.h;
-// 	}
-
-// 	this.pressed = function() {
-// 		return this.hovering(mouseX, mouseY) && mouseIsPressed;
-// 	}
-
-// 	this.ppressed = function() {
-// 		return this.hovering(pmouseX, pmouseY) && pmouseIsPressed;
-// 	}
-
-// 	this.relesed = function() {
-// 		return this.ppressed() && !this.pressed() && !this.held;
-// 	}
-// }
-
-// // https://stackoverflow.com/questions/1267283/how-can-i-pad-a-value-with-leading-zeros
-// function zeroFill (number, w) {
-// 	w -= number.toString().length;
-// 	if (w > 0) {
-// 		return new Array(w + (/\./.test(number) ? 2:1)).join('0') + number;
-// 	}
-// 	return number + ''; // always return a string
-// }
-
-// function level (num) {
-// 	this.w;
-// 	this.h;
-// 	this.numEnts;
-// 	this.bg;
-// 	this.blockMode;
-// 	this.levelData = "";
-// 	this.entities = [];
-// 	this.numLines;
-// 	this.dialouge;
-// }
-
-// setup();
-// draw();

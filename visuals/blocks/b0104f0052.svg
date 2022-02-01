@@ -1,0 +1,26 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
+<defs>
+<linearGradient id="Gradient_1" gradientUnits="userSpaceOnUse" x1="15" y1="30" x2="15" y2="0" spreadMethod="pad">
+<stop  offset="0%" stop-color="#FC773F" stop-opacity="0.611764705882353"/>
+
+<stop  offset="100%" stop-color="#FF3300" stop-opacity="0"/>
+</linearGradient>
+
+<filter id="Filter_1" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+<feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.88 0" result="result1"/>
+</filter>
+
+<g id="Symbol_89_0_Layer0_0_FILL">
+<path fill="url(#Gradient_1)" stroke="none" d="
+M 30 0
+L 0 0 0 30 30 30 30 0 Z"/>
+</g>
+</defs>
+
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<g transform="matrix( 1, 0, 0, 1, 0,0) ">
+<use filter="url(#Filter_1)" xlink:href="#Symbol_89_0_Layer0_0_FILL"/>
+</g>
+</g>
+</svg>
