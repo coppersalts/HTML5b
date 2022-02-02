@@ -1,11 +1,13 @@
+- parts of the character models
+- animated entities
+- door lights
+
 - HPRCBubble UI animations
 - csBubble UI animations
-- parts of the character models
-- the rest of the character models
-- animated entities
-- HPRC cranking arms (do this after finishing the rest of the charaxter models)
-- the metal tile borders
-- door lights
-- autosave
 
+- the rest of the character models (do this after adding the rest of the parts)
+- HPRC cranking arms (do this after finishing the rest of the character models)
+
+- autosave
+- loading levels.txt properly
 - the level editor (I'll do this last)

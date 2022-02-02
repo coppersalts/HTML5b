@@ -341,62 +341,62 @@ var blockProperties = [
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false]];
 var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54],[65,61,60,62,63,64],[],[],[14,16,83,85]];
 var charD = [
-[28,45.4,0.45,27,0.8,false,1],
-[23,56,0.36,31,0.8,false,1.7],
-[20,51,0.41,20,0.85,false,5],
-[10,86,0.26,31,0.8,false,1.6],
-[10,84,0.23,31,0.8,false,1.4],
-[28,70,0.075,28,0.8,false,9],
-[26,49,0.2,20,0.75,false,0.6],
-[44,65,0.8,20,0.75,false,0.8],
-[16,56,0.25,17,0.76,false,0.8],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[0,0,0,0,0,false],
-[36.5,72.8,1,20,0.6,false,0],
-[15.1,72.8,0.6,20,0.7,true,0],
-[20,40,0.15,20,0.7,true,0.7],
-[25,50,0.64,20,0.6,true,0.1],
-[25,10,1,0,0.7,true,0.2],
-[25,50,1,20,0.7,true,0.1],
-[25,29,0.1,20,0.8,true,1],
-[21.5,43,0.3,20,0.6,true,0.5],
-[35,60,1,20,0.7,true,0.1],
-[22.5,45,1,20,0.7,true,0.8],
-[25,50,1,0,0.7,true,0.1],
-[15,30,0.64,20,0.6,true,0.2],
-[10,55,0.8,0,0.3,true,0.4],
-[45,10,1,0,0.7,true,0.2],
-[20,40,1,0,0.8,false,0.8],
-[16,45,0.4,20,0.94,false,1.1],
-[25,10,1,0,0.7,true,0.3],
-[45,10,0.4,0,0.7,true,0.7],
-[15,50,0.1,0,0.8,true,1.9],
-[25,25,0.1,0,0.8,true,1.7],
-[30,540,10,10,0.4,true,0]];
+[28,45.4,0.45,27,0.8,false,1,1],
+[23,56,0.36,31,0.8,false,1.7,1],
+[20,51,0.41,20,0.85,false,5,1],
+[10,86,0.26,31,0.8,false,1.6,1],
+[10,84,0.23,31,0.8,false,1.4,1],
+[28,70,0.075,28,0.8,false,9,1],
+[26,49,0.2,20,0.75,false,0.6,1],
+[44,65,0.8,20,0.75,false,0.8,1],
+[16,56,0.25,17,0.76,false,0.8,1],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[0,0,0,0,0,false,1,0],
+[36.5,72.8,1,20,0.6,false,0,1],
+[15.1,72.8,0.6,20,0.7,true,0,1],
+[20,40,0.15,20,0.7,true,0.7,1],
+[25,50,0.64,20,0.6,true,0.1,1],
+[25,10,1,0,0.7,true,0.2,1],
+[25,50,1,20,0.7,true,0.1,1],
+[25,29,0.1,20,0.8,true,1,1],
+[21.5,43,0.3,20,0.6,true,0.5,1],
+[35,60,1,20,0.7,true,0.1,1],
+[22.5,45,1,20,0.7,true,0.8,1],
+[25,50,1,0,0.7,true,0.1,27],
+[15,30,0.64,20,0.6,true,0.2,1],
+[10,55,0.8,0,0.3,true,0.4,1],
+[45,10,1,0,0.7,true,0.2,1],
+[20,40,1,0,0.8,false,0.8,5],
+[16,45,0.4,20,0.94,false,1.1,60],
+[25,10,1,0,0.7,true,0.3,1],
+[45,10,0.4,0,0.7,true,0.7,1],
+[15,50,0.1,0,0.8,true,1.9,1],
+[25,25,0.1,0,0.8,true,1.7,1],
+[30,540,10,10,0.4,true,0,1]];
 
 // frames:
 // 00 - run left
@@ -1134,11 +1134,25 @@ function loadingScreen() {
 		svgTileBorders[i] = new Image();
 		svgTileBorders[i].src = 'visuals/borders/tb' + i.toString(10).padStart(4, '0') + '.svg';
 	}
-	for (var i = 0; i < svgChars.length; i++) {
-		var filename = 'visuals/entities/e' + i.toString(10).padStart(4, '0') + '.svg';
-		if (doesFileExist(filename)) {
+	// for (var i = 0; i < svgChars.length; i++) {
+	// 	var filename = 'visuals/entities/e' + i.toString(10).padStart(4, '0') + '.svg';
+	// 	if (doesFileExist(filename)) {
+	// 		svgChars[i] = new Image();
+	// 		svgChars[i].src = filename;
+	// 	}
+	// }
+	for (var i = 0; i < charD.length; i++) {
+		var id = i.toString(10).padStart(4, '0');
+		if (charD[i][7] < 1) continue;
+		else if (charD[i][7] == 1) {
 			svgChars[i] = new Image();
-			svgChars[i].src = filename;
+			svgChars[i].src = 'visuals/entities/e' + id + '.svg';
+		} else {
+			svgChars[i] = new Array(charD[i][7]);
+			for (var j = 0; j < svgChars[i].length; j++) {
+				svgChars[i][j] = new Image();
+				svgChars[i][j].src = 'visuals/entities/e' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg';;
+			}
 		}
 	}
 	for (var i = 0; i < svgHPRCBubble.length; i++) {
@@ -1163,14 +1177,35 @@ function loadingScreen() {
 	}
 
 	//TODO: optimize this at some point
+	// var xhr = new Array(charD.length);
+	// for (var i = 0; i < svgChars.length; i++) {
+	// 	//https://stackoverflow.com/questions/25220486/xmlhttprequest-in-for-loop
+	// 	(function(i) {
+	// 		if (typeof svgChars[i] !== 'undefined') {
+	// 			// I've been avoiding doing xmlhttprequest stuff as long as I could, doing things wrong so I could fix them and do them right later. But this seems to be the only way here, so...
+	// 			// But it was all worth it for not using any libraries!
+	// 			// https://stackoverflow.com/questions/38580176/how-can-i-read-an-svg-file-included-in-my-project-and-write-to-it
+	// 			xhr[i] = new XMLHttpRequest();
+	// 			xhr[i].open("GET", svgChars[i].src);
+	// 			xhr[i].setRequestHeader("Content-Type", "image/svg+xml");
+	// 			xhr[i].onload = function(event) {
+	// 				var response = event.target.responseText;
+	// 				var doc = new DOMParser();
+	// 				var xml = doc.parseFromString(response, "image/svg+xml");
+	// 				var svg = xml.getElementsByTagName('svg')[0];
+	// 				svgCharsVB[i] = svg.getAttribute('viewBox').split(' ').map(Number);
+	// 				return;
+	// 			};
+	// 			xhr[i].send();
+	// 		}
+	// 	})(i);
+	// }
+
 	var xhr = new Array(charD.length);
+	var xhr2 = new Array(charD.length);
 	for (var i = 0; i < svgChars.length; i++) {
-		//https://stackoverflow.com/questions/25220486/xmlhttprequest-in-for-loop
 		(function(i) {
-			if (typeof svgChars[i] !== 'undefined') {
-				// I've been avoiding doing xmlhttprequest stuff as long as I could, doing things wrong so I could fix them and do them right later. But this seems to be the only way here, so...
-				// But it was all worth it for not using any libraries!
-				// https://stackoverflow.com/questions/38580176/how-can-i-read-an-svg-file-included-in-my-project-and-write-to-it
+			if (typeof svgChars[i] !== 'undefined' && Object.prototype.toString.call(svgChars[i]) !== '[object Array]') {
 				xhr[i] = new XMLHttpRequest();
 				xhr[i].open("GET", svgChars[i].src);
 				xhr[i].setRequestHeader("Content-Type", "image/svg+xml");
@@ -1185,8 +1220,30 @@ function loadingScreen() {
 				xhr[i].send();
 			}
 		})(i);
+		if (Object.prototype.toString.call(svgChars[i]) === '[object Array]') {
+			svgCharsVB[i] = new Array(svgChars[i].length);
+			xhr2[i] = new Array(svgChars[i].length);
+			for (var j = 0; j < svgChars[i].length; j++) {
+				(function(i,j) {
+					xhr2[i][j] = new XMLHttpRequest();
+					xhr2[i][j].open("GET", svgChars[i][j].src);
+					xhr2[i][j].setRequestHeader("Content-Type", "image/svg+xml");
+					xhr2[i][j].onload = function(event) {
+						var response = event.target.responseText;
+						var doc = new DOMParser();
+						var xml = doc.parseFromString(response, "image/svg+xml");
+						var svg = xml.getElementsByTagName('svg')[0];
+						svgCharsVB[i][j] = svg.getAttribute('viewBox').split(' ').map(Number);
+						return;
+					};
+					xhr2[i][j].send();
+				})(i,j);
+			}
+		}
 	}
-	xhr = new Array(charD.length);
+
+	xhr = new Array(blockProperties.length);
+	xhr2 = new Array(blockProperties.length);
 	for (var i = 0; i < svgTiles.length; i++) {
 		(function(i) {
 			if (typeof svgTiles[i] !== 'undefined' && Object.prototype.toString.call(svgTiles[i]) !== '[object Array]') {
@@ -1204,32 +1261,28 @@ function loadingScreen() {
 				xhr[i].send();
 			}
 		})(i);
-	}
-	var xhr2 = new Array(charD.length);
-	for (var i = 0; i < svgTiles.length; i++) {
-		// (function(i) {
-			if (Object.prototype.toString.call(svgTiles[i]) === '[object Array]') {
-				svgTilesVB[i] = new Array(svgTiles[i].length);
-				xhr2[i] = new Array(svgTiles[i].length);
-				for (var j = 0; j < svgTiles[i].length; j++) {
-					(function(i,j) {
-						xhr2[i][j] = new XMLHttpRequest();
-						xhr2[i][j].open("GET", svgTiles[i][j].src);
-						xhr2[i][j].setRequestHeader("Content-Type", "image/svg+xml");
-						xhr2[i][j].onload = function(event) {
-							var response = event.target.responseText;
-							var doc = new DOMParser();
-							var xml = doc.parseFromString(response, "image/svg+xml");
-							var svg = xml.getElementsByTagName('svg')[0];
-							svgTilesVB[i][j] = svg.getAttribute('viewBox').split(' ').map(Number);
-							return;
-						};
-						xhr2[i][j].send();
-					})(i,j);
-				}
+		if (Object.prototype.toString.call(svgTiles[i]) === '[object Array]') {
+			svgTilesVB[i] = new Array(svgTiles[i].length);
+			xhr2[i] = new Array(svgTiles[i].length);
+			for (var j = 0; j < svgTiles[i].length; j++) {
+				(function(i,j) {
+					xhr2[i][j] = new XMLHttpRequest();
+					xhr2[i][j].open("GET", svgTiles[i][j].src);
+					xhr2[i][j].setRequestHeader("Content-Type", "image/svg+xml");
+					xhr2[i][j].onload = function(event) {
+						var response = event.target.responseText;
+						var doc = new DOMParser();
+						var xml = doc.parseFromString(response, "image/svg+xml");
+						var svg = xml.getElementsByTagName('svg')[0];
+						svgTilesVB[i][j] = svg.getAttribute('viewBox').split(' ').map(Number);
+						return;
+					};
+					xhr2[i][j].send();
+				})(i,j);
 			}
-		// })(i);
+		}
 	}
+
 	svgMenu0.src = 'visuals/menu0.svg';
 	svgMenu2.src = 'visuals/menu2.svg';
 	svgMenu2border.src = 'visuals/menu2border.svg';
@@ -1241,7 +1294,7 @@ function loadingScreen() {
 	menu2_3Buttons.push(new Path2D('M 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 97.5 11.4\nL 85.2 11.4 85.2 16.35 96.5 16.35 96.5 20.35 85.2 20.35 85.2 26.1 97.75 26.1 97.75 30.4 80.05 30.4 80.05 7.05 97.5 7.05 97.5 11.4\nM 77.4 7.05\nL 77.4 11.4 70.4 11.4 70.4 30.4 65.25 30.4 65.25 11.4 58.3 11.4 58.3 7.05 77.4 7.05\nM 40.95 21.6\nL 41.1 23.45\nQ 41.25 24.35 41.8 25.1\nL 43.25 26.2 45.75 26.65\nQ 48.5 26.65 49.55 25.4 50.6 24.2 50.6 21.6\nL 50.6 7.05 55.7 7.05 55.7 21.6\nQ 55.7 26.3 53.05 28.65 50.4 30.95 45.75 30.95 41 30.95 38.4 28.65 35.8 26.35 35.8 21.6\nL 35.8 7.05 40.95 7.05 40.95 21.6\nM 26.55 13.85\nL 26.45 13.85 20.75 30.4 16.8 30.4 11.05 14.05 11 14.05 11 30.4 6.2 30.4 6.2 7.05 13.45 7.05 18.9 23.1 18.95 23.1 24.1 7.05 31.35 7.05 31.35 30.4 26.55 30.4 26.55 13.85 Z'));
 	menu2_3Buttons.push(new Path2D('\nM 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 86.35 6.35\nL 86.35 26.35 98.3 26.35 98.3 30.85 80.95 30.85 80.95 6.35 86.35 6.35\nM 64.1 6.35\nL 69.6 6.35 78.8 30.85 73.2 30.85 71.35 25.4 62.2 25.4 60.25 30.85 54.8 30.85 64.1 6.35\nM 52.8 6.35\nL 52.8 21.6\nQ 52.8 26.55 50.05 29 47.25 31.45 42.35 31.45 37.35 31.45 34.65 29 31.9 26.6 31.9 21.6\nL 31.9 6.35 37.3 6.35 37.3 21.6 37.45 23.55\nQ 37.65 24.5 38.2 25.25 38.75 26.05 39.7 26.45\nL 42.35 26.9\nQ 45.2 26.9 46.3 25.65 47.4 24.35 47.4 21.6\nL 47.4 6.35 52.8 6.35\nM 21.4 6.75\nQ 23.65 7.8 25.2 9.5 26.75 11.3 27.55 13.65 28.35 16 28.35 18.7 28.35 21.4 27.55 23.7 26.75 26 25.2 27.7\nL 28.25 30.5 25.75 33.15 22.25 30\nQ 21.05 30.7 19.6 31.05\nL 16.35 31.45\nQ 13.5 31.45 11.25 30.45 9.05 29.45 7.5 27.75 5.95 26 5.15 23.7 4.3 21.35 4.3 18.7 4.3 16 5.15 13.65 5.95 11.3 7.5 9.5 9.05 7.8 11.25 6.75 13.5 5.8 16.35 5.8 19.2 5.8 21.4 6.75\nM 21.45 24.35\nQ 22.15 23.4 22.55 22.05 23 20.65 23 18.7 23 17.1 22.65 15.6 22.25 14.05 21.45 12.9 20.7 11.7 19.4 11 18.15 10.3 16.35 10.3 14.5 10.3 13.25 11 12 11.7 11.2 12.9 10.4 14.05 10.05 15.6 9.7 17.1 9.7 18.7 9.7 20.25 10.05 21.7 10.4 23.2 11.2 24.35 12 25.5 13.25 26.2 14.5 26.9 16.35 26.9\nL 17.55 26.9 18.5 26.6 16.2 24.45 18.7 21.8 21.45 24.35\nM 66.85 12.4\nL 66.75 12.4 63.6 21.4 69.9 21.4 66.85 12.4 Z'));
 	// TODO: uh... this is a very wrong way of doing this.
-	setTimeout(setup,4000);
+	setTimeout(setup,5000);
 }
 
 
@@ -2071,18 +2124,19 @@ function opposite(i, xOrY)
 
 
 function drawCharacters() {
-	if(playMode == 0 && currentLevel >= 1) {
-		for (var _loc1_ = 0; _loc1_ < startLocations[currentLevel - transitionType].length; _loc1_++) {
+	// if(playMode == 0 && currentLevel >= 1) {
+	// 	for (var _loc1_ = 0; _loc1_ < startLocations[currentLevel - transitionType].length; _loc1_++) {
 			// levelChar["char" + _loc1_].removeMovieClip();
-		}
-	} else {
-		for (var _loc1_ = 0; _loc1_ < startLocations[currentLevel].length; _loc1_++) {
+		// }
+	// } else {
+	// 	for (var _loc1_ = 0; _loc1_ < startLocations[currentLevel].length; _loc1_++) {
 			// levelChar["char" + _loc1_].removeMovieClip();
-		}
-	}
+		// }
+	// }
 	for (var _loc2_ = 0; _loc2_ < charCount*2; _loc2_++) {
 		var _loc1_ = charDepths[_loc2_];
 		if (_loc1_ < 0) continue;
+		var currCharID = char[_loc1_].id;
 
 
 		if (char[_loc1_].burstFrame >= 0) {
@@ -2098,17 +2152,30 @@ function drawCharacters() {
 		}
 
 		// levelChar.attachMovie("char","char" + _loc1_,charDepth - _loc1_ * 2,{_x:char[_loc1_].x,_y:char[_loc1_].y});
-		if (char[_loc1_].deathTimer > 0) {
+		// if statment used to include: && typeof svgChars[char[_loc1_].id] !== 'undefined'
+		if (char[_loc1_].deathTimer > 0 && charD[currCharID][7] > 0) {
 			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2) ctx.globalAlpha = 0.3;
-			if (char[_loc1_].id > 34 && typeof svgChars[char[_loc1_].id] !== 'undefined') {
+			if (currCharID > 34) {
 				// ctx.drawImage(svgChars[char[_loc1_].id], char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h);
 				// var vb = svgChars[char[_loc1_].id].viewBox;
+				// var vb, currCharSvg;
 				// console.log(vb);
-				ctx.drawImage(svgChars[char[_loc1_].id], char[_loc1_].x+svgCharsVB[char[_loc1_].id][0], char[_loc1_].y+svgCharsVB[char[_loc1_].id][1]);
+				if (charD[currCharID][7] == 1) {
+					ctx.drawImage(svgChars[currCharID], char[_loc1_].x+svgCharsVB[currCharID][0], char[_loc1_].y+svgCharsVB[currCharID][1]);
+					// currCharSvg = svgChars[char[_loc1_].id];
+					// vb = svgCharsVB[char[_loc1_].id];
+				} else {
+					var currCharFrame = _frameCount%charD[currCharID][7];
+					ctx.drawImage(svgChars[currCharID][currCharFrame], char[_loc1_].x+svgCharsVB[currCharID][currCharFrame][0], char[_loc1_].y+svgCharsVB[currCharID][currCharFrame][1]);
+					// currCharSvg = svgChars[char[_loc1_].id][currCharFrame];
+					// vb = svgCharsVB[char[_loc1_].id][currCharFrame];
+				}
+
+				// Hitboxes
 				// ctx.strokeStyle = '#ff0000';
 				// ctx.lineWidth = 1;
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
-			} else if (char[_loc1_].id <= 34 && typeof svgChars[char[_loc1_].id] !== 'undefined') {
+			} else {
 				var model = charModels[char[_loc1_].id];
 
 				// draw legs
@@ -2170,12 +2237,13 @@ function drawCharacters() {
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
 
 				ctx.globalAlpha = 1;
-			} else {
-				// ctx.fillStyle = '#00ffff';
-				ctx.fillStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
-				ctx.fillRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
 			}
 		}
+		// else {
+		// 	// ctx.fillStyle = '#00ffff';
+		// 	ctx.fillStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
+		// 	ctx.fillRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
+		// }
 		// levelChar["char" + _loc1_].gotoAndStop(char[_loc1_].id + 1);
 		// levelChar["char" + _loc1_].leg1.gotoAndStop(1);
 		// levelChar["char" + _loc1_].leg2.gotoAndStop(1);
