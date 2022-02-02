@@ -2,21 +2,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
 <defs>
 <linearGradient id="Gradient_1" gradientUnits="userSpaceOnUse" x1="22.5" y1="30" x2="22.5" y2="15" spreadMethod="pad">
-<stop  offset="0%" stop-color="#000000"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0.4"/>
 
-<stop  offset="100%" stop-color="#000000" stop-opacity="0"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0"/>
 </linearGradient>
 
 <radialGradient id="Gradient_2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( -0.7071067811865475, 0.7071067811865475, 0.7071067811865475, 0.7071067811865475, 15,15) " spreadMethod="pad">
-<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0"/>
 
-<stop  offset="100%" stop-color="#000000"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0.4"/>
 </radialGradient>
 
 <linearGradient id="Gradient_3" gradientUnits="userSpaceOnUse" x1="0" y1="7.5" x2="15" y2="7.5" spreadMethod="pad">
-<stop  offset="0%" stop-color="#000000"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0.4"/>
 
-<stop  offset="100%" stop-color="#000000" stop-opacity="0"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0"/>
 </linearGradient>
 
 <g id="Layer0_0_FILL">

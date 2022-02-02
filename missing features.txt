@@ -1,6 +1,5 @@
 - HPRCBubble UI animations
 - csBubble UI animations
-- the alpha is wrong on the ambient shadows
 - parts of the character models
 - the rest of the character models
 - animated entities

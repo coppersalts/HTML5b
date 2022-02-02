@@ -2,27 +2,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
 <defs>
 <radialGradient id="Gradient_1" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( 0.7071067811865475, 0.7071067811865475, 0.7071067811865475, -0.7071067811865475, 15,15) " spreadMethod="pad">
-<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0"/>
 
-<stop  offset="100%" stop-color="#000000"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0.4"/>
 </radialGradient>
 
 <radialGradient id="Gradient_2" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( -0.7071067811865475, -0.7071067811865475, -0.7071067811865475, 0.7071067811865475, 15,15) " spreadMethod="pad">
-<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0"/>
 
-<stop  offset="100%" stop-color="#000000"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0.4"/>
 </radialGradient>
 
 <radialGradient id="Gradient_3" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( -0.7071067811865475, 0.7071067811865475, -0.7071067811865475, -0.7071067811865475, 15,15) " spreadMethod="pad">
-<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0"/>
 
-<stop  offset="100%" stop-color="#000000"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0.4"/>
 </radialGradient>
 
 <radialGradient id="Gradient_4" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="15.008341430684473" fx="0" fy="0" gradientTransform="matrix( 0.7071067811865475, -0.7071067811865475, 0.7071067811865475, 0.7071067811865475, 15,15) " spreadMethod="pad">
-<stop  offset="0%" stop-color="#000000" stop-opacity="0"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0"/>
 
-<stop  offset="100%" stop-color="#000000"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0.4"/>
 </radialGradient>
 
 <g id="Layer0_0_FILL">
