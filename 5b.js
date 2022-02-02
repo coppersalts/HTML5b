@@ -1038,7 +1038,7 @@ var imgBgs = new Array(12);
 var svgTiles = new Array(blockProperties.length);
 var svgLevers = new Array(6);
 var svgShadows = new Array(19);
-var svgTileBorders = new Array(19);
+var svgTileBorders = new Array(34);
 
 var svgChars = new Array(charD.length);
 var svgBodyParts = [];
@@ -2040,6 +2040,9 @@ function setBorder(x, y, s) {
 		}
 		_loc1_ = _loc1_ + 1;
 	}
+		
+	var metalBlocks = [98,102,105,107];
+	if (tileBorders[y][x][tileBorders[y][x].length-1] < 15 && metalBlocks.includes(levels[currentLevel][y][x])) tileBorders[y][x][tileBorders[y][x].length-1] += 19;
 }
 function opposite(i, xOrY)
 {
