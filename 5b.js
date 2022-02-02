@@ -1306,7 +1306,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 
 	drawRoundedRect(fill, x, y, menu0ButtonSize.w, menu0ButtonSize.h, menu0ButtonSize.cr);
 
-	ctx.font = '30px Helvetica';
+	ctx.font = 'bold 30px Helvetica';
 	ctx.fillStyle = '#666666';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
@@ -1387,7 +1387,7 @@ function drawNewGame2Button(text, x, y, id, color, action) {
 		action();
 	}
 
-	drawRoundedRect(color, x, y, size, size, 25);
+	drawRoundedRect(color, x, y, size, size, 10);
 
 	ctx.font = 'bold 40px Helvetica';
 	ctx.fillStyle = '#ffffff';
@@ -2074,6 +2074,7 @@ function drawCharacters() {
 
 		// levelChar.attachMovie("char","char" + _loc1_,charDepth - _loc1_ * 2,{_x:char[_loc1_].x,_y:char[_loc1_].y});
 		if (char[_loc1_].deathTimer > 0) {
+			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2) ctx.globalAlpha = 0.3;
 			if (char[_loc1_].id > 34 && typeof svgChars[char[_loc1_].id] !== 'undefined') {
 				// ctx.drawImage(svgChars[char[_loc1_].id], char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h);
 				// var vb = svgChars[char[_loc1_].id].viewBox;
@@ -2143,6 +2144,7 @@ function drawCharacters() {
 				// ctx.strokeStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
 
+				ctx.globalAlpha = 1;
 			} else {
 				// ctx.fillStyle = '#00ffff';
 				ctx.fillStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
@@ -3469,17 +3471,6 @@ function startDeath(i)
 		// }
 	}
 }
-function blinkDeath(i)
-{
-	if(char[i].deathTimer % 6 <= 2)
-	{
-		// levelChar["char" + i]._alpha = 30;
-	}
-	else
-	{
-		// levelChar["char" + i]._alpha = 100;
-	}
-}
 function endDeath(i) {
 	// console.log('ending death...');
 	putDown(i);
@@ -4462,7 +4453,6 @@ function draw() {
 						// levelChar["char" + _loc2_].leg2._visible = false;
 					}
 					char[_loc2_].deathTimer--;
-					blinkDeath(_loc2_);
 					if (char[_loc2_].deathTimer <= 0) {
 						endDeath(_loc2_);
 					}

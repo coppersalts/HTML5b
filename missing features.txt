@@ -4,9 +4,8 @@
 - the alpha is wrong on the ambient shadows
 - parts of the character models
 - the rest of the character models
-- death flashing
 - animated entities
-- HPRC cranking arms
+- HPRC cranking arms (do this after finishing the rest of the charaxter models)
 - getting blocks to layer correctly
 - the metal tile borders
 - door lights
