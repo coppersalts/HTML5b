@@ -2,6 +2,7 @@
 // TODO: implement depths
 // TODO: look up the difference between var and let.
 // TODO: go through all the todo's I've put throughout this file.
+// TODO: rename some functions
 
 var canvas;
 var ctx;
@@ -970,6 +971,7 @@ var HPRCBubbleFrame; // TODO: refactor this thing out
 var HPRCText = '';
 var HPRCCrankRot = 0;
 var charDepths = [];
+var tileDepths;
 
 function numberToText(i, hundreds) {
 	if (hundreds) {
@@ -1357,7 +1359,7 @@ function drawLevelButton(text, x, y, id, color) {
 			levelButtonClicked = -1;
 			if (id <= levelProgress) {
 				playLevel(id);
-				// white._alpha = 100;
+				white_alpha = 1;
 			}
 		}
 	}
@@ -1679,6 +1681,7 @@ function resetLevel() {
 	for (var i = 0; i < charDepths.length; i++) charDepths[i] = i%2==0?Math.floor(charCount-i/2-1):-1;
 	copyLevel(levels[currentLevel]);
 	charDepth = levelWidth * levelHeight + charCount * 2;
+	tileDepths = [[],[],[],[]];
 	charCount2 = 0;
 	HPRC1 = HPRC2 = 1000000;
 	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
@@ -1691,6 +1694,7 @@ function resetLevel() {
 			char[_loc1_].speed = startLocations[currentLevel][_loc1_][6][0] * 10 + startLocations[currentLevel][_loc1_][6][1];
 		}
 	}
+	getTileDepths();
 	drawLevel();
 	drawCharacters();
 	recover = false;
@@ -1746,11 +1750,7 @@ function drawLevelButtons() {
 	drawMenu2_3Button(0, 837.5, 486.95, menu3Menu);
 }
 
-function drawLevel() {
-	// if (playMode == 0 && currentLevel >= 1) {
-	// 	removeTileMovieClips();
-	// 	addTileMovieClips();
-	// }
+function getTileDepths() {
 	for (var _loc3_ = 0; _loc3_ < 6; _loc3_++) {
 		switchable[_loc3_] = new Array(0);
 	}
@@ -1762,23 +1762,27 @@ function drawLevel() {
 					switchable[blockProperties[thisLevel[_loc2_][_loc1_]][12] - 1].push([_loc1_,_loc2_]);
 				}
 				if (blockProperties[thisLevel[_loc2_][_loc1_]][14]) {
-					addTileMovieClip(_loc1_,_loc2_); //levelActive3
+					tileDepths[3].push({x:_loc1_,y:_loc2_});
+					// addTileMovieClip(_loc1_,_loc2_); //levelActive3
 				} else if (blockProperties[thisLevel[_loc2_][_loc1_]][11] >= 1) {
-					addTileMovieClip(_loc1_,_loc2_); //levelActive2
-					if (blockProperties[thisLevel[_loc2_][_loc1_]][11] >= 7 && blockProperties[thisLevel[_loc2_][_loc1_]][11] <= 12) {
+					tileDepths[2].push({x:_loc1_,y:_loc2_});
+					// addTileMovieClip(_loc1_,_loc2_); //levelActive2
+					// if (blockProperties[thisLevel[_loc2_][_loc1_]][11] >= 7 && blockProperties[thisLevel[_loc2_][_loc1_]][11] <= 12) {
 						// levelActive2["tileX" + _loc1_ + "Y" + _loc2_].lever._rotation = 60;
-					}
+					// }
 				} else if (blockProperties[thisLevel[_loc2_][_loc1_]][8]) {
-					addTileMovieClip(_loc1_,_loc2_); //levelActive
+					tileDepths[1].push({x:_loc1_,y:_loc2_});
+					// addTileMovieClip(_loc1_,_loc2_); //levelActive
 				} else {
-					addTileMovieClip(_loc1_,_loc2_); //levelStill
+					tileDepths[0].push({x:_loc1_,y:_loc2_});
+					// addTileMovieClip(_loc1_,_loc2_); //levelStill
 				}
 				if (thisLevel[_loc2_][_loc1_] == 6) {
 					locations[0] = _loc1_;
 					locations[1] = _loc2_;
-					if (bgs[currentLevel] == 9 || bgs[currentLevel] == 10) {
+					// if (bgs[currentLevel] == 9 || bgs[currentLevel] == 10) {
 						// levelActive["tileX" + _loc1_ + "Y" + _loc2_].bg.gotoAndStop(2);
-					}
+					// }
 				}
 				if (thisLevel[_loc2_][_loc1_] == 12) {
 					locations[2] = _loc1_;
@@ -1788,6 +1792,18 @@ function drawLevel() {
 				}
 			}
 		}
+	}
+}
+
+function drawLevel() {
+	// if (playMode == 0 && currentLevel >= 1) {
+	// 	removeTileMovieClips();
+	// 	addTileMovieClips();
+	// }
+
+	// Draw Static
+	for (var i = 0; i < tileDepths[0].length; i++) {
+		addTileMovieClip(tileDepths[0][i].x,tileDepths[0][i].y);
 	}
 	// ctx.globalAlpha = 0.4;
 	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
@@ -1801,11 +1817,17 @@ function drawLevel() {
 			}
 		}
 	}
+	for (var i = 1; i < tileDepths.length; i++) {
+		for (var j = 0; j < tileDepths[i].length; j++) {
+			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
+		}
+	}
 	// ctx.globalAlpha = 1;
 }
 
 // TODO: add depths
 
+// draws a tile
 function addTileMovieClip(x, y) {
 	var _loc5_ = thisLevel[y][x];
 	if (typeof svgTiles[_loc5_] !== 'undefined') {
