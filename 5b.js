@@ -972,6 +972,9 @@ var HPRCText = '';
 var HPRCCrankRot = 0;
 var charDepths = [];
 var tileDepths;
+var doorLightX = [[27.5],[15,40],[10,27.5,45],[10,21.75,33.25,45],[4,16.25,27.5,38.75,50],[4,14,23,32,41,50]];
+var doorLightFade = [0,0,0,0,0,0];
+var doorLightFadeDire = [0,0,0,0,0,0];
 
 function numberToText(i, hundreds) {
 	if (hundreds) {
@@ -1000,7 +1003,9 @@ function addCommas(i) {
 	}
 	return _loc2_;
 }
-
+function mapRange(value, min1, max1, min2, max2) {
+	return min2 + (((value - min1) / (max1 - min1)) * (max2 - min2));
+}
 
 
 
@@ -1727,6 +1732,8 @@ function playLevel(i) {
 
 function resetLevel() {
 	HPRCBubbleFrame = 0;
+	doorLightFade = [0,0,0,0,0,0];
+	doorLightFadeDire = [0,0,0,0,0,0];
 	charCount = startLocations[currentLevel].length;
 	levelWidth = levels[currentLevel][0].length;
 	levelHeight = levels[currentLevel].length;
@@ -1913,11 +1920,20 @@ function addTileMovieClip(x, y) {
 			ctx.drawImage(svgTiles[_loc5_][frame], x*30+svgTilesVB[_loc5_][frame][0], y*30+svgTilesVB[_loc5_][frame][1]);
 			// ctx.drawImage(svgTiles[_loc5_][0], x*30, y*30);
 		}
-	}
-	else if (_loc5_ == 6) {
+	} else if (_loc5_ == 6) {
+		// Door
 		ctx.fillStyle = '#505050';
 		ctx.fillRect((x-1)*30, (y-3)*30, 60, 120);
+		// charsAtEnd
+		for (var i = 0; i < charCount2; i++) {
+			// mapRange
+			// ctx.fillStyle = 'rgb(' + 40*doorLightFade[i] + ',' + 40*(1-doorLightFade[i]) + ',' + 40*doorLightFade[i] + ')';
+			ctx.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
+			ctx.fillRect((x-1)*30+doorLightX[charCount2-1][i], y*30-80, 5, 5);
+			doorLightFade[i] = Math.max(Math.min(doorLightFade[i]+doorLightFadeDire[i]*0.0625, 1), 0);
+		}
 	} else if (_loc5_ == 12) {
+		// Coin
 		if (!gotThisCoin) {
 			ctx.save();
 			ctx.translate(x*30+15, y*30+15);
@@ -4589,6 +4605,7 @@ function draw() {
 					if (Math.abs(char[_loc2_].x - locations[0] * 30) <= 30 && Math.abs(char[_loc2_].y - (locations[1] * 30 + 10)) <= 50) {
 						if (!char[_loc2_].atEnd) {
 							charsAtEnd++;
+							doorLightFadeDire[charsAtEnd-1] = 1;
 							// levelActive["tileX" + locations[0] + "Y" + locations[1]].light["light" + charsAtEnd].gotoAndPlay(2);
 							if (charsAtEnd >= charCount2) {
 								wipeTimer = 1;
@@ -4602,6 +4619,7 @@ function draw() {
 						char[_loc2_].atEnd = true;
 					} else {
 						if (char[_loc2_].atEnd) {
+							doorLightFadeDire[charsAtEnd-1] = -1;
 							// levelActive["tileX" + locations[0] + "Y" + locations[1]].light["light" + charsAtEnd].gotoAndPlay(16);
 							charsAtEnd--;
 						}
