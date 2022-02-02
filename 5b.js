@@ -2128,8 +2128,37 @@ function drawCharacters() {
 				ctx.drawImage(svgHPRCBubble[0], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-128+bounceY(9, 30));
 			} else if (HPRCBubbleFrame == 2) {
 				ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[1].width/2, char[_loc1_].y-150);
+				ctx.save();
+				var charimgmat = charModels[char[recover2].id].charimgmat;
+				ctx.transform(charimgmat.a,charimgmat.b,charimgmat.c,charimgmat.d,charimgmat.tx/2+char[_loc1_].x,charimgmat.ty/2+char[_loc1_].y-107);
+				ctx.drawImage(svgChars[char[recover2].id], -svgChars[char[recover2].id].width/2, -svgChars[char[recover2].id].height/2);
+				ctx.restore();
 			} else if (HPRCBubbleFrame == 3) {
 				ctx.drawImage(svgHPRCBubble[2], char[_loc1_].x-svgHPRCBubble[2].width/2, char[_loc1_].y-150);
+				
+				var dead = recover2;
+
+				ctx.save();
+				var charimgmat = charModels[char[dead].id].charimgmat;
+				ctx.transform(charimgmat.a,charimgmat.b,charimgmat.c,charimgmat.d,charimgmat.tx/2+char[_loc1_].x,charimgmat.ty/2+char[_loc1_].y-107);
+				ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
+				ctx.restore();
+				
+				dead = nextDeadPerson(recover2,-1);
+
+				ctx.save();
+				var charimgmat = charModels[char[dead].id].charimgmat;
+				ctx.transform(charimgmat.a*0.6,charimgmat.b,charimgmat.c,charimgmat.d*0.6,charimgmat.tx/2+char[_loc1_].x-31.45,charimgmat.ty/2+char[_loc1_].y-107);
+				ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
+				ctx.restore();
+				
+				dead = nextDeadPerson(recover2,1);
+
+				ctx.save();
+				var charimgmat = charModels[char[dead].id].charimgmat;
+				ctx.transform(charimgmat.a*0.6,charimgmat.b,charimgmat.c,charimgmat.d*0.6,charimgmat.tx/2+char[_loc1_].x+31.45,charimgmat.ty/2+char[_loc1_].y-107);
+				ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
+				ctx.restore();
 			}
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
 		}
@@ -3921,19 +3950,19 @@ function draw() {
 				// if (levelChar["char" + control].burst._currentframe == 2) {
 				// 	levelChar["char" + control].burst.play();
 				// }
-				// if (recover) {
-				// 	char[control].justChanged = 2;
-				// 	if (recoverTimer == 0) {
-				// 		if (_keysDown[37]) {
-				// 			if (!leftPress) recoverCycle(HPRC2,-1);
-				// 			leftPress = true;
-				// 		} else leftPress = false;
-				// 		if (_keysDown[39]) {
-				// 			if (!rightPress) recoverCycle(HPRC2,1);
-				// 			rightPress = true;
-				// 		} else rightPress = false;
-				// 	}
-				// } else {
+				if (recover) {
+					char[control].justChanged = 2;
+					if (recoverTimer == 0) {
+						if (_keysDown[37]) {
+							if (!leftPress) recoverCycle(HPRC2,-1);
+							leftPress = true;
+						} else leftPress = false;
+						if (_keysDown[39]) {
+							if (!rightPress) recoverCycle(HPRC2,1);
+							rightPress = true;
+						} else rightPress = false;
+					}
+				} else {
 					if (cornerHangTimer == 0) {
 						if (_keysDown[37]) {
 							char[control].moveHorizontal(- power);
@@ -3942,7 +3971,7 @@ function draw() {
 						}
 					}
 					if (!_keysDown[37] && !_keysDown[39]) char[control].stopMoving();
-				// }
+				}
 				if (_keysDown[38]) {
 					if (!upPress) {
 						if (recover && recoverTimer == 0) {
