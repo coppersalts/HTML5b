@@ -1,6 +1,6 @@
 - HPRCBubble UI animations
 - csBubble UI animations
-- the trees, wall of text, and stopped one-way conveyer blocks
+- the trees
 - the alpha is wrong on the ambient shadows
 - parts of the character models
 - the rest of the character models

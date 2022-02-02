@@ -189,7 +189,7 @@ var musicSound = new Audio('data/music hq.wav');
 // [15] - animated?
 // [16] - animation frames
 // [17] - loop?
-// [18] - loop frames
+// [18] - loop frame order
 var blockProperties = [
 // tile0
 [false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
@@ -199,7 +199,7 @@ var blockProperties = [
 [true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
 [true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
 [false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 // tile1
@@ -256,7 +256,7 @@ var blockProperties = [
 [true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,3,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,9,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
 // tile6
 [true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
@@ -280,13 +280,13 @@ var blockProperties = [
 [false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
 [true,true,true,true,true,true,true,true,true,false,false,0,1,false,false,false,1,false],
 // tile8
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
+[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
 [false,true,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
 [false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,0,false],
+[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
 [false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,0,false],
+[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 [false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
@@ -337,7 +337,7 @@ var blockProperties = [
 // tile13
 [false,false,false,false,false,false,false,false,false,false,false,0,1,false,true,false,1,false],
 [true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false]];
+[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false]];
 var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54],[65,61,60,62,63,64],[],[],[14,16,83,85]];
 var charD = [
 [28,45.4,0.45,27,0.8,false,1],
@@ -1239,7 +1239,7 @@ function loadingScreen() {
 	menu2_3Buttons.push(new Path2D('M 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 97.5 11.4\nL 85.2 11.4 85.2 16.35 96.5 16.35 96.5 20.35 85.2 20.35 85.2 26.1 97.75 26.1 97.75 30.4 80.05 30.4 80.05 7.05 97.5 7.05 97.5 11.4\nM 77.4 7.05\nL 77.4 11.4 70.4 11.4 70.4 30.4 65.25 30.4 65.25 11.4 58.3 11.4 58.3 7.05 77.4 7.05\nM 40.95 21.6\nL 41.1 23.45\nQ 41.25 24.35 41.8 25.1\nL 43.25 26.2 45.75 26.65\nQ 48.5 26.65 49.55 25.4 50.6 24.2 50.6 21.6\nL 50.6 7.05 55.7 7.05 55.7 21.6\nQ 55.7 26.3 53.05 28.65 50.4 30.95 45.75 30.95 41 30.95 38.4 28.65 35.8 26.35 35.8 21.6\nL 35.8 7.05 40.95 7.05 40.95 21.6\nM 26.55 13.85\nL 26.45 13.85 20.75 30.4 16.8 30.4 11.05 14.05 11 14.05 11 30.4 6.2 30.4 6.2 7.05 13.45 7.05 18.9 23.1 18.95 23.1 24.1 7.05 31.35 7.05 31.35 30.4 26.55 30.4 26.55 13.85 Z'));
 	menu2_3Buttons.push(new Path2D('\nM 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 86.35 6.35\nL 86.35 26.35 98.3 26.35 98.3 30.85 80.95 30.85 80.95 6.35 86.35 6.35\nM 64.1 6.35\nL 69.6 6.35 78.8 30.85 73.2 30.85 71.35 25.4 62.2 25.4 60.25 30.85 54.8 30.85 64.1 6.35\nM 52.8 6.35\nL 52.8 21.6\nQ 52.8 26.55 50.05 29 47.25 31.45 42.35 31.45 37.35 31.45 34.65 29 31.9 26.6 31.9 21.6\nL 31.9 6.35 37.3 6.35 37.3 21.6 37.45 23.55\nQ 37.65 24.5 38.2 25.25 38.75 26.05 39.7 26.45\nL 42.35 26.9\nQ 45.2 26.9 46.3 25.65 47.4 24.35 47.4 21.6\nL 47.4 6.35 52.8 6.35\nM 21.4 6.75\nQ 23.65 7.8 25.2 9.5 26.75 11.3 27.55 13.65 28.35 16 28.35 18.7 28.35 21.4 27.55 23.7 26.75 26 25.2 27.7\nL 28.25 30.5 25.75 33.15 22.25 30\nQ 21.05 30.7 19.6 31.05\nL 16.35 31.45\nQ 13.5 31.45 11.25 30.45 9.05 29.45 7.5 27.75 5.95 26 5.15 23.7 4.3 21.35 4.3 18.7 4.3 16 5.15 13.65 5.95 11.3 7.5 9.5 9.05 7.8 11.25 6.75 13.5 5.8 16.35 5.8 19.2 5.8 21.4 6.75\nM 21.45 24.35\nQ 22.15 23.4 22.55 22.05 23 20.65 23 18.7 23 17.1 22.65 15.6 22.25 14.05 21.45 12.9 20.7 11.7 19.4 11 18.15 10.3 16.35 10.3 14.5 10.3 13.25 11 12 11.7 11.2 12.9 10.4 14.05 10.05 15.6 9.7 17.1 9.7 18.7 9.7 20.25 10.05 21.7 10.4 23.2 11.2 24.35 12 25.5 13.25 26.2 14.5 26.9 16.35 26.9\nL 17.55 26.9 18.5 26.6 16.2 24.45 18.7 21.8 21.45 24.35\nM 66.85 12.4\nL 66.75 12.4 63.6 21.4 69.9 21.4 66.85 12.4 Z'));
 	// TODO: uh... this is a very wrong way of doing this.
-	setTimeout(setup,3000);
+	setTimeout(setup,4000);
 }
 
 
