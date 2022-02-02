@@ -1,3 +1,5 @@
+// This is the original 5b code written by Cary Huang.  It was taken from the decompiled swf.
+ 
 function resetLevel()
 {
 	charCount = startLocations[currentLevel].length;

@@ -184,7 +184,7 @@ for (var _loc3_ = 0; _loc3_ < levelCount; _loc3_++) {
 	mdao[_loc3_] = mdao2;
 	levelStart += 8;
 }
-var musicSound = new Audio('data/music.mp3');
+var musicSound = new Audio('data/music hq.wav');
 
 // [15] - animated?
 // [16] - animation frames
@@ -1637,8 +1637,8 @@ function resetLevel() {
 	charCount = startLocations[currentLevel].length;
 	levelWidth = levels[currentLevel][0].length;
 	levelHeight = levels[currentLevel].length;
-	charDepths = new Array(charCount);
-	for (var i = 0; i < charDepths.length; i++) charDepths[i] = charCount-i-1;
+	charDepths = new Array(charCount*2);
+	for (var i = 0; i < charDepths.length; i++) charDepths[i] = i%2==0?Math.floor(charCount-i/2-1):-1;
 	copyLevel(levels[currentLevel]);
 	charDepth = levelWidth * levelHeight + charCount * 2;
 	charCount2 = 0;
@@ -2017,8 +2017,9 @@ function drawCharacters() {
 			// levelChar["char" + _loc1_].removeMovieClip();
 		}
 	}
-	for (var _loc2_ = 0; _loc2_ < charCount; _loc2_++) {
+	for (var _loc2_ = 0; _loc2_ < charCount*2; _loc2_++) {
 		var _loc1_ = charDepths[_loc2_];
+		if (_loc1_ < 0) continue;
 		// levelChar.attachMovie("char","char" + _loc1_,charDepth - _loc1_ * 2,{_x:char[_loc1_].x,_y:char[_loc1_].y});
 		if (char[_loc1_].deathTimer > 0) {
 			if (char[_loc1_].id > 34 && typeof svgChars[char[_loc1_].id] !== 'undefined') {
@@ -3503,20 +3504,15 @@ function putDown(i)
 		char[char[i].carryObject].weight2 = char[char[i].carryObject].weight;
 		char[i].carry = false;
 		char[i].justChanged = 2;
-		swapDepths(char[i].carryObject, charDepths[0], false);
-		// levelChar["char" + char[i].carryObject].swapDepths(charDepth - char[i].carryObject * 2);
+		swapDepths(char[i].carryObject, char[i].carryObject * 2);
 		char[char[i].carryObject].carriedBy = -1;
 		char[char[i].carryObject].stopMoving();
 	}
 	cornerHangTimer = 0;
 }
-function swapDepths(i, j, conditional) {
-	var idep = charDepths.indexOf(i);
-	var jdep = charDepths.indexOf(j);
-	if ((conditional && idep<jdep) || !conditional) {
-		charDepths[idep] = j;
-		charDepths[jdep] = i;
-	}
+function swapDepths(i, jdep) {
+	charDepths[charDepths.indexOf(i)] = charDepths[jdep];
+	charDepths[jdep] = i;
 }
 function charThrow(i)
 {
@@ -3635,12 +3631,10 @@ function changeControl()
 	if(char[control].charState >= 7)
 	{
 		char[control].stopMoving();
-		swapDepths(control, charDepths[0], false);
-		// levelChar["char" + control].swapDepths(charDepth - control * 2);
+		swapDepths(control, control * 2);
 		if(char[control].carry)
 		{
-			swapDepths(char[control].carryObject , control, false);
-			// levelChar["char" + char[control].carry].swapDepths(charDepth - control * 2 + 1);
+			swapDepths(char[control].carryObject, control * 2 + 1);
 		}
 	}
 	control = (control + 1) % charCount;
@@ -3660,8 +3654,7 @@ function changeControl()
 		{
 			putDown(char[control].carriedBy);
 		}
-		swapDepths(control, charDepths[charCount-1], false);
-		// levelChar["char" + control].swapDepths(charDepth + charCount * 2 - control * 2);
+		swapDepths(control, charCount * 2 - (control + 1) * 2);
 		// levelChar["char" + control].burst.gotoAndPlay(2);
 	}
 }
@@ -4007,8 +4000,7 @@ function draw() {
 										if (ifCarried(_loc2_)) putDown(char[_loc2_].carriedBy);
 										char[control].carry = true;
 										char[control].carryObject = _loc2_;
-										swapDepths(_loc2_, control, true);
-										// levelChar["char" + _loc2_].swapDepths(charDepth + charCount * 2 - control * 2 + 1);
+										swapDepths(_loc2_, charCount * 2 - (control + 1) * 2 + 1);
 										char[_loc2_].carriedBy = control;
 										char[_loc2_].weight2 = char[_loc2_].weight;
 										char[control].weight2 = char[_loc2_].weight + char[control].weight;
