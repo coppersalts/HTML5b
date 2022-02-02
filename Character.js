@@ -40,6 +40,7 @@ class Character {
 		this.leg1skew = 0;
 		this.leg2skew = 0;
 		this.legAnimationFrame = [0,0]; // Animation offset.
+		this.burstFrame = -1;
 	}
 
 	applyForces(grav, control, waterUpMaxSpeed)

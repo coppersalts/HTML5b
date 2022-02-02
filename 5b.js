@@ -419,7 +419,9 @@ var charModels = [
 		legx: [-5.55, 8.8],
 		legy: [-11.25,-11.25],
 		firemat: {a:-0.45697021484375,b:0.0060882568359375,c:0.0076904296875,d:0.5772552490234375,tx:-2.3,ty:-51.8},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0.05,ty:0.6}
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0.05,ty:0.6},
+		burstmat: {a:1.5308685302734375,b:0,c:0,d:0.8062744140625,tx:0.05,ty:-23.95},
+		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
 		torsoX: 1.15,
@@ -428,6 +430,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:-0.4046630859375,b:0.0060882568359375,c:0.006805419921875,d:0.5772552490234375,tx:1.05,ty:-51.05},
 		charimgmat: {a:0.12158203125,b:-0.0020751953125,c:0.0037384033203125,d:0.12152099609375,tx:0.1,ty:0.4},
+		burstmat: {a:1.0688934326171875,b:0,c:0,d:1,tx:1.6,ty:-32.25},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.2847747802734375,b:-0.0040130615234375,c:0.0086822509765625,d:0.285064697265625,tx:0.35,ty:-26.65}},
@@ -526,6 +529,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:2.05,ty:0},
 		charimgmat: {a:0.14532470703125,b:-0.00250244140625,c:0.00445556640625,d:0.1452484130859375,tx:-0.3,ty:0.5},
+		burstmat: {a:1,b:0,c:0,d:0.8679046630859375,tx:0.6,ty:-27.95},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.319091796875,b:-0.0054779052734375,c:0.009796142578125,d:0.3189697265625,tx:0.35,ty:-26.65}},
@@ -580,6 +584,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:-0.1956634521484375,b:0.0030975341796875,c:0.0032806396484375,d:0.2937164306640625,tx:1.05,ty:-94},
 		charimgmat: {a:0.1161346435546875,b:0,c:0,d:0.1161346435546875,tx:-0.15,ty:0.2},
+		burstmat: {a:0.5277099609375,b:0,c:0,d:1.2281951904296875,tx:0.6,ty:-41},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.05,ty:-41.75}},
@@ -670,6 +675,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:-0.16912841796875,b:0.0142822265625,c:0.031341552734375,d:0.6383819580078125,tx:-3.65,ty:-58.2},
 		charimgmat: {a:0.10894775390625,b:-0.003753662109375,c:0.003753662109375,d:0.10894775390625,tx:-0.2,ty:-1.4},
+		burstmat: {a:0.557373046875,b:0,c:0,d:1.2081451416015625,tx:-2.65,ty:-42.2},
 		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
@@ -679,6 +685,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:1.8,ty:-4.75},
 		charimgmat: {a:0.126861572265625,b:0,c:0,d:0.126861572265625,tx:-0.1,ty:-0.3},
+		burstmat: {a:1.35589599609375,b:0,c:0,d:1.2286834716796875,tx:1.8,ty:-39.65},
 		frames: [
 			[
 				{bodypart:0,mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:0.4,ty:-39.1}}
@@ -731,6 +738,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:-0.2,ty:0.05},
 		charimgmat: {a:0.116455078125,b:0,c:0,d:0.116455078125,tx:0.4,ty:20.05},
+		burstmat: {a:1.35589599609375,b:0,c:0,d:0.9438323974609375,tx:2.55,ty:-22.5},
 		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
@@ -740,6 +748,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:1.8939666748046875,b:0,c:0,d:1.1790008544921875,tx:2.05,ty:0},
 		charimgmat: {a:-0.06329345703125,b:0,c:0,d:0.0632781982421875,tx:-0.6,ty:18.65},
+		burstmat: {a:1.55078125,b:0,c:0,d:1.09588623046875,tx:1.55,ty:-36.75},
 		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
@@ -749,6 +758,7 @@ var charModels = [
 		legy: [-11.25,-11.25],
 		firemat: {a:0.757598876953125,b:0,c:0,d:1,tx:2.3,ty:-2.5},
 		charimgmat: {a:-0.112091064453125,b:0,c:0,d:0.112091064453125,tx:8.05,ty:-5.8},
+		burstmat: {a:0.794342041015625,b:0,c:0,d:0.952484130859375,tx:1.55,ty:-29.75},
 		frames: [[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 	},
 	{
@@ -1021,7 +1031,6 @@ function doesFileExist(urlToFile) {
 
 
 
-
 var imgBgs = new Array(12);
 
 var svgTiles = new Array(blockProperties.length);
@@ -1035,214 +1044,243 @@ var svgBodyParts = [];
 // var svgHPRCBubble = new Array(4);
 var svgHPRCBubble = new Array(3);
 var svgCSBubble = new Image();
-svgCSBubble.src = 'visuals/ui/csbubble/dia.svg';
 var svgHPRCCrank = new Image();
-svgHPRCCrank.src = 'visuals/entities/e0035crank.svg';
 
 var svgCoin = new Image();
-svgCoin.src = 'visuals/wintoken.svg';
 var svgCoinGet = new Array(11);
 var svgFire = new Array(18);
+var svgBurst = new Array(13);
 var svgIceCubeMelt = new Image();
-svgIceCubeMelt.src = 'visuals/effects/icecubemelt.svg';
-
-for (var i = 0; i < imgBgs.length; i++) {
-	imgBgs[i] = new Image();
-	imgBgs[i].src = 'visuals/bg/bg' + i.toString(10).padStart(4, '0') + '.png';
-}
-for (var i = 0; i < blockProperties.length; i++) {
-	var id = i.toString(10).padStart(4, '0');
-	if (blockProperties[i][16] < 1) continue;
-	else if (blockProperties[i][16] == 1) {
-		svgTiles[i] = new Image();
-		svgTiles[i].src = 'visuals/blocks/b' + id + '.svg';
-	} else {
-		svgTiles[i] = new Array(blockProperties[i][16]);
-		for (var j = 0; j < svgTiles[i].length; j++) {
-			svgTiles[i][j] = new Image();
-			svgTiles[i][j].src = 'visuals/blocks/b' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg';;
-		}
-	}
-}
-for (var i = 0; i < svgLevers.length; i++) {
-	var filename = 'visuals/blocks/b' + i.toString(10).padStart(2, '0') + 'lever.svg';
-	if (doesFileExist(filename)) {
-		svgLevers[i] = new Image();
-		svgLevers[i].src = filename;
-	}
-}
-for (var i = 0; i < svgShadows.length; i++) {
-	svgShadows[i] = new Image();
-	svgShadows[i].src = 'visuals/shadows/s' + i.toString(10).padStart(4, '0') + '.svg';
-}
-for (var i = 0; i < svgTileBorders.length; i++) {
-	svgTileBorders[i] = new Image();
-	svgTileBorders[i].src = 'visuals/borders/tb' + i.toString(10).padStart(4, '0') + '.svg';
-}
-for (var i = 0; i < svgChars.length; i++) {
-	var filename = 'visuals/entities/e' + i.toString(10).padStart(4, '0') + '.svg';
-	if (doesFileExist(filename)) {
-		svgChars[i] = new Image();
-		svgChars[i].src = filename;
-	}
-}
-for (var i = 0; i < svgHPRCBubble.length; i++) {
-	svgHPRCBubble[i] = new Image();
-	svgHPRCBubble[i].src = 'visuals/ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg';
-}
-for (var i = 0; doesFileExist('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg'); i++) {
-	svgBodyParts[i] = new Image();
-	svgBodyParts[i].src = 'visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg';
-}
-for (var i = 0; i < svgCoinGet.length; i++) {
-	svgCoinGet[i] = new Image();
-	svgCoinGet[i].src = 'visuals/wtgetf' + i.toString(10).padStart(4, '0') + '.svg';
-}
-for (var i = 0; i < svgFire.length; i++) {
-	svgFire[i] = new Image();
-	svgFire[i].src = 'visuals/effects/fire' + i.toString(10).padStart(4, '0') + '.svg';
-}
 
 var wcFrames = [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
 var legFrames = [6,7,wcFrames];
 
-//TODO: optimize this at some point
 var svgCharsVB = new Array(charD.length);
-var xhr = new Array(charD.length);
-for (var i = 0; i < svgChars.length; i++) {
-	//https://stackoverflow.com/questions/25220486/xmlhttprequest-in-for-loop
-	(function(i) {
-		if (typeof svgChars[i] !== 'undefined') {
-			// I've been avoiding doing xmlhttprequest stuff as long as I could, doing things wrong so I could fix them and do them right later. But this seems to be the only way here, so...
-			// But it was all worth it for not using any libraries!
-			// https://stackoverflow.com/questions/38580176/how-can-i-read-an-svg-file-included-in-my-project-and-write-to-it
-			xhr[i] = new XMLHttpRequest();
-			xhr[i].open("GET", svgChars[i].src);
-			xhr[i].setRequestHeader("Content-Type", "image/svg+xml");
-			xhr[i].onload = function(event) {
-				var response = event.target.responseText;
-				var doc = new DOMParser();
-				var xml = doc.parseFromString(response, "image/svg+xml");
-				var svg = xml.getElementsByTagName('svg')[0];
-				svgCharsVB[i] = svg.getAttribute('viewBox').split(' ').map(Number);
-				return;
-			};
-			xhr[i].send();
-		}
-	})(i);
-}
 var svgTilesVB = new Array(blockProperties.length);
-xhr = new Array(charD.length);
-for (var i = 0; i < svgTiles.length; i++) {
-	(function(i) {
-		if (typeof svgTiles[i] !== 'undefined' && Object.prototype.toString.call(svgTiles[i]) !== '[object Array]') {
-			xhr[i] = new XMLHttpRequest();
-			xhr[i].open("GET", svgTiles[i].src);
-			xhr[i].setRequestHeader("Content-Type", "image/svg+xml");
-			xhr[i].onload = function(event) {
-				var response = event.target.responseText;
-				var doc = new DOMParser();
-				var xml = doc.parseFromString(response, "image/svg+xml");
-				var svg = xml.getElementsByTagName('svg')[0];
-				svgTilesVB[i] = svg.getAttribute('viewBox').split(' ').map(Number);
-				return;
-			};
-			xhr[i].send();
-		}
-	})(i);
-}
-var xhr2 = new Array(charD.length);
-for (var i = 0; i < svgTiles.length; i++) {
-	// (function(i) {
-		if (Object.prototype.toString.call(svgTiles[i]) === '[object Array]') {
-			svgTilesVB[i] = new Array(svgTiles[i].length);
-			xhr2[i] = new Array(svgTiles[i].length);
-			for (var j = 0; j < svgTiles[i].length; j++) {
-				(function(i,j) {
-					xhr2[i][j] = new XMLHttpRequest();
-					xhr2[i][j].open("GET", svgTiles[i][j].src);
-					xhr2[i][j].setRequestHeader("Content-Type", "image/svg+xml");
-					xhr2[i][j].onload = function(event) {
-						var response = event.target.responseText;
-						var doc = new DOMParser();
-						var xml = doc.parseFromString(response, "image/svg+xml");
-						var svg = xml.getElementsByTagName('svg')[0];
-						svgTilesVB[i][j] = svg.getAttribute('viewBox').split(' ').map(Number);
-						return;
-					};
-					xhr2[i][j].send();
-				})(i,j);
-			}
-		}
-	// })(i);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 var svgMenu0 = new Image();
-svgMenu0.src = 'visuals/menu0.svg';
 var svgMenu2 = new Image();
-svgMenu2.src = 'visuals/menu2.svg';
 var svgMenu2border = new Image();
-svgMenu2border.src = 'visuals/menu2border.svg';
 var svgMenu2borderimg = new Image();
-svgMenu2borderimg.src = 'visuals/bitmap737.jpg';
 var preMenuBG = new Image();
-preMenuBG.src = 'visuals/premenubg.png';
 
 var menu2_3Buttons = [];
-menu2_3Buttons.push(new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'));
-menu2_3Buttons.push(new Path2D('M 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nM 92.9 6.5\nL 99.6 6.5 90.05 16.15 100.55 30.9 93.8 30.9 86.45 19.95 83.4 23.05 83.4 30.9 78 30.9 78 6.5 83.4 6.5 83.4 16.6 92.9 6.5\nM 67.15 11.65\nQ 66.45 11.05 65.55 10.75\nL 63.65 10.4\nQ 61.85 10.4 60.6 11.1 59.3 11.85 58.55 13 57.75 14.2 57.4 15.7 57.05 17.2 57.05 18.8 57.05 20.35 57.4 21.8 57.75 23.25 58.55 24.4 59.3 25.6 60.6 26.3 61.85 27 63.65 27 66.1 27 67.5 25.45 68.9 23.95 69.2 21.5\nL 74.4 21.5\nQ 74.2 23.8 73.35 25.65 72.45 27.5 71.05 28.8 69.65 30.1 67.8 30.8\nL 63.65 31.5\nQ 60.8 31.5 58.6 30.5 56.35 29.5 54.8 27.8 53.3 26.1 52.45 23.75 51.65 21.45 51.65 18.8 51.65 16.1 52.45 13.75 53.3 11.4 54.8 9.65 56.35 7.9 58.6 6.9 60.8 5.9 63.65 5.9 65.65 5.9 67.45 6.5 69.25 7.1 70.65 8.2 72.1 9.3 73 10.95 73.95 12.6 74.15 14.7\nL 68.95 14.7\nQ 68.85 13.8 68.35 13\nL 67.15 11.65\nM 50.6 30.9\nL 45 30.9 43.15 25.5 34.05 25.5 32.15 30.9 26.7 30.9 35.95 6.5 41.45 6.5 50.6 30.9\nM 22.35 7.8\nQ 23.35 8.5 23.9 9.65 24.5 10.85 24.5 12.55 24.5 14.35 23.65 15.6 22.8 16.85 21.15 17.65 23.45 18.3 24.55 19.9 25.65 21.55 25.65 23.8 25.65 25.7 24.95 27.05 24.2 28.4 23 29.25 21.8 30.1 20.2 30.5\nL 17.05 30.9 5.2 30.9 5.2 6.5 16.7 6.5 19.85 6.8\nQ 21.3 7.1 22.35 7.8\nM 19.2 20.85\nQ 18.15 20.05 16.4 20.05\nL 10.6 20.05 10.6 26.75 16.3 26.75 17.8 26.6 19.05 26.05 19.95 25.1 20.25 23.5\nQ 20.25 21.65 19.2 20.85\nM 19 12.1\nQ 18.65 11.5 18.15 11.2\nL 17 10.8 15.6 10.65 10.6 10.65 10.6 16.4 16 16.4\nQ 17.45 16.4 18.35 15.7 19.3 15 19.3 13.5\nL 19 12.1\nM 38.7 12.5\nL 38.65 12.5 35.45 21.45 41.75 21.45 38.7 12.5 Z'));
-menu2_3Buttons.push(new Path2D('M 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 97.5 11.4\nL 85.2 11.4 85.2 16.35 96.5 16.35 96.5 20.35 85.2 20.35 85.2 26.1 97.75 26.1 97.75 30.4 80.05 30.4 80.05 7.05 97.5 7.05 97.5 11.4\nM 77.4 7.05\nL 77.4 11.4 70.4 11.4 70.4 30.4 65.25 30.4 65.25 11.4 58.3 11.4 58.3 7.05 77.4 7.05\nM 40.95 21.6\nL 41.1 23.45\nQ 41.25 24.35 41.8 25.1\nL 43.25 26.2 45.75 26.65\nQ 48.5 26.65 49.55 25.4 50.6 24.2 50.6 21.6\nL 50.6 7.05 55.7 7.05 55.7 21.6\nQ 55.7 26.3 53.05 28.65 50.4 30.95 45.75 30.95 41 30.95 38.4 28.65 35.8 26.35 35.8 21.6\nL 35.8 7.05 40.95 7.05 40.95 21.6\nM 26.55 13.85\nL 26.45 13.85 20.75 30.4 16.8 30.4 11.05 14.05 11 14.05 11 30.4 6.2 30.4 6.2 7.05 13.45 7.05 18.9 23.1 18.95 23.1 24.1 7.05 31.35 7.05 31.35 30.4 26.55 30.4 26.55 13.85 Z'));
-menu2_3Buttons.push(new Path2D('\nM 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 86.35 6.35\nL 86.35 26.35 98.3 26.35 98.3 30.85 80.95 30.85 80.95 6.35 86.35 6.35\nM 64.1 6.35\nL 69.6 6.35 78.8 30.85 73.2 30.85 71.35 25.4 62.2 25.4 60.25 30.85 54.8 30.85 64.1 6.35\nM 52.8 6.35\nL 52.8 21.6\nQ 52.8 26.55 50.05 29 47.25 31.45 42.35 31.45 37.35 31.45 34.65 29 31.9 26.6 31.9 21.6\nL 31.9 6.35 37.3 6.35 37.3 21.6 37.45 23.55\nQ 37.65 24.5 38.2 25.25 38.75 26.05 39.7 26.45\nL 42.35 26.9\nQ 45.2 26.9 46.3 25.65 47.4 24.35 47.4 21.6\nL 47.4 6.35 52.8 6.35\nM 21.4 6.75\nQ 23.65 7.8 25.2 9.5 26.75 11.3 27.55 13.65 28.35 16 28.35 18.7 28.35 21.4 27.55 23.7 26.75 26 25.2 27.7\nL 28.25 30.5 25.75 33.15 22.25 30\nQ 21.05 30.7 19.6 31.05\nL 16.35 31.45\nQ 13.5 31.45 11.25 30.45 9.05 29.45 7.5 27.75 5.95 26 5.15 23.7 4.3 21.35 4.3 18.7 4.3 16 5.15 13.65 5.95 11.3 7.5 9.5 9.05 7.8 11.25 6.75 13.5 5.8 16.35 5.8 19.2 5.8 21.4 6.75\nM 21.45 24.35\nQ 22.15 23.4 22.55 22.05 23 20.65 23 18.7 23 17.1 22.65 15.6 22.25 14.05 21.45 12.9 20.7 11.7 19.4 11 18.15 10.3 16.35 10.3 14.5 10.3 13.25 11 12 11.7 11.2 12.9 10.4 14.05 10.05 15.6 9.7 17.1 9.7 18.7 9.7 20.25 10.05 21.7 10.4 23.2 11.2 24.35 12 25.5 13.25 26.2 14.5 26.9 16.35 26.9\nL 17.55 26.9 18.5 26.6 16.2 24.45 18.7 21.8 21.45 24.35\nM 66.85 12.4\nL 66.75 12.4 63.6 21.4 69.9 21.4 66.85 12.4 Z'));
-
+var menu2_3Buttons = [];
 var menu0ButtonSize = {w: 273.0, h: 36.9, cr: 6.65};
 var menu2_3ButtonSize = {w: 104.5, h: 37.3};
 var levelButtonSize = {w: 100, h: 40};
 var menu0ButtonClicked = -1;
 var menu2_3ButtonClicked = -1;
 var levelButtonClicked = -1;
+
+// also loads the resources.
+function loadingScreen() {
+	canvas = document.getElementById('cnv');
+	ctx = canvas.getContext('2d');
+	canvas.style.width = cwidth + "px";
+	canvas.style.height = cheight + "px";
+
+	// Account for Pixel Density
+	canvas.width = Math.floor(cwidth * pixelRatio);
+	canvas.height = Math.floor(cheight * pixelRatio);
+	ctx.scale(pixelRatio, pixelRatio);
+
+	ctx.fillStyle = '#999966';
+	ctx.fillRect(0, 0, cwidth, cheight);
+	ctx.fillStyle = '#000000';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.font = '30px Helvetica';
+	ctx.fillText('Loading Resources...', cwidth/2, cheight/2);
+
+
+	svgCSBubble.src = 'visuals/ui/csbubble/dia.svg';
+	svgHPRCCrank.src = 'visuals/entities/e0035crank.svg';
+	svgCoin.src = 'visuals/wintoken.svg';
+	svgIceCubeMelt.src = 'visuals/effects/icecubemelt.svg';
+
+	for (var i = 0; i < imgBgs.length; i++) {
+		imgBgs[i] = new Image();
+		imgBgs[i].src = 'visuals/bg/bg' + i.toString(10).padStart(4, '0') + '.png';
+	}
+	for (var i = 0; i < blockProperties.length; i++) {
+		var id = i.toString(10).padStart(4, '0');
+		if (blockProperties[i][16] < 1) continue;
+		else if (blockProperties[i][16] == 1) {
+			svgTiles[i] = new Image();
+			svgTiles[i].src = 'visuals/blocks/b' + id + '.svg';
+		} else {
+			svgTiles[i] = new Array(blockProperties[i][16]);
+			for (var j = 0; j < svgTiles[i].length; j++) {
+				svgTiles[i][j] = new Image();
+				svgTiles[i][j].src = 'visuals/blocks/b' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg';;
+			}
+		}
+	}
+	for (var i = 0; i < svgLevers.length; i++) {
+		var filename = 'visuals/blocks/b' + i.toString(10).padStart(2, '0') + 'lever.svg';
+		if (doesFileExist(filename)) {
+			svgLevers[i] = new Image();
+			svgLevers[i].src = filename;
+		}
+	}
+	for (var i = 0; i < svgShadows.length; i++) {
+		svgShadows[i] = new Image();
+		svgShadows[i].src = 'visuals/shadows/s' + i.toString(10).padStart(4, '0') + '.svg';
+	}
+	for (var i = 0; i < svgTileBorders.length; i++) {
+		svgTileBorders[i] = new Image();
+		svgTileBorders[i].src = 'visuals/borders/tb' + i.toString(10).padStart(4, '0') + '.svg';
+	}
+	for (var i = 0; i < svgChars.length; i++) {
+		var filename = 'visuals/entities/e' + i.toString(10).padStart(4, '0') + '.svg';
+		if (doesFileExist(filename)) {
+			svgChars[i] = new Image();
+			svgChars[i].src = filename;
+		}
+	}
+	for (var i = 0; i < svgHPRCBubble.length; i++) {
+		svgHPRCBubble[i] = new Image();
+		svgHPRCBubble[i].src = 'visuals/ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg';
+	}
+	for (var i = 0; doesFileExist('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg'); i++) {
+		svgBodyParts[i] = new Image();
+		svgBodyParts[i].src = 'visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg';
+	}
+	for (var i = 0; i < svgCoinGet.length; i++) {
+		svgCoinGet[i] = new Image();
+		svgCoinGet[i].src = 'visuals/wtgetf' + i.toString(10).padStart(4, '0') + '.svg';
+	}
+	for (var i = 0; i < svgFire.length; i++) {
+		svgFire[i] = new Image();
+		svgFire[i].src = 'visuals/effects/fire' + i.toString(10).padStart(4, '0') + '.svg';
+	}
+	for (var i = 0; i < svgBurst.length; i++) {
+		svgBurst[i] = new Image();
+		svgBurst[i].src = 'visuals/effects/burst' + i.toString(10).padStart(4, '0') + '.svg';
+	}
+
+	//TODO: optimize this at some point
+	var xhr = new Array(charD.length);
+	for (var i = 0; i < svgChars.length; i++) {
+		//https://stackoverflow.com/questions/25220486/xmlhttprequest-in-for-loop
+		(function(i) {
+			if (typeof svgChars[i] !== 'undefined') {
+				// I've been avoiding doing xmlhttprequest stuff as long as I could, doing things wrong so I could fix them and do them right later. But this seems to be the only way here, so...
+				// But it was all worth it for not using any libraries!
+				// https://stackoverflow.com/questions/38580176/how-can-i-read-an-svg-file-included-in-my-project-and-write-to-it
+				xhr[i] = new XMLHttpRequest();
+				xhr[i].open("GET", svgChars[i].src);
+				xhr[i].setRequestHeader("Content-Type", "image/svg+xml");
+				xhr[i].onload = function(event) {
+					var response = event.target.responseText;
+					var doc = new DOMParser();
+					var xml = doc.parseFromString(response, "image/svg+xml");
+					var svg = xml.getElementsByTagName('svg')[0];
+					svgCharsVB[i] = svg.getAttribute('viewBox').split(' ').map(Number);
+					return;
+				};
+				xhr[i].send();
+			}
+		})(i);
+	}
+	xhr = new Array(charD.length);
+	for (var i = 0; i < svgTiles.length; i++) {
+		(function(i) {
+			if (typeof svgTiles[i] !== 'undefined' && Object.prototype.toString.call(svgTiles[i]) !== '[object Array]') {
+				xhr[i] = new XMLHttpRequest();
+				xhr[i].open("GET", svgTiles[i].src);
+				xhr[i].setRequestHeader("Content-Type", "image/svg+xml");
+				xhr[i].onload = function(event) {
+					var response = event.target.responseText;
+					var doc = new DOMParser();
+					var xml = doc.parseFromString(response, "image/svg+xml");
+					var svg = xml.getElementsByTagName('svg')[0];
+					svgTilesVB[i] = svg.getAttribute('viewBox').split(' ').map(Number);
+					return;
+				};
+				xhr[i].send();
+			}
+		})(i);
+	}
+	var xhr2 = new Array(charD.length);
+	for (var i = 0; i < svgTiles.length; i++) {
+		// (function(i) {
+			if (Object.prototype.toString.call(svgTiles[i]) === '[object Array]') {
+				svgTilesVB[i] = new Array(svgTiles[i].length);
+				xhr2[i] = new Array(svgTiles[i].length);
+				for (var j = 0; j < svgTiles[i].length; j++) {
+					(function(i,j) {
+						xhr2[i][j] = new XMLHttpRequest();
+						xhr2[i][j].open("GET", svgTiles[i][j].src);
+						xhr2[i][j].setRequestHeader("Content-Type", "image/svg+xml");
+						xhr2[i][j].onload = function(event) {
+							var response = event.target.responseText;
+							var doc = new DOMParser();
+							var xml = doc.parseFromString(response, "image/svg+xml");
+							var svg = xml.getElementsByTagName('svg')[0];
+							svgTilesVB[i][j] = svg.getAttribute('viewBox').split(' ').map(Number);
+							return;
+						};
+						xhr2[i][j].send();
+					})(i,j);
+				}
+			}
+		// })(i);
+	}
+	svgMenu0.src = 'visuals/menu0.svg';
+	svgMenu2.src = 'visuals/menu2.svg';
+	svgMenu2border.src = 'visuals/menu2border.svg';
+	svgMenu2borderimg.src = 'visuals/bitmap737.jpg';
+	preMenuBG.src = 'visuals/premenubg.png';
+
+	menu2_3Buttons.push(new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'));
+	menu2_3Buttons.push(new Path2D('M 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nM 92.9 6.5\nL 99.6 6.5 90.05 16.15 100.55 30.9 93.8 30.9 86.45 19.95 83.4 23.05 83.4 30.9 78 30.9 78 6.5 83.4 6.5 83.4 16.6 92.9 6.5\nM 67.15 11.65\nQ 66.45 11.05 65.55 10.75\nL 63.65 10.4\nQ 61.85 10.4 60.6 11.1 59.3 11.85 58.55 13 57.75 14.2 57.4 15.7 57.05 17.2 57.05 18.8 57.05 20.35 57.4 21.8 57.75 23.25 58.55 24.4 59.3 25.6 60.6 26.3 61.85 27 63.65 27 66.1 27 67.5 25.45 68.9 23.95 69.2 21.5\nL 74.4 21.5\nQ 74.2 23.8 73.35 25.65 72.45 27.5 71.05 28.8 69.65 30.1 67.8 30.8\nL 63.65 31.5\nQ 60.8 31.5 58.6 30.5 56.35 29.5 54.8 27.8 53.3 26.1 52.45 23.75 51.65 21.45 51.65 18.8 51.65 16.1 52.45 13.75 53.3 11.4 54.8 9.65 56.35 7.9 58.6 6.9 60.8 5.9 63.65 5.9 65.65 5.9 67.45 6.5 69.25 7.1 70.65 8.2 72.1 9.3 73 10.95 73.95 12.6 74.15 14.7\nL 68.95 14.7\nQ 68.85 13.8 68.35 13\nL 67.15 11.65\nM 50.6 30.9\nL 45 30.9 43.15 25.5 34.05 25.5 32.15 30.9 26.7 30.9 35.95 6.5 41.45 6.5 50.6 30.9\nM 22.35 7.8\nQ 23.35 8.5 23.9 9.65 24.5 10.85 24.5 12.55 24.5 14.35 23.65 15.6 22.8 16.85 21.15 17.65 23.45 18.3 24.55 19.9 25.65 21.55 25.65 23.8 25.65 25.7 24.95 27.05 24.2 28.4 23 29.25 21.8 30.1 20.2 30.5\nL 17.05 30.9 5.2 30.9 5.2 6.5 16.7 6.5 19.85 6.8\nQ 21.3 7.1 22.35 7.8\nM 19.2 20.85\nQ 18.15 20.05 16.4 20.05\nL 10.6 20.05 10.6 26.75 16.3 26.75 17.8 26.6 19.05 26.05 19.95 25.1 20.25 23.5\nQ 20.25 21.65 19.2 20.85\nM 19 12.1\nQ 18.65 11.5 18.15 11.2\nL 17 10.8 15.6 10.65 10.6 10.65 10.6 16.4 16 16.4\nQ 17.45 16.4 18.35 15.7 19.3 15 19.3 13.5\nL 19 12.1\nM 38.7 12.5\nL 38.65 12.5 35.45 21.45 41.75 21.45 38.7 12.5 Z'));
+	menu2_3Buttons.push(new Path2D('M 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 97.5 11.4\nL 85.2 11.4 85.2 16.35 96.5 16.35 96.5 20.35 85.2 20.35 85.2 26.1 97.75 26.1 97.75 30.4 80.05 30.4 80.05 7.05 97.5 7.05 97.5 11.4\nM 77.4 7.05\nL 77.4 11.4 70.4 11.4 70.4 30.4 65.25 30.4 65.25 11.4 58.3 11.4 58.3 7.05 77.4 7.05\nM 40.95 21.6\nL 41.1 23.45\nQ 41.25 24.35 41.8 25.1\nL 43.25 26.2 45.75 26.65\nQ 48.5 26.65 49.55 25.4 50.6 24.2 50.6 21.6\nL 50.6 7.05 55.7 7.05 55.7 21.6\nQ 55.7 26.3 53.05 28.65 50.4 30.95 45.75 30.95 41 30.95 38.4 28.65 35.8 26.35 35.8 21.6\nL 35.8 7.05 40.95 7.05 40.95 21.6\nM 26.55 13.85\nL 26.45 13.85 20.75 30.4 16.8 30.4 11.05 14.05 11 14.05 11 30.4 6.2 30.4 6.2 7.05 13.45 7.05 18.9 23.1 18.95 23.1 24.1 7.05 31.35 7.05 31.35 30.4 26.55 30.4 26.55 13.85 Z'));
+	menu2_3Buttons.push(new Path2D('\nM 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 86.35 6.35\nL 86.35 26.35 98.3 26.35 98.3 30.85 80.95 30.85 80.95 6.35 86.35 6.35\nM 64.1 6.35\nL 69.6 6.35 78.8 30.85 73.2 30.85 71.35 25.4 62.2 25.4 60.25 30.85 54.8 30.85 64.1 6.35\nM 52.8 6.35\nL 52.8 21.6\nQ 52.8 26.55 50.05 29 47.25 31.45 42.35 31.45 37.35 31.45 34.65 29 31.9 26.6 31.9 21.6\nL 31.9 6.35 37.3 6.35 37.3 21.6 37.45 23.55\nQ 37.65 24.5 38.2 25.25 38.75 26.05 39.7 26.45\nL 42.35 26.9\nQ 45.2 26.9 46.3 25.65 47.4 24.35 47.4 21.6\nL 47.4 6.35 52.8 6.35\nM 21.4 6.75\nQ 23.65 7.8 25.2 9.5 26.75 11.3 27.55 13.65 28.35 16 28.35 18.7 28.35 21.4 27.55 23.7 26.75 26 25.2 27.7\nL 28.25 30.5 25.75 33.15 22.25 30\nQ 21.05 30.7 19.6 31.05\nL 16.35 31.45\nQ 13.5 31.45 11.25 30.45 9.05 29.45 7.5 27.75 5.95 26 5.15 23.7 4.3 21.35 4.3 18.7 4.3 16 5.15 13.65 5.95 11.3 7.5 9.5 9.05 7.8 11.25 6.75 13.5 5.8 16.35 5.8 19.2 5.8 21.4 6.75\nM 21.45 24.35\nQ 22.15 23.4 22.55 22.05 23 20.65 23 18.7 23 17.1 22.65 15.6 22.25 14.05 21.45 12.9 20.7 11.7 19.4 11 18.15 10.3 16.35 10.3 14.5 10.3 13.25 11 12 11.7 11.2 12.9 10.4 14.05 10.05 15.6 9.7 17.1 9.7 18.7 9.7 20.25 10.05 21.7 10.4 23.2 11.2 24.35 12 25.5 13.25 26.2 14.5 26.9 16.35 26.9\nL 17.55 26.9 18.5 26.6 16.2 24.45 18.7 21.8 21.45 24.35\nM 66.85 12.4\nL 66.75 12.4 63.6 21.4 69.9 21.4 66.85 12.4 Z'));
+	// TODO: uh... this is a very wrong way of doing this.
+	setTimeout(setup,3000);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function onRect(mx, my, x, y, w, h) {
 	return mx>x&&mx<x+w&&my>y&&my<y+h;
@@ -2020,6 +2058,20 @@ function drawCharacters() {
 	for (var _loc2_ = 0; _loc2_ < charCount*2; _loc2_++) {
 		var _loc1_ = charDepths[_loc2_];
 		if (_loc1_ < 0) continue;
+
+
+		if (char[_loc1_].burstFrame >= 0) {
+			ctx.save();
+			var burstImg = svgBurst[char[_loc1_].burstFrame];
+			var burstmat = charModels[char[_loc1_].id].burstmat;
+			ctx.transform(burstmat.a,burstmat.b,burstmat.c,burstmat.d,burstmat.tx+char[_loc1_].x,burstmat.ty+char[_loc1_].y);
+			ctx.drawImage(burstImg, -burstImg.width/2, -burstImg.height/2);
+			ctx.restore();
+
+			char[_loc1_].burstFrame++;
+			if (char[_loc1_].burstFrame > svgBurst.length-1) char[_loc1_].burstFrame = -1;
+		}
+
 		// levelChar.attachMovie("char","char" + _loc1_,charDepth - _loc1_ * 2,{_x:char[_loc1_].x,_y:char[_loc1_].y});
 		if (char[_loc1_].deathTimer > 0) {
 			if (char[_loc1_].id > 34 && typeof svgChars[char[_loc1_].id] !== 'undefined') {
@@ -3655,6 +3707,7 @@ function changeControl()
 			putDown(char[control].carriedBy);
 		}
 		swapDepths(control, charCount * 2 - (control + 1) * 2);
+		char[control].burstFrame = 0;
 		// levelChar["char" + control].burst.gotoAndPlay(2);
 	}
 }
@@ -3822,7 +3875,6 @@ function toggleSound() {
 
 
 
-
 // TODO: optimize
 function mousemove(event){
 	_xmouse = event.pageX - canvas.getBoundingClientRect().left;
@@ -3848,16 +3900,8 @@ function keyup(event){
 
 // mouseIsDown
 
-function setup() {
-	canvas = document.getElementById('cnv');
-	ctx = canvas.getContext('2d');
-	canvas.style.width = cwidth + "px";
-	canvas.style.height = cheight + "px";
 
-	// Account for Pixel Density
-	canvas.width = Math.floor(cwidth * pixelRatio);
-	canvas.height = Math.floor(cheight * pixelRatio);
-	ctx.scale(pixelRatio, pixelRatio);
+function setup() {
 
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);

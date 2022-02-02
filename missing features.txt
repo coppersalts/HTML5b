@@ -7,8 +7,7 @@
 - death flashing
 - animated entities
 - HPRC cranking arms
-- getting the entity and blocks to layer correctly
-- the little flash of light when you switch characters
+- getting blocks to layer correctly
 - the metal tile borders
 - door lights
 - autosave
