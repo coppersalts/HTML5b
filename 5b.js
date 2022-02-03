@@ -476,6 +476,32 @@ var bodyPartAnimations = [
 			{a:-0.1394805908203125,b:0.4163665771484375,c:-0.3674163818359375,d:-0.115997314453125,tx:-1.7,ty:-0.1},
 			{a:-0.1436767578125,b:0.4165496826171875,c:-0.3667144775390625,d:-0.119384765625,tx:-1.7,ty:-0.1}
 		]
+	},
+	{
+		// Jump Arm 2
+		bodypart: 3,
+		frames: [
+			{a:0.363616943359375,b:0.0290069580078125,c:-0.0290069580078125,d:0.363616943359375,tx:0.05,ty:2.5},
+			{a:0.3632659912109375,b:0.03179931640625,c:-0.03179931640625,d:0.3632659912109375,tx:0.1,ty:2.45},
+			{a:0.362457275390625,b:0.0399322509765625,c:-0.0399322509765625,d:0.362457275390625,tx:0,ty:2.45},
+			{a:0.3603515625,b:0.0555419921875,c:-0.0555419921875,d:0.3603515625,tx:0,ty:2.4},
+			{a:0.356475830078125,b:0.07623291015625,c:-0.07623291015625,d:0.356475830078125,tx:0,ty:2.35},
+			{a:0.3489227294921875,b:0.105255126953125,c:-0.105255126953125,d:0.3489227294921875,tx:0,ty:2.3},
+			{a:0.336517333984375,b:0.1396942138671875,c:-0.1396942138671875,d:0.336517333984375,tx:-0.05,ty:2.25},
+			{a:0.317535400390625,b:0.178497314453125,c:-0.178497314453125,d:0.317535400390625,tx:-0.1,ty:2.1},
+			{a:0.2895660400390625,b:0.2209014892578125,c:-0.2209014892578125,d:0.2895660400390625,tx:-0.15,ty:2.05},
+			{a:0.252410888671875,b:0.26251220703125,c:-0.26251220703125,d:0.252410888671875,tx:-0.15,ty:2},
+			{a:0.20660400390625,b:0.2999420166015625,c:-0.2999420166015625,d:0.20660400390625,tx:-0.25,ty:2},
+			{a:0.152862548828125,b:0.3306884765625,c:-0.3306884765625,d:0.152862548828125,tx:-0.3,ty:2},
+			{a:0.096160888671875,b:0.3515472412109375,c:-0.3515472412109375,d:0.096160888671875,tx:-0.3,ty:2},
+			{a:0.0413360595703125,b:0.3622894287109375,c:-0.3622894287109375,d:0.0413360595703125,tx:-0.35,ty:2.05},
+			{a:-0.00811767578125,b:0.364654541015625,c:-0.364654541015625,d:-0.00811767578125,tx:-0.5,ty:2.05},
+			{a:-0.04949951171875,b:0.361236572265625,c:-0.361236572265625,d:-0.04949951171875,tx:-0.55,ty:2.1},
+			{a:-0.08221435546875,b:0.3551177978515625,c:-0.3551177978515625,d:-0.08221435546875,tx:-0.6,ty:2.25},
+			{a:-0.103973388671875,b:0.34930419921875,c:-0.34930419921875,d:-0.103973388671875,tx:-0.7,ty:2.25},
+			{a:-0.117431640625,b:0.344970703125,c:-0.344970703125,d:-0.117431640625,tx:-0.7,ty:2.25},
+			{a:-0.12213134765625,b:0.343719482421875,c:-0.343719482421875,d:-0.12213134765625,tx:-0.75,ty:2.25}
+		]
 	}
 ]
 // frames:
@@ -693,28 +719,36 @@ var charModels = [
 				{bodypart:3,mat:{a:-0.322235107421875,b:-0.090789794921875,c:-0.090789794921875,d:0.322235107421875,tx:-5.6,ty:-19.95}},
 				{bodypart:0,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.05,ty:-40.85}},
 				{bodypart:1,mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:-3.6,ty:-38.7}},
-				{bodypart:3,mat:{a:-0.313751220703125,b:0.1172332763671875,c:0.1172332763671875,d:0.313751220703125,tx:4.65,ty:-20.1}}
+				{bodypart:3,mat:{a:-0.313751220703125,b:0.1172332763671875,c:0.1172332763671875,d:0.313751220703125,tx:4.65,ty:-20.1}},
+				{bodypart:'dia',mat:{a:0.4889373779296875,b:0,c:0,d:0.9688720703125,tx:-0.8,ty:-28.85}}
 			],
 			[
+				{bodypart:false,anim:0,offset:15,loop:true,mat:{a:-1,b:0,c:0,d:1,tx:7.5,ty:-22.65}},
 				{bodypart:0,mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.05,ty:-41.75}},
 				{bodypart:1,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:5,ty:-39.6}},
-				{bodypart:37,mat:{a:0.194427490234375,b:0,c:0,d:0.329345703125,tx:2.8,ty:-29.45}}
+				{bodypart:37,mat:{a:0.194427490234375,b:0,c:0,d:0.329345703125,tx:2.8,ty:-29.45}},
+				{bodypart:false,anim:0,offset:0,loop:true,mat:{a:-1,b:0,c:0,d:1,tx:-4.55,ty:-22.65}}
 			],
 			[
 				{bodypart:3,mat:{a:0.322235107421875,b:-0.090789794921875,c:0.090789794921875,d:0.322235107421875,tx:6.2,ty:-19.95}},
 				{bodypart:0,mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.55,ty:-40.85}},
 				{bodypart:1,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:4.2,ty:-38.7}},
-				{bodypart:3,mat:{a:0.313751220703125,b:0.1172332763671875,c:-0.1172332763671875,d:0.313751220703125,tx:-4.05,ty:-20.1}}
+				{bodypart:3,mat:{a:0.313751220703125,b:0.1172332763671875,c:-0.1172332763671875,d:0.313751220703125,tx:-4.05,ty:-20.1}},
+				{bodypart:'dia',mat:{a:-0.4889373779296875,b:0,c:0,d:0.9688720703125,tx:1.4,ty:-28.85}}
 			],
 			[
+				{bodypart:false,anim:2,offset:0,loop:false,mat:{a:0.999664306640625,b:-0.022705078125,c:0.022705078125,d:0.999664306640625,tx:-3.05,ty:-25.7}},
 				{bodypart:0,mat:{a:0.33477783203125,b:0.0128631591796875,c:-0.0128631591796875,d:0.33477783203125,tx:2.45,ty:-41.05}},
 				{bodypart:1,mat:{a:-0.33477783203125,b:-0.0128631591796875,c:-0.0128631591796875,d:0.33477783203125,tx:-1.3,ty:-39.05}},
-				{bodypart:38,mat:{a:-0.194244384765625,b:-0.0074615478515625,c:-0.0112762451171875,d:0.2929840087890625,tx:0.55,ty:-28.7}}
+				{bodypart:38,mat:{a:-0.194244384765625,b:-0.0074615478515625,c:-0.0112762451171875,d:0.2929840087890625,tx:0.55,ty:-28.7}},
+				{bodypart:false,anim:2,offset:0,loop:false,mat:{a:-0.999664306640625,b:0.022705078125,c:0.022705078125,d:0.999664306640625,tx:6.7,ty:-25.1}}
 			],
 			[
+				{bodypart:false,anim:2,offset:0,loop:false,mat:{a:-0.999755859375,b:-0.01812744140625,c:-0.01812744140625,d:0.999755859375,tx:5.05,ty:-25.2}},
 				{bodypart:0,mat:{a:-0.334716796875,b:0.014404296875,c:0.014404296875,d:0.334716796875,tx:-0.5,ty:-40.5}},
 				{bodypart:1,mat:{a:0.334716796875,b:-0.014404296875,c:0.014404296875,d:0.334716796875,tx:3.25,ty:-38.55}},
-				{bodypart:38,mat:{a:0.1941986083984375,b:-0.0083465576171875,c:0.012603759765625,d:0.2929229736328125,tx:1.45,ty:-28.2}}
+				{bodypart:38,mat:{a:0.1941986083984375,b:-0.0083465576171875,c:0.012603759765625,d:0.2929229736328125,tx:1.45,ty:-28.2}},
+				{bodypart:false,anim:2,offset:0,loop:false,mat:{a:0.999755859375,b:0.01812744140625,c:-0.01812744140625,d:0.999755859375,tx:-4.65,ty:-24.6}}
 			],
 			[
 				{bodypart:4,mat:{a:0.02471923828125,b:-0.3337860107421875,c:-0.3337860107421875,d:-0.0247039794921875,tx:-3.5,ty:-20.2}},
@@ -2355,7 +2389,8 @@ function drawCharacters() {
 						// var bpanimframe = modelFrame[i].loop ? ((char[_loc1_].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[_loc1_].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
 						var diamouthframe = 0;
 						if (cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == _loc1_) {
-							var expr = dialogueFace[currentLevel][cutSceneLine]-2;
+							// var expr = dialogueFace[currentLevel][cutSceneLine]-2;
+							var expr = char[_loc1_].expr;
 							diamouthframe = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
 							// TODO: change based on expression
 							img = svgBodyParts[diaMouths[expr].frames[diamouthframe].bodypart-1];
@@ -2363,7 +2398,7 @@ function drawCharacters() {
 							// TODO: refactor this somehwere else
 							if (char[_loc1_].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[_loc1_].diaMouthFrame++;
 						} else {
-							img = svgBodyParts[diaMouths[model.defaultExpr].frames[diamouthframe].bodypart-1];
+							img = svgBodyParts[diaMouths[char[_loc1_].expr].frames[diamouthframe].bodypart-1];
 						}
 						// var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
 						var mat = diaMouths[model.defaultExpr].frames[diamouthframe].mat;
@@ -3605,6 +3640,7 @@ function rescue()
 		if(char[_loc1_].charState == 9)
 		{
 			char[_loc1_].charState = 10;
+			char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
 			// levelChar["char" + _loc1_].charBody.mouth.gotoAndStop(1);
 		}
 		_loc1_ = _loc1_ + 1;
@@ -3649,6 +3685,7 @@ function displayLine(level, line)
 		// _root.csBubble.csBubble2.gotoAndStop(1);
 		// _root.csBubble.csBubble2.box.charBody.gotoAndStop(char[_loc2_].id + 1);
 		// _root.levelChar["char" + _loc2_].charBody.gotoAndStop(Math.ceil(char[_loc2_].dire / 2) * 2);
+		char[_loc2_].expr = dialogueFace[level][line]-2;
 		// _root.levelChar["char" + _loc2_].charBody.mouth.gotoAndStop(1);
 		// _root.levelChar["char" + _loc2_].charBody.mouth.gotoAndStop(dialogueFace[level][line]);
 	}
@@ -3936,6 +3973,7 @@ function changeControl()
 		}
 		swapDepths(control, charCount * 2 - (control + 1) * 2);
 		char[control].burstFrame = 0;
+		char[control].expr = charModels[char[control].id].defaultExpr;
 		// levelChar["char" + control].burst.gotoAndPlay(2);
 	}
 }

@@ -43,6 +43,7 @@ class Character {
 		this.legAnimationFrame = [0,0]; // Animation offset.
 		this.burstFrame = -1;
 		this.diaMouthFrame = 0;
+		this.expr = 0;
 	}
 
 	applyForces(grav, control, waterUpMaxSpeed)
