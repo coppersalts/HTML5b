@@ -35,12 +35,14 @@ class Character {
 		this.heatSpeed = theatSpeed;
 
 		this.frame = 3;
+		this.poseTimer = 0;
 		this.leg1frame = 0;
 		this.leg2frame = 0;
 		this.leg1skew = 0;
 		this.leg2skew = 0;
 		this.legAnimationFrame = [0,0]; // Animation offset.
 		this.burstFrame = -1;
+		this.diaMouthFrame = 0;
 	}
 
 	applyForces(grav, control, waterUpMaxSpeed)
@@ -136,5 +138,12 @@ class Character {
 	swimUp(jumpPower)
 	{
 		this.vy -= this.weight2 + jumpPower;
+	}
+
+	setFrame(newFrame) {
+		if (newFrame != this.frame) {
+			if (!((this.frame == 5 && newFrame == 4) || (this.frame == 4 && newFrame == 5))) this.poseTimer = 0;
+			this.frame = newFrame;
+		}
 	}
 }

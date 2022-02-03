@@ -413,6 +413,86 @@ var charD = [
 // 11 - 
 // 12 - 
 // 13 - 
+var diaMouths = [
+	{
+		frameorder: [1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0],
+		frames: [
+			{bodypart:37,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-1.55,ty:-0.1}},
+			{bodypart:38,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-1.55,ty:-0.1}},
+			{bodypart:46,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-1.55,ty:-0.1}},
+			{bodypart:37,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-1.55,ty:-0.1}}
+		]
+	},
+	{
+		frameorder: [0,0,1,2,3,1,1,0,0,1,2,3,1,1,0,0,1,2,3,1,1,0,0,1,2,3,1,1,0,0,1,2,3,1,1,0,0,1,2,3,1,1,0,0,1,2,3,1,1,0,0,1,2,3,1,1,0],
+		frames: [
+			{bodypart:2,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-0.55,ty:1.35}},
+			{bodypart:43,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-0.55,ty:1.35}},
+			{bodypart:44,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-0.55,ty:1.35}},
+			{bodypart:45,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-0.55,ty:1.35}}
+		]
+	}
+]
+var bodyPartAnimations = [
+	{
+		// Running Arm
+		bodypart: 42,
+		frames: [
+			{a:0.1691741943359375,b:-0.3343353271484375,c:-0.32513427734375,d:-0.164520263671875,tx:0,ty:0},
+			{a:0.1628875732421875,b:-0.3369293212890625,c:-0.32763671875,d:-0.1584014892578125,tx:-0.05,ty:0.05},
+			{a:0.143402099609375,b:-0.3457183837890625,c:-0.3361968994140625,d:-0.13946533203125,tx:0,ty:0.05},
+			{a:0.106475830078125,b:-0.35894775390625,c:-0.3490753173828125,d:-0.1035614013671875,tx:0,ty:0.15},
+			{a:0.0476837158203125,b:-0.37158203125,c:-0.3613433837890625,d:-0.0463714599609375,tx:0,ty:0.2},
+			{a:-0.0312652587890625,b:-0.3734130859375,c:-0.3631439208984375,d:0.0304107666015625,tx:0.1,ty:0.3},
+			{a:-0.130035400390625,b:-0.3511962890625,c:-0.341522216796875,d:0.12646484375,tx:0.2,ty:0.45},
+			{a:-0.2310028076171875,b:-0.29461669921875,c:-0.2865142822265625,d:0.224639892578125,tx:0.4,ty:0.6},
+			{a:-0.31005859375,b:-0.209991455078125,c:-0.2042236328125,d:0.3015289306640625,tx:0.5,ty:0.6},
+			{a:-0.3542327880859375,b:-0.1222076416015625,c:-0.1188507080078125,d:0.3444976806640625,tx:0.75,ty:0.65},
+			{a:-0.3712921142578125,b:-0.0524749755859375,c:-0.051025390625,d:0.361083984375,tx:0.9,ty:0.65},
+			{a:-0.37493896484375,b:-0.0117645263671875,c:-0.011444091796875,d:0.3646240234375,tx:1,ty:0.6},
+			{a:-0.37518310546875,b:-0.0000152587890625,c:-0.0000152587890625,d:0.3648681640625,tx:0.95,ty:0.55},
+			{a:-0.375152587890625,b:-0.0035858154296875,c:-0.0034942626953125,d:0.364837646484375,tx:0.95,ty:0.55},
+			{a:-0.3746490478515625,b:-0.0182647705078125,c:-0.01776123046875,d:0.364349365234375,tx:0.95,ty:0.55},
+			{a:-0.3723907470703125,b:-0.044281005859375,c:-0.0430755615234375,d:0.3621368408203125,tx:0.85,ty:0.6},
+			{a:-0.3656005859375,b:-0.0829010009765625,c:-0.08062744140625,d:0.35552978515625,tx:0.8,ty:0.65},
+			{a:-0.3497314453125,b:-0.1344451904296875,c:-0.1307373046875,d:0.3401031494140625,tx:0.7,ty:0.6},
+			{a:-0.3190460205078125,b:-0.196136474609375,c:-0.19073486328125,d:0.310272216796875,tx:0.6,ty:0.6},
+			{a:-0.2664947509765625,b:-0.2629547119140625,c:-0.2557220458984375,d:0.2591705322265625,tx:0.5,ty:0.6},
+			{a:-0.19036865234375,b:-0.3223876953125,c:-0.3135223388671875,d:0.1851348876953125,tx:0.3,ty:0.5},
+			{a:-0.0957794189453125,b:-0.36212158203125,c:-0.3521575927734375,d:0.0931396484375,tx:0.2,ty:0.45},
+			{a:-0.0017242431640625,b:-0.3748016357421875,c:-0.3644866943359375,d:0.001678466796875,tx:0.15,ty:0.3},
+			{a:0.076385498046875,b:-0.3666534423828125,c:-0.3565673828125,d:-0.07427978515625,tx:0.1,ty:0.15},
+			{a:0.129913330078125,b:-0.35107421875,c:-0.3414154052734375,d:-0.1263275146484375,tx:0.05,ty:0.05},
+			{a:0.159912109375,b:-0.338348388671875,c:-0.32904052734375,d:-0.155517578125,tx:0.05,ty:0.05}
+		]
+	},
+	{
+		// Jump Arm
+		bodypart: 4,
+		frames: [
+			{a:0.24114990234375,b:0.0818023681640625,c:-0.123992919921875,d:0.365570068359375,tx:-0.05,ty:4.4},
+			{a:0.2412567138671875,b:0.083343505859375,c:-0.12591552734375,d:0.364501953125,tx:0,ty:4.4},
+			{a:0.2418670654296875,b:0.0895843505859375,c:-0.1339111328125,d:0.3616180419921875,tx:-0.1,ty:4.25},
+			{a:0.2423858642578125,b:0.1007843017578125,c:-0.1479644775390625,d:0.356048583984375,tx:-0.1,ty:4.2},
+			{a:0.2422637939453125,b:0.1172943115234375,c:-0.1678619384765625,d:0.3470306396484375,tx:-0.15,ty:4},
+			{a:0.240447998046875,b:0.139434814453125,c:-0.193145751953125,d:0.3335418701171875,tx:-0.25,ty:3.8},
+			{a:0.2349395751953125,b:0.1680755615234375,c:-0.222930908203125,d:0.3143310546875,tx:-0.3,ty:3.6},
+			{a:0.22479248046875,b:0.20147705078125,c:-0.255889892578125,d:0.2880706787109375,tx:-0.4,ty:3.25},
+			{a:0.2071990966796875,b:0.239471435546875,c:-0.2901611328125,d:0.25347900390625,tx:-0.6,ty:2.85},
+			{a:0.1816253662109375,b:0.27899169921875,c:-0.3218231201171875,d:0.2118682861328125,tx:-0.75,ty:2.5},
+			{a:0.146728515625,b:0.3177032470703125,c:-0.3484039306640625,d:0.1646728515625,tx:-0.85,ty:2.1},
+			{a:0.1043548583984375,b:0.351959228515625,c:-0.3685150146484375,d:0.11297607421875,tx:-1.05,ty:1.65},
+			{a:0.056854248046875,b:0.37933349609375,c:-0.3805389404296875,d:0.062042236328125,tx:-1.2,ty:1.3},
+			{a:0.0088653564453125,b:0.3985443115234375,c:-0.3854522705078125,d:0.0136566162109375,tx:-1.3,ty:0.9},
+			{a:-0.0344390869140625,b:0.410064697265625,c:-0.3846893310546875,d:-0.0270843505859375,tx:-1.4,ty:0.6},
+			{a:-0.07354736328125,b:0.41558837890625,c:-0.3806915283203125,d:-0.0607147216796875,tx:-1.5,ty:0.35},
+			{a:-0.1043243408203125,b:0.41729736328125,c:-0.375457763671875,d:-0.0870208740234375,tx:-1.6,ty:0.15},
+			{a:-0.1259613037109375,b:0.4172210693359375,c:-0.37078857421875,d:-0.104949951171875,tx:-1.6,ty:0},
+			{a:-0.1394805908203125,b:0.4163665771484375,c:-0.3674163818359375,d:-0.115997314453125,tx:-1.7,ty:-0.1},
+			{a:-0.1436767578125,b:0.4165496826171875,c:-0.3667144775390625,d:-0.119384765625,tx:-1.7,ty:-0.1}
+		]
+	}
+]
 var charModels = [
 	{
 		torsoX: 1.15,
@@ -432,44 +512,55 @@ var charModels = [
 		firemat: {a:-0.4046630859375,b:0.0060882568359375,c:0.006805419921875,d:0.5772552490234375,tx:1.05,ty:-51.05},
 		charimgmat: {a:0.12158203125,b:-0.0020751953125,c:0.0037384033203125,d:0.12152099609375,tx:0.1,ty:0.4},
 		burstmat: {a:1.0688934326171875,b:0,c:0,d:1,tx:1.6,ty:-32.25},
+		defaultExpr: 1,
 		frames: [
 			[
+				{bodypart:false,anim:0,offset:15,loop:true,mat:{a:1,b:0,c:0,d:1,tx:-21.05,ty:-17.65}},
 				{bodypart:0,mat:{a:0.2847747802734375,b:-0.0040130615234375,c:0.0086822509765625,d:0.285064697265625,tx:0.35,ty:-26.65}},
 				{bodypart:1,mat:{a:-0.375213623046875,b:0.00494384765625,c:0,d:0.375213623046875,tx:-9.05,ty:-30.6}},
 				{bodypart:1,mat:{a:-0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:4.2,ty:-30.35}},
 				{bodypart:2,mat:{a:-0.3180999755859375,b:0.01141357421875,c:0.022735595703125,d:0.43402099609375,tx:-2.5,ty:-17.5}},
+				{bodypart:false,anim:0,offset:0,loop:true,mat:{a:1,b:0,c:0,d:1,tx:17.95,ty:-17.65}}
 			],
 			[
 				{bodypart:3,mat:{a:0.3733978271484375,b:0.0712127685546875,c:-0.0721435546875,d:0.3782196044921875,tx:-21.35,ty:-16.9}},
 				{bodypart:0,mat:{a:0.2847747802734375,b:-0.0040130615234375,c:0.0086822509765625,d:0.285064697265625,tx:0.6,ty:-26.2}},
 				{bodypart:1,mat:{a:-0.375213623046875,b:0.00494384765625,c:0,d:0.375213623046875,tx:-8.8,ty:-30.15}},
 				{bodypart:1,mat:{a:-0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:4.45,ty:-29.8}},
-				{bodypart:3,mat:{a:-0.3849334716796875,b:0.0501251220703125,c:0.0777587890625,d:0.3766937255859375,tx:21.1,ty:-18.65}}
+				{bodypart:3,mat:{a:-0.3849334716796875,b:0.0501251220703125,c:0.0777587890625,d:0.3766937255859375,tx:21.1,ty:-18.65}},
+				{bodypart:'dia',mat:{a:0.886138916015625,b:0,c:0,d:0.886138916015625,tx:-2.05,ty:-18.05}}
 			],
 			[
+				{bodypart:false,anim:0,offset:15,loop:true,mat:{a:-1,b:0,c:0,d:1,tx:22.1,ty:-17.65}},
 				{bodypart:0,mat:{a:0.283721923828125,b:0.0136260986328125,c:-0.0087432861328125,d:0.283905029296875,tx:0.85,ty:-26.65}},
 				{bodypart:1,mat:{a:0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:-4.2,ty:-30.25}},
 				{bodypart:1,mat:{a:0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:9.05,ty:-30.6}},
 				{bodypart:2,mat:{a:0.3180999755859375,b:0.01141357421875,c:-0.022735595703125,d:0.43402099609375,tx:2.5,ty:-17.5}},
+				{bodypart:false,anim:0,offset:0,loop:true,mat:{a:-1,b:0,c:0,d:1,tx:-17.95,ty:-17.65}}
 			],
 			[
 				{bodypart:3,mat:{a:-0.3730010986328125,b:0.071136474609375,c:0.0718994140625,d:0.3780364990234375,tx:21.2,ty:-16.8}},
 				{bodypart:0,mat:{a:0.2848052978515625,b:0.003997802734375,c:-0.0077362060546875,d:0.2839813232421875,tx:-0.3,ty:-26.2}},
 				{bodypart:1,mat:{a:0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:-4.4,ty:-29.75}},
 				{bodypart:1,mat:{a:0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:8.75,ty:-30.1}},
-				{bodypart:3,mat:{a:0.3796844482421875,b:0.0500335693359375,c:-0.076751708984375,d:0.3769683837890625,tx:-20.85,ty:-18.65}}
+				{bodypart:3,mat:{a:0.3796844482421875,b:0.0500335693359375,c:-0.076751708984375,d:0.3769683837890625,tx:-20.85,ty:-18.65}},
+				{bodypart:'dia',mat:{a:-0.886138916015625,b:0,c:0,d:0.886138916015625,tx:2.35,ty:-18.05}}
 			],
 			[
+				{bodypart:false,anim:1,offset:0,loop:false,mat:{a:1,b:0,c:0,d:1,tx:-18.55,ty:-24.65}},
 				{bodypart:0,mat:{a:0.28375244140625,b:0.0136871337890625,c:-0.009918212890625,d:0.2838592529296875,tx:1.9,ty:-26.75}},
 				{bodypart:1,mat:{a:-0.37451171875,b:-0.0196380615234375,c:-0.0245208740234375,d:0.374267578125,tx:-7.25,ty:-31.35}},
 				{bodypart:1,mat:{a:-0.37451171875,b:-0.0196380615234375,c:-0.0245208740234375,d:0.374267578125,tx:6,ty:-30.1}},
-				{bodypart:2,mat:{a:-0.3180389404296875,b:-0.0084075927734375,c:-0.004058837890625,d:0.310455322265625,tx:-1.55,ty:-17.8}}
+				{bodypart:2,mat:{a:-0.3180389404296875,b:-0.0084075927734375,c:-0.004058837890625,d:0.310455322265625,tx:-1.55,ty:-17.8}},
+				{bodypart:false,anim:1,offset:0,loop:false,mat:{a:-1,b:0,c:0,d:1,tx:21.4,ty:-24.65}}
 			],
 			[
+				{bodypart:false,anim:1,offset:0,loop:false,mat:{a:-1,b:0,c:0,d:1,tx:21.4,ty:-24.65}},
 				{bodypart:0,mat:{a:0.2836456298828125,b:-0.0136871337890625,c:0.009918212890625,d:0.2837677001953125,tx:0.9,ty:-26.75}},
 				{bodypart:1,mat:{a:0.37451171875,b:-0.0196380615234375,c:0.0245208740234375,d:0.374267578125,tx:-3.2,ty:-30.1}},
 				{bodypart:1,mat:{a:0.37451171875,b:-0.0196380615234375,c:0.0245208740234375,d:0.374267578125,tx:10.05,ty:-31.35}},
-				{bodypart:2,mat:{a:0.3180389404296875,b:-0.0084075927734375,c:0.004058837890625,d:0.310455322265625,tx:4.35,ty:-17.8}}
+				{bodypart:2,mat:{a:0.3180389404296875,b:-0.0084075927734375,c:0.004058837890625,d:0.310455322265625,tx:4.35,ty:-17.8}},
+				{bodypart:false,anim:1,offset:0,loop:false,mat:{a:1,b:0,c:0,d:1,tx:-18.55,ty:-24.65}}
 			],
 			[
 				{bodypart:4,mat:{a:-0.0284576416015625,b:-0.457672119140625,c:-0.385009765625,d:0.023651123046875,tx:-17.15,ty:-21.15}},
@@ -1755,8 +1846,8 @@ function resetLevel() {
 		}
 	}
 	getTileDepths();
-	drawLevel();
-	drawCharacters();
+	// drawLevel();
+	// drawCharacters();
 	recover = false;
 	cornerHangTimer = 0;
 	charsAtEnd = 0;
@@ -1861,9 +1952,11 @@ function drawLevel() {
 	// 	addTileMovieClips();
 	// }
 
-	// Draw Static
-	for (var i = 0; i < tileDepths[0].length; i++) {
-		addTileMovieClip(tileDepths[0][i].x,tileDepths[0][i].y);
+	// Draw Static & Active1
+	for (var i = 0; i < 2; i++) {
+		for (var j = 0; j < tileDepths[i].length; j++) {
+			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
+		}
 	}
 	// ctx.globalAlpha = 0.4;
 	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
@@ -1877,7 +1970,7 @@ function drawLevel() {
 			}
 		}
 	}
-	for (var i = 1; i < tileDepths.length; i++) {
+	for (var i = 2; i < tileDepths.length; i++) {
 		for (var j = 0; j < tileDepths[i].length; j++) {
 			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
 		}
@@ -1924,13 +2017,13 @@ function addTileMovieClip(x, y) {
 		// Door
 		ctx.fillStyle = '#505050';
 		ctx.fillRect((x-1)*30, (y-3)*30, 60, 120);
-		// charsAtEnd
 		for (var i = 0; i < charCount2; i++) {
-			// mapRange
-			// ctx.fillStyle = 'rgb(' + 40*doorLightFade[i] + ',' + 40*(1-doorLightFade[i]) + ',' + 40*doorLightFade[i] + ')';
 			ctx.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
 			ctx.fillRect((x-1)*30+doorLightX[charCount2-1][i], y*30-80, 5, 5);
-			doorLightFade[i] = Math.max(Math.min(doorLightFade[i]+doorLightFadeDire[i]*0.0625, 1), 0);
+			if (doorLightFadeDire[i] != 0) {
+				doorLightFade[i] = Math.max(Math.min(doorLightFade[i]+doorLightFadeDire[i]*0.0625, 1), 0);
+				if (doorLightFade[i] == 1 || doorLightFade[i] == 0) doorLightFadeDire[i] = 0;
+			}
 		}
 	} else if (_loc5_ == 12) {
 		// Coin
@@ -2232,10 +2325,12 @@ function drawCharacters() {
 				var modelFrame = model.frames[char[_loc1_].frame];
 				var xoff = model.torsoX;
 				var yoff = model.torsoY;
+				var runbob = (char[_loc1_].frame==0||char[_loc1_].frame==2)?bounceY(4, 13, char[_loc1_].poseTimer):0;
 				// ctx.translate(charModels[char[_loc1_].id].torsoX,charModels[char[_loc1_].id].torsoY);
 				for (var i = 0; i < modelFrame.length; i++) {
 					var img = svgChars[char[_loc1_].id];
 					if (modelFrame[i].bodypart > 0) img = svgBodyParts[modelFrame[i].bodypart-1];
+
 					ctx.save();
 					ctx.transform(
 						modelFrame[i].mat.a,
@@ -2243,11 +2338,35 @@ function drawCharacters() {
 						modelFrame[i].mat.c,
 						modelFrame[i].mat.d,
 						char[_loc1_].x+modelFrame[i].mat.tx+xoff,
-						char[_loc1_].y+modelFrame[i].mat.ty+yoff
+						char[_loc1_].y+modelFrame[i].mat.ty+yoff+(typeof modelFrame[i].bodypart == 'number'?runbob:0)
 					);
+					if (modelFrame[i].bodypart === false) {
+						img = svgBodyParts[bodyPartAnimations[modelFrame[i].anim].bodypart-1];
+						var bpanimframe = modelFrame[i].loop ? ((char[_loc1_].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[_loc1_].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
+						var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
+						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+					} else if (modelFrame[i].bodypart == 'dia') {
+						// var bpanimframe = modelFrame[i].loop ? ((char[_loc1_].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[_loc1_].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
+						var diamouthframe = 0;
+						if (cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == _loc1_) {
+							var expr = dialogueFace[currentLevel][cutSceneLine]-2;
+							diamouthframe = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
+							// TODO: change based on expression
+							img = svgBodyParts[diaMouths[expr].frames[diamouthframe].bodypart-1];
+
+							// TODO: refactor this somehwere else
+							if (char[_loc1_].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[_loc1_].diaMouthFrame++;
+						} else {
+							img = svgBodyParts[diaMouths[model.defaultExpr].frames[diamouthframe].bodypart-1];
+						}
+						// var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
+						var mat = diaMouths[model.defaultExpr].frames[diamouthframe].mat;
+						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+					}
 					ctx.drawImage(img, -img.width/2, -img.height/2);
 					ctx.restore();
 				}
+				char[_loc1_].poseTimer++;
 				// Hitboxes
 				// ctx.strokeStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
@@ -2289,7 +2408,7 @@ function drawCharacters() {
 			ctx.restore();
 			// TODO: make this not so hard coded.
 			if (HPRCBubbleFrame == 1) {
-				ctx.drawImage(svgHPRCBubble[0], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-128+bounceY(9, 30));
+				ctx.drawImage(svgHPRCBubble[0], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-128+bounceY(9, 30, _frameCount));
 			} else if (HPRCBubbleFrame == 2) {
 				ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[1].width/2, char[_loc1_].y-150);
 				ctx.save();
@@ -2690,26 +2809,26 @@ function setBody(i)
 		}
 	}
 	if (cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == i) {
-		char[i].frame = Math.ceil(char[i].dire / 2) * 2 - 1;
+		char[i].setFrame(Math.ceil(char[i].dire / 2) * 2 - 1);
 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) * 2);
 	} else if(i == control && recoverTimer >= 1) {
 		if(char[i].x - (char[HPRC2].x - 33) < 25) {
-			char[i].frame = Math.ceil(char[i].dire / 2) + 11;
+			char[i].setFrame(Math.ceil(char[i].dire / 2) + 11);
 			// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 12);
 		} else {
-			char[i].frame = Math.ceil(char[i].dire / 2) + 9;
+			char[i].setFrame(Math.ceil(char[i].dire / 2) + 9);
 			// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 10);
 		}
 		// drawCrankingArms(i);
 	} else if(char[i].carry) {
-		char[i].frame = Math.ceil(char[i].dire / 2) + 5;
+		char[i].setFrame(Math.ceil(char[i].dire / 2) + 5);
 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 6);
 	} else if(!char[i].onob && !ifCarried(i)) {
-			char[i].frame = Math.ceil(char[i].dire / 2) + 3;
+			char[i].setFrame(Math.ceil(char[i].dire / 2) + 3);
 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 4);
 		var _loc9_ = Math.round(Math.min(4 - char[i].vy,15));
 	} else {
-		char[i].frame = char[i].dire - 1;
+		char[i].setFrame(char[i].dire - 1);
 		// levelChar["char" + i].charBody.gotoAndStop(char[i].dire);
 	}
 }
@@ -2725,9 +2844,12 @@ function offSetLegs(i, duration, frame) {
 	// levelChar["char" + i].leg2.leg.leg.gotoAndPlay((levelChar["char" + i].leg1.leg.leg._currentframe + (duration / 2 - 1)) % duration + 1);
 }
 // TODO: implement easing in this.
-function bounceY(amt, time) {
-	var base = (_frameCount%time)*2;
+function bounceY(amt, time, t) {
+	// var base = (t%time)*2;
+	var base = Math.sin(mapRange((t%time), 0, time*2, 0, Math.PI))*time*2;
+	// return Math.sin(mapRange(base, 0, time, 0, Math.PI))*amt;
 	return (base>time?time-base+time:base)*amt/time;
+	// return base/time*amt;
 }
 
 
@@ -4074,6 +4196,7 @@ function draw() {
 			if (_keysDown[13] || _keysDown[16]) {
 				if (!csPress && cutScene == 1) {
 					cutSceneLine++;
+					 if (dialogueChar[currentLevel][cutSceneLine] < 99) char[dialogueChar[currentLevel][cutSceneLine]].diaMouthFrame = 0;
 					if (cutSceneLine >= dialogueChar[currentLevel].length) endCutScene();
 					else displayLine(currentLevel,cutSceneLine);
 				}

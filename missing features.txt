@@ -1,5 +1,4 @@
 - parts of the character models
-- door lights
 
 - HPRCBubble UI animations
 - csBubble UI animations
