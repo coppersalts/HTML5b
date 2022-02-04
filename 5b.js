@@ -980,7 +980,7 @@ var charModels = [
 				{type:'static',bodypart:0,mat:{a:0.20111083984375,b:0,c:0,d:0.3351287841796875,tx:5.8,ty:-38.7}},
 				{type:'static',bodypart:36,mat:{a:0.1166839599609375,b:0,c:0,d:0.329345703125,tx:4.45,ty:-28.55}},
 			]
-		] 
+		]
 	},
 	{
 		// Pencil
@@ -1677,7 +1677,7 @@ async function loadingScreen() {
 	ctx.scale(pixelRatio, pixelRatio);
 
 	// Hard-coded value. You can make it calculated later if you want.
-	var totalResources = 1076; 
+	var totalResources = 1076;
 	var loadedResources = 0;
 	// Background
 	ctx.fillStyle = '#999966';
@@ -2913,7 +2913,7 @@ function drawCharacters() {
 // https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
 /* accepts parameters
  * h  Object = {h:x, s:y, v:z}
- * OR 
+ * OR
  * h, s, v
 */
 function HSVtoRGB(h, s, v) {
@@ -3191,47 +3191,36 @@ function setBody(i)
 			_loc3_[0] = _loc3_[1];
 			_loc3_[1] -= 3;
 		}
-		var _loc8_ = 3 - char[i].dire;
 		if(_loc3_[0] > _loc3_[1] && _loc3_[1] >= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[0]/90;
-			char[i].leg2skew = _loc3_[0]/90;
-			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
-			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
+			char[i].leg1skew = _loc3_[0]/60;
+			char[i].leg2skew = _loc3_[0]/60;
 		} else if(_loc3_[0] > _loc3_[1] && _loc3_[0] <= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[1]/90;
-			char[i].leg2skew = _loc3_[1]/90;
-			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
-			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
+			char[i].leg1skew = _loc3_[1]/60;
+			char[i].leg2skew = _loc3_[1]/60;
 		} else if(_loc3_[0] < 0 && _loc3_[1] > 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[0]/90;
-			char[i].leg2skew = _loc3_[1]/90;
-			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
-			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
+			char[i].leg1skew = _loc3_[0]/60;
+			char[i].leg2skew = _loc3_[1]/60;
 		} else if(_loc3_[1] > 0 && _loc3_[0] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = -0.5 * (3-char[i].dire);
-			char[i].leg2skew = -0.5 * (3-char[i].dire);
-			// levelChar["char" + i].leg1.leg.gotoAndStop(25 + 23 * (3 - char[i].dire));
-			// levelChar["char" + i].leg2.leg.gotoAndStop(25 + 23 * (3 - char[i].dire));
+			char[i].leg1skew = 0.55;
+			char[i].leg2skew = 0.55;
 		} else if(_loc3_[0] < 0 && _loc3_[1] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = 0.5 * (3-char[i].dire);
-			char[i].leg2skew = 0.5 * (3-char[i].dire);
-			// levelChar["char" + i].leg1.leg.gotoAndStop(25 - 23 * (3 - char[i].dire));
-			// levelChar["char" + i].leg2.leg.gotoAndStop(25 - 23 * (3 - char[i].dire));
+			char[i].leg1skew = -0.55;
+			char[i].leg2skew = -0.55;
 		} else {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			// levelChar["char" + i].leg1.leg.gotoAndStop(1);
-			// levelChar["char" + i].leg2.leg.gotoAndStop(1);
+			char[i].leg1skew = 0;
+			char[i].leg2skew = 0;
 		}
 	} else {
 		if (char[i].dire % 2 == 1 && char[i].onob) {
