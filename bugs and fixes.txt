@@ -3,7 +3,6 @@ this is a text file where I'm keeping track of things to fix/change.
 fixes:
 make the walking animations only restart when the player starts pressing or lets go of the key.
 layer background blocks behind other blocks (and implement block depths in general)
-you can still move when recovering
 fix the fonts.
 the music loops badly.
 you can change your direction while dying

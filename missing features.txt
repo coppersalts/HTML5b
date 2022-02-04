@@ -1,15 +1,18 @@
 to do next:
-load levels.txt properly
-refactor the character models
+add a progress bar to the loading screen.
 
+- the rest of the character models (do this after adding the rest of the parts)
+- HPRC cranking arms (do this after finishing the rest of the character models)
 
 - HPRCBubble UI animations
 - csBubble UI animations
 - tints
 
-- the rest of the character models (do this after adding the rest of the parts)
-- HPRC cranking arms (do this after finishing the rest of the character models)
-
 - autosave
-- loading levels.txt properly
 - the level editor (I'll do this last)
+
+
+
+- leg fix
+- the rest of the legs
+- entity layering fix

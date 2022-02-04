@@ -1,5 +1,4 @@
 // TODO: rename _locn_ variables.
-// TODO: implement depths
 // TODO: look up the difference between var and let.
 // TODO: go through all the todo's I've put throughout this file.
 // TODO: rename some functions
@@ -28,7 +27,7 @@ var levelStart = 0;
 var levelWidth = 0;
 var levelHeight = 0;
 var thisLevel = new Array(0);
-var tileFrames = new Array(0); //added by me
+var tileFrames = new Array(0);
 var switchable = new Array(6);
 var charCount = 0;
 var charCount2 = 0;
@@ -425,6 +424,22 @@ var diaMouths = [
 			{type:'static',bodypart:42,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-0.55,ty:1.35}},
 			{type:'static',bodypart:43,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-0.55,ty:1.35}},
 			{type:'static',bodypart:44,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-0.55,ty:1.35}},
+		]
+	},
+	{
+		frameorder: [1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0],
+		frames: [
+			{type:'static',bodypart:51,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-33.45,ty:-2.15}},
+			{type:'static',bodypart:52,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-33.45,ty:-2.15}},
+			{type:'static',bodypart:53,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-33.45,ty:-2.15}},
+		]
+	},
+	{
+		frameorder: [1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0,0,1,2,2,2,1,0],
+		frames: [
+			{type:'static',bodypart:54,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-33.45,ty:-2.15}},
+			{type:'static',bodypart:55,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-33.45,ty:-2.15}},
+			{type:'static',bodypart:56,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-33.45,ty:-2.15}},
 		]
 	}
 ]
@@ -1210,29 +1225,53 @@ var charModels = [
 		frames: [
 			[
 				{type:'body',mat:{a:-1,b:0,c:0,d:1,tx:101.7,ty:139.35}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:52.7,ty:-19.15}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:153.3,ty:-19.15}},
+				{type:'static',bodypart:51,mat:{a:-1.81903076171875,b:0,c:0.0367431640625,d:1.7514495849609375,tx:99.65,ty:52.8}},
 			],
 			[
 				{type:'body',mat:{a:-1,b:0,c:0,d:1,tx:101.7,ty:139.35}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:52.7,ty:-19.15}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:153.3,ty:-19.15}},
+				{type:'dia',mat:{a:4.6165771484375,b:0,c:0,d:4.6165771484375,tx:104.55,ty:58.9}},
 			],
 			[
 				{type:'body',mat:{a:1,b:0,c:0,d:1,tx:105.2,ty:139.35}},
+				{type:'static',bodypart:39,mat:{a:1.33612060546875,b:0,c:-0.0269927978515625,d:1.2864837646484375,tx:53.6,ty:-19.15}},
+				{type:'static',bodypart:39,mat:{a:1.33612060546875,b:0,c:-0.0269927978515625,d:1.2864837646484375,tx:154.2,ty:-19.15}},
+				{type:'static',bodypart:51,mat:{a:1.81903076171875,b:0,c:-0.0367431640625,d:1.7514495849609375,tx:107.25,ty:52.8}},
 			],
 			[
 				{type:'body',mat:{a:1,b:0,c:0,d:1,tx:105.2,ty:139.35}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:52.7,ty:-19.15}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:153.3,ty:-19.15}},
+				{type:'dia',mat:{a:-4.6165771484375,b:0,c:0,d:4.6165771484375,tx:104.55,ty:58.9}},
 			],
 			[
 				{type:'body',mat:{a:-1,b:0,c:0,d:1,tx:101.7,ty:139.35}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:52.7,ty:-19.15}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:153.3,ty:-19.15}},
+				{type:'static',bodypart:52,mat:{a:-1.81903076171875,b:0,c:0.0367431640625,d:1.7514495849609375,tx:99.65,ty:52.8}},
 			],
 			[
 				{type:'body',mat:{a:1,b:0,c:0,d:1,tx:105.2,ty:139.35}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:52.7,ty:-19.15}},
+				{type:'static',bodypart:39,mat:{a:-1.33612060546875,b:0,c:0.0269927978515625,d:1.2864837646484375,tx:153.3,ty:-19.15}},
+				{type:'static',bodypart:52,mat:{a:1.81903076171875,b:0,c:-0.0367431640625,d:1.7514495849609375,tx:106.45,ty:52.8}},
 			],
 			[],
 			[],
 			[
 				{type:'body',mat:{a:-1,b:0,c:0,d:1,tx:101.7,ty:139.35}},
+				{type:'static',bodypart:40,mat:{a:1.5439453125,b:0,c:0,d:1.5439453125,tx:65,ty:-6.75}},
+				{type:'static',bodypart:40,mat:{a:-1.5439453125,b:0,c:0,d:1.5439453125,tx:147.7,ty:-3.45}},
+				{type:'static',bodypart:56,mat:{a:1.81903076171875,b:0,c:-0.0367431640625,d:1.7514495849609375,tx:106.45,ty:52.8}},
 			],
 			[
 				{type:'body',mat:{a:1,b:0,c:0,d:1,tx:105.2,ty:139.35}},
+				{type:'static',bodypart:40,mat:{a:1.5439453125,b:0,c:0,d:1.5439453125,tx:54.95,ty:-3.45}},
+				{type:'static',bodypart:40,mat:{a:-1.5439453125,b:0,c:0,d:1.5439453125,tx:137.65,ty:-3.45}},
+				{type:'static',bodypart:56,mat:{a:-1.81903076171875,b:0,c:0.0367431640625,d:1.7514495849609375,tx:96.2,ty:52.8}},
 			],
 			[],
 			[],
@@ -2330,7 +2369,6 @@ function drawLevel() {
 	// ctx.globalAlpha = 1;
 }
 
-// TODO: add depths
 
 // draws a tile
 function addTileMovieClip(x, y) {
@@ -2339,8 +2377,7 @@ function addTileMovieClip(x, y) {
 		if (!blockProperties[_loc5_][15]) {
 			if (blockProperties[_loc5_][11] > 0 && typeof svgLevers[(blockProperties[_loc5_][11]-1)%6] !== 'undefined') {
 				ctx.save();
-				// ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-				ctx.translate(x*30+15, y*30+28); //x*30, y*30
+				ctx.translate(x*30+15, y*30+28);
 				ctx.rotate(tileFrames[y][x].rotation*(Math.PI/180));
 				ctx.translate(-x*30-15, -y*30-28); // TODO: find out how to remove this line
 				ctx.drawImage(svgLevers[(blockProperties[_loc5_][11]-1)%6], x*30, y*30);
@@ -2714,13 +2751,12 @@ function drawCharacters() {
 							// var expr = dialogueFace[currentLevel][cutSceneLine]-2;
 							var expr = char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2;
 							diamouthframe = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
-							// TODO: change based on expression
 							img = svgBodyParts[diaMouths[expr].frames[diamouthframe].bodypart];
 
 							// TODO: refactor this somehwere else
 							if (char[_loc1_].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[_loc1_].diaMouthFrame++;
 						} else {
-							img = svgBodyParts[diaMouths[char[_loc1_].expr].frames[diamouthframe].bodypart];
+							img = svgBodyParts[diaMouths[char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2].frames[diamouthframe].bodypart];
 						}
 						// var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
 						var mat = diaMouths[model.defaultExpr].frames[diamouthframe].mat;
@@ -3210,7 +3246,6 @@ function offSetLegs(i, duration, frame) {
 	}
 	// levelChar["char" + i].leg2.leg.leg.gotoAndPlay((levelChar["char" + i].leg1.leg.leg._currentframe + (duration / 2 - 1)) % duration + 1);
 }
-// TODO: implement easing in this.
 function bounceY(amt, time, t) {
 	// var base = (t%time)*2;
 	var base = Math.sin(mapRange((t%time), 0, time*2, 0, Math.PI))*time*2;
@@ -4490,8 +4525,6 @@ function keydown(event){
 function keyup(event){
 	_keysDown[event.keyCode || event.charCode] = false;
 }
-
-// mouseIsDown
 
 
 function setup() {
