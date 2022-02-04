@@ -1,4 +1,7 @@
-- parts of the character models
+to do next:
+load levels.txt properly
+refactor the character models
+
 
 - HPRCBubble UI animations
 - csBubble UI animations
