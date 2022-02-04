@@ -2,6 +2,9 @@
 // TODO: look up the difference between var and let.
 // TODO: go through all the todo's I've put throughout this file.
 // TODO: rename some functions
+// TODO: precalculate some of the stuff in the draw functions when the level in reset.
+// TODO: if possible, cashe some things as bitmaps for better performance.
+// TODO: remove some of the commented out actionscript stuff.
 
 var canvas;
 var ctx;
@@ -11,6 +14,7 @@ const pixelRatio = window.devicePixelRatio;
 
 var _xmouse = 0;
 var _ymouse = 0;
+// var _cursor = ; // cursor type
 const _keysDown = new Array(222).fill(false);
 var _frameCount = 0;
 // var _quality = "HIGH";
@@ -1368,90 +1372,34 @@ var charModels = [
 			]
 		]
 	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
-	{
-		firemat: {},
-	},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
 	{
 		firemat: {a:-0.34619140625,b:0.0040283203125,c:0.0058135986328125,d:0.3830718994140625,tx:-1.25,ty:-27.6},
 	},
@@ -1667,6 +1615,10 @@ async function asyncLoadVB(src) {
 	});
 }
 
+function drawLoadingScreen(total, progress, w, h, pad) {
+	ctx.fillRect((cwidth-w+pad)/2, (cheight+pad)/2, mapRange(progress, 0, total, 0, w-pad), h-pad);
+}
+
 
 
 
@@ -1714,23 +1666,36 @@ var levelButtonClicked = -1;
 
 // also loads the resources.
 async function loadingScreen() {
+	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
 	ctx = canvas.getContext('2d');
 	canvas.style.width = cwidth + "px";
 	canvas.style.height = cheight + "px";
-
 	// Account for Pixel Density
 	canvas.width = Math.floor(cwidth * pixelRatio);
 	canvas.height = Math.floor(cheight * pixelRatio);
 	ctx.scale(pixelRatio, pixelRatio);
 
+	// Hard-coded value. You can make it calculated later if you want.
+	var totalResources = 1076; 
+	var loadedResources = 0;
+	// Background
 	ctx.fillStyle = '#999966';
 	ctx.fillRect(0, 0, cwidth, cheight);
+	// Text
 	ctx.fillStyle = '#000000';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.font = '30px Helvetica';
-	ctx.fillText('Loading Resources...', cwidth/2, cheight/2);
+	ctx.fillText('Loading Resources...', cwidth/2, cheight*0.4);
+	// Bar
+	var progressBarW = cwidth*0.6;
+	var progressBarH = 40;
+	var progressBarPad = 15;
+	ctx.strokeStyle = '#000000';
+	ctx.lineWidth = 2;
+	ctx.strokeRect((cwidth-progressBarW)/2, cheight/2, progressBarW, progressBarH);
+	ctx.fillStyle = '#4cccb3';
 
 
 	var req = await fetch("data/levels.txt");
@@ -1739,12 +1704,22 @@ async function loadingScreen() {
 	loadLevels();
 
 	svgCSBubble = await asyncLoadImage('visuals/ui/csbubble/dia.svg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	svgHPRCCrank = await asyncLoadImage('visuals/entities/e0035crank.svg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	svgCoin = await asyncLoadImage('visuals/wintoken.svg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	svgIceCubeMelt = await asyncLoadImage('visuals/effects/icecubemelt.svg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 
 	for (var i = 0; i < imgBgs.length; i++) {
 		imgBgs[i] = await asyncLoadImage('visuals/bg/bg' + i.toString(10).padStart(4, '0') + '.png');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; i < blockProperties.length; i++) {
 		var id = i.toString(10).padStart(4, '0');
@@ -1752,12 +1727,16 @@ async function loadingScreen() {
 		else if (blockProperties[i][16] == 1) {
 			svgTiles[i] = await asyncLoadImage('visuals/blocks/b' + id + '.svg');
 			svgTilesVB[i] = await asyncLoadVB(svgTiles[i].src);
+			loadedResources++;
+			drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 		} else {
 			svgTiles[i] = new Array(blockProperties[i][16]);
 			svgTilesVB[i] = new Array(blockProperties[i][16]);
 			for (var j = 0; j < svgTiles[i].length; j++) {
 				svgTiles[i][j] = await asyncLoadImage('visuals/blocks/b' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg');
 				svgTilesVB[i][j] = await asyncLoadVB(svgTiles[i][j].src);
+				loadedResources++;
+				drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 			}
 		}
 	}
@@ -1765,13 +1744,19 @@ async function loadingScreen() {
 		var filename = 'visuals/blocks/b' + i.toString(10).padStart(2, '0') + 'lever.svg';
 		if (doesFileExist(filename)) {
 			svgLevers[i] = await asyncLoadImage(filename);
+			loadedResources++;
+			drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 		}
 	}
 	for (var i = 0; i < svgShadows.length; i++) {
 		svgShadows[i] = await asyncLoadImage('visuals/shadows/s' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; i < svgTileBorders.length; i++) {
 		svgTileBorders[i] = await asyncLoadImage('visuals/borders/tb' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; i < charD.length; i++) {
 		var id = i.toString(10).padStart(4, '0');
@@ -1779,36 +1764,61 @@ async function loadingScreen() {
 		else if (charD[i][7] == 1) {
 			svgChars[i] = await asyncLoadImage('visuals/entities/e' + id + '.svg');
 			svgCharsVB[i] = await asyncLoadVB(svgChars[i].src);
+			loadedResources++;
+			drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 		} else {
 			svgChars[i] = new Array(charD[i][7]);
 			svgCharsVB[i] = new Array(charD[i][7]);
+			loadedResources++;
 			for (var j = 0; j < svgChars[i].length; j++) {
 				svgChars[i][j] = await asyncLoadImage('visuals/entities/e' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg');
 				svgCharsVB[i][j] = await asyncLoadVB(svgChars[i][j].src);
+				loadedResources++;
+				drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 			}
 		}
 	}
 	for (var i = 0; i < svgHPRCBubble.length; i++) {
 		svgHPRCBubble[i] = await asyncLoadImage('visuals/ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; doesFileExist('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg'); i++) {
 		svgBodyParts[i] = await asyncLoadImage('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; i < svgCoinGet.length; i++) {
 		svgCoinGet[i] = await asyncLoadImage('visuals/wtgetf' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; i < svgFire.length; i++) {
 		svgFire[i] = await asyncLoadImage('visuals/effects/fire' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; i < svgBurst.length; i++) {
 		svgBurst[i] = await asyncLoadImage('visuals/effects/burst' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 
 	svgMenu0 = await asyncLoadImage('visuals/menu0.svg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	svgMenu2 = await asyncLoadImage('visuals/menu2.svg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	svgMenu2border = await asyncLoadImage('visuals/menu2border.svg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	svgMenu2borderimg = await asyncLoadImage('visuals/bitmap737.jpg');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	preMenuBG = await asyncLoadImage('visuals/premenubg.png');
+	loadedResources++;
+	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 
 	menu2_3Buttons.push(new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'));
 	menu2_3Buttons.push(new Path2D('M 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nM 92.9 6.5\nL 99.6 6.5 90.05 16.15 100.55 30.9 93.8 30.9 86.45 19.95 83.4 23.05 83.4 30.9 78 30.9 78 6.5 83.4 6.5 83.4 16.6 92.9 6.5\nM 67.15 11.65\nQ 66.45 11.05 65.55 10.75\nL 63.65 10.4\nQ 61.85 10.4 60.6 11.1 59.3 11.85 58.55 13 57.75 14.2 57.4 15.7 57.05 17.2 57.05 18.8 57.05 20.35 57.4 21.8 57.75 23.25 58.55 24.4 59.3 25.6 60.6 26.3 61.85 27 63.65 27 66.1 27 67.5 25.45 68.9 23.95 69.2 21.5\nL 74.4 21.5\nQ 74.2 23.8 73.35 25.65 72.45 27.5 71.05 28.8 69.65 30.1 67.8 30.8\nL 63.65 31.5\nQ 60.8 31.5 58.6 30.5 56.35 29.5 54.8 27.8 53.3 26.1 52.45 23.75 51.65 21.45 51.65 18.8 51.65 16.1 52.45 13.75 53.3 11.4 54.8 9.65 56.35 7.9 58.6 6.9 60.8 5.9 63.65 5.9 65.65 5.9 67.45 6.5 69.25 7.1 70.65 8.2 72.1 9.3 73 10.95 73.95 12.6 74.15 14.7\nL 68.95 14.7\nQ 68.85 13.8 68.35 13\nL 67.15 11.65\nM 50.6 30.9\nL 45 30.9 43.15 25.5 34.05 25.5 32.15 30.9 26.7 30.9 35.95 6.5 41.45 6.5 50.6 30.9\nM 22.35 7.8\nQ 23.35 8.5 23.9 9.65 24.5 10.85 24.5 12.55 24.5 14.35 23.65 15.6 22.8 16.85 21.15 17.65 23.45 18.3 24.55 19.9 25.65 21.55 25.65 23.8 25.65 25.7 24.95 27.05 24.2 28.4 23 29.25 21.8 30.1 20.2 30.5\nL 17.05 30.9 5.2 30.9 5.2 6.5 16.7 6.5 19.85 6.8\nQ 21.3 7.1 22.35 7.8\nM 19.2 20.85\nQ 18.15 20.05 16.4 20.05\nL 10.6 20.05 10.6 26.75 16.3 26.75 17.8 26.6 19.05 26.05 19.95 25.1 20.25 23.5\nQ 20.25 21.65 19.2 20.85\nM 19 12.1\nQ 18.65 11.5 18.15 11.2\nL 17 10.8 15.6 10.65 10.6 10.65 10.6 16.4 16 16.4\nQ 17.45 16.4 18.35 15.7 19.3 15 19.3 13.5\nL 19 12.1\nM 38.7 12.5\nL 38.65 12.5 35.45 21.45 41.75 21.45 38.7 12.5 Z'));
@@ -2132,6 +2142,8 @@ function beginNewGame() {
 }
 
 function drawLevelMapBorder() {
+	// For security reasons, you can not draw images from svg files to a canvas.
+	// So I have to draw the border image manually with masking and stuff.
 	// https://stackoverflow.com/questions/18379818/canvas-image-masking-overlapping
 	ctx.save();
 	ctx.beginPath();
