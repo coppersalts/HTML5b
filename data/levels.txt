@@ -14,7 +14,7 @@ Time to explore
 ................................
 ...........................4....
 666......................////.:.
-//6666........5...../////////>>>
+//6666........5.....////////////
 /////6666.....//////////////////
 ////////////////////////////////
 ////////////////////////////////
@@ -27,8 +27,8 @@ Time to explore
 00S ...got eaten by Evil Leafy? WHAT?  That doesn't make any sense!
 00S Well, I guess I'll go look for my fellow FreeSmarters to get a sense of what's going on.
 99S Use the arrow keys to move and press the space bar to jump.
-000002
- 
+000000
+
 First danger
 32,18,01,00,L
 ................................
@@ -53,7 +53,7 @@ First danger
 01
 99S Before you make that perilous leap, remember that you can press 'R' to reset the level!
 000000
- 
+
 Pillar
 32,18,01,00,L
 ................................
@@ -77,7 +77,7 @@ Pillar
 01,02.00,15.00,10
 00
 000000
- 
+
 Going under
 32,18,01,00,L
 ..............................//
@@ -101,7 +101,7 @@ Going under
 01,01.50,09.00,10
 00
 000000
- 
+
 Small packages
 50,18,03,01,L
 ...//////////////////////////...............//////
@@ -129,7 +129,7 @@ Small packages
 99S Press 'UP' to pick up this lovely wooden box.
 99S You can press 'DOWN' to set the box down, or press 'UP' again to throw it.
 000000
- 
+
 Landfill
 32,18,05,04,L
 ////////////////////////////////
@@ -157,7 +157,7 @@ Landfill
 38,24.00,05.00,06
 00
 000000
- 
+
 Rock bottom
 32,50,03,06,L
 ///////////////////_//////^/////
@@ -215,7 +215,7 @@ YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 40,28.00,16.83,03 060002222222222222222211133333333333333333
 00
 000000
- 
+
 A friend
 32,18,05,05,L
 ////////_///////////////_///////
@@ -243,7 +243,7 @@ YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 46,19.00,06.00,03 1000001111
 00
 000000
- 
+
 A companion
 32,50,03,06,L
 ////////////////////////////////
@@ -301,7 +301,7 @@ YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 42,09.00,47.00,06
 00
 000000
- 
+
 A sad goodbye
 32,18,02,00,L
 ......................:.........
@@ -326,7 +326,7 @@ A sad goodbye
 42,04.00,15.00,06
 00
 000000
- 
+
 A change of terrain
 32,18,01,00,L
 ..........................:.....
@@ -350,7 +350,7 @@ A change of terrain
 01,03.00,15.00,10
 00
 000000
- 
+
 Pillar 2
 61,30,01,00,L
 ............................................................3
@@ -386,7 +386,7 @@ Pillar 2
 01,03.50,26.00,10
 00
 000000
- 
+
 On the edge
 32,18,05,03,L
 :...............................
@@ -414,7 +414,7 @@ On the edge
 41,18.00,05.00,06
 00
 000000
- 
+
 High
 32,18,05,03,L
 ................................
@@ -442,7 +442,7 @@ High
 40,21.00,12.87,03 100000011111
 00
 000000
- 
+
 Zoom
 32,18,05,03,L
 ................................
@@ -470,7 +470,7 @@ AAEAAAAAAAAAAAAAAAAAAAA......:F.
 40,11.50,07.00,03 2000001111
 00
 000000
- 
+
 Zoom zoom
 80,18,03,02,L
 ................:...............................................................
@@ -496,7 +496,7 @@ AAAEAAA.................................B............BBB..............BqqB......
 46,49.50,11.00,05
 00
 000000
- 
+
 Switch
 65,40,06,02,L
 ................................................................D
@@ -547,7 +547,7 @@ Switch
 40,39.50,20.98,03 102233333222
 00
 000000
- 
+
 Living life on the edge
 50,18,01,02,L
 ..................................................
@@ -571,7 +571,7 @@ Living life on the edge
 01,03.50,14.00,10
 00
 000000
- 
+
 Say hello
 32,18,04,02,L
 ................................
@@ -605,7 +605,7 @@ Say hello
 01H Okey dokey!
 99S Press 'Z' to switch player control.
 000000
- 
+
 Working together
 32,18,03,03,L
 ................................
@@ -631,7 +631,7 @@ Working together
 46,09.00,12.00,03 103333333333322222222222
 00
 000000
- 
+
 Pick me up
 32,18,02,03,L
 ..........rZ..........8.........
@@ -656,7 +656,7 @@ Pick me up
 03,02.00,04.00,10
 00
 000000
- 
+
 Horrifically tall
 32,50,08,03,L
 ................................
@@ -719,7 +719,7 @@ Horrifically tall
 48,27.50,06.50,04 15222222222222222222222333333333333333333333
 00
 000000
- 
+
 Ground level
 32,18,07,00,L
 ...............F................
@@ -749,7 +749,7 @@ Ground level
 46,01.00,12.00,03 06001110
 00
 000000
- 
+
 Strange discovery
 32,18,04,00,L
 :...............................
@@ -775,12 +775,12 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 35,26.00,14.00,06
 36,24.00,14.00,06
 04
-00H Hey, look!  It's the Hand€powered Recovery Center!  It must have fallen out of the FreeSmart van!
+00H Hey, look!  It's the Hand-powered Recovery Center!  It must have fallen out of the FreeSmart van!
 01S But, it's, like, broken into two pieces.  There's no way it can still work.
 00S Maybe it can!  I am an HPRC User Manual, so I can look it up.  Let's see... According to me, the HPRC is very durable!
 01S Well, apparently not.
 000000
- 
+
 Would you die for me?
 32,18,04,00,L
 ................................
@@ -808,7 +808,7 @@ wwwwwwwwwwww11111111wwwwwwwwwwww
 01
 99S Press 'DOWN' to use the HPRC.
 000001
- 
+
 Jump off a cliff
 32,18,07,00,L
 ................................
@@ -838,7 +838,7 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 46,03.50,15.00,03 1230000002111111
 00
 000002
- 
+
 Cross the uncrossable
 32,18,04,00,L
 ............w:..................
@@ -865,7 +865,7 @@ wwwwwwwww2.....3wwwwww2.3ww2.f..
 36,05.00,13.00,06
 00
 000003
- 
+
 Build my pathway
 50,18,04,00,L
 .................................................:
@@ -892,7 +892,7 @@ Build my pathway
 36,04.00,06.00,06
 00
 000002
- 
+
 Don't look back
 50,35,06,00,L
 .....................{{{{{{.....{{{{{{...........:
@@ -938,7 +938,7 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww{{{{{{............
 46,29.50,14.80,03 0811111122222222333333330000001111113333333322222222000000
 00
 000003
- 
+
 Civilization!
 32,18,04,07,L
 ..........................€®®®®®
@@ -965,7 +965,7 @@ wwwwww111111wwwwwwwwwwwwwwwwwwww
 36,04.00,07.00,06
 00
 000000
- 
+
 Encounter
 32,18,08,08,L
 €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
@@ -1002,12 +1002,12 @@ M€.........¯¯¯¯¯............N...
 00H Okay.  But first, I have questions for you.  Like, where are we?
 02H We are inside Evil Leafy.  I, along with thousands of other recommended characters, live here.  I don't know about you though.
 00H Well, I'm not sure about it either... but I think we may have gotten eaten by Evil Leafy.
-02S GOTTEN EATEN? But€but...
+02S GOTTEN EATEN? But-but...
 00S What? What's wrong?  I'm still fine.  My friend, Match, is still fine.  We're all good, right?
 02S That's what I don't understand!
 00S I don't understand anything either!  Whatever.  You're not helping.  Bye.
 000000
- 
+
 I need you for something
 32,18,05,08,L
 €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
@@ -1035,7 +1035,7 @@ AAA.........DqqqqqqC............
 36,01.00,11.00,06
 00
 000002
- 
+
 The Drop
 32,30,03,09,L
 €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
@@ -1077,7 +1077,7 @@ S¶¶¶¶cd........²²²....²²²²......
 02S Well, first you killed me, and then you trapped me in an inescapable box!  And I'm sure Match can tell you how awful that is!
 00S Oh, right.  But I was desperate!  You know what they say, right?  "Desperate times call for desperate measures!"
 02S I don't care about any of that!  You will be punished for murdering me!
-00S Uh€oh...
+00S Uh-oh...
 02S YOU SHALL NOT PASS!
 50S poop
 01S EEEEEEEE!
@@ -1085,7 +1085,7 @@ S¶¶¶¶cd........²²²....²²²²......
 01S I'm scared!
 02H Now you know not to mess with me!
 000000
- 
+
 Dungeon
 32,18,04,10,L
 ..v.v..vvv...vv..v.v.....²²²²²²²
@@ -1112,7 +1112,7 @@ Dungeon
 36,14.00,15.00,06
 00
 000001
- 
+
 Thirst for acid
 62,18,09,10,L
 .............................................¶¶¶........²²²²²²
@@ -1144,7 +1144,7 @@ Thirst for acid
 36.31.00,17.00,06
 00
 000000
- 
+
 Checkpoint!
 90,18,09,10,L
 .......................D¶.................¶..g..........¶¶:¶..............................
@@ -1176,7 +1176,7 @@ Checkpoint!
 45,68.50,08.50,03 080003333311122222
 00
 000000
- 
+
 Match filter
 32,18,05,10,L
 ²²²²²²²²²²²²²²²²².....²²²²¶¶¶¶²²
@@ -1204,7 +1204,7 @@ Match filter
 47,29.50,08.00,06
 00
 000000
- 
+
 Gimme my boxes
 32,18,08,10,L
 ......................:²¶²¶²¶²¶²
@@ -1235,7 +1235,7 @@ Gimme my boxes
 46,18.50,02.00,03 092222211111100000033333
 00
 000000
- 
+
 Oceanic divide
 50,18,05,10,L
 ...................²²²²²²²²²²²²¶¶¶¶AAAAAA²²²²²²²²²
@@ -1263,7 +1263,7 @@ Oceanic divide
 52,15.50,09.66,04 153333333322222222
 00
 000000
- 
+
 Bridge
 32,18,03,10,L
 ................................
@@ -1289,7 +1289,7 @@ Bridge
 52,28.50,13.00,06
 00
 000000
- 
+
 Liquify
 32,50,07,10,L
 :...............................
@@ -1400,7 +1400,7 @@ Eye skewb
 00H Well, you're in luck!  I have arms!
 03H Yay!
 000000
- 
+
 A cool new addition
 32,18,05,08,L
 €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
@@ -1428,7 +1428,7 @@ A cool new addition
 36,02.00,16.00,06
 00
 000003
- 
+
 Nice and toasty
 32,18,03,08,L
 €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
@@ -1454,7 +1454,7 @@ nnnn...........:.........@@@@...
 02,02.50,16.00,10
 00
 000000
- 
+
 We are different
 32,18,08,08,L
 €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
@@ -1485,7 +1485,7 @@ We are different
 46,00.50,02.00,03 083322
 00
 000000
- 
+
 Stranger strangers
 32,18,06,08,H
 .€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€.€
@@ -1518,17 +1518,17 @@ Stranger strangers
 01S Yeah, well, so did Lego Brick.  omg.
 04H Hey, who are you three?
 00S First, let me ask.  Who are you?  Some Lego Brick sent us into a dungeon.  I don't want you to do the same.
-04S Oh, Lego did that again.  Don't mind him.  He's a great guy, but€
+04S Oh, Lego did that again.  Don't mind him.  He's a great guy, but-
 01S A great guy??? He threw us into a dungeon!
 04S BUT, he has a huge fear of dying.  If you don't upset him, he'll be nice to you.
 00H What about you two?  Who are you?
-04S I'm Waffle, and this is Tune. Tune doesn't talk much because€
+04S I'm Waffle, and this is Tune. Tune doesn't talk much because-
 01S Blah, blah, blah!  Like OMG, I don't care.  Just tell us how to get out of here!
 00S Match, be nice!
 04S The only way to get out of Evil Leafy is through her mouth.  To get there, just keep going eastward.
 01S kthxbai.
 000000
- 
+
 Heading out
 90,18,10,11,L
 ...........................................................f.........................a....
@@ -1567,7 +1567,7 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww11111111wwwwwwwwww111111111wwwwwwwwwwwwwwwww
 02S No.
 00S Whatever.
 000000
- 
+
 Weapon transport
 32,18,06,11,L
 .......f........................
@@ -1596,7 +1596,7 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 36,02.00,05.00,06
 00
 000001
- 
+
 Take the plunge
 50,18,08,11,H
 ....................................................................................................
@@ -1627,7 +1627,7 @@ Take the plunge
 38,35.00,14.00,06
 00
 000000
- 
+
 I didn't want to see you
 32,18,07,11,H
 ...................................:............................
@@ -1660,7 +1660,7 @@ I didn't want to see you
 03H I just went on a little walk.  You know, to get some fresh air.
 00S Ugh, fine.
 000000
- 
+
 Those things scare me
 32,18,06,11,H
 ........../B.............................................b/B/B.:
@@ -1689,7 +1689,7 @@ Those things scare me
 43,24.00,16.00,03 0800000000001111111111
 00
 000000
- 
+
 Never look back
 76,18,06,11,H
 .....................................................0.0.0.0.0.0.0.0.0..................................................................................
@@ -1718,7 +1718,7 @@ Never look back
 36,08.00,14.00,06
 00
 000004
- 
+
 I'm sorry
 32,18,03,11,H
 ................................................................
@@ -1729,8 +1729,8 @@ I'm sorry
 ................................................................
 .....................................:..........................
 ................................................................
-................................................................
-................................................................
+..................................../B/B........................
+..................................../B/B........................
 ..................................../B/B........................
 ..................................../B/B........................
 ..................................../B/B............../C........
@@ -1744,4 +1744,3 @@ I'm sorry
 02,01.00,15.00,10
 00
 000000
- 
