@@ -1,5 +1,3 @@
-- HPRC cranking arms
-
 - HPRCBubble UI animations
 - csBubble UI animations
 - tints

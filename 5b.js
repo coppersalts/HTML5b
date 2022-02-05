@@ -594,9 +594,7 @@ var bodyPartAnimations = [
 // 12 - recover2 left
 // 13 - recover2 right
 
-// TODO: each body part should get a string saying what type it is so that "bodypart" isn't super wierd like it is now.
-// it can be something like 'static', 'anim', 'dia', or 'body'.
-// TODO: load this file externally?
+// TODO: load this externally?
 var charModels = [
 	{
 		// Ruby
@@ -690,21 +688,29 @@ var charModels = [
 				{type:'static',bodypart:2,mat:{a:0.0661163330078125,b:-0.358734130859375,c:-0.358734130859375,d:-0.066131591796875,tx:-19.35,ty:-18.1}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-19.4,y:-17.4}},
 				{type:'body',mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:0,ty:-23.85}},
 				{type:'static',bodypart:36,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-13.05,ty:-19.35}},
 				{type:'static',bodypart:39,mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:-25.35,ty:-29.8}},
 				{type:'static',bodypart:39,mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:-9.65,ty:-30.05}},
+				{type:'armroot',id:1,pos:{x:19.2,y:-17.4}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:19.2,y:-17.4}},
 				{type:'body',mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:0,ty:-23.85}},
 				{type:'static',bodypart:36,mat:{a:0.400299072265625,b:0,c:0,d:0.400299072265625,tx:11.6,ty:-19.35}},
 				{type:'static',bodypart:39,mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:9.65,ty:-30.05}},
 				{type:'static',bodypart:39,mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:25.35,ty:-29.8}},
+				{type:'armroot',id:1,pos:{x:-19.4,y:-17.4}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:19.2,y:-17.4}},
+				{type:'armroot',id:1,pos:{x:-19.4,y:-17.4}},
 				{type:'body',mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:0,ty:-23.85}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:19.2,y:-17.4}},
+				{type:'armroot',id:1,pos:{x:-19.4,y:-17.4}},
 				{type:'body',mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:0,ty:-23.85}},
 			]
 		]
@@ -801,21 +807,29 @@ var charModels = [
 				{type:'static',bodypart:2,mat:{a:-0.21820068359375,b:0.313629150390625,c:-0.29925537109375,d:-0.2410430908203125,tx:-21.2,ty:-24.75}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-21.1,y:-17.05}},
 				{type:'body',mat:{a:0.2847747802734375,b:-0.0040130615234375,c:0.0086822509765625,d:0.285064697265625,tx:0.6,ty:-26.2}},
 				{type:'static',bodypart:0,mat:{a:-0.375213623046875,b:0.00494384765625,c:0,d:0.375213623046875,tx:-8.8,ty:-30.15}},
 				{type:'static',bodypart:0,mat:{a:-0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:4.45,ty:-29.9}},
 				{type:'static',bodypart:1,mat:{a:-0.3180999755859375,b:0.01141357421875,c:0.022735595703125,d:0.43402099609375,tx:-2.25,ty:-17.05}},
+				{type:'armroot',id:1,pos:{x:21.5,y:-17.05}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:22.1,y:-17.05}},
 				{type:'body',mat:{a:0.28399658203125,b:0.00396728515625,c:-0.008697509765625,d:0.2838592529296875,tx:0.25,ty:-26.2}},
 				{type:'static',bodypart:0,mat:{a:0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:-3.45,ty:-29.8}},
 				{type:'static',bodypart:0,mat:{a:0.37518310546875,b:0.00494384765625,c:0,d:0.375213623046875,tx:9.8,ty:-30.15}},
 				{type:'static',bodypart:1,mat:{a:0.3180999755859375,b:0.01141357421875,c:-0.022735595703125,d:0.43402099609375,tx:3.25,ty:-17.05}},
+				{type:'armroot',id:1,pos:{x:-20.5,y:-17.05}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:22.1,y:-17.05}},
+				{type:'armroot',id:1,pos:{x:-20.5,y:-17.05}},
 				{type:'body',mat:{a:-0.28411865234375,b:0.0000152587890625,c:-0.0037078857421875,d:0.2840576171875,tx:0.4,ty:-26.2}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:22.1,y:-17.05}},
+				{type:'armroot',id:1,pos:{x:-20.5,y:-17.05}},
 				{type:'body',mat:{a:-0.28411865234375,b:0.0000152587890625,c:-0.0037078857421875,d:0.2840576171875,tx:0.4,ty:-26.2}},
 			]
 		]
@@ -961,21 +975,29 @@ var charModels = [
 				{type:'static',bodypart:3,mat:{a:0.1793365478515625,b:-0.380706787109375,c:-0.3028411865234375,d:-0.1426544189453125,tx:-4.3,ty:-20}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-6.15,y:-20.1}},
 				{type:'body',mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.05,ty:-40.85}},
 				{type:'static',bodypart:0,mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:-3.6,ty:-38.7}},
 				{type:'static',bodypart:36,mat:{a:-0.194427490234375,b:0,c:0,d:0.329345703125,tx:-1.4,ty:-28.55}},
+				{type:'armroot',id:1,pos:{x:5.4,y:-20.1}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:6.75,y:-20.1}},
 				{type:'body',mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.55,ty:-40.85}},
 				{type:'static',bodypart:0,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:4.2,ty:-38.7}},
 				{type:'static',bodypart:36,mat:{a:0.194427490234375,b:0,c:0,d:0.329345703125,tx:2,ty:-28.55}},
+				{type:'armroot',id:1,pos:{x:-4.8,y:-20.1}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-6.15,y:-20.1}},
+				{type:'armroot',id:1,pos:{x:7.2,y:-20.1}},
 				{type:'body',mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.2,ty:-40.85}},
 				{type:'static',bodypart:0,mat:{a:-0.20111083984375,b:0,c:0,d:0.3351287841796875,tx:-5.15,ty:-38.7}},
 				{type:'static',bodypart:36,mat:{a:-0.1166839599609375,b:0,c:0,d:0.329345703125,tx:-3.8,ty:-28.55}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:6.9,y:-20.1}},
+				{type:'armroot',id:1,pos:{x:-6.3,y:-20.1}},
 				{type:'body',mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.1,ty:-40.85}},
 				{type:'static',bodypart:0,mat:{a:0.20111083984375,b:0,c:0,d:0.3351287841796875,tx:5.8,ty:-38.7}},
 				{type:'static',bodypart:36,mat:{a:0.1166839599609375,b:0,c:0,d:0.329345703125,tx:4.45,ty:-28.55}},
@@ -1064,21 +1086,29 @@ var charModels = [
 				{type:'anim',anim:3,offset:0,loop:true,bodypart:3,mat:{a:0.2680206298828125,b:-0.1997222900390625,c:-0.1997222900390625,d:-0.2680206298828125,tx:-4.65,ty:-25.4}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-6.4,y:-21.2}},
 				{type:'body',mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.8,ty:-40.1}},
 				{type:'static',bodypart:0,mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:-3.85,ty:-37.95}},
 				{type:'static',bodypart:36,mat:{a:-0.194427490234375,b:0,c:0,d:0.329345703125,tx:-1.65,ty:-27.8}},
+				{type:'armroot',id:1,pos:{x:5.65,y:-21.2}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:8.55,y:-21.2}},
 				{type:'body',mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:1.35,ty:-40.1}},
 				{type:'static',bodypart:0,mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:6,ty:-37.95}},
 				{type:'static',bodypart:36,mat:{a:0.194427490234375,b:0,c:0,d:0.329345703125,tx:3.8,ty:-27.8}},
+				{type:'armroot',id:1,pos:{x:-3.5,y:-21.2}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-6.4,y:-21.2}},
+				{type:'armroot',id:1,pos:{x:8,y:-21.2}},
 				{type:'body',mat:{a:0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:0.8,ty:-40.1}},
 				{type:'static',bodypart:0,mat:{a:-0.17022705078125,b:0,c:0,d:0.3351287841796875,tx:-5.35,ty:-38.25}},
 				{type:'static',bodypart:36,mat:{a:-0.0987548828125,b:0,c:0,d:0.329345703125,tx:-4.25,ty:-28.1}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:8.55,y:-20.45}},
+				{type:'armroot',id:1,pos:{x:-5.85,y:-20.45}},
 				{type:'body',mat:{a:-0.3351287841796875,b:0,c:0,d:0.3351287841796875,tx:1.35,ty:-40.1}},
 				{type:'static',bodypart:0,mat:{a:0.20745849609375,b:0,c:0,d:0.3351287841796875,tx:6.7,ty:-37.95}},
 				{type:'static',bodypart:36,mat:{a:0.120361328125,b:0,c:0,d:0.329345703125,tx:5.35,ty:-27.8}},
@@ -1167,23 +1197,31 @@ var charModels = [
 				{type:'static',bodypart:47,mat:{a:0.606903076171875,b:0,c:0,d:0.606903076171875,tx:4.3,ty:-65.55}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-26.25,y:-22.9}},
 				{type:'body',mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:2.35,ty:-42}},
 				{type:'static',bodypart:36,mat:{a:-0.400299072265625,b:0,c:0,d:0.400299072265625,tx:-16.3,ty:-28.25}},
 				{type:'static',bodypart:0,mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:-25.5,ty:-43.95}},
 				{type:'static',bodypart:0,mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:-9.8,ty:-44.2}},
+				{type:'armroot',id:1,pos:{x:23.3,y:-22.9}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:29.35,y:-22.9}},
 				{type:'body',mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:2.35,ty:-42}},
 				{type:'static',bodypart:36,mat:{a:0.400299072265625,b:0,c:0,d:0.400299072265625,tx:21,ty:-28.25}},
 				{type:'static',bodypart:0,mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:14.5,ty:-44.2}},
 				{type:'static',bodypart:0,mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:30.2,ty:-43.95}},
+				{type:'armroot',id:1,pos:{x:-20.2,y:-22.9}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-27.95,y:-22.9}},
+				{type:'armroot',id:1,pos:{x:31.8,y:-22.9}},
 				{type:'body',mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:2.35,ty:-42}},
 				{type:'static',bodypart:36,mat:{a:-0.1955413818359375,b:0,c:0,d:0.400299072265625,tx:-25.8,ty:-29.65}},
 				{type:'static',bodypart:0,mat:{a:0.193145751953125,b:0,c:0,d:0.3648529052734375,tx:-30.55,ty:-43.05}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:31.05,y:-22.9}},
+				{type:'armroot',id:1,pos:{x:-27,y:-22.9}},
 				{type:'body',mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:2.35,ty:-42}},
 				{type:'static',bodypart:36,mat:{a:0.1955413818359375,b:0,c:0,d:0.400299072265625,tx:30.5,ty:-29.65}},
 				{type:'static',bodypart:0,mat:{a:-0.193145751953125,b:0,c:0,d:0.3648529052734375,tx:35.25,ty:-43.05}},
@@ -1360,15 +1398,23 @@ var charModels = [
 			],
 			[
 				{type:'static',bodypart:60,mat:{a:-0.3065643310546875,b:0,c:0,d:0.3065643310546875,tx:29.95,ty:-51.95}},
+				{type:'armroot',id:0,pos:{x:-12,y:-14.25}},
+				{type:'armroot',id:1,pos:{x:14.6,y:-15.75}},
 			],
 			[
 				{type:'static',bodypart:60,mat:{a:0.3065643310546875,b:0,c:0,d:0.3065643310546875,tx:-25.05,ty:-51.95}},
+				{type:'armroot',id:0,pos:{x:-10.85,y:-15.75}},
+				{type:'armroot',id:1,pos:{x:15.75,y:-14.25}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:-3.6,y:-15.6}},
 				{type:'static',bodypart:61,mat:{a:-0.3065643310546875,b:0,c:0,d:0.3065643310546875,tx:29.95,ty:-51.95}},
+				{type:'armroot',id:1,pos:{x:-15.6,y:-15.6}},
 			],
 			[
+				{type:'armroot',id:0,pos:{x:6.95,y:-15.6}},
 				{type:'static',bodypart:61,mat:{a:0.3065643310546875,b:0,c:0,d:0.3065643310546875,tx:-25.05,ty:-51.95}},
+				{type:'armroot',id:1,pos:{x:8.05,y:-15.6}},
 			]
 		]
 	},
@@ -1524,6 +1570,7 @@ var tileBorders;
 var HPRCBubbleFrame; // TODO: refactor this thing out
 var HPRCText = '';
 var HPRCCrankRot = 0;
+var hprcCrankPos = {x:-29.5,y:-23.7}
 var charDepths = [];
 var tileDepths;
 var doorLightX = [[27.5],[15,40],[10,27.5,45],[10,21.75,33.25,45],[4,16.25,27.5,38.75,50],[4,14,23,32,41,50]];
@@ -2916,6 +2963,23 @@ function drawCharacters() {
 					char[_loc1_].y+charModels[char[_loc1_].id].torsomat.ty
 					);
 				for (var i = 0; i < modelFrame.length; i++) {
+					if (char[_loc1_].frame > 9 && modelFrame[i].type == 'armroot') {
+						var handOff = modelFrame[i].id==0?10:20;
+						var handX = -charModels[char[_loc1_].id].torsomat.tx + (char[HPRC2].x - char[_loc1_].x) + hprcCrankPos.x + handOff * Math.cos(Math.PI * recoverTimer / 15 - 0.2);
+						var handY = -charModels[char[_loc1_].id].torsomat.ty + (char[HPRC2].y - char[_loc1_].y) + hprcCrankPos.y + handOff * Math.sin(Math.PI * recoverTimer / 15 - 0.2);
+						ctx.strokeStyle = '#000000';
+						ctx.lineWidth = 1.5;
+						ctx.beginPath();
+						ctx.moveTo(modelFrame[i].pos.x, modelFrame[i].pos.y);
+						ctx.lineTo(handX, handY);
+						ctx.stroke();
+
+						ctx.fillStyle = '#000000';
+						ctx.beginPath();
+						ctx.arc(handX, handY, 2, 0, 2*Math.PI, false);
+						ctx.fill();
+						continue;
+					}
 					var img = svgBodyParts[modelFrame[i].bodypart];
 					if (modelFrame[i].type == 'body') img = svgChars[char[_loc1_].id];
 
@@ -2994,7 +3058,7 @@ function drawCharacters() {
 			// -29.5, -23.7
 			var radius = svgHPRCCrank.height/2;
 			ctx.save();
-			ctx.translate(char[_loc1_].x-29.5-radius, char[_loc1_].y-23.7+radius);
+			ctx.translate(char[_loc1_].x+hprcCrankPos.x, char[_loc1_].y+hprcCrankPos.y);
 			ctx.rotate(HPRCCrankRot);
 			ctx.drawImage(svgHPRCCrank, -radius, -radius);
 			ctx.restore();
