@@ -1,5 +1,3 @@
-- the rest of the legs
-- entity layering fix
 - HPRC cranking arms
 
 - HPRCBubble UI animations

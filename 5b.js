@@ -2351,8 +2351,11 @@ function resetLevel() {
 	charCount = startLocations[currentLevel].length;
 	levelWidth = levels[currentLevel][0].length;
 	levelHeight = levels[currentLevel].length;
-	charDepths = new Array(charCount*2);
-	for (var i = 0; i < charDepths.length; i++) charDepths[i] = i%2==0?Math.floor(charCount-i/2-1):-1;
+	charDepths = new Array((charCount + 1) * 2).fill(-1);
+	for (var i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
+	// move the control to the front
+	charDepths[(charCount-1)*2] = -1;
+	charDepths[charCount*2] = 0;
 	copyLevel(levels[currentLevel]);
 	charDepth = levelWidth * levelHeight + charCount * 2;
 	tileDepths = [[],[],[],[]];
@@ -2360,7 +2363,41 @@ function resetLevel() {
 	HPRC1 = HPRC2 = 1000000;
 	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
 		var _loc2_ = startLocations[currentLevel][_loc1_][0];
-		char[_loc1_] = new Character(_loc2_,startLocations[currentLevel][_loc1_][1] * 30 + startLocations[currentLevel][_loc1_][2] * 30 / 100,startLocations[currentLevel][_loc1_][3] * 30 + startLocations[currentLevel][_loc1_][4] * 30 / 100,70 + _loc1_ * 40,400 - _loc1_ * 30,0,0,false,4,false,0,200,200,30,startLocations[currentLevel][_loc1_][5],-1,new Array(0),charD[_loc2_][0],charD[_loc2_][1],charD[_loc2_][2],charD[_loc2_][2],charD[_loc2_][3],false,charD[_loc2_][4],0,2,0,new Array(0),0,0,0,0,charD[_loc2_][6]);
+		char[_loc1_] = new Character(
+			_loc2_,
+			startLocations[currentLevel][_loc1_][1] * 30 + startLocations[currentLevel][_loc1_][2] * 30 / 100,
+			startLocations[currentLevel][_loc1_][3] * 30 + startLocations[currentLevel][_loc1_][4] * 30 / 100,
+			70 + _loc1_ * 40,
+			400 - _loc1_ * 30,
+			0,
+			0,
+			false,
+			4,
+			false,
+			0,
+			200,
+			200,
+			30,
+			startLocations[currentLevel][_loc1_][5],
+			-1,
+			new Array(0),
+			charD[_loc2_][0],
+			charD[_loc2_][1],
+			charD[_loc2_][2],
+			charD[_loc2_][2],
+			charD[_loc2_][3],
+			false,
+			charD[_loc2_][4],
+			0,
+			2,
+			0,
+			new Array(0),
+			0,
+			0,
+			0,
+			0,
+			charD[_loc2_][6]
+		);
 		char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
 		if (_loc2_ <= 5) charCount2++;
 		if (_loc2_ == 36) HPRC1 = _loc1_;
@@ -2764,7 +2801,7 @@ function drawCharacters() {
 			// levelChar["char" + _loc1_].removeMovieClip();
 		// }
 	// }
-	for (var _loc2_ = 0; _loc2_ < charCount*2; _loc2_++) {
+	for (var _loc2_ = 0; _loc2_ < (charCount+1)*2; _loc2_++) {
 		var _loc1_ = charDepths[_loc2_];
 		if (_loc1_ < 0) continue;
 		var currCharID = char[_loc1_].id;
@@ -4328,7 +4365,7 @@ function putDown(i)
 		char[char[i].carryObject].weight2 = char[char[i].carryObject].weight;
 		char[i].carry = false;
 		char[i].justChanged = 2;
-		swapDepths(char[i].carryObject, char[i].carryObject * 2);
+		swapDepths(char[i].carryObject, (charCount - char[i].carryObject - 1) * 2);
 		char[char[i].carryObject].carriedBy = -1;
 		char[char[i].carryObject].stopMoving();
 	}
@@ -4450,35 +4487,31 @@ function allSolid(i)
 {
 	return blockProperties[i][0] && blockProperties[i][1] && blockProperties[i][2] && blockProperties[i][3];
 }
-function changeControl()
-{
-	if(char[control].charState >= 7)
-	{
+
+function changeControl() {
+	if (char[control].charState >= 7) {
 		char[control].stopMoving();
-		swapDepths(control, control * 2);
-		if(char[control].carry)
-		{
-			swapDepths(char[control].carryObject, control * 2 + 1);
+		swapDepths(control, (charCount - control - 1) * 2);
+		if(char[control].carry) {
+			swapDepths(char[control].carryObject, (charCount - control - 1) + 1);
 		}
 	}
 	control = (control + 1) % charCount;
 	var _loc1_ = 0;
-	while(char[control].charState != 10 && _loc1_ < 10)
-	{
+	while (char[control].charState != 10 && _loc1_ < 10) {
 		control = (control + 1) % charCount;
-		_loc1_ = _loc1_ + 1;
+		_loc1_++;
 	}
-	if(_loc1_ == 10)
-	{
+	if (_loc1_ == 10) {
 		control = 10000;
 	}
-	if(control < 1000)
-	{
+
+	if (control < 1000) {
 		if(ifCarried(control))
 		{
 			putDown(char[control].carriedBy);
 		}
-		swapDepths(control, charCount * 2 - (control + 1) * 2);
+		swapDepths(control, (charCount) * 2);
 		char[control].burstFrame = 0;
 		char[control].expr = charModels[char[control].id].defaultExpr;
 		// levelChar["char" + control].burst.gotoAndPlay(2);
@@ -4816,7 +4849,7 @@ function draw() {
 										if (ifCarried(_loc2_)) putDown(char[_loc2_].carriedBy);
 										char[control].carry = true;
 										char[control].carryObject = _loc2_;
-										swapDepths(_loc2_, charCount * 2 - (control + 1) * 2 + 1);
+										swapDepths(_loc2_, charCount * 2 + 1);
 										char[_loc2_].carriedBy = control;
 										char[_loc2_].weight2 = char[_loc2_].weight;
 										char[control].weight2 = char[_loc2_].weight + char[control].weight;
