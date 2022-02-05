@@ -1,5 +1,7 @@
 // TODO: rename _locn_ variables.
 // TODO: look up the difference between var and let.
+// UPDATE: I now know the difference and I can't decide whether or not to use it in certain places. All I know is I probably shouldn't use it in for loops.
+// I'll look more into it once I get more into optimizing.
 // TODO: go through all the todo's I've put throughout this file.
 // TODO: rename some functions
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
@@ -190,14 +192,6 @@ function loadLevels() {
 	}
 }
 
-// thanks to imaperson for writing this!
-// (async () => {
-// 	var req = await fetch("data/levels.txt");
-// 	var text = await req.text();
-// 	levelsString = text;
-// 	loadLevels();
-// })();
-
 var musicSound = new Audio('data/music hq.wav');
 
 // [15] - animated?
@@ -205,211 +199,213 @@ var musicSound = new Audio('data/music hq.wav');
 // [17] - loop?
 // [18] - loop frame order
 var blockProperties = [
-// tile0
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-// tile1
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,14,false,[0,1,2,3,4,5,6,7,8,9,10,11,12,13]],
-[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
-[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,true],
-[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
-[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
-// tile2
-[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-// tile3
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,1,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,7,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,2,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,8,0,false,false,false,1,false],
-[false,true,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-// tile4
-[true,true,true,true,false,false,false,false,true,false,false,13,0,false,false,true,5,false],
-[true,true,true,true,false,false,false,false,true,false,false,14,0,false,false,true,5,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,true,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,true,false,true,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,true,true,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,3,true,[0,0,0,0,0,1,1,2,2,1,1]],
-// tile5
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,3,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,9,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
-// tile6
-[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-[false,true,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,2,true,[0,0,0,1,1,1]],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-// tile7
-[false,false,false,true,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,15,0,false,false,true,5,false],
-[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,30,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]],
-[false,false,false,false,true,true,true,true,true,false,false,0,0,false,false,true,20,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]],
-[false,false,false,false,true,true,true,true,true,false,false,0,0,false,false,true,20,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-[true,true,true,true,true,true,true,true,true,false,false,0,1,false,false,false,1,false],
-// tile8
-[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
-[false,true,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-// tile9
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-// tile10
-[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,6,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,true,false,false,12,0,false,false,false,1,false],
-// tile11
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-// tile12
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-// tile13
-[false,false,false,false,false,false,false,false,false,false,false,0,1,false,true,false,1,false],
-[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false]];
+	// tile0
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	// tile1
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,14,false,[0,1,2,3,4,5,6,7,8,9,10,11,12,13]],
+	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
+	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
+	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,true],
+	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
+	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	// tile2
+	[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	// tile3
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,1,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,7,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,2,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,8,0,false,false,false,1,false],
+	[false,true,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	// tile4
+	[true,true,true,true,false,false,false,false,true,false,false,13,0,false,false,true,5,false],
+	[true,true,true,true,false,false,false,false,true,false,false,14,0,false,false,true,5,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,true,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,true,false,true,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,true,true,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,3,true,[0,0,0,0,0,1,1,2,2,1,1]],
+	// tile5
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
+	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,3,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,9,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
+	// tile6
+	[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
+	[false,true,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,2,true,[0,0,0,1,1,1]],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	// tile7
+	[false,false,false,true,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,15,0,false,false,true,5,false],
+	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,30,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]],
+	[false,false,false,false,true,true,true,true,true,false,false,0,0,false,false,true,20,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]],
+	[false,false,false,false,true,true,true,true,true,false,false,0,0,false,false,true,20,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[true,true,true,true,true,true,true,true,true,false,false,0,1,false,false,false,1,false],
+	// tile8
+	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
+	[false,true,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
+	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
+	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
+	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	// tile9
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	// tile10
+	[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,6,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,12,0,false,false,false,1,false],
+	// tile11
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	// tile12
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	// tile13
+	[false,false,false,false,false,false,false,false,false,false,false,0,1,false,true,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false]
+];
 var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54],[65,61,60,62,63,64],[],[],[14,16,83,85]];
 var charD = [
-[28,45.4,0.45,27,0.8,false,1,1],
-[23,56,0.36,31,0.8,false,1.7,1],
-[20,51,0.41,20,0.85,false,5,1],
-[10,86,0.26,31,0.8,false,1.6,1],
-[10,84,0.23,31,0.8,false,1.4,1],
-[28,70,0.075,28,0.8,false,9,1],
-[26,49,0.2,20,0.75,false,0.6,1],
-[44,65,0.8,20,0.75,false,0.8,1],
-[16,56,0.25,17,0.76,false,0.8,1],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[0,0,0,0,0,false,1,0],
-[36.5,72.8,1,20,0.6,false,0,1],
-[15.1,72.8,0.6,20,0.7,true,0,1],
-[20,40,0.15,20,0.7,true,0.7,1],
-[25,50,0.64,20,0.6,true,0.1,1],
-[25,10,1,0,0.7,true,0.2,1],
-[25,50,1,20,0.7,true,0.1,1],
-[25,29,0.1,20,0.8,true,1,1],
-[21.5,43,0.3,20,0.6,true,0.5,1],
-[35,60,1,20,0.7,true,0.1,1],
-[22.5,45,1,20,0.7,true,0.8,1],
-[25,50,1,0,0.7,true,0.1,27],
-[15,30,0.64,20,0.6,true,0.2,1],
-[10,55,0.8,0,0.3,true,0.4,1],
-[45,10,1,0,0.7,true,0.2,1],
-[20,40,1,0,0.8,false,0.8,5],
-[16,45,0.4,20,0.94,false,1.1,60],
-[25,10,1,0,0.7,true,0.3,1],
-[45,10,0.4,0,0.7,true,0.7,1],
-[15,50,0.1,0,0.8,true,1.9,1],
-[25,25,0.1,0,0.8,true,1.7,1],
-[30,540,10,10,0.4,true,0,1]];
+	[28,45.4,0.45,27,0.8,false,1,1],
+	[23,56,0.36,31,0.8,false,1.7,1],
+	[20,51,0.41,20,0.85,false,5,1],
+	[10,86,0.26,31,0.8,false,1.6,1],
+	[10,84,0.23,31,0.8,false,1.4,1],
+	[28,70,0.075,28,0.8,false,9,1],
+	[26,49,0.2,20,0.75,false,0.6,1],
+	[44,65,0.8,20,0.75,false,0.8,1],
+	[16,56,0.25,17,0.76,false,0.8,1],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[0,0,0,0,0,false,1,0],
+	[36.5,72.8,1,20,0.6,false,0,1],
+	[15.1,72.8,0.6,20,0.7,true,0,1],
+	[20,40,0.15,20,0.7,true,0.7,1],
+	[25,50,0.64,20,0.6,true,0.1,1],
+	[25,10,1,0,0.7,true,0.2,1],
+	[25,50,1,20,0.7,true,0.1,1],
+	[25,29,0.1,20,0.8,true,1,1],
+	[21.5,43,0.3,20,0.6,true,0.5,1],
+	[35,60,1,20,0.7,true,0.1,1],
+	[22.5,45,1,20,0.7,true,0.8,1],
+	[25,50,1,0,0.7,true,0.1,27],
+	[15,30,0.64,20,0.6,true,0.2,1],
+	[10,55,0.8,0,0.3,true,0.4,1],
+	[45,10,1,0,0.7,true,0.2,1],
+	[20,40,1,0,0.8,false,0.8,5],
+	[16,45,0.4,20,0.94,false,1.1,60],
+	[25,10,1,0,0.7,true,0.3,1],
+	[45,10,0.4,0,0.7,true,0.7,1],
+	[15,50,0.1,0,0.8,true,1.9,1],
+	[25,25,0.1,0,0.8,true,1.7,1],
+[30,540,10,10,0.4,true,0,1]
+];
 
 var diaMouths = [
 	{
@@ -577,6 +573,95 @@ var bodyPartAnimations = [
 			{a:-0.3065643310546875,b:0,c:0,d:0.3065643310546875,tx:27.45,ty:-49.95},
 		]
 	}
+]
+var legFrames = [
+	{type:'static',bodypart:6},
+	{type:'static',bodypart:7},
+	{type:'anim',usesMats:false,frames:[8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]},
+	{type:'anim',usesMats:true,bodypart:62,frames:[
+		{a:0.351593017578125,b:0.111663818359375,c:-0.1230926513671875,d:0.463104248046875,tx:0.25,ty:-0.7},
+		{a:0.3514251708984375,b:0.1110687255859375,c:-0.122222900390625,d:0.46295166015625,tx:0.2,ty:-0.75},
+		{a:0.3518218994140625,b:0.1097564697265625,c:-0.12200927734375,d:0.4629974365234375,tx:0.25,ty:-0.75},
+		{a:0.351898193359375,b:0.1095123291015625,c:-0.12017822265625,d:0.4634857177734375,tx:0.25,ty:-0.7},
+		{a:0.35235595703125,b:0.10797119140625,c:-0.118133544921875,d:0.4640350341796875,tx:0.35,ty:-0.7},
+		{a:0.3529052734375,b:0.1063232421875,c:-0.115966796875,d:0.464569091796875,tx:0.25,ty:-0.7},
+		{a:0.3537445068359375,b:0.103363037109375,c:-0.1120758056640625,d:0.4655303955078125,tx:0.25,ty:-0.75},
+		{a:0.35467529296875,b:0.1002655029296875,c:-0.108001708984375,d:0.46649169921875,tx:0.25,ty:-0.7},
+		{a:0.3555755615234375,b:0.097015380859375,c:-0.103729248046875,d:0.4674835205078125,tx:0.35,ty:-0.7},
+		{a:0.3567962646484375,b:0.0924530029296875,c:-0.0977325439453125,d:0.468780517578125,tx:0.35,ty:-0.75},
+		{a:0.3580169677734375,b:0.08770751953125,c:-0.09149169921875,d:0.470062255859375,tx:0.35,ty:-0.75},
+		{a:0.35943603515625,b:0.0815887451171875,c:-0.0834808349609375,d:0.4715576171875,tx:0.4,ty:-0.7},
+		{a:0.3608551025390625,b:0.075286865234375,c:-0.0751953125,d:0.4729461669921875,tx:0.4,ty:-0.65},
+		{a:0.36212158203125,b:0.068817138671875,c:-0.0667266845703125,d:0.4742431640625,tx:0.35,ty:-0.75},
+		{a:0.363555908203125,b:0.06097412109375,c:-0.0564727783203125,d:0.4756011962890625,tx:0.35,ty:-0.7},
+		{a:0.36480712890625,b:0.052978515625,c:-0.046051025390625,d:0.476715087890625,tx:0.45,ty:-0.7},
+		{a:0.3661041259765625,b:0.0436859130859375,c:-0.033905029296875,d:0.477783203125,tx:0.4,ty:-0.65},
+		{a:0.3669586181640625,b:0.0355377197265625,c:-0.02325439453125,d:0.4784393310546875,tx:0.5,ty:-0.75},
+		{a:0.3676605224609375,b:0.0273284912109375,c:-0.0125579833984375,d:0.4788665771484375,tx:0.6,ty:-0.75},
+		{a:0.3682708740234375,b:0.017974853515625,c:-0.000396728515625,d:0.4790496826171875,tx:0.5,ty:-0.75},
+		{a:0.368621826171875,b:0.009918212890625,c:0.00848388671875,d:0.47894287109375,tx:0.6,ty:-0.75},
+		{a:0.3687286376953125,b:0.003204345703125,c:0.017181396484375,d:0.4786376953125,tx:0.6,ty:-0.75},
+		{a:0.36871337890625,b:-0.0032806396484375,c:0.027191162109375,d:0.4781646728515625,tx:0.65,ty:-0.7},
+		{a:0.3686370849609375,b:-0.00836181640625,c:0.0337677001953125,d:0.4777069091796875,tx:0.6,ty:-0.7},
+		{a:0.3684844970703125,b:-0.0131988525390625,c:0.040069580078125,d:0.4771728515625,tx:0.65,ty:-0.7},
+		{a:0.368255615234375,b:-0.0178070068359375,c:0.0460052490234375,d:0.4766387939453125,tx:0.65,ty:-0.7},
+		{a:0.3680419921875,b:-0.0209503173828125,c:0.0500946044921875,d:0.4762115478515625,tx:0.7,ty:-0.7},
+		{a:0.3679656982421875,b:-0.0226898193359375,c:0.0523529052734375,d:0.4759368896484375,tx:0.65,ty:-0.7},
+		{a:0.3678741455078125,b:-0.024200439453125,c:0.054290771484375,d:0.4757080078125,tx:0.65,ty:-0.7},
+		{a:0.367889404296875,b:-0.02484130859375,c:0.05499267578125,d:0.4757843017578125,tx:0.65,ty:-0.7},
+		{a:0.3678741455078125,b:-0.024261474609375,c:0.0543670654296875,d:0.4757080078125,tx:0.65,ty:-0.7},
+		{a:0.367919921875,b:-0.02288818359375,c:0.0525970458984375,d:0.475921630859375,tx:0.6,ty:-0.7},
+		{a:0.367950439453125,b:-0.02264404296875,c:0.052276611328125,d:0.4759368896484375,tx:0.65,ty:-0.7},
+		{a:0.3680419921875,b:-0.0210723876953125,c:0.05023193359375,d:0.476165771484375,tx:0.65,ty:-0.75},
+		{a:0.3681793212890625,b:-0.019378662109375,c:0.048065185546875,d:0.476409912109375,tx:0.65,ty:-0.7},
+		{a:0.368316650390625,b:-0.0163421630859375,c:0.044158935546875,d:0.4768218994140625,tx:0.65,ty:-0.75},
+		{a:0.3684844970703125,b:-0.0131988525390625,c:0.0400543212890625,d:0.4771728515625,tx:0.6,ty:-0.7},
+		{a:0.3685760498046875,b:-0.0099029541015625,c:0.0358123779296875,d:0.4775543212890625,tx:0.6,ty:-0.7},
+		{a:0.36865234375,b:-0.0064544677734375,c:0.0313262939453125,d:0.4778594970703125,tx:0.6,ty:-0.7},
+		{a:0.3687286376953125,b:-0.00164794921875,c:0.0251007080078125,d:0.4782867431640625,tx:0.6,ty:-0.7},
+		{a:0.3687286376953125,b:0.0032958984375,c:0.01708984375,d:0.4786376953125,tx:0.5,ty:-0.7},
+		{a:0.3686370849609375,b:0.0084075927734375,c:0.01043701171875,d:0.4788970947265625,tx:0.5,ty:-0.7},
+		{a:0.36834716796875,b:0.0160980224609375,c:0.000457763671875,d:0.4790191650390625,tx:0.5,ty:-0.7},
+		{a:0.3679962158203125,b:0.022705078125,c:-0.006561279296875,d:0.47900390625,tx:0.5,ty:-0.75},
+		{a:0.367431640625,b:0.0306549072265625,c:-0.01690673828125,d:0.4787139892578125,tx:0.4,ty:-0.7},
+		{a:0.3666534423828125,b:0.0386505126953125,c:-0.0273590087890625,d:0.47821044921875,tx:0.45,ty:-0.7},
+		{a:0.36572265625,b:0.0467376708984375,c:-0.0378875732421875,d:0.47747802734375,tx:0.4,ty:-0.7},
+		{a:0.36456298828125,b:0.0548095703125,c:-0.0484161376953125,d:0.4764862060546875,tx:0.35,ty:-0.75},
+		{a:0.363250732421875,b:0.062835693359375,c:-0.0604705810546875,d:0.47509765625,tx:0.4,ty:-0.7},
+		{a:0.36151123046875,b:0.07196044921875,c:-0.0708770751953125,d:0.4736328125,tx:0.25,ty:-0.65},
+		{a:0.3601226806640625,b:0.0785675048828125,c:-0.0795135498046875,d:0.47222900390625,tx:0.35,ty:-0.7},
+		{a:0.3583526611328125,b:0.0861663818359375,c:-0.089508056640625,d:0.4704437255859375,tx:0.35,ty:-0.65},
+		{a:0.3568267822265625,b:0.0923919677734375,c:-0.09765625,d:0.468780517578125,tx:0.2,ty:-0.75},
+		{a:0.3555145263671875,b:0.0972137451171875,c:-0.1039886474609375,d:0.4674072265625,tx:0.25,ty:-0.7},
+		{a:0.3542022705078125,b:0.1017913818359375,c:-0.1100006103515625,d:0.46600341796875,tx:0.25,ty:-0.65},
+		{a:0.3532867431640625,b:0.1049957275390625,c:-0.114227294921875,d:0.4650115966796875,tx:0.2,ty:-0.75},
+		{a:0.3524017333984375,b:0.10797119140625,c:-0.1181488037109375,d:0.4640045166015625,tx:0.15,ty:-0.7},
+		{a:0.3518829345703125,b:0.109619140625,c:-0.120269775390625,d:0.4634552001953125,tx:0.25,ty:-0.7},
+		{a:0.3514404296875,b:0.1110076904296875,c:-0.1221466064453125,d:0.46295166015625,tx:0.2,ty:-0.7},
+		{a:0.351593017578125,b:0.111663818359375,c:-0.1230926513671875,d:0.463104248046875,tx:0.25,ty:-0.7},
+	]},
+	{type:'anim',usesMats:true,bodypart:62,frames:[
+		{a:0.2861175537109375,b:0.232147216796875,c:-0.2834320068359375,d:0.3856353759765625,tx:0.1,ty:-0.65},
+		{a:0.2884979248046875,b:0.228240966796875,c:-0.2781219482421875,d:0.3885650634765625,tx:0.15,ty:-0.7},
+		{a:0.29730224609375,b:0.2166748046875,c:-0.262603759765625,d:0.3993072509765625,tx:0,ty:-0.7},
+		{a:0.312591552734375,b:0.194122314453125,c:-0.23236083984375,d:0.417724609375,tx:0.2,ty:-0.7},
+		{a:0.3320465087890625,b:0.1588134765625,c:-0.18536376953125,d:0.4407501220703125,tx:0.35,ty:-0.7},
+		{a:0.3515167236328125,b:0.1096343994140625,c:-0.120361328125,d:0.4630279541015625,tx:0.45,ty:-0.75},
+		{a:0.3641204833984375,b:0.0562286376953125,c:-0.05029296875,d:0.47607421875,tx:0.5,ty:-0.65},
+		{a:0.368499755859375,b:0.0100250244140625,c:0.0083465576171875,d:0.4788360595703125,tx:0.65,ty:-0.7},
+		{a:0.368316650390625,b:-0.0161285400390625,c:0.043853759765625,d:0.4767913818359375,tx:0.7,ty:-0.75},
+		{a:0.367889404296875,b:-0.0248565673828125,c:0.05499267578125,d:0.4757843017578125,tx:0.7,ty:-0.7},
+		{a:0.3680419921875,b:-0.02099609375,c:0.050140380859375,d:0.476165771484375,tx:0.7,ty:-0.75},
+		{a:0.3685760498046875,b:-0.0084228515625,c:0.0338897705078125,d:0.4776763916015625,tx:0.65,ty:-0.7},
+		{a:0.3684844970703125,b:0.0113525390625,c:0.0066070556640625,d:0.4788665771484375,tx:0.6,ty:-0.7},
+		{a:0.365966796875,b:0.043426513671875,c:-0.0335845947265625,d:0.4776153564453125,tx:0.5,ty:-0.65},
+		{a:0.358428955078125,b:0.0848388671875,c:-0.0877532958984375,d:0.4704437255859375,tx:0.45,ty:-0.7},
+		{a:0.3435211181640625,b:0.13238525390625,c:-0.1503753662109375,d:0.45404052734375,tx:0.35,ty:-0.65},
+		{a:0.3231201171875,b:0.1761322021484375,c:-0.208404541015625,d:0.430267333984375,tx:0.2,ty:-0.7},
+		{a:0.3029327392578125,b:0.2087860107421875,c:-0.2519989013671875,d:0.4060821533203125,tx:0.1,ty:-0.65},
+		{a:0.29034423828125,b:0.225860595703125,c:-0.274932861328125,d:0.390838623046875,tx:0.1,ty:-0.7},
+		{a:0.2861175537109375,b:0.232147216796875,c:-0.2834320068359375,d:0.3856353759765625,tx:0.1,ty:-0.65},
+	]},
 ]
 // frames:
 // 00 - run left
@@ -1507,6 +1592,7 @@ var charModels = [
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 	},
 ];
+// TODO: add the npcs to this? that might break something, so I'll wait to try it out.
 var names = ["Ruby","Book","Ice Cube","Match","Pencil","Bubble"];
 var selectedTab = 0;
 var power = 1;
@@ -1577,6 +1663,7 @@ var doorLightX = [[27.5],[15,40],[10,27.5,45],[10,21.75,33.25,45],[4,16.25,27.5,
 var doorLightFade = [0,0,0,0,0,0];
 var doorLightFadeDire = [0,0,0,0,0,0];
 
+// TODO: replace usages with this with String.padStart()
 function numberToText(i, hundreds) {
 	if (hundreds) {
 		if (i < 10) return "00" + i;
@@ -1604,6 +1691,7 @@ function addCommas(i) {
 	}
 	return _loc2_;
 }
+// I missed processing's map() function so much I wrote my own that I think I stole parts of from stackoverflow, but didn't link to.
 function mapRange(value, min1, max1, min2, max2) {
 	return min2 + (((value - min1) / (max1 - min1)) * (max2 - min2));
 }
@@ -1689,95 +1777,6 @@ var svgCoinGet = new Array(11);
 var svgFire = new Array(18);
 var svgBurst = new Array(13);
 var svgIceCubeMelt;
-var legFrames = [
-	{type:'static',bodypart:6},
-	{type:'static',bodypart:7},
-	{type:'anim',usesMats:false,frames:[8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]},
-	{type:'anim',usesMats:true,bodypart:62,frames:[
-		{a:0.351593017578125,b:0.111663818359375,c:-0.1230926513671875,d:0.463104248046875,tx:0.25,ty:-0.7},
-		{a:0.3514251708984375,b:0.1110687255859375,c:-0.122222900390625,d:0.46295166015625,tx:0.2,ty:-0.75},
-		{a:0.3518218994140625,b:0.1097564697265625,c:-0.12200927734375,d:0.4629974365234375,tx:0.25,ty:-0.75},
-		{a:0.351898193359375,b:0.1095123291015625,c:-0.12017822265625,d:0.4634857177734375,tx:0.25,ty:-0.7},
-		{a:0.35235595703125,b:0.10797119140625,c:-0.118133544921875,d:0.4640350341796875,tx:0.35,ty:-0.7},
-		{a:0.3529052734375,b:0.1063232421875,c:-0.115966796875,d:0.464569091796875,tx:0.25,ty:-0.7},
-		{a:0.3537445068359375,b:0.103363037109375,c:-0.1120758056640625,d:0.4655303955078125,tx:0.25,ty:-0.75},
-		{a:0.35467529296875,b:0.1002655029296875,c:-0.108001708984375,d:0.46649169921875,tx:0.25,ty:-0.7},
-		{a:0.3555755615234375,b:0.097015380859375,c:-0.103729248046875,d:0.4674835205078125,tx:0.35,ty:-0.7},
-		{a:0.3567962646484375,b:0.0924530029296875,c:-0.0977325439453125,d:0.468780517578125,tx:0.35,ty:-0.75},
-		{a:0.3580169677734375,b:0.08770751953125,c:-0.09149169921875,d:0.470062255859375,tx:0.35,ty:-0.75},
-		{a:0.35943603515625,b:0.0815887451171875,c:-0.0834808349609375,d:0.4715576171875,tx:0.4,ty:-0.7},
-		{a:0.3608551025390625,b:0.075286865234375,c:-0.0751953125,d:0.4729461669921875,tx:0.4,ty:-0.65},
-		{a:0.36212158203125,b:0.068817138671875,c:-0.0667266845703125,d:0.4742431640625,tx:0.35,ty:-0.75},
-		{a:0.363555908203125,b:0.06097412109375,c:-0.0564727783203125,d:0.4756011962890625,tx:0.35,ty:-0.7},
-		{a:0.36480712890625,b:0.052978515625,c:-0.046051025390625,d:0.476715087890625,tx:0.45,ty:-0.7},
-		{a:0.3661041259765625,b:0.0436859130859375,c:-0.033905029296875,d:0.477783203125,tx:0.4,ty:-0.65},
-		{a:0.3669586181640625,b:0.0355377197265625,c:-0.02325439453125,d:0.4784393310546875,tx:0.5,ty:-0.75},
-		{a:0.3676605224609375,b:0.0273284912109375,c:-0.0125579833984375,d:0.4788665771484375,tx:0.6,ty:-0.75},
-		{a:0.3682708740234375,b:0.017974853515625,c:-0.000396728515625,d:0.4790496826171875,tx:0.5,ty:-0.75},
-		{a:0.368621826171875,b:0.009918212890625,c:0.00848388671875,d:0.47894287109375,tx:0.6,ty:-0.75},
-		{a:0.3687286376953125,b:0.003204345703125,c:0.017181396484375,d:0.4786376953125,tx:0.6,ty:-0.75},
-		{a:0.36871337890625,b:-0.0032806396484375,c:0.027191162109375,d:0.4781646728515625,tx:0.65,ty:-0.7},
-		{a:0.3686370849609375,b:-0.00836181640625,c:0.0337677001953125,d:0.4777069091796875,tx:0.6,ty:-0.7},
-		{a:0.3684844970703125,b:-0.0131988525390625,c:0.040069580078125,d:0.4771728515625,tx:0.65,ty:-0.7},
-		{a:0.368255615234375,b:-0.0178070068359375,c:0.0460052490234375,d:0.4766387939453125,tx:0.65,ty:-0.7},
-		{a:0.3680419921875,b:-0.0209503173828125,c:0.0500946044921875,d:0.4762115478515625,tx:0.7,ty:-0.7},
-		{a:0.3679656982421875,b:-0.0226898193359375,c:0.0523529052734375,d:0.4759368896484375,tx:0.65,ty:-0.7},
-		{a:0.3678741455078125,b:-0.024200439453125,c:0.054290771484375,d:0.4757080078125,tx:0.65,ty:-0.7},
-		{a:0.367889404296875,b:-0.02484130859375,c:0.05499267578125,d:0.4757843017578125,tx:0.65,ty:-0.7},
-		{a:0.3678741455078125,b:-0.024261474609375,c:0.0543670654296875,d:0.4757080078125,tx:0.65,ty:-0.7},
-		{a:0.367919921875,b:-0.02288818359375,c:0.0525970458984375,d:0.475921630859375,tx:0.6,ty:-0.7},
-		{a:0.367950439453125,b:-0.02264404296875,c:0.052276611328125,d:0.4759368896484375,tx:0.65,ty:-0.7},
-		{a:0.3680419921875,b:-0.0210723876953125,c:0.05023193359375,d:0.476165771484375,tx:0.65,ty:-0.75},
-		{a:0.3681793212890625,b:-0.019378662109375,c:0.048065185546875,d:0.476409912109375,tx:0.65,ty:-0.7},
-		{a:0.368316650390625,b:-0.0163421630859375,c:0.044158935546875,d:0.4768218994140625,tx:0.65,ty:-0.75},
-		{a:0.3684844970703125,b:-0.0131988525390625,c:0.0400543212890625,d:0.4771728515625,tx:0.6,ty:-0.7},
-		{a:0.3685760498046875,b:-0.0099029541015625,c:0.0358123779296875,d:0.4775543212890625,tx:0.6,ty:-0.7},
-		{a:0.36865234375,b:-0.0064544677734375,c:0.0313262939453125,d:0.4778594970703125,tx:0.6,ty:-0.7},
-		{a:0.3687286376953125,b:-0.00164794921875,c:0.0251007080078125,d:0.4782867431640625,tx:0.6,ty:-0.7},
-		{a:0.3687286376953125,b:0.0032958984375,c:0.01708984375,d:0.4786376953125,tx:0.5,ty:-0.7},
-		{a:0.3686370849609375,b:0.0084075927734375,c:0.01043701171875,d:0.4788970947265625,tx:0.5,ty:-0.7},
-		{a:0.36834716796875,b:0.0160980224609375,c:0.000457763671875,d:0.4790191650390625,tx:0.5,ty:-0.7},
-		{a:0.3679962158203125,b:0.022705078125,c:-0.006561279296875,d:0.47900390625,tx:0.5,ty:-0.75},
-		{a:0.367431640625,b:0.0306549072265625,c:-0.01690673828125,d:0.4787139892578125,tx:0.4,ty:-0.7},
-		{a:0.3666534423828125,b:0.0386505126953125,c:-0.0273590087890625,d:0.47821044921875,tx:0.45,ty:-0.7},
-		{a:0.36572265625,b:0.0467376708984375,c:-0.0378875732421875,d:0.47747802734375,tx:0.4,ty:-0.7},
-		{a:0.36456298828125,b:0.0548095703125,c:-0.0484161376953125,d:0.4764862060546875,tx:0.35,ty:-0.75},
-		{a:0.363250732421875,b:0.062835693359375,c:-0.0604705810546875,d:0.47509765625,tx:0.4,ty:-0.7},
-		{a:0.36151123046875,b:0.07196044921875,c:-0.0708770751953125,d:0.4736328125,tx:0.25,ty:-0.65},
-		{a:0.3601226806640625,b:0.0785675048828125,c:-0.0795135498046875,d:0.47222900390625,tx:0.35,ty:-0.7},
-		{a:0.3583526611328125,b:0.0861663818359375,c:-0.089508056640625,d:0.4704437255859375,tx:0.35,ty:-0.65},
-		{a:0.3568267822265625,b:0.0923919677734375,c:-0.09765625,d:0.468780517578125,tx:0.2,ty:-0.75},
-		{a:0.3555145263671875,b:0.0972137451171875,c:-0.1039886474609375,d:0.4674072265625,tx:0.25,ty:-0.7},
-		{a:0.3542022705078125,b:0.1017913818359375,c:-0.1100006103515625,d:0.46600341796875,tx:0.25,ty:-0.65},
-		{a:0.3532867431640625,b:0.1049957275390625,c:-0.114227294921875,d:0.4650115966796875,tx:0.2,ty:-0.75},
-		{a:0.3524017333984375,b:0.10797119140625,c:-0.1181488037109375,d:0.4640045166015625,tx:0.15,ty:-0.7},
-		{a:0.3518829345703125,b:0.109619140625,c:-0.120269775390625,d:0.4634552001953125,tx:0.25,ty:-0.7},
-		{a:0.3514404296875,b:0.1110076904296875,c:-0.1221466064453125,d:0.46295166015625,tx:0.2,ty:-0.7},
-		{a:0.351593017578125,b:0.111663818359375,c:-0.1230926513671875,d:0.463104248046875,tx:0.25,ty:-0.7},
-	]},
-	{type:'anim',usesMats:true,bodypart:62,frames:[
-		{a:0.2861175537109375,b:0.232147216796875,c:-0.2834320068359375,d:0.3856353759765625,tx:0.1,ty:-0.65},
-		{a:0.2884979248046875,b:0.228240966796875,c:-0.2781219482421875,d:0.3885650634765625,tx:0.15,ty:-0.7},
-		{a:0.29730224609375,b:0.2166748046875,c:-0.262603759765625,d:0.3993072509765625,tx:0,ty:-0.7},
-		{a:0.312591552734375,b:0.194122314453125,c:-0.23236083984375,d:0.417724609375,tx:0.2,ty:-0.7},
-		{a:0.3320465087890625,b:0.1588134765625,c:-0.18536376953125,d:0.4407501220703125,tx:0.35,ty:-0.7},
-		{a:0.3515167236328125,b:0.1096343994140625,c:-0.120361328125,d:0.4630279541015625,tx:0.45,ty:-0.75},
-		{a:0.3641204833984375,b:0.0562286376953125,c:-0.05029296875,d:0.47607421875,tx:0.5,ty:-0.65},
-		{a:0.368499755859375,b:0.0100250244140625,c:0.0083465576171875,d:0.4788360595703125,tx:0.65,ty:-0.7},
-		{a:0.368316650390625,b:-0.0161285400390625,c:0.043853759765625,d:0.4767913818359375,tx:0.7,ty:-0.75},
-		{a:0.367889404296875,b:-0.0248565673828125,c:0.05499267578125,d:0.4757843017578125,tx:0.7,ty:-0.7},
-		{a:0.3680419921875,b:-0.02099609375,c:0.050140380859375,d:0.476165771484375,tx:0.7,ty:-0.75},
-		{a:0.3685760498046875,b:-0.0084228515625,c:0.0338897705078125,d:0.4776763916015625,tx:0.65,ty:-0.7},
-		{a:0.3684844970703125,b:0.0113525390625,c:0.0066070556640625,d:0.4788665771484375,tx:0.6,ty:-0.7},
-		{a:0.365966796875,b:0.043426513671875,c:-0.0335845947265625,d:0.4776153564453125,tx:0.5,ty:-0.65},
-		{a:0.358428955078125,b:0.0848388671875,c:-0.0877532958984375,d:0.4704437255859375,tx:0.45,ty:-0.7},
-		{a:0.3435211181640625,b:0.13238525390625,c:-0.1503753662109375,d:0.45404052734375,tx:0.35,ty:-0.65},
-		{a:0.3231201171875,b:0.1761322021484375,c:-0.208404541015625,d:0.430267333984375,tx:0.2,ty:-0.7},
-		{a:0.3029327392578125,b:0.2087860107421875,c:-0.2519989013671875,d:0.4060821533203125,tx:0.1,ty:-0.65},
-		{a:0.29034423828125,b:0.225860595703125,c:-0.274932861328125,d:0.390838623046875,tx:0.1,ty:-0.7},
-		{a:0.2861175537109375,b:0.232147216796875,c:-0.2834320068359375,d:0.3856353759765625,tx:0.1,ty:-0.65},
-	]},
-]
 
 var svgCharsVB = new Array(charD.length);
 var svgTilesVB = new Array(blockProperties.length);
@@ -2228,42 +2227,10 @@ function drawMenu() {
 	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, true,  menuLevelCreator);
 	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, true,  menuExplore);
 
-	// menuMovieClip.menuLevelCreatorGray.gotoAndStop(2);
-	// menuMovieClip.menuLevelViewerGray.gotoAndStop(2);
 	// var started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
 	//    started = false;
 	// }
-	// if (!started) {
-	//    menuMovieClip.menuContGameGray.gotoAndStop(2);
-	// }
-	// menuMovieClip.menuNewGame.onRelease = function() {
-	//    if(started) {
-	//       menuMovieClip.menuNewGame._x += 1000;
-	//       menuMovieClip.menuNewGame2._x -= 1000;
-	//    }
-	//    else
-	//    {
-	//       beginNewGame();
-	//    }
-	// };
-	// menuMovieClip.menuNewGame2.yes.onRelease = function()
-	// {
-	//    beginNewGame();
-	// };
-	// menuMovieClip.menuNewGame2.no.onRelease = function()
-	// {
-	//    menuMovieClip.menuNewGame._x -= 1000;
-	//    menuMovieClip.menuNewGame2._x += 1000;
-	// };
-	// menuMovieClip.menuContGame.onRelease = function()
-	// {
-	// 	if(started)
-	// 	{
-	// 		_root.menuMovieClip.removeMovieClip();
-	// 		drawLevelMap();
-	// 	}
-	// };
 }
 
 function beginNewGame() {
@@ -2278,6 +2245,8 @@ function drawLevelMapBorder() {
 	// For security reasons, you can not draw images from svg files to a canvas.
 	// So I have to draw the border image manually with masking and stuff.
 	// https://stackoverflow.com/questions/18379818/canvas-image-masking-overlapping
+
+	// It might be better to use a path object here instead of hard-coding it.
 	ctx.save();
 	ctx.beginPath();
 	ctx.moveTo(0,0);
@@ -2305,42 +2274,20 @@ function drawLevelMapBorder() {
 	drawMenu2_3Button(1, 823, 469, menu2Back);
 }
 function drawLevelMap() {
-	// ctx.fillRect(0, 0, 100, 100);
 	ctx.drawImage(svgMenu2, 0, 0);
-	// _root.attachMovie("levelMap","levelMap",2,{_x:0,_y:0});
-	// _root.attachMovie("levelMapBorder","levelMapBorder",3);
-
-	// levelMapBorder.goBack.onRelease = function()
-	// {
-	//    _root.levelMap.removeMovieClip();
-	//    _root.levelMapBorder.removeMovieClip();
-	//    menuScreen = 0;
-	// };
-	// levelMapBorder.muteButton2.onRelease = function()
-	// {
-	//    if(musicSound.getVolume() == 100)
-	//    {
-	//       musicSound.setVolume(0);
-	//    }
-	//    else
-	//    {
-	//       musicSound.setVolume(100);
-	//    }
-	// };
-
 
 	ctx.fillStyle = '#000000';
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	ctx.font = '40px Helvetica';
-	ctx.fillText('x ' + coins, 477.95, 44.9);
+	ctx.fillText('x ' + coins, 477.95, 46.9);
 	ctx.font = '21px Helvetica';
 	ctx.fillText(toHMS(timer), 767.3, 27.5);
 	ctx.fillText(addCommas(deathCount), 767.3, 55.9);
 	ctx.textAlign = 'right';
 	ctx.fillText('Time:', 757.05, 27.5);
 	ctx.fillText('Deaths:', 757.05, 55.9);
-	if(levelProgress > 0) {
+	if (levelProgress > 0) {
 		ctx.font = '14px Helvetica';
 		ctx.textAlign = 'right';
 		ctx.fillText('Minimal deaths to complete level ' + levelProgress + ':', 756.3, 90.5);
@@ -2358,7 +2305,7 @@ function drawLevelMap() {
 		else if (levelProgress == _loc3_) color = 2;
 		else if (levelProgress > _loc3_) color = 3;
 		var text = '';
-		if(_loc3_ >= 100) text = "B" + numberToText(_loc3_ - 99,false);
+		if (_loc3_ >= 100) text = "B" + numberToText(_loc3_ - 99,false);
 		else text = numberToText(_loc3_ + 1,true);
 		drawLevelButton(text, _loc4_ % 8 * 110 + 45, Math.floor(_loc4_ / 8) * 50 + 160, _loc3_, color);
 	}
@@ -2566,7 +2513,6 @@ function drawLevel() {
 			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
 		}
 	}
-	// ctx.globalAlpha = 0.4;
 	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
 			// if (tileBorders[_loc2_][_loc1_]  > 0) ctx.drawImage(svgTileBorders[tileBorders[_loc2_][_loc1_] -1], _loc1_*30, _loc2_*30);
@@ -2578,16 +2524,17 @@ function drawLevel() {
 			}
 		}
 	}
+	// Draw Active2+
 	for (var i = 2; i < tileDepths.length; i++) {
 		for (var j = 0; j < tileDepths[i].length; j++) {
 			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
 		}
 	}
-	// ctx.globalAlpha = 1;
 }
 
 
 // draws a tile
+// TODO: precalculate a this stuff and only do the drawing in here. Unless it's actually all necesarry. Then you can just leave it.
 function addTileMovieClip(x, y) {
 	var _loc5_ = thisLevel[y][x];
 	if (typeof svgTiles[_loc5_] !== 'undefined') {
@@ -2661,7 +2608,7 @@ function addTileMovieClip(x, y) {
 
 	// TODO: precalculate these when the level is loaded. Update when there's a block update.
 	// ctx.globalAlpha = 0.4;
-	// if(_loc5_ == 6) {
+	// if (_loc5_ == 6) {
 	// // 	level["tileX" + x + "Y" + y].light.gotoAndStop(charCount2);
 	// 	for (var _loc2_ = 0; _loc2_ < 2; _loc2_++) {
 	// 		for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
@@ -2718,7 +2665,7 @@ function calculateShadowsAndBorders() {
 				// }
 				//
 				var _loc5_ = thisLevel[y][x];
-				if(_loc5_ == 6) {
+				if (_loc5_ == 6) {
 					for (var _loc2_ = 0; _loc2_ < 2; _loc2_++) {
 						for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
 							setAmbientShadow(x - _loc2_,y - _loc1_);
@@ -2749,7 +2696,7 @@ function setAmbientShadow(x, y) {
 	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
 		if ((!outOfRange(x + cardinal[_loc1_][0],y + cardinal[_loc1_][1]))) {
 			var _loc4_ = blockProperties[thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]]][12];
-			if(blockProperties[thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]]][_loc1_] && (_loc4_ == 0 || _loc4_ == 6)) {
+			if (blockProperties[thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]]][_loc1_] && (_loc4_ == 0 || _loc4_ == 6)) {
 				_loc5_ += Math.pow(2,3 - _loc1_);
 				// ctx.fillStyle = '#009900';
 				// ctx.fillRect(x*30, y*30, 30, 30);
@@ -2780,46 +2727,35 @@ function setBorder(x, y, s) {
 	tileBorders[y][x] = [];
 	if (outOfRange(x, y)) return;
 	var _loc6_ = 0;
-	var _loc1_ = 0;
-	while(_loc1_ < 4)
-	{
-		if ((!outOfRange(x + cardinal[_loc1_][0],y + cardinal[_loc1_][1])) && thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]] != s)
-		{
+	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
+		if ((!outOfRange(x + cardinal[_loc1_][0],y + cardinal[_loc1_][1])) && thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]] != s) {
 			_loc6_ += Math.pow(2,3 - _loc1_);
 		}
-		_loc1_ = _loc1_ + 1;
 	}
 	// if (_loc6_ > 0) ctx.drawImage(svgTileBorders[_loc6_-1], x*30, y*30);
 	if (_loc6_ > 0) tileBorders[y][x].push(_loc6_);
 	// tileBorders[_loc2_][_loc1_]
 	// tile.ambientShadow.gotoAndStop(_loc6_ + 1);
-	_loc1_ = 0;
-	while(_loc1_ < 4)
-	{
-		if((!outOfRange(x + diagonal[_loc1_][0],y + diagonal[_loc1_][1])) &&  thisLevel[y][x + diagonal[_loc1_][0]] == s && thisLevel[y + diagonal[_loc1_][1]][x] == s && thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]] != s)
-		{
+	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
+		if ((!outOfRange(x + diagonal[_loc1_][0],y + diagonal[_loc1_][1])) &&  thisLevel[y][x + diagonal[_loc1_][0]] == s && thisLevel[y + diagonal[_loc1_][1]][x] == s && thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]] != s) {
 			tileBorders[y][x].push(16+_loc1_);
 			// ctx.drawImage(svgTileBorders[15+_loc1_], x*30, y*30);
 			// tile.ambientShadow2["a" + _loc1_].gotoAndStop(2);
 		}
-		else
-		{
-			// tile.ambientShadow2["a" + _loc1_].gotoAndStop(1);
-		}
-		_loc1_ = _loc1_ + 1;
+		// else {
+		// 	// tile.ambientShadow2["a" + _loc1_].gotoAndStop(1);
+		// }
 	}
 		
+	// TODO: remove this hard-coded array
 	var metalBlocks = [98,102,105,107];
 	if (tileBorders[y][x][tileBorders[y][x].length-1] < 15 && metalBlocks.includes(levels[currentLevel][y][x])) tileBorders[y][x][tileBorders[y][x].length-1] += 19;
 }
-function opposite(i, xOrY)
-{
-	if(xOrY == 0)
-	{
+function opposite(i, xOrY) {
+	if (xOrY == 0) {
 		return 3.5 - Math.abs(i - 1.5);
 	}
-	if(xOrY == 1)
-	{
+	if (xOrY == 1) {
 		return Math.floor(i / 2);
 	}
 }
@@ -2839,7 +2775,7 @@ function opposite(i, xOrY)
 
 
 function drawCharacters() {
-	// if(playMode == 0 && currentLevel >= 1) {
+	// if (playMode == 0 && currentLevel >= 1) {
 	// 	for (var _loc1_ = 0; _loc1_ < startLocations[currentLevel - transitionType].length; _loc1_++) {
 			// levelChar["char" + _loc1_].removeMovieClip();
 		// }
@@ -2976,7 +2912,7 @@ function drawCharacters() {
 
 						ctx.fillStyle = '#000000';
 						ctx.beginPath();
-						ctx.arc(handX, handY, 2, 0, 2*Math.PI, false);
+						ctx.arc(handX, handY, 2.5, 0, 2*Math.PI, false);
 						ctx.fill();
 						continue;
 					}
@@ -3050,7 +2986,7 @@ function drawCharacters() {
 			// levelChar["char" + _loc1_].charBody.mouth.gotoAndStop(3);
 			// levelChar["char" + _loc1_].charBody.mouth.mouth.gotoAndStop(57);
 		}
-		if(_loc1_ == HPRC2) {
+		if (_loc1_ == HPRC2) {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
@@ -3102,7 +3038,7 @@ function drawCharacters() {
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
 		}
 
-		if(char[_loc1_].temp >= 50) {
+		if (char[_loc1_].temp >= 50) {
 			ctx.save();
 			var fireImg = svgFire[_frameCount%svgFire.length];
 			if (char[_loc1_].id == 2) fireImg = svgIceCubeMelt;
@@ -3122,231 +3058,33 @@ function drawCharacters() {
  * OR
  * h, s, v
 */
-function HSVtoRGB(h, s, v) {
-    var r, g, b, i, f, p, q, t;
-    if (arguments.length === 1) {
-        s = h.s, v = h.v, h = h.h;
-    }
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-        case 0: r = v, g = t, b = p; break;
-        case 1: r = q, g = v, b = p; break;
-        case 2: r = p, g = v, b = t; break;
-        case 3: r = p, g = q, b = v; break;
-        case 4: r = t, g = p, b = v; break;
-        case 5: r = v, g = p, b = q; break;
-    }
-    r = Math.round(r * 255);
-    g = Math.round(g * 255);
-    b = Math.round(b * 255);
-    return 'rgb(' + r + ',' + g + ',' + b + ')';
-}
-
-
-
-// function setBody(i)
-// {
-// 	char[i].leg1skew = 0;
-// 	char[i].leg2skew = 0;
-// 	var _loc2_ = undefined;
-// 	var _loc3_ = [0,0];
-// 	if(ifCarried(i) && cornerHangTimer == 0)
-// 	{
-// 		var _loc5_ = 1;
-// 		while(_loc5_ <= 2)
-// 		{
-// 			// levelChar["char" + i]["leg" + _loc5_].gotoAndStop(Math.floor(char[i].dire / 2 + 0.5));
-// 			// levelChar["char" + i]["leg" + _loc5_].leg.gotoAndStop(51);
-// 			_loc5_ = _loc5_ + 1;
-// 		}
-// 		// offSetLegs(i,60);
-// 	}
-// 	else if(char[i].dire % 2 == 0 && char[i].onob)
-// 	// else if(char[i].onob)
-// 	{
-// 		if(char[i].standingOn >= 0)
-// 		{
-// 			var _loc4_ = char[i].standingOn;
-// 			_loc5_ = 1;
-// 			while(_loc5_ <= 2)
-// 			{
-// 				// levelChar["char" + i]["leg" + _loc5_].gotoAndStop(char[i].dire / 2);
-// 				// _loc2_ = char[i].x + levelChar["char" + i]["leg" + _loc5_]._x;
-// 				_loc2_ = char[i].x + charModels[char[i].id].legx[_loc5_-1];
-// 				if(_loc2_ >= char[_loc4_].x + char[_loc4_].w)
-// 				{
-// 					_loc3_[_loc5_ - 1] = char[_loc4_].x + char[_loc4_].w - _loc2_;
-// 				}
-// 				else if(_loc2_ <= char[_loc4_].x - char[_loc4_].w)
-// 				{
-// 					_loc3_[_loc5_ - 1] = char[_loc4_].x - char[_loc4_].w - _loc2_;
-// 				}
-// 				_loc5_ = _loc5_ + 1;
-// 			}
-// 		}
-// 		else if(char[i].fricGoal == 0)
-// 		{
-// 			_loc5_ = 1;
-// 			while(_loc5_ <= 2)
-// 			{
-// 				// levelChar["char" + i]["leg" + _loc5_].gotoAndStop(char[i].dire / 2);
-// 				// _loc2_ = char[i].x + levelChar["char" + i]["leg" + _loc5_]._x;
-// 				_loc2_ = char[i].x + charModels[char[i].id].legx[_loc5_-1];
-// 				if(!safeToStandAt(_loc2_,char[i].y + 1))
-// 				{
-// 					var _loc7_ = safeToStandAt(_loc2_ - 30,char[i].y + 1);
-// 					var _loc6_ = safeToStandAt(_loc2_ + 30,char[i].y + 1);
-// 					if(_loc7_ && (!_loc6_ || _loc2_ % 30 - (_loc5_ - 1.5) * 10 < 30 - _loc2_ % 30) && !horizontalProp(i,-1,1,char[i].x - 15,char[i].y))
-// 					{
-// 						_loc3_[_loc5_ - 1] = (- _loc2_) % 30;
-// 					}
-// 					else if(_loc6_ && !horizontalProp(i,1,1,char[i].x + 15,char[i].y))
-// 					{
-// 						_loc3_[_loc5_ - 1] = 30 - _loc2_ % 30;
-// 					}
-// 				}
-// 				else
-// 				{
-// 					_loc3_[_loc5_ - 1] = 0;
-// 				}
-// 				_loc5_ = _loc5_ + 1;
-// 			}
-// 		}
-// 		if(_loc3_[1] - _loc3_[0] >= 41)
-// 		{
-// 			_loc3_[0] = _loc3_[1];
-// 			_loc3_[1] -= 3;
-// 		}
-// 		if(_loc3_[0] > _loc3_[1] && _loc3_[1] >= 0)
-// 		{
-// 			char[i].leg1frame = 0;
-// 			char[i].leg2frame = 0;
-// 			char[i].leg1skew = _loc3_[0]/60;
-// 			char[i].leg2skew = _loc3_[0]/60;
-// 			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
-// 			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
-// 		}
-// 		else if(_loc3_[0] > _loc3_[1] && _loc3_[0] <= 0)
-// 		{
-// 			char[i].leg1frame = 0;
-// 			char[i].leg2frame = 0;
-// 			char[i].leg1skew = _loc3_[1]/60;
-// 			char[i].leg2skew = _loc3_[1]/60;
-// 			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
-// 			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
-// 		}
-// 		else if(_loc3_[0] < 0 && _loc3_[1] > 0)
-// 		{
-// 			char[i].leg1frame = 0;
-// 			char[i].leg2frame = 0;
-// 			char[i].leg1skew = _loc3_[0]/60;
-// 			char[i].leg2skew = _loc3_[1]/60;
-// 			// levelChar["char" + i].leg1.leg.gotoAndStop(toFrame(_loc3_[0] * _loc8_));
-// 			// levelChar["char" + i].leg2.leg.gotoAndStop(toFrame(_loc3_[1] * _loc8_));
-// 		}
-// 		else if(_loc3_[1] > 0 && _loc3_[0] == 0)
-// 		{
-// 			char[i].leg1frame = 0;
-// 			char[i].leg2frame = 0;
-// 			char[i].leg1skew = -0.5 * (3-char[i].dire);
-// 			char[i].leg2skew = -0.5 * (3-char[i].dire);
-// 			// levelChar["char" + i].leg1.leg.gotoAndStop(25 + 23 * (3 - char[i].dire));
-// 			// levelChar["char" + i].leg2.leg.gotoAndStop(25 + 23 * (3 - char[i].dire));
-// 		}
-// 		else if(_loc3_[0] < 0 && _loc3_[1] == 0)
-// 		{
-// 			char[i].leg1frame = 0;
-// 			char[i].leg2frame = 0;
-// 			char[i].leg1skew = 0.5 * (3-char[i].dire);
-// 			char[i].leg2skew = 0.5 * (3-char[i].dire);
-// 			// levelChar["char" + i].leg1.leg.gotoAndStop(25 - 23 * (3 - char[i].dire));
-// 			// levelChar["char" + i].leg2.leg.gotoAndStop(25 - 23 * (3 - char[i].dire));
-// 		}
-// 		else
-// 		{
-// 			char[i].leg1frame = 0;
-// 			char[i].leg2frame = 0;
-// 			char[i].leg1skew = 0;
-// 			char[i].leg2skew = 0;
-// 			// levelChar["char" + i].leg1.leg.gotoAndStop(1);
-// 			// levelChar["char" + i].leg2.leg.gotoAndStop(1);
-// 		}
-// 	}
-// 	else
-// 	{
-// 		_loc5_ = 1;
-// 		while(_loc5_ <= 2)
-// 		{
-// 			// levelChar["char" + i]["leg" + _loc5_].gotoAndStop(Math.floor(char[i].dire / 2 + 0.5));
-// 			if(char[i].submerged >= 1 && !char[i].onob)
-// 			{
-// 				// levelChar["char" + i]["leg" + _loc5_].leg.gotoAndStop(52);
-// 			}
-// 			else
-// 			{
-// 				char[i].leg1frame = 1;
-// 				char[i].leg2frame = 1;
-// 				// levelChar["char" + i]["leg" + _loc5_].leg.gotoAndStop(50 - char[i].onob);
-// 			}
-// 			_loc5_ = _loc5_ + 1;
-// 		}
-// 		if(char[i].dire % 2 == 1 && char[i].onob)
-// 		{
-// 			// offSetLegs(i,28);
-// 		}
-// 		if(char[i].submerged >= 1 && !char[i].onob)
-// 		{
-// 			// offSetLegs(i,20);
-// 		}
-// 	}
-
-
-// 	if(cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == i)
-// 	{
-// 		char[i].leg1frame = 0;
-// 		char[i].leg2frame = 0;
-// 		char[i].frame = Math.ceil(char[i].dire / 2) * 2 - 1;
-// 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) * 2);
-// 	}
-// 	else if(i == control && recoverTimer >= 1)
-// 	{
-// 		if(char[i].x - (char[HPRC2].x - 33) < 25)
-// 		{
-// 			char[i].frame = Math.ceil(char[i].dire / 2) + 11;
-// 			// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 12);
-// 		}
-// 		else
-// 		{
-// 			char[i].frame = Math.ceil(char[i].dire / 2) + 9;
-// 			// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 10);
-// 		}
-// 		// drawCrankingArms(i);
-// 	}
-// 	else if(char[i].carry)
-// 	{
-// 		char[i].frame = Math.ceil(char[i].dire / 2) + 5;
-// 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 6);
-// 	}
-// 	else if(!char[i].onob && !ifCarried(i))
-// 	{
-// 		char[i].frame = Math.ceil(char[i].dire / 2) + 3;
-// 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 4);
-// 		var _loc9_ = Math.round(Math.min(4 - char[i].vy,15));
-// 	}
-// 	else
-// 	{
-// 		char[i].leg1frame = 0;
-// 		char[i].leg2frame = 0;
-// 		char[i].frame = char[i].dire;
-// 		// levelChar["char" + i].charBody.gotoAndStop(char[i].dire);
-// 	}
+// Originally used this for generating colors on the hitboxes. But it's no longer needed since we no longer draw those hitboxes. 
+// function HSVtoRGB(h, s, v) {
+//     var r, g, b, i, f, p, q, t;
+//     if (arguments.length === 1) {
+//         s = h.s, v = h.v, h = h.h;
+//     }
+//     i = Math.floor(h * 6);
+//     f = h * 6 - i;
+//     p = v * (1 - s);
+//     q = v * (1 - f * s);
+//     t = v * (1 - (1 - f) * s);
+//     switch (i % 6) {
+//         case 0: r = v, g = t, b = p; break;
+//         case 1: r = q, g = v, b = p; break;
+//         case 2: r = p, g = v, b = t; break;
+//         case 3: r = p, g = q, b = v; break;
+//         case 4: r = t, g = p, b = v; break;
+//         case 5: r = v, g = p, b = q; break;
+//     }
+//     r = Math.round(r * 255);
+//     g = Math.round(g * 255);
+//     b = Math.round(b * 255);
+//     return 'rgb(' + r + ',' + g + ',' + b + ')';
 // }
-function setBody(i)
-{
+
+
+function setBody(i) {
 	char[i].leg1skew = 0;
 	char[i].leg2skew = 0;
 
@@ -3361,33 +3099,31 @@ function setBody(i)
 		offSetLegs(i, 60, 3, 0, 1);
 		char[i].leg1frame = 3;
 		char[i].leg2frame = 3;
-	} else if(char[i].dire % 2 == 0 && char[i].onob) {
-		if(char[i].standingOn >= 0) {
+	} else if (char[i].dire % 2 == 0 && char[i].onob) {
+		if (char[i].standingOn >= 0) {
 			var _loc4_ = char[i].standingOn;
-			for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++)
-			{
+			for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++) {
 				// levelChar["char" + i]["leg" + _loc5_].gotoAndStop(char[i].dire / 2);
 				_loc2_ = char[i].x + charModels[char[i].id].legx[_loc5_-1];
 				// _loc2_ = char[i].x + levelChar["char" + i]["leg" + _loc5_]._x;
-				if(_loc2_ >= char[_loc4_].x + char[_loc4_].w) {
+				if (_loc2_ >= char[_loc4_].x + char[_loc4_].w) {
 					_loc3_[_loc5_ - 1] = char[_loc4_].x + char[_loc4_].w - _loc2_;
-				} else if(_loc2_ <= char[_loc4_].x - char[_loc4_].w) {
+				} else if (_loc2_ <= char[_loc4_].x - char[_loc4_].w) {
 					_loc3_[_loc5_ - 1] = char[_loc4_].x - char[_loc4_].w - _loc2_;
 				}
 			}
 		}
 		else if (char[i].fricGoal == 0) {
-			for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++)
-			{
+			for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++) {
 				// levelChar["char" + i]["leg" + _loc5_].gotoAndStop(char[i].dire / 2);
 				// _loc2_ = char[i].x + levelChar["char" + i]["leg" + _loc5_]._x;
 				_loc2_ = char[i].x + charModels[char[i].id].legx[_loc5_-1];
 				if (!safeToStandAt(_loc2_,char[i].y + 1)) {
 					var _loc7_ = safeToStandAt(_loc2_ - 30,char[i].y + 1);
 					var _loc6_ = safeToStandAt(_loc2_ + 30,char[i].y + 1);
-					if(_loc7_ && (!_loc6_ || _loc2_ % 30 - (_loc5_ - 1.5) * 10 < 30 - _loc2_ % 30) && !horizontalProp(i,-1,1,char[i].x - 15,char[i].y)) {
+					if (_loc7_ && (!_loc6_ || _loc2_ % 30 - (_loc5_ - 1.5) * 10 < 30 - _loc2_ % 30) && !horizontalProp(i,-1,1,char[i].x - 15,char[i].y)) {
 						_loc3_[_loc5_ - 1] = (- _loc2_) % 30;
-					} else if(_loc6_ && !horizontalProp(i,1,1,char[i].x + 15,char[i].y)) {
+					} else if (_loc6_ && !horizontalProp(i,1,1,char[i].x + 15,char[i].y)) {
 						_loc3_[_loc5_ - 1] = 30 - _loc2_ % 30;
 					}
 				} else {
@@ -3399,27 +3135,27 @@ function setBody(i)
 			_loc3_[0] = _loc3_[1];
 			_loc3_[1] -= 3;
 		}
-		if(_loc3_[0] > _loc3_[1] && _loc3_[1] >= 0) {
+		if (_loc3_[0] > _loc3_[1] && _loc3_[1] >= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
 			char[i].leg1skew = _loc3_[0]/60;
 			char[i].leg2skew = _loc3_[0]/60;
-		} else if(_loc3_[0] > _loc3_[1] && _loc3_[0] <= 0) {
+		} else if (_loc3_[0] > _loc3_[1] && _loc3_[0] <= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
 			char[i].leg1skew = _loc3_[1]/60;
 			char[i].leg2skew = _loc3_[1]/60;
-		} else if(_loc3_[0] < 0 && _loc3_[1] > 0) {
+		} else if (_loc3_[0] < 0 && _loc3_[1] > 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
 			char[i].leg1skew = _loc3_[0]/60;
 			char[i].leg2skew = _loc3_[1]/60;
-		} else if(_loc3_[1] > 0 && _loc3_[0] == 0) {
+		} else if (_loc3_[1] > 0 && _loc3_[0] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
 			char[i].leg1skew = 0.55;
 			char[i].leg2skew = 0.55;
-		} else if(_loc3_[0] < 0 && _loc3_[1] == 0) {
+		} else if (_loc3_[0] < 0 && _loc3_[1] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
 			char[i].leg1skew = -0.55;
@@ -3460,8 +3196,8 @@ function setBody(i)
 	if (cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == i) {
 		char[i].setFrame(Math.ceil(char[i].dire / 2) * 2 - 1);
 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) * 2);
-	} else if(i == control && recoverTimer >= 1) {
-		if(char[i].x - (char[HPRC2].x - 33) < 25) {
+	} else if (i == control && recoverTimer >= 1) {
+		if (char[i].x - (char[HPRC2].x - 33) < 25) {
 			char[i].setFrame(Math.ceil(char[i].dire / 2) + 11);
 			// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 12);
 		} else {
@@ -3469,10 +3205,10 @@ function setBody(i)
 			// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 10);
 		}
 		// drawCrankingArms(i);
-	} else if(char[i].carry) {
+	} else if (char[i].carry) {
 		char[i].setFrame(Math.ceil(char[i].dire / 2) + 5);
 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 6);
-	} else if(!char[i].onob && !ifCarried(i)) {
+	} else if (!char[i].onob && !ifCarried(i)) {
 			char[i].setFrame(Math.ceil(char[i].dire / 2) + 3);
 		// levelChar["char" + i].charBody.gotoAndStop(Math.ceil(char[i].dire / 2) + 4);
 		var _loc9_ = Math.round(Math.min(4 - char[i].vy,15));
@@ -3493,11 +3229,8 @@ function offSetLegs(i, duration, frame, l1st, l2st) {
 	// levelChar["char" + i].leg2.leg.leg.gotoAndPlay((levelChar["char" + i].leg1.leg.leg._currentframe + (duration / 2 - 1)) % duration + 1);
 }
 function bounceY(amt, time, t) {
-	// var base = (t%time)*2;
 	var base = Math.sin(mapRange((t%time), 0, time*2, 0, Math.PI))*time*2;
-	// return Math.sin(mapRange(base, 0, time, 0, Math.PI))*amt;
 	return (base>time?time-base+time:base)*amt/time;
-	// return base/time*amt;
 }
 
 
@@ -3542,7 +3275,7 @@ function bounceY(amt, time, t) {
 
 
 function ifCarried(i) {
-	if(char[i].carriedBy >= 0 && char[i].carriedBy <= 190) {
+	if (char[i].carriedBy >= 0 && char[i].carriedBy <= 190) {
 		return char[char[i].carriedBy].carry;
 	}
 	return false;
@@ -3554,10 +3287,8 @@ function landOnObject(i) {
 	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
 		if (!ifCarried(_loc1_) && (char[_loc1_].charState == 6 || char[_loc1_].charState == 4)) {
 			var _loc3_ = Math.abs(char[i].x - char[_loc1_].x);
-			if (_loc3_ < char[i].w + char[_loc1_].w && char[i].y >= char[_loc1_].y - char[_loc1_].h && (char[i].py < char[_loc1_].py - char[_loc1_].h || char[i].py == char[_loc1_].py - char[_loc1_].h && char[i].vy == 0))
-			{
-				if (_loc3_ - char[_loc1_].w < _loc5_)
-				{
+			if (_loc3_ < char[i].w + char[_loc1_].w && char[i].y >= char[_loc1_].y - char[_loc1_].h && (char[i].py < char[_loc1_].py - char[_loc1_].h || char[i].py == char[_loc1_].py - char[_loc1_].h && char[i].vy == 0)) {
+				if (_loc3_ - char[_loc1_].w < _loc5_) {
 					_loc5_ = _loc3_ - char[_loc1_].w;
 					_loc4_ = _loc1_;
 				}
@@ -3565,16 +3296,10 @@ function landOnObject(i) {
 		}
 	}
 	if (_loc5_ < 10000 && char[i].standingOn != _loc4_) {
-		if (char[i].standingOn >= 0) {
-			fallOff(i);
-		}
-		if (char[_loc4_].charState == 6 && !char[_loc4_].onob) {
-			char[_loc4_].vy = inter(char[_loc4_].vy,char[i].vy,char[i].weight2 / (char[_loc4_].weight2 + char[i].weight2));
-		}
+		if (char[i].standingOn >= 0) fallOff(i);
+		if (char[_loc4_].charState == 6 && !char[_loc4_].onob) char[_loc4_].vy = inter(char[_loc4_].vy,char[i].vy,char[i].weight2 / (char[_loc4_].weight2 + char[i].weight2));
 		land(i,char[_loc4_].y - char[_loc4_].h,char[_loc4_].vy);
-		if (char[_loc4_].onob) {
-			land2(i,char[_loc4_].y - char[_loc4_].h);
-		}
+		if (char[_loc4_].onob) land2(i,char[_loc4_].y - char[_loc4_].h);
 		char[i].standingOn = _loc4_;
 		char[_loc4_].stoodOnBy.push(i);
 		rippleWeight(i,char[i].weight2,1);
@@ -3597,8 +3322,7 @@ function checkButton(i) {
 				if (!outOfRange(_loc3_, _loc4_)) {
 					_loc6_ = blockProperties[thisLevel[_loc4_][_loc3_]][11];
 					if (_loc6_ >= 13) {
-						// if(levelActive2["tileX" + _loc3_ + "Y" + _loc4_].button._currentframe != 2)
-						// {
+						// if (levelActive2["tileX" + _loc3_ + "Y" + _loc4_].button._currentframe != 2) {
 							// leverSwitch(_loc6_ - 13);
 						// 	levelActive2["tileX" + _loc3_ + "Y" + _loc4_].button.gotoAndStop(2);
 						// }
@@ -3624,143 +3348,92 @@ function checkButton(i) {
 	}
 }
 function checkButton2(i, bypass) {
-	if(char[i].y < levelHeight * 30 + 30)
-	{
+	if (char[i].y < levelHeight * 30 + 30) {
 		var _loc8_ = char[i].buttonsPressed.length;
-		var _loc5_ = 0;
-		while(_loc5_ < _loc8_)
-		{
+		for (var _loc5_ = 0; _loc5_ < _loc8_; _loc5_++) {
 			var _loc4_ = char[i].buttonsPressed[_loc5_][0];
 			var _loc6_ = char[i].buttonsPressed[_loc5_][1];
-			if(!char[i].onob || char[i].standingOn >= 0 || char[i].x < _loc4_ * 30 - char[i].w || char[i].x >= _loc4_ * 30 + 30 + char[i].w || bypass)
-			{
+			if (!char[i].onob || char[i].standingOn >= 0 || char[i].x < _loc4_ * 30 - char[i].w || char[i].x >= _loc4_ * 30 + 30 + char[i].w || bypass) {
 				var _loc7_ = true;
-				var _loc3_ = 0;
-				while(_loc3_ < charCount)
-				{
-					if(_loc3_ != i)
-					{
-						var _loc2_ = 0;
-						while(_loc2_ < char[_loc3_].buttonsPressed.length)
-						{
-							if(char[_loc3_].buttonsPressed[_loc2_][0] == _loc4_ && char[_loc3_].buttonsPressed[_loc2_][1] == _loc6_)
-							{
+				for (var _loc3_ = 0; _loc3_ < charCount; _loc3_++) {
+					if (_loc3_ != i) {
+						for (var _loc2_ = 0; _loc2_ < char[_loc3_].buttonsPressed.length; _loc2_++) {
+							if (char[_loc3_].buttonsPressed[_loc2_][0] == _loc4_ && char[_loc3_].buttonsPressed[_loc2_][1] == _loc6_) {
 								_loc7_ = false;
 							}
-							_loc2_ = _loc2_ + 1;
 						}
 					}
-					_loc3_ = _loc3_ + 1;
 				}
-				if(_loc7_)
-				{
+				if (_loc7_) {
 					leverSwitch(blockProperties[thisLevel[_loc6_][_loc4_]][11] - 13);
 					tileFrames[_loc6_][_loc4_].cf = 2;
 					tileFrames[_loc6_][_loc4_].playing = true;
 					// levelActive2["tileX" + _loc4_ + "Y" + _loc6_].button.gotoAndPlay(3);
 				}
-				_loc3_ = 0;
-				while(_loc3_ < _loc8_)
-				{
-					if(_loc3_ > _loc5_)
-					{
+				for (var _loc3_ = 0; _loc3_ < _loc8_; _loc3_++) {
+					if (_loc3_ > _loc5_) {
 						char[i].buttonsPressed[_loc3_][0] = char[i].buttonsPressed[_loc3_ - 1][0];
 						char[i].buttonsPressed[_loc3_][1] = char[i].buttonsPressed[_loc3_ - 1][1];
 					}
-					_loc3_ = _loc3_ + 1;
 				}
 				char[i].buttonsPressed.pop();
 			}
-			_loc5_ = _loc5_ + 1;
 		}
 	}
 }
-function leverSwitch(j)
-{
-	var _loc5_ = 0;
-	while(_loc5_ < switchable[j].length)
-	{
+function leverSwitch(j) {
+	for (var _loc5_ = 0; _loc5_ < switchable[j].length; _loc5_++) {
 		var _loc4_ = switchable[Math.min(j,5)][_loc5_][0];
 		var _loc3_ = switchable[Math.min(j,5)][_loc5_][1];
-		var _loc1_ = 0;
-		while(_loc1_ < switches[j].length)
-		{
-			if(thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2])
-			{
+		for (var _loc1_ = 0; _loc1_ < switches[j].length; _loc1_++) {
+			if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2]) {
 				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2 + 1];
 				// levelActive["tileX" + _loc4_ + "Y" + _loc3_].gotoAndStop(switches[j][_loc1_ * 2 + 1] % 10 + 1);
-			}
-			else if(thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2 + 1])
-			{
+			} else if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2 + 1]) {
 				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2];
 				// levelActive["tileX" + _loc4_ + "Y" + _loc3_].gotoAndStop(switches[j][_loc1_ * 2] % 10 + 1);
 			}
-			_loc1_ = _loc1_ + 1;
 		}
-		_loc5_ = _loc5_ + 1;
 	}
-	var _loc6_ = 0;
-	while(_loc6_ < charCount)
-	{
+	for (var _loc6_ = 0; _loc6_ < charCount; _loc6_++) {
 		char[_loc6_].justChanged = 2;
 		checkDeath(_loc6_);
 		_loc6_ = _loc6_ + 1;
 	}
 }
-function checkDeath(i)
-{
-	var _loc3_ = Math.floor((char[i].y - char[i].h) / 30);
-	while(_loc3_ <= Math.floor((char[i].y - 0.01) / 30))
-	{
-		var _loc1_ = Math.floor((char[i].x - char[i].w) / 30);
-		while(_loc1_ <= Math.floor((char[i].x + char[i].w) / 30))
-		{
+function checkDeath(i) {
+	for (var _loc3_ = Math.floor((char[i].y - char[i].h) / 30); _loc3_ <= Math.floor((char[i].y - 0.01) / 30); _loc3_++) {
+		for (var _loc1_ = Math.floor((char[i].x - char[i].w) / 30); _loc1_ <= Math.floor((char[i].x + char[i].w) / 30); _loc1_++) {
 			if (!outOfRange(_loc1_, _loc3_)) {
-				if (blockProperties[thisLevel[_loc3_][_loc1_]][4] || blockProperties[thisLevel[_loc3_][_loc1_]][5] || blockProperties[thisLevel[_loc3_][_loc1_]][6] || blockProperties[thisLevel[_loc3_][_loc1_]][7])
-				{
+				if (blockProperties[thisLevel[_loc3_][_loc1_]][4] || blockProperties[thisLevel[_loc3_][_loc1_]][5] || blockProperties[thisLevel[_loc3_][_loc1_]][6] || blockProperties[thisLevel[_loc3_][_loc1_]][7]) {
 					startDeath(i);
 				}
 			}
-			_loc1_ = _loc1_ + 1;
 		}
-		_loc3_ = _loc3_ + 1;
 	}
 }
 function getCoin(i) {
-	if(!gotThisCoin && char[i].charState >= 7)
-	{
-		if(Math.floor((char[i].x - char[i].w) / 30) <= locations[2] && Math.ceil((char[i].x + char[i].w) / 30) - 1 >= locations[2] && Math.floor((char[i].y - char[i].h) / 30) <= locations[3] && Math.ceil(char[i].y / 30) - 1 >= locations[3])
-		{
+	if (!gotThisCoin && char[i].charState >= 7) {
+		if (Math.floor((char[i].x - char[i].w) / 30) <= locations[2] && Math.ceil((char[i].x + char[i].w) / 30) - 1 >= locations[2] && Math.floor((char[i].y - char[i].h) / 30) <= locations[3] && Math.ceil(char[i].y / 30) - 1 >= locations[3]) {
 			// levelActive["tileX" + locations[2] + "Y" + locations[3]].coin.gotoAndPlay(2);
 			gotThisCoin = true;
 		}
 	}
 }
-function setCamera()
-{
-	if(levelWidth <= 32)
-	{
+function setCamera() {
+	if (levelWidth <= 32) {
 		cameraX = levelWidth * 15 - 480;
-	}
-	else if(char[control].x - cameraX < 384)
-	{
+	} else if (char[control].x - cameraX < 384) {
 		cameraX = Math.min(Math.max(cameraX + (char[control].x - 384 - cameraX),0),levelWidth * 30 - 960);
-	}
-	else if(char[control].x - cameraX >= 576)
-	{
+	} else if (char[control].x - cameraX >= 576) {
 		cameraX = Math.min(Math.max(cameraX + (char[control].x - 576 - cameraX),0),levelWidth * 30 - 960);
 	}
 
-	if(levelHeight <= 18)
-	{
+	if (levelHeight <= 18) {
 		cameraY = levelHeight * 15 - 270;
-	}
-	else if(char[control].y - cameraY < 216)
-	{
+	} else if (char[control].y - cameraY < 216) {
 		cameraY = Math.min(Math.max(cameraY + (char[control].y - 216 - cameraY),0),levelHeight * 30 - 540);
-	}
-	else if(char[control].y - cameraY >= 324)
-	{
+	} else if (char[control].y - cameraY >= 324) {
 		cameraY = Math.min(Math.max(cameraY + (char[control].y - 324 - cameraY),0),levelHeight * 30 - 540);
 	}
 }
@@ -3768,36 +3441,26 @@ function setCamera()
 
 
 
-function newTileUp(i)
-{
+function newTileUp(i) {
 	return Math.floor((char[i].y - char[i].h) / 30) < Math.floor((char[i].py - char[i].h) / 30);
 }
-function newTileDown(i)
-{
+function newTileDown(i) {
 	return Math.ceil(char[i].y / 30) > Math.ceil(char[i].py / 30);
 }
-function newTileHorizontal(i, sign)
-{
+function newTileHorizontal(i, sign) {
 	return Math.ceil(sign * (char[i].x + char[i].w * sign) / 30) > Math.ceil(sign * (char[i].px + char[i].w * sign) / 30);
 }
-function exitTileHorizontal(i, sign)
-{
+function exitTileHorizontal(i, sign) {
 	return Math.ceil(sign * (char[i].x - char[i].w * sign) / 30) > Math.ceil(sign * (char[i].px - char[i].w * sign) / 30);
 }
-function exitTileVertical(i, sign)
-{
+function exitTileVertical(i, sign) {
 	var _loc1_ = 0.5 * sign + 0.5;
 	return Math.ceil(sign * (char[i].y - char[i].h * _loc1_) / 30) > Math.ceil(sign * (char[i].py - char[i].h * _loc1_) / 30);
 }
-function submerge(i)
-{
-	if(char[i].temp > 0)
-	{
-		char[i].temp = 0;
-	}
+function submerge(i) {
+	if (char[i].temp > 0) char[i].temp = 0;
 	var _loc2_ = somewhereSubmerged(i);
-	if(char[i].submerged <= 1 && _loc2_ >= 2)
-	{
+	if (char[i].submerged <= 1 && _loc2_ >= 2) {
 		char[i].weight2 -= 0.16;
 		rippleWeight(i,0.16,-1);
 		char[i].vx *= 0.1;
@@ -3805,15 +3468,11 @@ function submerge(i)
 	}
 	char[i].submerged = _loc2_;
 }
-function unsubmerge(i)
-{
-	if(exitTileHorizontal(i,-1) || exitTileHorizontal(i,1) || exitTileVertical(i,1) || exitTileVertical(i,-1))
-	{
+function unsubmerge(i) {
+	if (exitTileHorizontal(i,-1) || exitTileHorizontal(i,1) || exitTileVertical(i,1) || exitTileVertical(i,-1)) {
 		var _loc2_ = somewhereSubmerged(i);
-		if(_loc2_ == 0 && char[i].submerged >= 1)
-		{
-			if(char[i].submerged == 2 && exitTileVertical(i,-1) && char[i].weight2 < 0 && !ifCarried(i))
-			{
+		if (_loc2_ == 0 && char[i].submerged >= 1) {
+			if (char[i].submerged == 2 && exitTileVertical(i,-1) && char[i].weight2 < 0 && !ifCarried(i)) {
 				char[i].vy = 0;
 				char[i].y = Math.ceil(char[i].y / 30) * 30;
 				_loc2_ = 1;
@@ -3824,127 +3483,83 @@ function unsubmerge(i)
 		char[i].submerged = _loc2_;
 	}
 }
-function heat(i)
-{
-	if(char[i].submerged == 0)
-	{
+function heat(i) {
+	if (char[i].submerged == 0) {
 		char[i].temp += char[i].heatSpeed;
 	}
 	char[i].justChanged = 2;
-	if(char[i].temp > 50 && char[i].id != 3)
-	{
+	if (char[i].temp > 50 && char[i].id != 3) {
 		startDeath(i);
-		if(char[i].id == 2)
-		{
+		if (char[i].id == 2) {
 			extinguish(i);
 		}
 	}
-	if(char[i].heated == 1)
-	{
-		unheat(i);
-	}
+	if (char[i].heated == 1) unheat(i);
 }
-function unheat(i)
-{
-	if(exitTileHorizontal(i,-1) || exitTileHorizontal(i,1) || exitTileVertical(i,1) || exitTileVertical(i,-1))
-	{
-		if(!somewhereHeated(i))
-		{
+function unheat(i) {
+	if (exitTileHorizontal(i,-1) || exitTileHorizontal(i,1) || exitTileVertical(i,1) || exitTileVertical(i,-1)) {
+		if (!somewhereHeated(i)) {
 			char[i].heated = 0;
 		}
 	}
 }
-function extinguish(i)
-{
-	var _loc1_ = 0;
-	while(_loc1_ < charCount)
-	{
-		if(char[_loc1_].charState >= 5 && _loc1_ != i && char[_loc1_].temp > 0)
-		{
-			if(Math.abs(char[i].x - char[_loc1_].x) < char[i].w + char[_loc1_].w && char[_loc1_].y > char[i].y - char[i].h && char[_loc1_].y < char[i].y + char[_loc1_].h)
-			{
+function extinguish(i) {
+	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
+		if (char[_loc1_].charState >= 5 && _loc1_ != i && char[_loc1_].temp > 0) {
+			if (Math.abs(char[i].x - char[_loc1_].x) < char[i].w + char[_loc1_].w && char[_loc1_].y > char[i].y - char[i].h && char[_loc1_].y < char[i].y + char[_loc1_].h) {
 				char[_loc1_].temp = 0;
 			}
 		}
-		_loc1_ = _loc1_ + 1;
 	}
 }
-function somewhereSubmerged(i)
-{
+function somewhereSubmerged(i) {
 	var _loc3_ = 0;
-	var _loc5_ = Math.floor((char[i].x - char[i].w) / 30);
-	while(_loc5_ <= Math.floor((char[i].x + char[i].w) / 30))
-	{
+	for (var _loc5_ = Math.floor((char[i].x - char[i].w) / 30); _loc5_ <= Math.floor((char[i].x + char[i].w) / 30); _loc5_++) {
 		var _loc6_ = Math.floor((char[i].y - char[i].h) / 30);
 		var _loc4_ = Math.floor(char[i].y / 30);
-		var _loc1_ = _loc6_;
-		while(_loc1_ <= _loc4_)
-		{
+		for (var _loc1_ = _loc6_; _loc1_ <= _loc4_; _loc1_++) {
 			if (!outOfRange(_loc5_, _loc1_) && blockProperties[thisLevel[_loc1_][_loc5_]][14]) {
-				if(_loc1_ == _loc4_)
-				{
-					if(_loc3_ == 0)
-					{
+				if (_loc1_ == _loc4_) {
+					if (_loc3_ == 0) {
 						_loc3_ = 2;
 					}
-				}
-				else
-				{
+				} else {
 					_loc3_ = 3;
 				}
 			}
-			_loc1_ = _loc1_ + 1;
 		}
-		_loc5_ = _loc5_ + 1;
 	}
 	return _loc3_;
 }
-function somewhereHeated(i)
-{
-	var _loc3_ = Math.floor((char[i].x - char[i].w) / 30);
-	while(_loc3_ <= Math.floor((char[i].x + char[i].w) / 30))
-	{
-		var _loc2_ = Math.floor((char[i].y - char[i].h) / 30);
-		while(_loc2_ <= Math.floor(char[i].y / 30))
-		{
-			if(thisLevel[_loc2_][_loc3_] == 15)
-			{
-				return true;
-			}
-			_loc2_ = _loc2_ + 1;
+function somewhereHeated(i) {
+	for (var _loc3_ = Math.floor((char[i].x - char[i].w) / 30); _loc3_ <= Math.floor((char[i].x + char[i].w) / 30); _loc3_++) {
+		for (var _loc2_ = Math.floor((char[i].y - char[i].h) / 30); _loc2_ <= Math.floor(char[i].y / 30); _loc2_++) {
+			if (thisLevel[_loc2_][_loc3_] == 15) return true;
 		}
-		_loc3_ = _loc3_ + 1;
 	}
 	return false;
 }
-function xOff(i)
-{
+function xOff(i) {
 	return char[char[i].carriedBy].w * (Math.ceil(char[char[i].carriedBy].dire / 2) * 2 - 3) * 0.7;
 }
-function xOff2(i)
-{
+function xOff2(i) {
 	return char[i].w * (Math.ceil(char[i].dire / 2) * 2 - 3) * 0.7;
 }
-function yOff(i)
-{
-	if(char[i].charState == 6)
-	{
+function yOff(i) {
+	if (char[i].charState == 6) {
 		return char[char[i].carriedBy].h2;
 	}
 	return char[char[i].carriedBy].h2 - 13;
 }
 
-function solidAt(x, y)
-{
+function solidAt(x, y) {
 	var _loc1_ = getBlockTypeAt(x,y);
 	return (typeof _loc1_ === 'number')?(blockProperties[_loc1_][0] && blockProperties[_loc1_][1] && blockProperties[_loc1_][2] && blockProperties[_loc1_][3]):true;
 }
-function solidCeiling(x, y)
-{
+function solidCeiling(x, y) {
 	return blockProperties[getBlockTypeAt(x,y)][0];
 }
-function safeToStandAt(x, y)
-{
+function safeToStandAt(x, y) {
 	var _loc1_ = getBlockTypeAt(x,y);
 	return (typeof _loc1_ === 'number')?(blockProperties[_loc1_][1] && !blockProperties[_loc1_][5] && _loc1_ != 14 && _loc1_ != 16 && _loc1_ != 83 && _loc1_ != 85):true;
 }
@@ -3960,7 +3575,7 @@ function verticalProp(i, sign, prop, x, y) {
 	if (prop >= 4 && prop <= 7) {
 		for (_loc1_ = Math.floor((x - char[i].w) / 30); _loc1_ <= Math.floor((x + char[i].w - 0.01) / 30); _loc1_++) {
 			if (!outOfRange(_loc1_, _loc4_)) {
-				if(blockProperties[thisLevel[_loc4_][_loc1_]][prop - 4] && !blockProperties[thisLevel[_loc4_][_loc1_]][prop]) {
+				if (blockProperties[thisLevel[_loc4_][_loc1_]][prop - 4] && !blockProperties[thisLevel[_loc4_][_loc1_]][prop]) {
 					return false;
 				}
 			}
@@ -3985,7 +3600,7 @@ function horizontalProp(i, sign, prop, x, y) {
 	if (prop >= 4 && prop <= 7) {
 		for (var _loc1_ = Math.floor((y - char[i].h) / 30); _loc1_ <= Math.floor((y - 0.01) / 30); _loc1_++) {
 			if (!outOfRange(_loc2_, _loc1_)) {
-				if(blockProperties[thisLevel[_loc1_][_loc2_]][prop - 4] && !blockProperties[thisLevel[_loc1_][_loc2_ - sign]][prop - 4] && !blockProperties[thisLevel[_loc1_][_loc2_]][prop]) {
+				if (blockProperties[thisLevel[_loc1_][_loc2_]][prop - 4] && !blockProperties[thisLevel[_loc1_][_loc2_ - sign]][prop - 4] && !blockProperties[thisLevel[_loc1_][_loc2_]][prop]) {
 					return false;
 				}
 			}
@@ -4000,19 +3615,14 @@ function horizontalProp(i, sign, prop, x, y) {
 	}
 	return false;
 }
-function verticalType(i, sign, prop, pist)
-{
+function verticalType(i, sign, prop, pist) {
 	var _loc7_ = -0.5 * sign + 0.5;
 	var _loc3_ = Math.floor((char[i].y - char[i].h * _loc7_) / 30);
 	var _loc4_ = false;
-	var _loc1_ = Math.floor((char[i].x - char[i].w) / 30);
-	while(_loc1_ <= Math.floor((char[i].x + char[i].w - 0.01) / 30))
-	{
+	for (var _loc1_ = Math.floor((char[i].x - char[i].w) / 30); _loc1_ <= Math.floor((char[i].x + char[i].w - 0.01) / 30); _loc1_++) {
 		if (!outOfRange(_loc1_, _loc3_)) {
-			if(thisLevel[_loc3_][_loc1_] == prop)
-			{
-				if(pist)
-				{
+			if (thisLevel[_loc3_][_loc1_] == prop) {
+				if (pist) {
 					tileFrames[_loc3_][_loc1_].playing = true;
 					tileFrames[_loc3_][_loc1_].cf = 1;
 					// levelActive["tileX" + _loc1_ + "Y" + _loc3_].piston.gotoAndPlay(2);
@@ -4020,276 +3630,190 @@ function verticalType(i, sign, prop, pist)
 				_loc4_ = true;
 			}
 		}
-		_loc1_ = _loc1_ + 1;
 	}
 	return _loc4_;
 }
-function horizontalType(i, sign, prop)
-{
+function horizontalType(i, sign, prop) {
 	var _loc3_ = Math.floor((char[i].x + char[i].w * sign) / 30);
-	var _loc1_ = Math.floor((char[i].y - char[i].h) / 30);
-	while(_loc1_ <= Math.floor((char[i].y - 0.01) / 30))
-	{
+	for (var _loc1_ = Math.floor((char[i].y - char[i].h) / 30); _loc1_ <= Math.floor((char[i].y - 0.01) / 30); _loc1_++) {
 		if (!outOfRange(_loc3_, _loc1_)) {
 			if (thisLevel[_loc1_][_loc3_] == prop) {
 				return true;
 			}
 		}
-		_loc1_ = _loc1_ + 1;
 	}
 	return false;
 }
-function land(i, y, vy)
-{
+function land(i, y, vy) {
 	char[i].y = y;
-	if(char[i].weight2 <= 0)
-	{
+	if (char[i].weight2 <= 0) {
 		char[i].vy = - Math.abs(vy);
-	}
-	else
-	{
+	} else {
 		char[i].vy = vy;
 		char[i].onob = true;
 	}
 }
-function land2(i, y)
-{
-	char[control].landTimer = 0;
+function land2(i, y) {
+	if (control < 1000) char[control].landTimer = 0;
 	stopCarrierY(i,y,false);
 }
-function fallOff(i)
-{
-	if(char[i].standingOn >= 0)
-	{
+function fallOff(i) {
+	if (char[i].standingOn >= 0) {
 		var _loc4_ = false;
-		if(char[char[i].standingOn].submerged == 1)
-		{
+		if (char[char[i].standingOn].submerged == 1) {
 			char[char[i].standingOn].submerged = 2;
-		}
-		else
-		{
+		} else {
 			rippleWeight(i,char[i].weight2,-1);
 		}
 		var _loc3_ = char[char[i].standingOn].stoodOnBy.length;
-		var _loc2_ = 0;
-		while(_loc2_ < _loc3_)
-		{
-			if(char[char[i].standingOn].stoodOnBy[_loc2_] == i)
-			{
+		for (var _loc2_ = 0; _loc2_ < _loc3_; _loc2_++) {
+			if (char[char[i].standingOn].stoodOnBy[_loc2_] == i) {
 				_loc4_ = true;
 			}
-			if(_loc4_ && _loc2_ <= _loc3_ - 2)
-			{
+			if (_loc4_ && _loc2_ <= _loc3_ - 2) {
 				char[char[i].standingOn].stoodOnBy[_loc2_] = char[char[i].standingOn].stoodOnBy[_loc2_ + 1];
 			}
-			_loc2_ = _loc2_ + 1;
 		}
 		char[char[i].standingOn].stoodOnBy.pop();
 		char[i].standingOn = -1;
 		char[i].onob = false;
-		_loc2_ = 0;
-		while(_loc2_ < char[i].stoodOnBy.length)
-		{
+		for (var _loc2_ = 0; _loc2_ < char[i].stoodOnBy.length; _loc2_++) {
 			fallOff(char[i].stoodOnBy[_loc2_]);
-			_loc2_ = _loc2_ + 1;
 		}
 	}
 }
-function aboveFallOff(i)
-{
-	if(char[i].stoodOnBy.length >= 1)
-	{
-		var _loc1_ = 0;
-		while(_loc1_ < char[i].stoodOnBy.length)
-		{
+function aboveFallOff(i) {
+	if (char[i].stoodOnBy.length >= 1) {
+		for (var _loc1_ = 0; _loc1_ < char[i].stoodOnBy.length; _loc1_++) {
 			fallOff(char[i].stoodOnBy[_loc1_]);
 			_loc1_ = _loc1_ + 1;
 		}
 	}
 }
-function centered(i, len)
-{
-	if(i % 2 == 0)
-	{
+function centered(i, len) {
+	if (i % 2 == 0) {
 		return (len - i - 2 + len % 2) / 2;
 	}
 	return (i + len - 1 + len % 2) / 2;
 }
-function onlyConveyorsUnder(i)
-{
+function onlyConveyorsUnder(i) {
 	var _loc8_ = Math.floor(char[i].y / 30 + 0.5);
 	var _loc4_ = Math.floor((char[i].x - char[i].w) / 30);
 	var _loc6_ = Math.floor((char[i].x + char[i].w - 0.01) / 30);
 	var _loc3_ = 0;
-	var _loc2_ = 0;
-	while(_loc2_ <= _loc6_ - _loc4_)
-	{
+	for (var _loc2_ = 0; _loc2_ <= _loc6_ - _loc4_; _loc2_++) {
 		var _loc5_ = centered(_loc2_,1 + _loc6_ - _loc4_) + _loc4_;
 		if (!outOfRange(_loc5_, _loc8_)) {
 			var _loc1_ = thisLevel[_loc8_][_loc5_];
-			if(blockProperties[_loc1_][1])
-			{
-				if(_loc1_ == 14 || _loc1_ == 83)
-				{
-					if(_loc3_ == 0)
-					{
-						_loc3_ = -2.48;
-					}
-				}
-				else if(_loc1_ == 16 || _loc1_ == 85)
-				{
-					if(_loc3_ == 0)
-					{
-						_loc3_ = 2.48;
-					}
-				}
-				else if(_loc2_ == 0 || char[i].charState == 10)
-				{
+			if (blockProperties[_loc1_][1]) {
+				if (_loc1_ == 14 || _loc1_ == 83) {
+					if (_loc3_ == 0) _loc3_ = -2.48;
+				} else if (_loc1_ == 16 || _loc1_ == 85) {
+					if (_loc3_ == 0) _loc3_ = 2.48;
+				} else if (_loc2_ == 0 || char[i].charState == 10) {
 					return 0;
 				}
 			}
-			_loc2_ = _loc2_ + 1;
 		}
 	}
 	return _loc3_;
 }
-function stopCarrierX(i, x)
-{
-	if(ifCarried(i))
-	{
+function stopCarrierX(i, x) {
+	if (ifCarried(i)) {
 		char[char[i].carriedBy].x = x - xOff(i);
 		char[char[i].carriedBy].vx = 0;
 	}
 }
-function stopCarrierY(i, y, canCornerHang)
-{
-	if(ifCarried(i) && (!char[char[i].carriedBy].onob || char[char[i].carriedBy].standingOn >= 0 && char[char[char[i].carriedBy].standingOn].vy != 0))
-	{
-		if(char[char[i].carriedBy].standingOn >= 0)
-		{
+function stopCarrierY(i, y, canCornerHang) {
+	if (ifCarried(i) && (!char[char[i].carriedBy].onob || char[char[i].carriedBy].standingOn >= 0 && char[char[char[i].carriedBy].standingOn].vy != 0)) {
+		if (char[char[i].carriedBy].standingOn >= 0) {
 			char[char[char[i].carriedBy].standingOn].vy = 0;
 			fallOff(char[i].carriedBy);
 		}
-		if(char[char[i].carriedBy].vy >= 0 && canCornerHang && !solidAt(char[char[i].carriedBy].x,char[i].y + 15))
-		{
+		if (char[char[i].carriedBy].vy >= 0 && canCornerHang && !solidAt(char[char[i].carriedBy].x,char[i].y + 15)) {
 			var _loc3_ = solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 45,char[i].y + 15);
 			var _loc2_ = solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 45,char[i].y + 15);
 			char[i].justChanged = 2;
 			char[char[i].carriedBy].justChanged = 2;
-			if(_loc3_ && _loc2_)
-			{
+			if (_loc3_ && _loc2_) {
 				putDown(char[i].carriedBy);
-			}
-			else if(_loc3_)
-			{
+			} else if (_loc3_) {
 				char[char[i].carriedBy].vx += power;
-			}
-			else if(_loc2_)
-			{
+			} else if (_loc2_) {
 				char[char[i].carriedBy].vx -= power;
 			}
 			cornerHangTimer++;
-			if(cornerHangTimer > 30)
-			{
+			if (cornerHangTimer > 30) {
 				putDown(char[i].carriedBy);
 			}
 		}
 		if (char[i].carriedBy != -1) {
 			char[char[i].carriedBy].vy = 0;
 			char[char[i].carriedBy].y = y + yOff(i);
-			if(newTileDown(char[i].carriedBy) && verticalProp(char[i].carriedBy,1,1,char[char[i].carriedBy].x,char[char[i].carriedBy].y))
-			{
+			if (newTileDown(char[i].carriedBy) && verticalProp(char[i].carriedBy,1,1,char[char[i].carriedBy].x,char[char[i].carriedBy].y)) {
 				char[char[i].carriedBy].y = Math.floor(char[char[i].carriedBy].y / 30) * 30;
 			}
 		}
 	}
 }
-function startCutScene()
-{
-	if(cutScene == 0)
-	{
-		if(toSeeCS)
-		{
+function startCutScene() {
+	if (cutScene == 0) {
+		if (toSeeCS) {
 			cutScene = 1;
 			cutSceneLine = 0;
 			displayLine(currentLevel,cutSceneLine);
 			char[control].dire = Math.ceil(char[control].dire / 2) * 2;
-		}
-		else
-		{
+		} else {
 			rescue();
-			var _loc2_ = 0;
-			while(_loc2_ < dialogueChar[currentLevel].length)
-			{
+			for (var _loc2_ = 0; _loc2_ < dialogueChar[currentLevel].length; _loc2_++) {
 				var _loc1_ = dialogueChar[currentLevel][_loc2_];
-				if(_loc1_ >= 50 && _loc1_ < 60)
-				{
-					leverSwitch(_loc1_ - 50);
-				}
-				_loc2_ = _loc2_ + 1;
+				if (_loc1_ >= 50 && _loc1_ < 60) leverSwitch(_loc1_ - 50);
 			}
 			cutScene = 3;
 		}
 	}
 }
-function endCutScene()
-{
+function endCutScene() {
 	toSeeCS = false;
 	cutScene = 2;
 	rescue();
 	char[control].expr = charModels[char[control].id].defaultExpr;
 	// csBubble.gotoAndPlay(17);
 }
-function rescue()
-{
-	var _loc1_ = 0;
-	while(_loc1_ < charCount)
-	{
-		if(char[_loc1_].charState == 9)
-		{
+function rescue() {
+	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
+		if (char[_loc1_].charState == 9) {
 			char[_loc1_].charState = 10;
 			char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
 			// levelChar["char" + _loc1_].charBody.mouth.gotoAndStop(1);
 		}
-		_loc1_ = _loc1_ + 1;
 	}
 }
-function displayLine(level, line)
-{
+function displayLine(level, line) {
 	var _loc2_ = dialogueChar[level][line];
-	if(_loc2_ >= 50 && _loc2_ < 60)
-	{
+	if (_loc2_ >= 50 && _loc2_ < 60) {
 		leverSwitch(_loc2_ - 50);
 		cutSceneLine++;
 		line = line + 1;
 		_loc2_ = dialogueChar[level][line];
 	}
 	var _loc5_ = undefined;
-	if(_loc2_ == 99)
-	{
+	if (_loc2_ == 99) {
 		_loc5_ = 480;
-	}
-	else
-	{
+	} else {
 		_loc5_ = Math.min(Math.max(char[_loc2_].x,bubWidth / 2 + bubMargin),960 - bubWidth / 2 - bubMargin);
 		// putDown(_loc2_);
 	}
 	// _root.csBubble.gotoAndPlay(2);
 	// _root.csBubble._x = _loc5_;
-	if(char[control].y - cameraY > 270)
-	{
+	if (char[control].y - cameraY > 270) {
 		// _root.csBubble._y = bubMargin + bubHeight / 2;
-	}
-	else
-	{
+	} else {
 		// _root.csBubble._y = 520 - bubMargin - bubHeight / 2;
 	}
-	if(_loc2_ == 99)
-	{
+	if (_loc2_ == 99) {
 		// _root.csBubble.csBubble2.gotoAndStop(2);
-	}
-	else
-	{
+	} else {
 		// _root.csBubble.csBubble2.gotoAndStop(1);
 		// _root.csBubble.csBubble2.box.charBody.gotoAndStop(char[_loc2_].id + 1);
 		// _root.levelChar["char" + _loc2_].charBody.gotoAndStop(Math.ceil(char[_loc2_].dire / 2) * 2);
@@ -4324,13 +3848,10 @@ function drawCutScene() {
 	ctx.font = '21px Helvetica';
 	wrapText(csText, bubLoc.x+textx, bubLoc.y+4.25, textwidth, 25);
 }
-function startDeath(i)
-{
+function startDeath(i) {
 	// console.log('starting death...');
-	if(char[i].deathTimer >= 30 && (char[i].charState >= 7 || char[i].temp >= 50))
-	{
-		if(ifCarried(i))
-		{
+	if (char[i].deathTimer >= 30 && (char[i].charState >= 7 || char[i].temp >= 50)) {
+		if (ifCarried(i)) {
 			char[char[i].carriedBy].vy = 0;
 			char[char[i].carriedBy].vx = 0;
 			putDown(char[i].carriedBy);
@@ -4346,8 +3867,7 @@ function startDeath(i)
 		// levelChar["char" + i].leg2.leg.gotoAndStop(50);
 		// levelChar["char" + i].charBody.gotoAndStop(8 + Math.ceil(char[i].dire / 2));
 		clearTint(i);
-		// if(char[i].temp >= 50)
-		// {
+		// if (char[i].temp >= 50) {
 			//svgFire
 			// levelChar["char" + i].fire.gotoAndStop(2);
 		// }
@@ -4357,73 +3877,60 @@ function endDeath(i) {
 	// console.log('ending death...');
 	putDown(i);
 	char[i].temp = 0;
+	char[i].heated = 0;
 	// levelChar["char" + i]._visible = false;
 	// levelChar["char" + i].fire.gotoAndStop(1);
 	char[i].charState = 1;
 	deathCount++;
 	// saveGame();
-	if(i == control)
-	{
+	if (i == control) {
 		changeControl();
 	}
 }
-function clearTint(i)
-{
+function clearTint(i) {
 	// myColor = new Color(levelChar["char" + i]);
 	// myColorTransform = new Object();
 	// myColorTransform = {rb:0,ra:100,ba:100,ga:100};
 	// myColor.setTransform(myColorTransform);
 }
-function bounce(i)
-{
-	if(ifCarried(i))
-	{
+function bounce(i) {
+	if (ifCarried(i)) {
 		bounce(char[i].carriedBy);
 	}
-	if(char[i].dire % 2 == 0)
-	{
+	if (char[i].dire % 2 == 0) {
 		char[i].fricGoal = 0;
 	}
 	char[i].jump((- jumpPower) * 1.66);
 	char[i].onob = false;
 	char[i].y = Math.floor(char[i].y / 30) * 30 - 10;
 }
-function bumpHead(i)
-{
-	if(char[i].standingOn >= 0)
-	{
+function bumpHead(i) {
+	if (char[i].standingOn >= 0) {
 		char[i].onob = false;
 		char[char[i].standingOn].vy = 0;
 		fallOff(i);
 	}
 }
-function rippleWeight(i, w, sign)
-{
-	if(char[i].standingOn >= 0)
-	{
+function rippleWeight(i, w, sign) {
+	if (char[i].standingOn >= 0) {
 		char[char[i].standingOn].weight2 += w * sign;
-		if(char[char[i].standingOn].submerged == 1 && char[char[i].standingOn].weight2 < 0)
-		{
+		if (char[char[i].standingOn].submerged == 1 && char[char[i].standingOn].weight2 < 0) {
 			char[char[i].standingOn].submerged = 2;
 		}
-		if(char[char[i].standingOn].submerged >= 2 && char[char[i].standingOn].weight2 < 0 && char[char[i].standingOn].onob)
-		{
+		if (char[char[i].standingOn].submerged >= 2 && char[char[i].standingOn].weight2 < 0 && char[char[i].standingOn].onob) {
 			char[char[i].standingOn].onob = false;
 		}
 		rippleWeight(char[i].standingOn,w,sign);
 	}
 }
-function onlyMovesOneBlock(i, j)
-{
+function onlyMovesOneBlock(i, j) {
 	var _loc1_ = Math.floor((char[j].dire - 1) / 2) * 2 - 1;
 	var _loc3_ = Math.ceil(_loc1_ * (char[i].x + char[i].w * _loc1_) / 30);
 	var _loc2_ = Math.ceil(_loc1_ * (char[control].x + xOff2(control) + char[i].w * _loc1_) / 30);
 	return Math.abs(_loc2_ - _loc3_) <= 1;
 }
-function putDown(i)
-{
-	if(char[i].carry)
-	{
+function putDown(i) {
+	if (char[i].carry) {
 		rippleWeight(i,char[char[i].carryObject].weight2,-1);
 		char[i].weight2 = char[i].weight;
 		char[char[i].carryObject].weight2 = char[char[i].carryObject].weight;
@@ -4439,90 +3946,61 @@ function swapDepths(i, jdep) {
 	charDepths[charDepths.indexOf(i)] = charDepths[jdep];
 	charDepths[jdep] = i;
 }
-function charThrow(i)
-{
+function charThrow(i) {
 	char[i].weight2 = char[i].weight;
 	char[char[i].carryObject].weight2 = char[char[i].carryObject].weight;
 	char[char[i].carryObject].vy = -7.5;
 	char[char[i].carryObject].vx = char[i].vx;
-	if(char[i].dire <= 2)
-	{
+	if (char[i].dire <= 2) {
 		char[char[i].carryObject].vx -= 3;
-	}
-	else
-	{
+	} else {
 		char[char[i].carryObject].vx += 3;
 	}
 }
-function fallOff(i)
-{
-	if(char[i].standingOn >= 0)
-	{
+function fallOff(i) {
+	if (char[i].standingOn >= 0) {
 		var _loc4_ = false;
-		if(char[char[i].standingOn].submerged == 1)
-		{
+		if (char[char[i].standingOn].submerged == 1) {
 			char[char[i].standingOn].submerged = 2;
-		}
-		else
-		{
+		} else {
 			rippleWeight(i,char[i].weight2,-1);
 		}
 		var _loc3_ = char[char[i].standingOn].stoodOnBy.length;
-		var _loc2_ = 0;
-		while(_loc2_ < _loc3_)
-		{
-			if(char[char[i].standingOn].stoodOnBy[_loc2_] == i)
-			{
+		for (var _loc2_ = 0; _loc2_ < _loc3_; _loc2_++) {
+			if (char[char[i].standingOn].stoodOnBy[_loc2_] == i) {
 				_loc4_ = true;
 			}
-			if(_loc4_ && _loc2_ <= _loc3_ - 2)
-			{
+			if (_loc4_ && _loc2_ <= _loc3_ - 2) {
 				char[char[i].standingOn].stoodOnBy[_loc2_] = char[char[i].standingOn].stoodOnBy[_loc2_ + 1];
 			}
-			_loc2_ = _loc2_ + 1;
 		}
 		char[char[i].standingOn].stoodOnBy.pop();
 		char[i].standingOn = -1;
 		char[i].onob = false;
-		_loc2_ = 0;
-		while(_loc2_ < char[i].stoodOnBy.length)
-		{
+		for (var _loc2_; _loc2_ < char[i].stoodOnBy.length; _loc2_++) {
 			fallOff(char[i].stoodOnBy[_loc2_]);
-			_loc2_ = _loc2_ + 1;
 		}
 	}
 }
-function aboveFallOff(i)
-{
-	if(char[i].stoodOnBy.length >= 1)
-	{
-		var _loc1_ = 0;
-		while(_loc1_ < char[i].stoodOnBy.length)
-		{
+function aboveFallOff(i) {
+	if (char[i].stoodOnBy.length >= 1) {
+		for (var _loc1_ = 0; _loc1_ < char[i].stoodOnBy.length; _loc1_++) {
 			fallOff(char[i].stoodOnBy[_loc1_]);
-			_loc1_ = _loc1_ + 1;
 		}
 	}
 }
-function objectsLandOn(i)
-{
-	var _loc1_ = 0;
-	while(_loc1_ < charCount)
-	{
-		if(char[_loc1_].charState >= 5 && char[_loc1_].standingOn != i)
-		{
+function objectsLandOn(i) {
+	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
+		if (char[_loc1_].charState >= 5 && char[_loc1_].standingOn != i) {
 			var _loc3_ = Math.abs(char[i].x - char[_loc1_].x);
-			if(_loc3_ < char[i].w + char[_loc1_].w && char[i].y - char[i].h <= char[_loc1_].y && char[i].py - char[i].h > char[_loc1_].py && (char[i].submerged <= 1 || !char[_loc1_].onob || char[_loc1_].submerged == 2))
-			{
-				if(char[_loc1_].standingOn >= 0)
-				{
+			if (_loc3_ < char[i].w + char[_loc1_].w && char[i].y - char[i].h <= char[_loc1_].y && char[i].py - char[i].h > char[_loc1_].py && (char[i].submerged <= 1 || !char[_loc1_].onob || char[_loc1_].submerged == 2)) {
+				if (char[_loc1_].standingOn >= 0) {
 					fallOff(_loc1_);
 				}
 				char[_loc1_].standingOn = i;
 				char[i].stoodOnBy.push(_loc1_);
 				land(_loc1_,char[i].y - char[i].h,char[_loc1_].vy);
-				if(char[i].charState == 6)
-				{
+				if (char[i].charState == 6) {
 					char[i].vy = inter(char[i].vy,char[_loc1_].vy,char[_loc1_].weight2 / (char[i].weight2 + char[_loc1_].weight2));
 				}
 				char[_loc1_].vy = char[i].vy;
@@ -4530,25 +4008,20 @@ function objectsLandOn(i)
 				char[_loc1_].fricGoal = char[i].fricGoal;
 			}
 		}
-		_loc1_ = _loc1_ + 1;
 	}
 }
-function near(c1, c2)
-{
+function near(c1, c2) {
 	var _loc3_ = char[c2].y - 23 - (char[c1].y - char[c1].h2 / 2);
 	return Math.abs(_loc3_) <= char[c2].h / 2 + char[c1].h2 / 2 && Math.abs(char[c1].x + xOff2(c1) - char[c2].x) < 50;
 }
-function near2(c1, c2)
-{
+function near2(c1, c2) {
 	var _loc2_ = char[c2].y - 23 - (char[c1].y - char[c1].h2 / 2);
 	return Math.abs(_loc2_) <= 20 && Math.abs(char[c1].x + xOff2(c1) - char[c2].x) < 50;
 }
-function inter(a, b, x)
-{
+function inter(a, b, x) {
 	return a + (b - a) * x;
 }
-function allSolid(i)
-{
+function allSolid(i) {
 	return blockProperties[i][0] && blockProperties[i][1] && blockProperties[i][2] && blockProperties[i][3];
 }
 
@@ -4556,23 +4029,20 @@ function changeControl() {
 	if (char[control].charState >= 7) {
 		char[control].stopMoving();
 		swapDepths(control, (charCount - control - 1) * 2);
-		if(char[control].carry) {
+		if (char[control].carry) {
 			swapDepths(char[control].carryObject, (charCount - control - 1) + 1);
 		}
 	}
 	control = (control + 1) % charCount;
-	var _loc1_ = 0;
-	while (char[control].charState != 10 && _loc1_ < 10) {
+	for (var _loc1_ = 0; char[control].charState != 10 && _loc1_ < 10; _loc1_++) {
 		control = (control + 1) % charCount;
-		_loc1_++;
 	}
 	if (_loc1_ == 10) {
 		control = 10000;
 	}
 
 	if (control < 1000) {
-		if(ifCarried(control))
-		{
+		if (ifCarried(control)) {
 			putDown(char[control].carriedBy);
 		}
 		swapDepths(control, (charCount) * 2);
@@ -4581,8 +4051,7 @@ function changeControl() {
 		// levelChar["char" + control].burst.gotoAndPlay(2);
 	}
 }
-function exitLevel()
-{
+function exitLevel() {
 	// _root.csBubble.removeMovieClip();
 	// removeTileMovieClips();
 	// _root.levelChar.removeMovieClip();
@@ -4593,66 +4062,46 @@ function exitLevel()
 	cameraY = 0;
 }
 
-function nextDeadPerson(i, dire)
-{
+function nextDeadPerson(i, dire) {
 	i2 = (i + dire + charCount) % charCount;
-	while(char[i2].charState != 1)
-	{
+	while (char[i2].charState != 1) {
 		i2 = (i2 + dire + charCount) % charCount;
 	}
 	return i2;
 }
-function numberOfDead()
-{
+function numberOfDead() {
 	var _loc2_ = 0;
-	var _loc1_ = 0;
-	while(_loc1_ < charCount)
-	{
-		if(char[_loc1_].charState == 1)
-		{
-			_loc2_ = _loc2_ + 1;
+	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
+		if (char[_loc1_].charState == 1) {
+			_loc2_++;
 		}
-		_loc1_ = _loc1_ + 1;
 	}
 	return _loc2_;
 }
-function recoverCycle(i, dire)
-{
+function recoverCycle(i, dire) {
 	var _loc1_ = 0;
 	var _loc2_ = dire;
-	if(dire == 0)
-	{
-		_loc2_ = 1;
-	}
+	if (dire == 0) _loc2_ = 1;
 	recover2 = (recover2 + _loc2_ + charCount) % charCount;
-	while((char[recover2].charState != 1 || char[recover2].pcharState <= 6) && _loc1_ < 10)
-	{
+	while ((char[recover2].charState != 1 || char[recover2].pcharState <= 6) && _loc1_ < 10) {
 		recover2 = (recover2 + _loc2_ + charCount) % charCount;
-		_loc1_ = _loc1_ + 1;
+		_loc1_++;
 	}
-	if(_loc1_ == 10)
-	{
+	if (_loc1_ == 10) {
 		HPRCBubbleFrame = 4;
 		// HPRCBubble.charImage.gotoAndPlay(5);
 		recover = false;
 		recover2 = 0;
-	}
-	else if(numberOfDead() == 1)
-	{
+	} else if (numberOfDead() == 1) {
 		HPRCBubbleFrame = 2;
 		// HPRCBubble.charImage.gotoAndStop(3);
 		// HPRCBubble.charImage.anim.charBody.gotoAndStop(char[recover2].id + 1);
-	}
-	else
-	{
+	} else {
 		HPRCBubbleFrame = 3;
 		// HPRCBubble.charImage.gotoAndStop(4);
-		if(dire == 0)
-		{
+		if (dire == 0) {
 			// HPRCBubble.charImage.anim.gotoAndStop(1);
-		}
-		else
-		{
+		} else {
 			// HPRCBubble.charImage.anim.gotoAndPlay(dire * 8 + 10);
 		}
 		// HPRCBubble.charImage.anim.charBody.gotoAndStop(char[recover2].id + 1);
@@ -4770,7 +4219,6 @@ function keyup(event){
 
 
 function setup() {
-
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
 	window.addEventListener('mouseup', mouseup);
@@ -4810,9 +4258,6 @@ function draw() {
 		cameraX = 0;
 	}
 	if (menuScreen == 3) {
-		// imgBgs[bgs[currentLevel]];
-		// ctx.fillStyle = '#999966';
-		// ctx.fillRect(0, 0, levelWidth*30, levelHeight*30);
 		var bgScale = Math.max(bgXScale, bgYScale);
 		ctx.drawImage(imgBgs[bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
 
@@ -5303,7 +4748,7 @@ function draw() {
 				} else if (char[_loc2_].onob) {
 					if (!ifCarried(_loc2_) && char[_loc2_].standingOn == -1) {
 						char[_loc2_].y = Math.round(char[_loc2_].y / 30) * 30;
-					} if(!verticalProp(_loc2_,1,1,char[_loc2_].x,char[_loc2_].y)) {
+					} if (!verticalProp(_loc2_,1,1,char[_loc2_].x,char[_loc2_].y)) {
 						char[_loc2_].onob = false;
 						aboveFallOff(_loc2_);
 						if (ifCarried(_loc2_)) {
