@@ -1,19 +1,9 @@
 
 things I'll add/fix next:
-- dialogue ui animations
-- fix door flash
-- dialogue stops playing after level 1 on a normal playthrough
-- music loops badly
-- you can change direction while dying
-- whatever the hell is going on with the dialogue in level 19
-- char getting recovered scale
-- the gap in that one background
-- hprc down bubble doesn't alway show up.
-- some metal blocks show the normal outline texture
-- change cursor on ui buttons
 - acid drops
 - tints
 - menu fonts
 
 - autosave
 - the level editor
+- music loops badly

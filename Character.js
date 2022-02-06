@@ -39,6 +39,7 @@ class Character {
 		this.poseTimer = 0;
 		this.leg1frame = 0;
 		this.leg2frame = 0;
+		this.legdire = 0;
 		this.leg1skew = 0;
 		this.leg2skew = 0;
 		this.legAnimationFrame = [0,0]; // Animation offset.

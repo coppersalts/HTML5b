@@ -1,0 +1,29 @@
+you can ignore this text file, it was just me trying to figire out the logic behind the csbubble placment
+
+lvl lin ety rol
+001 l00 e00 r10  top left
+001 l01 e00 r10  top left
+001 l02 e00 r10  top left
+001 l03 e00 r10  top left
+001 l04 e00 r10  top left
+001 l05 e99 r--  top center
+
+002 l00 e99 r--  bottom center
+
+005 l00 e99 r--  bottom center
+
+019 l00 e01 r09  bottom right
+019 l01 e00 r10  bottom right
+019 l02 e01 r09  bottom right
+019 l03 e01 r10  bottom right
+019 l04 e00 r09  bottom right
+019 l05 e01 r10  bottom right
+019 l06 e99 r--  bottom center
+
+024 l00 e00 r10  top right
+024 l00 e01 r10  top left
+024 l00 e00 r10  top right
+024 l00 e01 r10  top left
+
+
+ok I figured it out. it's the speaker's x position and it goes in the center for 99s. vertical position is determined by the player's y position on the screen.

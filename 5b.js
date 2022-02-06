@@ -16,7 +16,7 @@ const pixelRatio = window.devicePixelRatio;
 
 var _xmouse = 0;
 var _ymouse = 0;
-// var _cursor = ; // cursor type
+var _cursor = 'default';
 const _keysDown = new Array(222).fill(false);
 var _frameCount = 0;
 // var _quality = "HIGH";
@@ -1621,6 +1621,9 @@ var cutSceneLine = 0;
 var bubWidth = 500;
 var bubHeight = 100;
 var bubMargin = 40;
+var bubSc = 1;
+var bubX = 0;
+var bubY = 0;
 var charDepth = 0;
 var levelWidth = 0;
 var levelHeight = 0;
@@ -1793,6 +1796,7 @@ var menu0ButtonSize = {w: 273.0, h: 36.9, cr: 6.65};
 var menu2_3ButtonSize = {w: 104.5, h: 37.3};
 var levelButtonSize = {w: 100, h: 40};
 var menu0ButtonClicked = -1;
+var onButton = false;
 var menu2_3ButtonClicked = -1;
 var levelButtonClicked = -1;
 
@@ -2004,11 +2008,19 @@ function onRect(mx, my, x, y, w, h) {
 	return mx>x&&mx<x+w&&my>y&&my<y+h;
 }
 
+function setCursor(newCursor) {
+	if (_cursor != newCursor) {
+		_cursor = newCursor;
+		document.body.style.cursor = _cursor;
+	}
+}
+
 
 function drawMenu0Button(text, x, y, id, grayed, action) {
 	var fill = '#ffffff';
 	if (!grayed) {
 		if (onRect(_xmouse, _ymouse, x, y, menu0ButtonSize.w, menu0ButtonSize.h)) {
+			onButton = true;
 			if (mouseIsDown) {
 				fill = '#b8b8b8';
 				menu0ButtonClicked = id;
@@ -2034,6 +2046,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 function drawMenu2_3Button(id, x, y, action) {
 	var fill = '#ffffff';
 	if (onRect(_xmouse, _ymouse, x, y, menu2_3ButtonSize.w, menu2_3ButtonSize.h)) {
+		onButton = true;
 		if (mouseIsDown) {
 			fill = '#CCCCCC';
 			menu2_3ButtonClicked = id;
@@ -2060,6 +2073,7 @@ function drawLevelButton(text, x, y, id, color) {
 	else if (color == 4) fill = '#00cc00';
 	if (color > 1) {
 		if (onRect(_xmouse, _ymouse-cameraY, x, y, levelButtonSize.w, levelButtonSize.h)) {
+			onButton = true;
 			if (mouseIsDown) {
 				if (color == 2) fill = '#d56a00';
 				else if (color == 3) fill = '#c6bc02';
@@ -2075,7 +2089,7 @@ function drawLevelButton(text, x, y, id, color) {
 			levelButtonClicked = -1;
 			if (id <= levelProgress) {
 				playLevel(id);
-				white_alpha = 1;
+				white_alpha = 100;
 			}
 		}
 	}
@@ -2096,6 +2110,7 @@ function drawLevelButton(text, x, y, id, color) {
 function drawNewGame2Button(text, x, y, id, color, action) {
 	var size = 107.5;
 	if (onRect(_xmouse, _ymouse, x, y, size, size)) {
+		onButton = true;
 		if (mouseIsDown) {
 			menu0ButtonClicked = id;
 		}
@@ -2280,7 +2295,7 @@ function drawLevelMap() {
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	ctx.font = '40px Helvetica';
-	ctx.fillText('x ' + coins, 477.95, 46.9);
+	ctx.fillText('x ' + coins, 477.95, 50.9);
 	ctx.font = '21px Helvetica';
 	ctx.fillText(toHMS(timer), 767.3, 27.5);
 	ctx.fillText(addCommas(deathCount), 767.3, 55.9);
@@ -2392,7 +2407,13 @@ function resetLevel() {
 			0,
 			charD[_loc2_][6]
 		);
-		char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+		if (char[_loc1_].charState == 9) {
+			char[_loc1_].expr = 1;
+			char[_loc1_].diaMouthFrame = 0;
+		} else if (char[_loc1_].charState >= 7) {
+			char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+		}
+		
 		if (_loc2_ <= 5) charCount2++;
 		if (_loc2_ == 36) HPRC1 = _loc1_;
 		if (_loc2_ == 35) HPRC2 = _loc1_;
@@ -2734,6 +2755,10 @@ function setBorder(x, y, s) {
 	}
 	// if (_loc6_ > 0) ctx.drawImage(svgTileBorders[_loc6_-1], x*30, y*30);
 	if (_loc6_ > 0) tileBorders[y][x].push(_loc6_);
+		
+	// TODO: remove this hard-coded array
+	var metalBlocks = [98,102,105,107];
+	if (metalBlocks.includes(levels[currentLevel][y][x])) tileBorders[y][x][tileBorders[y][x].length-1] += 19;
 	// tileBorders[_loc2_][_loc1_]
 	// tile.ambientShadow.gotoAndStop(_loc6_ + 1);
 	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
@@ -2746,10 +2771,6 @@ function setBorder(x, y, s) {
 		// 	// tile.ambientShadow2["a" + _loc1_].gotoAndStop(1);
 		// }
 	}
-		
-	// TODO: remove this hard-coded array
-	var metalBlocks = [98,102,105,107];
-	if (tileBorders[y][x][tileBorders[y][x].length-1] < 15 && metalBlocks.includes(levels[currentLevel][y][x])) tileBorders[y][x][tileBorders[y][x].length-1] += 19;
 }
 function opposite(i, xOrY) {
 	if (xOrY == 0) {
@@ -2804,8 +2825,9 @@ function drawCharacters() {
 
 		// levelChar.attachMovie("char","char" + _loc1_,charDepth - _loc1_ * 2,{_x:char[_loc1_].x,_y:char[_loc1_].y});
 		// if statment used to include: && typeof svgChars[char[_loc1_].id] !== 'undefined'
-		if (char[_loc1_].deathTimer > 0 && charD[currCharID][7] > 0) {
-			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2) ctx.globalAlpha = 0.3;
+		// if (char[_loc1_].deathTimer > 0 && charD[currCharID][7] > 0) {
+		if (char[_loc1_].charState > 1 && charD[currCharID][7] > 0) {
+			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2 && char[_loc1_].charState > 2) ctx.globalAlpha = 0.3;
 			if (currCharID > 34) {
 				// ctx.drawImage(svgChars[char[_loc1_].id], char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h);
 				// var vb = svgChars[char[_loc1_].id].viewBox;
@@ -2829,8 +2851,14 @@ function drawCharacters() {
 			} else {
 				var model = charModels[char[_loc1_].id];
 
+				if (char[_loc1_].charState == 2) {
+					ctx.save();
+					var amt = (60 - recoverTimer) / 60;
+					ctx.transform(1, 0, 0, amt, 0, (1-amt)*char[_loc1_].y);
+				}
+
 				// draw legs
-				var legdire = (3-char[_loc1_].dire)>0?-1:1;
+				var legdire = char[_loc1_].legdire>0?1:-1;
 				var legmat = [
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg1skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65},
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg2skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65}
@@ -2935,20 +2963,20 @@ function drawCharacters() {
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					} else if (modelFrame[i].type == 'dia') {
 						// var bpanimframe = modelFrame[i].loop ? ((char[_loc1_].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[_loc1_].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
-						var diamouthframe = 0;
+						var dmf = 0;
 						if (cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == _loc1_) {
 							// var expr = dialogueFace[currentLevel][cutSceneLine]-2;
 							var expr = char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2;
-							diamouthframe = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
-							img = svgBodyParts[diaMouths[expr].frames[diamouthframe].bodypart];
+							dmf = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
+							img = svgBodyParts[diaMouths[expr].frames[dmf].bodypart];
 
 							// TODO: refactor this somehwere else
 							if (char[_loc1_].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[_loc1_].diaMouthFrame++;
 						} else {
-							img = svgBodyParts[diaMouths[char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2].frames[diamouthframe].bodypart];
+							img = svgBodyParts[diaMouths[char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2].frames[dmf].bodypart];
 						}
 						// var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
-						var mat = diaMouths[model.defaultExpr].frames[diamouthframe].mat;
+						var mat = diaMouths[model.defaultExpr].frames[dmf].mat;
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					}
 					ctx.drawImage(img, -img.width/2, -img.height/2);
@@ -2961,6 +2989,10 @@ function drawCharacters() {
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
 
 				ctx.globalAlpha = 1;
+
+				if (char[_loc1_].charState == 2) {
+					ctx.restore();
+				}
 			}
 		}
 		// else {
@@ -2980,8 +3012,6 @@ function drawCharacters() {
 		if (char[_loc1_].charState == 9) {
 			char[_loc1_].dire = 2;
 			char[_loc1_].frame = 1;
-			char[_loc1_].expr = 1;
-			char[_loc1_].diaMouthFrame = 0;
 			// levelChar["char" + _loc1_].charBody.gotoAndStop(2);
 			// levelChar["char" + _loc1_].charBody.mouth.gotoAndStop(3);
 			// levelChar["char" + _loc1_].charBody.mouth.mouth.gotoAndStop(57);
@@ -3090,6 +3120,7 @@ function setBody(i) {
 
 	var _loc2_ = undefined;
 	var _loc3_ = [0,0];
+	char[i].legdire = char[i].dire / 2 - 1;
 	if (ifCarried(i) && cornerHangTimer == 0) {
 		// for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++) {
 			// Carried legs
@@ -3804,11 +3835,15 @@ function displayLine(level, line) {
 		_loc5_ = Math.min(Math.max(char[_loc2_].x,bubWidth / 2 + bubMargin),960 - bubWidth / 2 - bubMargin);
 		// putDown(_loc2_);
 	}
+	bubSc = 0.1;
 	// _root.csBubble.gotoAndPlay(2);
 	// _root.csBubble._x = _loc5_;
+	bubX = _loc5_;
 	if (char[control].y - cameraY > 270) {
+		bubY = bubMargin + bubHeight / 2;
 		// _root.csBubble._y = bubMargin + bubHeight / 2;
 	} else {
+		bubY = 520 - bubMargin - bubHeight / 2;
 		// _root.csBubble._y = 520 - bubMargin - bubHeight / 2;
 	}
 	if (_loc2_ == 99) {
@@ -3825,12 +3860,14 @@ function displayLine(level, line) {
 	csText = dialogueText[level][line];
 }
 function drawCutScene() {
-	var bubLoc = {x:(cwidth-bubWidth)/2,y:bubMargin};
+	ctx.save();
+	ctx.transform(bubSc, 0, 0, bubSc, bubX, bubY);
+	var bubLoc = {x:-bubWidth/2,y:-bubHeight/2};
 	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y)
 	var textwidth = 386.55;
 	var textx = 106.7;
 	var currdiachar = dialogueChar[currentLevel][Math.min(cutSceneLine, dialogueChar[currentLevel].length-1)]
-	if (currdiachar==99) {
+	if (currdiachar == 99) {
 		textwidth = 488.25;
 		textx = 4.25;
 	} else {
@@ -3846,7 +3883,15 @@ function drawCutScene() {
 	ctx.fillStyle = '#000000';
 	ctx.textAlign = 'left'
 	ctx.font = '21px Helvetica';
-	wrapText(csText, bubLoc.x+textx, bubLoc.y+4.25, textwidth, 25);
+	wrapText(csText, bubLoc.x+textx, bubLoc.y+4.25, textwidth, 23);
+	ctx.restore();
+	if (cutScene == 2) {
+		if (bubSc > 0.1) bubSc -= bubSc/4;
+
+	} else {
+		if (bubSc < 0.99) bubSc += (1-bubSc)/4;
+		else bubSc = 1;
+	}
 }
 function startDeath(i) {
 	// console.log('starting death...');
@@ -4030,7 +4075,7 @@ function changeControl() {
 		char[control].stopMoving();
 		swapDepths(control, (charCount - control - 1) * 2);
 		if (char[control].carry) {
-			swapDepths(char[control].carryObject, (charCount - control - 1) + 1);
+			swapDepths(char[control].carryObject, (charCount - control - 1) * 2 + 1);
 		}
 	}
 	control = (control + 1) % charCount;
@@ -4045,7 +4090,10 @@ function changeControl() {
 		if (ifCarried(control)) {
 			putDown(char[control].carriedBy);
 		}
-		swapDepths(control, (charCount) * 2);
+		swapDepths(control, charCount * 2);
+		if (char[control].carry) {
+			swapDepths(char[control].carryObject, charCount * 2 + 1);
+		}
 		char[control].burstFrame = 0;
 		char[control].expr = charModels[char[control].id].defaultExpr;
 		// levelChar["char" + control].burst.gotoAndPlay(2);
@@ -4235,6 +4283,7 @@ function playGame() {
 }
 
 function draw() {
+	onButton = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
 	if (menuScreen == -1) {
@@ -4274,11 +4323,13 @@ function draw() {
 				timer += getTimer() - levelTimer2;
 				if (playMode == 0) {
 					currentLevel++;
+					toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
 					levelProgress = currentLevel;
 					resetLevel();
 				} else {
 					menuScreen = 2;
 					cameraX = 0;
+					cameraY = 0;
 				}
 				// saveGame();
 			}
@@ -4335,6 +4386,9 @@ function draw() {
 							// levelChar["char" + recover2]._x = char[recover2].x;
 							// levelChar["char" + recover2]._y = char[recover2].y;
 							char[recover2].frame = 3;
+							char[recover2].leg1frame = 1;
+							char[recover2].leg2frame = 1;
+							char[recover2].legdire = 1;
 							// levelChar["char" + recover2].charBody.gotoAndStop(4);
 							// levelChar["char" + recover2]._visible = true;
 							if (char[recover2].id == 5) {
@@ -4513,6 +4567,7 @@ function draw() {
 			if (char[_loc2_].charState == 2) {
 				recoverTimer--;
 				var _loc5_ = (60 - recoverTimer) / 60;
+				char[_loc2_].x = inter(char[HPRC1].x,goal,_loc5_);
 				// levelChar["char" + _loc2_]._yscale = _loc5_ * 100;
 				// levelChar["char" + _loc2_]._x = inter(char[HPRC1].x,goal,_loc5_);
 				if (recoverTimer <= 0) {
@@ -4956,14 +5011,14 @@ function draw() {
 	// 		}
 	// 	}
 	// }
-	if (levelTimer <= 30 || menuScreen != 4) {
+	if (levelTimer <= 30 || menuScreen != 3) {
 		if (wipeTimer >= 30 && wipeTimer <= 60) {
 			white_alpha = 220 - wipeTimer * 4;
 		}
 	} else {
 		white_alpha = 0;
 	}
-	if (wipeTimer == 29 && menuScreen == 4 && (charsAtEnd >= charCount2 || transitionType == 0)) {
+	if (wipeTimer == 29 && menuScreen == 3 && (charsAtEnd >= charCount2 || transitionType == 0)) {
 		white_alpha = 100;
 	}
 	if (wipeTimer >= 60) {
@@ -4992,5 +5047,12 @@ function draw() {
 		ctx.globalAlpha = 1;
 	}
 
+
+
+	if (onButton) {
+		setCursor('pointer');
+	} else {
+		setCursor('auto');
+	}
 	_frameCount++;
 }
