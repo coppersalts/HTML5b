@@ -23,7 +23,7 @@ var _frameCount = 0;
 var qTimer = 0;
 
 var levelsString = "";
-var levelCount = 53;
+var levelCount = 133;
 var f = 19;
 var levels = new Array(levelCount);
 var startLocations = new Array(levelCount);
@@ -47,6 +47,7 @@ var levelName = new Array(levelCount);
 var mdao = new Array(levelCount);
 var mdao2 = 0;
 var levelProgress;
+var bonusProgress;
 var gotCoin;
 var gotThisCoin = false;
 var tileCount = 11;
@@ -57,9 +58,9 @@ var coins;
 var longMode = false;
 
 function clearVars() {
-	// deathCount = timer = coins = levelProgress = 0;
-	deathCount = timer = coins = 0;
-	levelProgress = levelCount-1;
+	// deathCount = timer = coins = bonusProgress = levelProgress = 0;
+	deathCount = timer = coins = bonusProgress = 0;
+	levelProgress = 52;
 	gotCoin = new Array(levelCount);
 	for (var _loc1_ = 0; _loc1_ < levelCount; _loc1_++) {
 		gotCoin[_loc1_] = false;
@@ -2072,7 +2073,7 @@ function drawLevelButton(text, x, y, id, color) {
 	else if (color == 3) fill = '#efe303';
 	else if (color == 4) fill = '#00cc00';
 	if (color > 1) {
-		if (onRect(_xmouse, _ymouse-cameraY, x, y, levelButtonSize.w, levelButtonSize.h)) {
+		if (onRect(_xmouse, _ymouse-cameraY, x, y, levelButtonSize.w, levelButtonSize.h) && (_xmouse < 587 || _ymouse < 469)) {
 			onButton = true;
 			if (mouseIsDown) {
 				if (color == 2) fill = '#d56a00';
@@ -2087,7 +2088,7 @@ function drawLevelButton(text, x, y, id, color) {
 		}
 		if (!mouseIsDown && levelButtonClicked === id) {
 			levelButtonClicked = -1;
-			if (id <= levelProgress) {
+			if (id <= levelProgress || (id > 99 && id < bonusProgress+100)) {
 				playLevel(id);
 				white_alpha = 100;
 			}
@@ -2319,6 +2320,10 @@ function drawLevelMap() {
 		if (gotCoin[_loc3_]) color = 4;
 		else if (levelProgress == _loc3_) color = 2;
 		else if (levelProgress > _loc3_) color = 3;
+		else if (_loc3_ > 99) {
+			if (bonusProgress == _loc3_-99) color = 2;
+			else if (bonusProgress > _loc3_-99) color = 3;
+		}
 		var text = '';
 		if (_loc3_ >= 100) text = "B" + numberToText(_loc3_ - 99,false);
 		else text = numberToText(_loc3_ + 1,true);
@@ -4282,6 +4287,7 @@ function playGame() {
 	musicSound.loop = true;
 }
 
+// I think the draw loop coule be a good place to start optimisation when you get there.
 function draw() {
 	onButton = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -4304,7 +4310,6 @@ function draw() {
 				cameraY = Math.min(Math.max(cameraY - (_ymouse - 360) * 0.1,-1080),0);
 			}
 		}
-		cameraX = 0;
 	}
 	if (menuScreen == 3) {
 		var bgScale = Math.max(bgXScale, bgYScale);
@@ -4319,9 +4324,10 @@ function draw() {
 				if (gotThisCoin && !gotCoin[currentLevel]) {
 					gotCoin[currentLevel] = true;
 					coins++;
+					bonusProgress = Math.floor(coins*0.33);
 				}
 				timer += getTimer() - levelTimer2;
-				if (playMode == 0) {
+				if (playMode == 0 && currentLevel < 99) {
 					currentLevel++;
 					toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
 					levelProgress = currentLevel;
