@@ -23,7 +23,7 @@ var _frameCount = 0;
 var qTimer = 0;
 
 var levelsString = "";
-var levelCount = 133;
+var levelCount = 53;
 var f = 19;
 var levels = new Array(levelCount);
 var startLocations = new Array(levelCount);
@@ -2969,13 +2969,13 @@ function drawCharacters() {
 					} else if (modelFrame[i].type == 'dia') {
 						// var bpanimframe = modelFrame[i].loop ? ((char[_loc1_].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[_loc1_].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
 						var dmf = 0;
-						if (cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == _loc1_) {
+						if (cutScene == 1) {
 							// var expr = dialogueFace[currentLevel][cutSceneLine]-2;
 							var expr = char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2;
 							dmf = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
 							img = svgBodyParts[diaMouths[expr].frames[dmf].bodypart];
 
-							// TODO: refactor this somehwere else
+							// TODO: move this somehwere else
 							if (char[_loc1_].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[_loc1_].diaMouthFrame++;
 						} else {
 							img = svgBodyParts[diaMouths[char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2].frames[dmf].bodypart];
@@ -3434,7 +3434,6 @@ function leverSwitch(j) {
 	for (var _loc6_ = 0; _loc6_ < charCount; _loc6_++) {
 		char[_loc6_].justChanged = 2;
 		checkDeath(_loc6_);
-		_loc6_ = _loc6_ + 1;
 	}
 }
 function checkDeath(i) {
@@ -3797,6 +3796,9 @@ function startCutScene() {
 		if (toSeeCS) {
 			cutScene = 1;
 			cutSceneLine = 0;
+			for (var i = 0; i < char.length; i++) {
+				if (char[i].charState >= 7) char[i].diaMouthFrame = diaMouths[char[i].expr + charModels[char[i].id].mouthType*2].frameorder.length-1;
+			}
 			displayLine(currentLevel,cutSceneLine);
 			char[control].dire = Math.ceil(char[control].dire / 2) * 2;
 		} else {
@@ -3853,11 +3855,12 @@ function displayLine(level, line) {
 	}
 	if (_loc2_ == 99) {
 		// _root.csBubble.csBubble2.gotoAndStop(2);
-	} else {
+	} else if (_loc2_ < char.length) {
 		// _root.csBubble.csBubble2.gotoAndStop(1);
 		// _root.csBubble.csBubble2.box.charBody.gotoAndStop(char[_loc2_].id + 1);
 		// _root.levelChar["char" + _loc2_].charBody.gotoAndStop(Math.ceil(char[_loc2_].dire / 2) * 2);
 		char[_loc2_].expr = dialogueFace[level][line]-2;
+		char[_loc2_].diaMouthFrame = 0;
 		// _root.levelChar["char" + _loc2_].charBody.mouth.gotoAndStop(1);
 		// _root.levelChar["char" + _loc2_].charBody.mouth.gotoAndStop(dialogueFace[level][line]);
 	}
@@ -4344,7 +4347,7 @@ function draw() {
 			if (_keysDown[13] || _keysDown[16]) {
 				if (!csPress && cutScene == 1) {
 					cutSceneLine++;
-					if (dialogueChar[currentLevel][cutSceneLine] < char.length) char[dialogueChar[currentLevel][cutSceneLine]].diaMouthFrame = 0;
+					// if (dialogueChar[currentLevel][cutSceneLine] < char.length) char[dialogueChar[currentLevel][cutSceneLine]].diaMouthFrame = 0;
 					if (cutSceneLine >= dialogueChar[currentLevel].length) endCutScene();
 					else displayLine(currentLevel,cutSceneLine);
 				}
