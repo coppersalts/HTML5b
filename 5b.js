@@ -23,7 +23,7 @@ var _frameCount = 0;
 var qTimer = 0;
 
 var levelsString = "";
-var levelCount = 53;
+var levelCount = 133;
 var f = 19;
 var levels = new Array(levelCount);
 var startLocations = new Array(levelCount);
@@ -48,6 +48,7 @@ var mdao = new Array(levelCount);
 var mdao2 = 0;
 var levelProgress;
 var bonusProgress;
+var bonusesCleared;
 var gotCoin;
 var gotThisCoin = false;
 var tileCount = 11;
@@ -61,6 +62,7 @@ function clearVars() {
 	// deathCount = timer = coins = bonusProgress = levelProgress = 0;
 	deathCount = timer = coins = bonusProgress = 0;
 	levelProgress = 52;
+	bonusesCleared = new Array(33).fill(false);
 	gotCoin = new Array(levelCount);
 	for (var _loc1_ = 0; _loc1_ < levelCount; _loc1_++) {
 		gotCoin[_loc1_] = false;
@@ -1593,8 +1595,7 @@ var charModels = [
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 	},
 ];
-// TODO: add the npcs to this? that might break something, so I'll wait to try it out.
-var names = ["Ruby","Book","Ice Cube","Match","Pencil","Bubble"];
+var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
 var selectedTab = 0;
 var power = 1;
 var jumpPower = 11;
@@ -2320,9 +2321,9 @@ function drawLevelMap() {
 		if (gotCoin[_loc3_]) color = 4;
 		else if (levelProgress == _loc3_) color = 2;
 		else if (levelProgress > _loc3_) color = 3;
-		else if (_loc3_ > 99) {
-			if (bonusProgress == _loc3_-99) color = 2;
-			else if (bonusProgress > _loc3_-99) color = 3;
+		else if (_loc3_ > 99 && _loc3_ < bonusProgress+100) {
+			if (!bonusesCleared[_loc3_-100]) color = 2;
+			else color = 3;
 		}
 		var text = '';
 		if (_loc3_ >= 100) text = "B" + numberToText(_loc3_ - 99,false);
@@ -4339,6 +4340,9 @@ function draw() {
 					menuScreen = 2;
 					cameraX = 0;
 					cameraY = 0;
+					if (currentLevel > 99) {
+						bonusesCleared[currentLevel-100] = true;
+					}
 				}
 				// saveGame();
 			}
