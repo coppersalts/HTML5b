@@ -22,7 +22,7 @@ var _frameCount = 0;
 // var _quality = "HIGH";
 var qTimer = 0;
 
-var levelsString = "";
+var levelsString = '';
 var levelCount = 133;
 var f = 19;
 var levels = new Array(levelCount);
@@ -53,48 +53,49 @@ var gotCoin;
 var gotThisCoin = false;
 var tileCount = 11;
 // var bfdia5b = SharedObject.getLocal("bfdia5b");
+var bfdia5b = window.localStorage;
 var deathCount;
 var timer;
 var coins;
 var longMode = false;
 
 function clearVars() {
-	// deathCount = timer = coins = bonusProgress = levelProgress = 0;
-	deathCount = timer = coins = bonusProgress = 0;
-	levelProgress = 52;
+	// deathCount = timer = coins = bonusProgress = 0;
+	// levelProgress = 52;
+	deathCount = timer = coins = bonusProgress = levelProgress = 0;
 	bonusesCleared = new Array(33).fill(false);
+	gotCoin = new Array(levelCount).fill(false);
+}
+function saveGame() {
+	bfdia5b.setItem('gotCoin', gotCoin);
+	bfdia5b.setItem('coins', coins);
+	bfdia5b.setItem('levelProgress', levelProgress);
+	bfdia5b.setItem('bonusProgress', bonusProgress);
+	bfdia5b.setItem('bonusesCleared', bonusesCleared);
+	bfdia5b.setItem('deathCount', deathCount);
+	bfdia5b.setItem('timer', timer);
+}
+
+if (bfdia5b.getItem('levelProgress') == undefined) {
+	clearVars();
+} else {
+	levelProgress = parseInt(bfdia5b.getItem('levelProgress'));
+	bonusProgress = parseInt(bfdia5b.getItem('bonusProgress'));
+	deathCount = parseInt(bfdia5b.getItem('deathCount'));
+	timer = parseFloat(bfdia5b.getItem('timer'));
 	gotCoin = new Array(levelCount);
-	for (var _loc1_ = 0; _loc1_ < levelCount; _loc1_++) {
-		gotCoin[_loc1_] = false;
+	let gotCoinRaw = bfdia5b.getItem('gotCoin').split(',');
+	coins = 0;
+	for (var i = 0; i < levelCount; i++) {
+		gotCoin[i] = gotCoinRaw[i] === 'true';
+		if (gotCoin[i]) coins++;
+	}
+	bonusesCleared = new Array(33);
+	let bonusesClearedRaw = bfdia5b.getItem('bonusesCleared').split(',');
+	for (var i = 0; i < 33; i++) {
+		bonusesCleared[i] = bonusesClearedRaw[i] === 'true';
 	}
 }
-// function saveGame() {
-// 	bfdia5b.data.gotCoin = new Array(levelCount);
-// 	var _loc1_ = 0;
-// 	while (_loc1_ < levelCount) {
-// 		bfdia5b.data.gotCoin[_loc1_] = gotCoin[_loc1_];
-// 		_loc1_ = _loc1_ + 1;
-// 	}
-// 	bfdia5b.data.coins = coins;
-// 	bfdia5b.data.levelProgress = levelProgress;
-// 	bfdia5b.data.deathCount = deathCount;
-// 	bfdia5b.data.timer = timer;
-// 	bfdia5b.flush();
-// }
-
-// if (bfdia5b.data.levelProgress == undefined) {
-	clearVars();
-// } else {
-// 	levelProgress = bfdia5b.data.levelProgress;
-// 	gotCoin = new Array(levelCount);
-// 	coins = 0;
-// 	for (var i = 0; i < levelCount; i++) {
-// 		gotCoin[i] = bfdia5b.data.gotCoin[i];
-// 		if (gotCoin[i]) coins++;
-// 	}
-// 	deathCount = bfdia5b.data.deathCount;
-// 	timer = bfdia5b.data.timer;
-// }
 
 
 var white_alpha = 0;
@@ -182,7 +183,7 @@ function loadLevels() {
 			if (charAt(2) == 24) dialogueFace[_loc3_][_loc5_] = 2;
 			else dialogueFace[_loc3_][_loc5_] = 3;
 			levelStart += 4;
-			dialogueText[_loc3_][_loc5_] = "";
+			dialogueText[_loc3_][_loc5_] = '';
 			for (lineLength = 1; charAt(lineLength) != -35; lineLength++) {
 		dialogueText[_loc3_][_loc5_] += charAt2(lineLength - 1);
 			}
@@ -351,63 +352,73 @@ var blockProperties = [
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false]
 ];
 var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54],[65,61,60,62,63,64],[],[],[14,16,83,85]];
+
+// [0] - hitbox width
+// [1] - hitbox height
+// [2] - weight
+// [3] - carried object height
+// [4] - friction
+// [5] - cached as bitmap
+// [6] - heat speed
+// [7] - number of frames
+// [8] - has arms
 var charD = [
-	[28,45.4,0.45,27,0.8,false,1,1],
-	[23,56,0.36,31,0.8,false,1.7,1],
-	[20,51,0.41,20,0.85,false,5,1],
-	[10,86,0.26,31,0.8,false,1.6,1],
-	[10,84,0.23,31,0.8,false,1.4,1],
-	[28,70,0.075,28,0.8,false,9,1],
-	[26,49,0.2,20,0.75,false,0.6,1],
-	[44,65,0.8,20,0.75,false,0.8,1],
-	[16,56,0.25,17,0.76,false,0.8,1],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[0,0,0,0,0,false,1,0],
-	[36.5,72.8,1,20,0.6,false,0,1],
-	[15.1,72.8,0.6,20,0.7,true,0,1],
-	[20,40,0.15,20,0.7,true,0.7,1],
-	[25,50,0.64,20,0.6,true,0.1,1],
-	[25,10,1,0,0.7,true,0.2,1],
-	[25,50,1,20,0.7,true,0.1,1],
-	[25,29,0.1,20,0.8,true,1,1],
-	[21.5,43,0.3,20,0.6,true,0.5,1],
-	[35,60,1,20,0.7,true,0.1,1],
-	[22.5,45,1,20,0.7,true,0.8,1],
-	[25,50,1,0,0.7,true,0.1,27],
-	[15,30,0.64,20,0.6,true,0.2,1],
-	[10,55,0.8,0,0.3,true,0.4,1],
-	[45,10,1,0,0.7,true,0.2,1],
-	[20,40,1,0,0.8,false,0.8,5],
-	[16,45,0.4,20,0.94,false,1.1,60],
-	[25,10,1,0,0.7,true,0.3,1],
-	[45,10,0.4,0,0.7,true,0.7,1],
-	[15,50,0.1,0,0.8,true,1.9,1],
-	[25,25,0.1,0,0.8,true,1.7,1],
-[30,540,10,10,0.4,true,0,1]
+	[28,45.4,0.45,27,0.8,false,1,1,true],
+	[23,56,0.36,31,0.8,false,1.7,1,true],
+	[20,51,0.41,20,0.85,false,5,1,false],
+	[10,86,0.26,31,0.8,false,1.6,1,true],
+	[10,84,0.23,31,0.8,false,1.4,1,true],
+	[28,70,0.075,28,0.8,false,9,1,true],
+	[26,49,0.2,20,0.75,false,0.6,1,false],
+	[44,65,0.8,20,0.75,false,0.8,1,false],
+	[16,56,0.25,17,0.76,false,0.8,1,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[0,0,0,0,0,false,1,0,true],
+	[36.5,72.8,1,20,0.6,false,0,1,true],
+	[15.1,72.8,0.6,20,0.7,true,0,1,true],
+	[20,40,0.15,20,0.7,true,0.7,1,true],
+	[25,50,0.64,20,0.6,true,0.1,1,true],
+	[25,10,1,0,0.7,true,0.2,1,true],
+	[25,50,1,20,0.7,true,0.1,1,true],
+	[25,29,0.1,20,0.8,true,1,1,true],
+	[21.5,43,0.3,20,0.6,true,0.5,1,true],
+	[35,60,1,20,0.7,true,0.1,1,true],
+	[22.5,45,1,20,0.7,true,0.8,1,true],
+	[25,50,1,0,0.7,true,0.1,27,true],
+	[15,30,0.64,20,0.6,true,0.2,1,true],
+	[10,55,0.8,0,0.3,true,0.4,1,true],
+	[45,10,1,0,0.7,true,0.2,1,true],
+	[20,40,1,0,0.8,false,0.8,5,true],
+	[16,45,0.4,20,0.94,false,1.1,60,true],
+	[25,10,1,0,0.7,true,0.3,1,true],
+	[45,10,0.4,0,0.7,true,0.7,1,true],
+	[15,50,0.1,0,0.8,true,1.9,1,true],
+	[25,25,0.1,0,0.8,true,1.7,1,true],
+	[30,540,10,10,0.4,true,0,1,true]
 ];
 
 var diaMouths = [
@@ -1453,6 +1464,7 @@ var charModels = [
 		charimgmat: {a:-0.112091064453125,b:0,c:0,d:0.112091064453125,tx:8.05,ty:-5.8},
 		burstmat: {a:0.794342041015625,b:0,c:0,d:0.952484130859375,tx:1.55,ty:-29.75},
 		defaultExpr: 0,
+		mouthType: 0,
 		frames: [
 			[
 				{type:'static',bodypart:57,mat:{a:-0.3065643310546875,b:0,c:0,d:0.3065643310546875,tx:29.95,ty:-51.95}},
@@ -1536,63 +1548,103 @@ var charModels = [
 	{},
 	{
 		firemat: {a:-0.34619140625,b:0.0040283203125,c:0.0058135986328125,d:0.3830718994140625,tx:-1.25,ty:-27.6},
+		burstmat: {a:-0.34619140625,b:0.0040283203125,c:0.0058135986328125,d:0.3830718994140625,tx:-1.25,ty:-27.6},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
 	},
 ];
 var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
@@ -1671,12 +1723,12 @@ var doorLightFadeDire = [0,0,0,0,0,0];
 // TODO: replace usages with this with String.padStart()
 function numberToText(i, hundreds) {
 	if (hundreds) {
-		if (i < 10) return "00" + i;
-		if (i < 100) return "0" + i;
+		if (i < 10) return '00' + i;
+		if (i < 100) return '0' + i;
 		return i;
 	}
-	if (i == 0) return "00";
-	if (i < 10) return "0" + i;
+	if (i == 0) return '00';
+	if (i < 10) return '0' + i;
 	return i;
 }
 function toHMS(i) {
@@ -1684,14 +1736,14 @@ function toHMS(i) {
 	var _loc3_ = Math.floor(i / 60000) % 60;
 	var _loc2_ = Math.floor(i / 1000) % 60;
 	var _loc4_ = Math.floor(i / 100) % 10;
-	return numberToText(_loc5_,false) + ":" + numberToText(_loc3_,false) + ":" + numberToText(_loc2_,false) + "." + _loc4_;
+	return numberToText(_loc5_,false) + ':' + numberToText(_loc3_,false) + ':' + numberToText(_loc2_,false) + '.' + _loc4_;
 }
 function addCommas(i) {
 	var _loc4_ = String(i);
-	var _loc2_ = "";
+	var _loc2_ = '';
 	var _loc3_ = _loc4_.length;
 	for (var _loc1_ = 0; _loc1_ < _loc3_; _loc1_++) {
-		if ((_loc3_ - _loc1_) % 3 == 0 && _loc1_ != 0) _loc2_ += ",";
+		if ((_loc3_ - _loc1_) % 3 == 0 && _loc1_ != 0) _loc2_ += ',';
 		_loc2_ += _loc4_.charAt(_loc1_);
 	}
 	return _loc2_;
@@ -1742,11 +1794,11 @@ async function asyncLoadVB(src) {
 	return new Promise((resolve, reject) => {
 		let req = new XMLHttpRequest();
 		req.open('GET', src);
-		req.setRequestHeader("Content-Type", "image/svg+xml");
+		req.setRequestHeader('Content-Type', 'image/svg+xml');
 		req.onload = (event) => {
 			let response = event.target.responseText;
 			let doc = new DOMParser();
-			let xml = doc.parseFromString(response, "image/svg+xml");
+			let xml = doc.parseFromString(response, 'image/svg+xml');
 			let svg = xml.getElementsByTagName('svg')[0];
 			resolve(svg.getAttribute('viewBox').split(' ').map(Number));
 		}
@@ -1807,8 +1859,8 @@ async function loadingScreen() {
 	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
 	ctx = canvas.getContext('2d');
-	canvas.style.width = cwidth + "px";
-	canvas.style.height = cheight + "px";
+	canvas.style.width = cwidth + 'px';
+	canvas.style.height = cheight + 'px';
 	// Account for Pixel Density
 	canvas.width = Math.floor(cwidth * pixelRatio);
 	canvas.height = Math.floor(cheight * pixelRatio);
@@ -1836,11 +1888,13 @@ async function loadingScreen() {
 	ctx.fillStyle = '#4cccb3';
 
 
-	var req = await fetch("data/levels.txt");
+	console.log('loading levels...');
+	var req = await fetch('data/levels.txt');
 	var text = await req.text();
 	levelsString = text;
 	loadLevels();
 
+	console.log('loading misc. special level graphic elements...');
 	svgCSBubble = await asyncLoadImage('visuals/ui/csbubble/dia.svg');
 	loadedResources++;
 	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
@@ -1854,11 +1908,13 @@ async function loadingScreen() {
 	loadedResources++;
 	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 
+	console.log('loading backgrounds...');
 	for (var i = 0; i < imgBgs.length; i++) {
 		imgBgs[i] = await asyncLoadImage('visuals/bg/bg' + i.toString(10).padStart(4, '0') + '.png');
 		loadedResources++;
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
+	console.log('loading blocks...');
 	for (var i = 0; i < blockProperties.length; i++) {
 		var id = i.toString(10).padStart(4, '0');
 		if (blockProperties[i][16] < 1) continue;
@@ -1886,6 +1942,7 @@ async function loadingScreen() {
 			drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 		}
 	}
+	console.log('loading block borders and shadows...');
 	for (var i = 0; i < svgShadows.length; i++) {
 		svgShadows[i] = await asyncLoadImage('visuals/shadows/s' + i.toString(10).padStart(4, '0') + '.svg');
 		loadedResources++;
@@ -1896,6 +1953,7 @@ async function loadingScreen() {
 		loadedResources++;
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
+	console.log('loading entity graphics...');
 	for (var i = 0; i < charD.length; i++) {
 		var id = i.toString(10).padStart(4, '0');
 		if (charD[i][7] < 1) continue;
@@ -1916,13 +1974,15 @@ async function loadingScreen() {
 			}
 		}
 	}
-	for (var i = 0; i < svgHPRCBubble.length; i++) {
-		svgHPRCBubble[i] = await asyncLoadImage('visuals/ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg');
+	console.log('loading body parts...');
+	for (var i = 0; doesFileExist('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg'); i++) {
+		svgBodyParts[i] = await asyncLoadImage('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg');
 		loadedResources++;
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
-	for (var i = 0; doesFileExist('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg'); i++) {
-		svgBodyParts[i] = await asyncLoadImage('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg');
+	console.log('loading effects...');
+	for (var i = 0; i < svgHPRCBubble.length; i++) {
+		svgHPRCBubble[i] = await asyncLoadImage('visuals/ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg');
 		loadedResources++;
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
@@ -1942,6 +2002,7 @@ async function loadingScreen() {
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 
+	console.log('loading misc. menu graphics...');
 	svgMenu0 = await asyncLoadImage('visuals/menu0.svg');
 	loadedResources++;
 	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
@@ -1958,6 +2019,7 @@ async function loadingScreen() {
 	loadedResources++;
 	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 
+	// I don't know why I put these with the resource loading code, but whatever.
 	menu2_3Buttons.push(new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'));
 	menu2_3Buttons.push(new Path2D('M 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nM 92.9 6.5\nL 99.6 6.5 90.05 16.15 100.55 30.9 93.8 30.9 86.45 19.95 83.4 23.05 83.4 30.9 78 30.9 78 6.5 83.4 6.5 83.4 16.6 92.9 6.5\nM 67.15 11.65\nQ 66.45 11.05 65.55 10.75\nL 63.65 10.4\nQ 61.85 10.4 60.6 11.1 59.3 11.85 58.55 13 57.75 14.2 57.4 15.7 57.05 17.2 57.05 18.8 57.05 20.35 57.4 21.8 57.75 23.25 58.55 24.4 59.3 25.6 60.6 26.3 61.85 27 63.65 27 66.1 27 67.5 25.45 68.9 23.95 69.2 21.5\nL 74.4 21.5\nQ 74.2 23.8 73.35 25.65 72.45 27.5 71.05 28.8 69.65 30.1 67.8 30.8\nL 63.65 31.5\nQ 60.8 31.5 58.6 30.5 56.35 29.5 54.8 27.8 53.3 26.1 52.45 23.75 51.65 21.45 51.65 18.8 51.65 16.1 52.45 13.75 53.3 11.4 54.8 9.65 56.35 7.9 58.6 6.9 60.8 5.9 63.65 5.9 65.65 5.9 67.45 6.5 69.25 7.1 70.65 8.2 72.1 9.3 73 10.95 73.95 12.6 74.15 14.7\nL 68.95 14.7\nQ 68.85 13.8 68.35 13\nL 67.15 11.65\nM 50.6 30.9\nL 45 30.9 43.15 25.5 34.05 25.5 32.15 30.9 26.7 30.9 35.95 6.5 41.45 6.5 50.6 30.9\nM 22.35 7.8\nQ 23.35 8.5 23.9 9.65 24.5 10.85 24.5 12.55 24.5 14.35 23.65 15.6 22.8 16.85 21.15 17.65 23.45 18.3 24.55 19.9 25.65 21.55 25.65 23.8 25.65 25.7 24.95 27.05 24.2 28.4 23 29.25 21.8 30.1 20.2 30.5\nL 17.05 30.9 5.2 30.9 5.2 6.5 16.7 6.5 19.85 6.8\nQ 21.3 7.1 22.35 7.8\nM 19.2 20.85\nQ 18.15 20.05 16.4 20.05\nL 10.6 20.05 10.6 26.75 16.3 26.75 17.8 26.6 19.05 26.05 19.95 25.1 20.25 23.5\nQ 20.25 21.65 19.2 20.85\nM 19 12.1\nQ 18.65 11.5 18.15 11.2\nL 17 10.8 15.6 10.65 10.6 10.65 10.6 16.4 16 16.4\nQ 17.45 16.4 18.35 15.7 19.3 15 19.3 13.5\nL 19 12.1\nM 38.7 12.5\nL 38.65 12.5 35.45 21.45 41.75 21.45 38.7 12.5 Z'));
 	menu2_3Buttons.push(new Path2D('M 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 97.5 11.4\nL 85.2 11.4 85.2 16.35 96.5 16.35 96.5 20.35 85.2 20.35 85.2 26.1 97.75 26.1 97.75 30.4 80.05 30.4 80.05 7.05 97.5 7.05 97.5 11.4\nM 77.4 7.05\nL 77.4 11.4 70.4 11.4 70.4 30.4 65.25 30.4 65.25 11.4 58.3 11.4 58.3 7.05 77.4 7.05\nM 40.95 21.6\nL 41.1 23.45\nQ 41.25 24.35 41.8 25.1\nL 43.25 26.2 45.75 26.65\nQ 48.5 26.65 49.55 25.4 50.6 24.2 50.6 21.6\nL 50.6 7.05 55.7 7.05 55.7 21.6\nQ 55.7 26.3 53.05 28.65 50.4 30.95 45.75 30.95 41 30.95 38.4 28.65 35.8 26.35 35.8 21.6\nL 35.8 7.05 40.95 7.05 40.95 21.6\nM 26.55 13.85\nL 26.45 13.85 20.75 30.4 16.8 30.4 11.05 14.05 11 14.05 11 30.4 6.2 30.4 6.2 7.05 13.45 7.05 18.9 23.1 18.95 23.1 24.1 7.05 31.35 7.05 31.35 30.4 26.55 30.4 26.55 13.85 Z'));
@@ -2216,7 +2278,7 @@ function menu2Back() {
 }
 function menu3Menu() {
 	timer += getTimer() - levelTimer2;
-	// saveGame();
+	saveGame();
 	exitLevel();
 }
 
@@ -2252,7 +2314,7 @@ function drawMenu() {
 
 function beginNewGame() {
 	clearVars();
-	// saveGame();
+	saveGame();
 	menuScreen = 2;
 	cameraY = 0;
 	cameraX = 0;
@@ -2326,7 +2388,7 @@ function drawLevelMap() {
 			else color = 3;
 		}
 		var text = '';
-		if (_loc3_ >= 100) text = "B" + numberToText(_loc3_ - 99,false);
+		if (_loc3_ >= 100) text = 'B' + numberToText(_loc3_ - 99,false);
 		else text = numberToText(_loc3_ + 1,true);
 		drawLevelButton(text, _loc4_ % 8 * 110 + 45, Math.floor(_loc4_ / 8) * 50 + 160, _loc3_, color);
 	}
@@ -2411,7 +2473,8 @@ function resetLevel() {
 			0,
 			0,
 			0,
-			charD[_loc2_][6]
+			charD[_loc2_][6],
+			charD[_loc2_][8]
 		);
 		if (char[_loc1_].charState == 9) {
 			char[_loc1_].expr = 1;
@@ -2420,7 +2483,7 @@ function resetLevel() {
 			char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
 		}
 		
-		if (_loc2_ <= 5) charCount2++;
+		if (char[_loc1_].charState >= 9) charCount2++;
 		if (_loc2_ == 36) HPRC1 = _loc1_;
 		if (_loc2_ == 35) HPRC2 = _loc1_;
 		if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
@@ -2479,7 +2542,7 @@ function drawLevelButtons() {
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	ctx.font = 'bold 32px Helvetica';
-	ctx.fillText(numberToText(currentLevel + 1,true) + ". " + levelName[currentLevel], 12.85, 489.45);
+	ctx.fillText(numberToText(currentLevel + 1,true) + '. ' + levelName[currentLevel], 12.85, 489.45);
 	drawMenu2_3Button(0, 837.5, 486.95, menu3Menu);
 }
 
@@ -2869,6 +2932,7 @@ function drawCharacters() {
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg1skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65},
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg2skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65}
 				];
+				// Unless we're bubble dying...
 				if (!(char[_loc1_].id == 5 && Math.floor(char[_loc1_].frame/2) == 4)) {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
@@ -2994,12 +3058,11 @@ function drawCharacters() {
 				// ctx.strokeStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
 
-				ctx.globalAlpha = 1;
-
 				if (char[_loc1_].charState == 2) {
 					ctx.restore();
 				}
 			}
+			ctx.globalAlpha = 1;
 		}
 		// else {
 		// 	// ctx.fillStyle = '#00ffff';
@@ -3026,7 +3089,7 @@ function drawCharacters() {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
-			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-41.3);
+			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-41.6);
 			// -29.5, -23.7
 			var radius = svgHPRCCrank.height/2;
 			ctx.save();
@@ -3798,7 +3861,7 @@ function startCutScene() {
 			cutScene = 1;
 			cutSceneLine = 0;
 			for (var i = 0; i < char.length; i++) {
-				if (char[i].charState >= 7) char[i].diaMouthFrame = diaMouths[char[i].expr + charModels[char[i].id].mouthType*2].frameorder.length-1;
+				if (char[i].charState >= 7 && char[i].id < 35) char[i].diaMouthFrame = diaMouths[char[i].expr + charModels[char[i].id].mouthType*2].frameorder.length-1;
 			}
 			displayLine(currentLevel,cutSceneLine);
 			char[control].dire = Math.ceil(char[control].dire / 2) * 2;
@@ -3884,6 +3947,7 @@ function drawCutScene() {
 		ctx.fillRect(bubLoc.x+10, bubLoc.y+10, 80, 80);
 		ctx.save();
 		var charimg = svgChars[char[currdiachar].id];
+		if (Array.isArray(charimg)) charimg = charimg[0];
 		var charimgmat = charModels[char[currdiachar].id].charimgmat;
 		ctx.transform(charimgmat.a*2.6,charimgmat.b,charimgmat.c,charimgmat.d*2.6,charimgmat.tx+bubLoc.x+50,charimgmat.ty+bubLoc.y+50);
 		ctx.drawImage(charimg, -charimg.width/2, -charimg.height/2);
@@ -3936,7 +4000,7 @@ function endDeath(i) {
 	// levelChar["char" + i].fire.gotoAndStop(1);
 	char[i].charState = 1;
 	deathCount++;
-	// saveGame();
+	saveGame();
 	if (i == control) {
 		changeControl();
 	}
@@ -4322,31 +4386,6 @@ function draw() {
 		drawLevel();
 		drawCharacters();
 
-		if (wipeTimer == 30) {
-			if (transitionType == 0) resetLevel();
-			else if (charsAtEnd >= charCount2) {
-				if (gotThisCoin && !gotCoin[currentLevel]) {
-					gotCoin[currentLevel] = true;
-					coins++;
-					bonusProgress = Math.floor(coins*0.33);
-				}
-				timer += getTimer() - levelTimer2;
-				if (playMode == 0 && currentLevel < 99) {
-					currentLevel++;
-					toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
-					levelProgress = currentLevel;
-					resetLevel();
-				} else {
-					menuScreen = 2;
-					cameraX = 0;
-					cameraY = 0;
-					if (currentLevel > 99) {
-						bonusesCleared[currentLevel-100] = true;
-					}
-				}
-				// saveGame();
-			}
-		}
 		if (cutScene == 1 || cutScene == 2) {
 			if (_keysDown[13] || _keysDown[16]) {
 				if (!csPress && cutScene == 1) {
@@ -4414,7 +4453,7 @@ function draw() {
 							HPRCBubbleFrame = 0;
 				// 			HPRCBubble.charImage.gotoAndStop(1);
 							goal = Math.round(char[HPRC1].x / 30) * 30;
-						} else if (char[control].id != 2 && !recover && char[control].deathTimer >= 30) {
+						} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
 							if (char[control].carry) {
 								putDown(control);
 								charThrow(control);
@@ -4457,7 +4496,7 @@ function draw() {
 								HPRCBubbleFrame = 0;
 				// 				HPRCBubble.charImage.gotoAndStop(1);
 							}
-						} else if (HPRC2 < 10000 && near2(control,HPRC2) && char[control].id != 2 && char[control].onob) {
+						} else if (HPRC2 < 10000 && near2(control,HPRC2) && char[control].hasArms && char[control].onob) {
 							char[control].stopMoving();
 							if (char[control].x >= char[HPRC2].x - 33) char[control].dire = 2;
 							else char[control].dire = 4;
@@ -4847,7 +4886,7 @@ function draw() {
 					if (char[_loc2_].deathTimer <= 0) {
 						endDeath(_loc2_);
 					}
-				} else if (char[_loc2_].charState >= 7 && (char[_loc2_].justChanged >= 1 || levelTimer == 0)) {
+				} else if (char[_loc2_].charState >= 7 && char[_loc2_].id < 35 && (char[_loc2_].justChanged >= 1 || levelTimer == 0)) {
 					setBody(_loc2_);
 				}
 				if (_loc2_ == HPRC2) {
@@ -4870,7 +4909,7 @@ function draw() {
 					HPRCCrankRot = (recoverTimer * 12) * (Math.PI/180);
 					// levelChar["char" + _loc2_].charBody.crank._rotation = recoverTimer * 12;
 					if (!recover && HPRCBubbleFrame <= 2) {
-						if (control < 10000 && near(control,_loc2_) && numberOfDead() >= 1 && char[control].id != 2) {
+						if (control < 10000 && near(control,_loc2_) && numberOfDead() >= 1 && char[control].hasArms) {
 							HPRCBubbleFrame = 1;
 					// 		HPRCBubble.charImage.gotoAndStop(2);
 						} else {
@@ -4927,6 +4966,33 @@ function draw() {
 				char[_loc2_].justChanged--;
 			}
 		}
+
+		// This was originally near the start of the level screen code, but I moved it to the end to fix a bug relating to the camera when exiting a level.
+		if (wipeTimer == 30) {
+			if (transitionType == 0) resetLevel();
+			else if (charsAtEnd >= charCount2) {
+				if (gotThisCoin && !gotCoin[currentLevel]) {
+					gotCoin[currentLevel] = true;
+					coins++;
+					bonusProgress = Math.floor(coins*0.33);
+				}
+				timer += getTimer() - levelTimer2;
+				if (playMode == 0 && currentLevel < 99) {
+					currentLevel++;
+					toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
+					levelProgress = currentLevel;
+					resetLevel();
+				} else {
+					exitLevel();
+					if (currentLevel > 99) {
+						bonusesCleared[currentLevel-100] = true;
+					}
+				}
+				saveGame();
+			}
+		}
+
+
 		qTimer--;
 		_loc9_ = - cameraX;
 		_loc3_ = - cameraY;
@@ -5044,7 +5110,6 @@ function draw() {
 	ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	if (menuScreen == 2) {
 		drawLevelMapBorder();
-		cameraX = 0;
 		shakeX = 0;
 		shakeY = 0;
 	} else if (menuScreen == 3) {

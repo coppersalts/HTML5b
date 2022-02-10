@@ -1,6 +1,6 @@
 class Character {
 	// TODO: remove unnecessary arguments from the constructor. 
-	constructor(tid, tx, ty, tpx, tpy, tvx, tvy, tonob, tdire, tcarry, tcarryObject, tcarriedBy, tlandTimer, tdeathTimer, tcharState, tstandingOn, tstoodOnBy, tw, th, tweight, tweight2, th2, tatEnd, tfriction, tfricGoal, tjustChanged, tspeed, tbuttonsPressed, tpcharState, tsubmerged, ttemp, theated, theatSpeed) {
+	constructor(tid, tx, ty, tpx, tpy, tvx, tvy, tonob, tdire, tcarry, tcarryObject, tcarriedBy, tlandTimer, tdeathTimer, tcharState, tstandingOn, tstoodOnBy, tw, th, tweight, tweight2, th2, tatEnd, tfriction, tfricGoal, tjustChanged, tspeed, tbuttonsPressed, tpcharState, tsubmerged, ttemp, theated, theatSpeed, thasArms) {
 		this.id = tid;
 		this.x = tx;
 		this.y = ty;
@@ -34,6 +34,7 @@ class Character {
 		this.temp = ttemp;
 		this.heated = theated;
 		this.heatSpeed = theatSpeed;
+		this.hasArms = thasArms;
 
 		this.frame = 3;
 		this.poseTimer = 0;
