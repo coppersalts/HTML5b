@@ -7,6 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, cashe some things as bitmaps for better performance.
 // TODO: remove some of the commented out actionscript stuff.
+// TODO: start drawing static tiles to an offscreen canvas
 
 var canvas;
 var ctx;
@@ -19,7 +20,7 @@ var _ymouse = 0;
 var _cursor = 'default';
 const _keysDown = new Array(222).fill(false);
 var _frameCount = 0;
-// var _quality = "HIGH";
+// var _quality = 'HIGH';
 var qTimer = 0;
 
 var levelsString = '';
@@ -122,7 +123,7 @@ function loadLevels() {
 	for (var _loc3_ = 0; _loc3_ < levelCount; _loc3_++) {
 		levelStart += 2;
 		// Read Level Name
-		levelName[_loc3_] = "";
+		levelName[_loc3_] = '';
 		for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
 			levelName[_loc3_] += charAt2(lineLength);
 		}
@@ -2603,9 +2604,9 @@ function drawLevel() {
 			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
 		}
 	}
+	// Draw Borders and Shadows
 	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-			// if (tileBorders[_loc2_][_loc1_]  > 0) ctx.drawImage(svgTileBorders[tileBorders[_loc2_][_loc1_] -1], _loc1_*30, _loc2_*30);
 			for (var i = 0; i < tileShadows[_loc2_][_loc1_].length; i++) {
 				ctx.drawImage(svgShadows[tileShadows[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
 			}
@@ -2637,10 +2638,12 @@ function addTileMovieClip(x, y) {
 				ctx.drawImage(svgLevers[(blockProperties[_loc5_][11]-1)%6], x*30, y*30);
 				ctx.restore();
 				// Math.floor(blockProperties[_loc5_][11]/6);
-				//Math.floor(blockProperties[_loc5_][11]/6)
+				// Math.floor(blockProperties[_loc5_][11]/6)
 				// ctx.fillStyle = '#505050';
 				// ctx.fillRect(x*30, y*30, 30, 30);
 			}
+			// ctx.fillStyle = '#cc33ff';
+			// ctx.fillRect(x*30, y*30, 30, 30);
 			ctx.drawImage(svgTiles[_loc5_], x*30+svgTilesVB[_loc5_][0], y*30+svgTilesVB[_loc5_][1]);
 		} else {
 			var frame = 0;
@@ -2653,6 +2656,8 @@ function addTileMovieClip(x, y) {
 					tileFrames[y][x].cf = 0;
 				}
 			}
+			// ctx.fillStyle = '#00ffcc';
+			// ctx.fillRect(x*30, y*30, 30, 30);
 			ctx.drawImage(svgTiles[_loc5_][frame], x*30+svgTilesVB[_loc5_][frame][0], y*30+svgTilesVB[_loc5_][frame][1]);
 			// ctx.drawImage(svgTiles[_loc5_][0], x*30, y*30);
 		}
@@ -2671,53 +2676,20 @@ function addTileMovieClip(x, y) {
 	} else if (_loc5_ == 12) {
 		// Coin
 		if (!gotThisCoin) {
-			ctx.save();
-			ctx.translate(x*30+15, y*30+15);
-			var wtrot = Math.sin((_frameCount*Math.PI)/20)*0.5235987756;
-			ctx.transform(Math.cos(wtrot),-Math.sin(wtrot),Math.sin(wtrot),Math.cos(wtrot),0,0);
-			ctx.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7)/100, 1), 0);
-			ctx.drawImage(svgCoin, -15, -15, 30, 30);
-			ctx.restore();
+			if (locations[4] < 200) {
+				ctx.save();
+				ctx.translate(x*30+15, y*30+15);
+				var wtrot = Math.sin((_frameCount*Math.PI)/20)*0.5235987756;
+				ctx.transform(Math.cos(wtrot),-Math.sin(wtrot),Math.sin(wtrot),Math.cos(wtrot),0,0);
+				ctx.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7)/100, 1), 0);
+				ctx.drawImage(svgCoin, -15, -15, 30, 30);
+				ctx.restore();
+			}
 		} else if (tileFrames[y][x].cf < svgCoinGet.length) {
 			ctx.drawImage(svgCoinGet[tileFrames[y][x].cf], x*30-21, y*30-21);
 			tileFrames[y][x].cf++;
 		}
 	}
-	// else if (blockProperties[_loc5_][0] || blockProperties[_loc5_][1] || blockProperties[_loc5_][2] || blockProperties[_loc5_][3]) {
-	// 	ctx.fillStyle = '#00ff99';
-	// 	ctx.fillRect(x*30, y*30, 30, 30);
-	// } else if (blockProperties[_loc5_][4] || blockProperties[_loc5_][5] || blockProperties[_loc5_][6] || blockProperties[_loc5_][7]) {
-	// 	ctx.fillStyle = '#ff9900';
-	// 	ctx.fillRect(x*30, y*30, 30, 30);
-	// } else {
-	// 	ctx.fillStyle = '#ffff99';
-	// 	ctx.fillRect(x*30, y*30, 30, 30);
-	// }
-	// level.attachMovie("tile" + Math.floor(_loc5_ / 10),"tileX" + x + "Y" + y,y * levelWidth + x,{_x:x * 30,_y:y * 30});
-	// level["tileX" + x + "Y" + y].gotoAndStop(_loc5_ % 10 + 1);
-
-	// TODO: precalculate these when the level is loaded. Update when there's a block update.
-	// ctx.globalAlpha = 0.4;
-	// if (_loc5_ == 6) {
-	// // 	level["tileX" + x + "Y" + y].light.gotoAndStop(charCount2);
-	// 	for (var _loc2_ = 0; _loc2_ < 2; _loc2_++) {
-	// 		for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
-	// 			setAmbientShadow(x - _loc2_,y - _loc1_);
-	// 		}
-	// 	}
-	// } else if (_loc5_ >= 110 && _loc5_ <= 129) {
-	// 	for (var _loc2_ = 0; _loc2_ < 3; _loc2_++) {
-	// 		for (var _loc1_ = 0; _loc1_ < 2; _loc1_++) {
-	// 			setAmbientShadow(x - _loc2_,y - _loc1_);
-	// 		}
-	// 	}
-	// } else if (blockProperties[thisLevel[y][x]][10]) {
-	// 	setAmbientShadow(x,y);
-	// }
-	// if (blockProperties[thisLevel[y][x]][13]) {
-	// 	setBorder(x,y,_loc5_);
-	// }
-	// ctx.globalAlpha = 1;
 }
 
 function calculateShadowsAndBorders() {
@@ -2879,38 +2851,28 @@ function drawCharacters() {
 		if (_loc1_ < 0) continue;
 		var currCharID = char[_loc1_].id;
 
-
-		if (char[_loc1_].burstFrame >= 0) {
-			ctx.save();
-			var burstImg = svgBurst[char[_loc1_].burstFrame];
-			var burstmat = charModels[char[_loc1_].id].burstmat;
-			ctx.transform(burstmat.a,burstmat.b,burstmat.c,burstmat.d,burstmat.tx+char[_loc1_].x,burstmat.ty+char[_loc1_].y);
-			ctx.drawImage(burstImg, -burstImg.width/2, -burstImg.height/2);
-			ctx.restore();
-
-			char[_loc1_].burstFrame++;
-			if (char[_loc1_].burstFrame > svgBurst.length-1) char[_loc1_].burstFrame = -1;
-		}
-
 		// levelChar.attachMovie("char","char" + _loc1_,charDepth - _loc1_ * 2,{_x:char[_loc1_].x,_y:char[_loc1_].y});
-		// if statment used to include: && typeof svgChars[char[_loc1_].id] !== 'undefined'
-		// if (char[_loc1_].deathTimer > 0 && charD[currCharID][7] > 0) {
-		if (char[_loc1_].charState > 1 && charD[currCharID][7] > 0) {
+		if (char[_loc1_].charState > 1 && typeof svgChars[currCharID] !== 'undefined') {
+			// Draw Burst
+			if (char[_loc1_].burstFrame >= 0) {
+				ctx.save();
+				var burstImg = svgBurst[char[_loc1_].burstFrame];
+				var burstmat = charModels[char[_loc1_].id].burstmat;
+				ctx.transform(burstmat.a,burstmat.b,burstmat.c,burstmat.d,burstmat.tx+char[_loc1_].x,burstmat.ty+char[_loc1_].y);
+				ctx.drawImage(burstImg, -burstImg.width/2, -burstImg.height/2);
+				ctx.restore();
+
+				char[_loc1_].burstFrame++;
+				if (char[_loc1_].burstFrame > svgBurst.length-1) char[_loc1_].burstFrame = -1;
+			}
+
 			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2 && char[_loc1_].charState > 2) ctx.globalAlpha = 0.3;
 			if (currCharID > 34) {
-				// ctx.drawImage(svgChars[char[_loc1_].id], char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h);
-				// var vb = svgChars[char[_loc1_].id].viewBox;
-				// var vb, currCharSvg;
-				// console.log(vb);
 				if (charD[currCharID][7] == 1) {
 					ctx.drawImage(svgChars[currCharID], char[_loc1_].x+svgCharsVB[currCharID][0], char[_loc1_].y+svgCharsVB[currCharID][1]);
-					// currCharSvg = svgChars[char[_loc1_].id];
-					// vb = svgCharsVB[char[_loc1_].id];
 				} else {
 					var currCharFrame = _frameCount%charD[currCharID][7];
 					ctx.drawImage(svgChars[currCharID][currCharFrame], char[_loc1_].x+svgCharsVB[currCharID][currCharFrame][0], char[_loc1_].y+svgCharsVB[currCharID][currCharFrame][1]);
-					// currCharSvg = svgChars[char[_loc1_].id][currCharFrame];
-					// vb = svgCharsVB[char[_loc1_].id][currCharFrame];
 				}
 
 				// Hitboxes
@@ -2932,7 +2894,7 @@ function drawCharacters() {
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg1skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65},
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg2skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65}
 				];
-				// Unless we're bubble dying...
+				// If we're not bubble and also not dying
 				if (!(char[_loc1_].id == 5 && Math.floor(char[_loc1_].frame/2) == 4)) {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
@@ -2984,8 +2946,6 @@ function drawCharacters() {
 				}
 
 				var modelFrame = model.frames[char[_loc1_].frame];
-				// var xoff = model.torsoX;
-				// var yoff = model.torsoY;
 				ctx.save();
 				var runbob = (char[_loc1_].frame==0||char[_loc1_].frame==2)?bounceY(4/charModels[char[_loc1_].id].torsomat.a, 13, char[_loc1_].poseTimer):0;
 				ctx.transform(
@@ -3035,7 +2995,6 @@ function drawCharacters() {
 						// var bpanimframe = modelFrame[i].loop ? ((char[_loc1_].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[_loc1_].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
 						var dmf = 0;
 						if (cutScene == 1) {
-							// var expr = dialogueFace[currentLevel][cutSceneLine]-2;
 							var expr = char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2;
 							dmf = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
 							img = svgBodyParts[diaMouths[expr].frames[dmf].bodypart];
@@ -3045,7 +3004,6 @@ function drawCharacters() {
 						} else {
 							img = svgBodyParts[diaMouths[char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2].frames[dmf].bodypart];
 						}
-						// var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
 						var mat = diaMouths[model.defaultExpr].frames[dmf].mat;
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					}
@@ -3062,7 +3020,7 @@ function drawCharacters() {
 					ctx.restore();
 				}
 			}
-			ctx.globalAlpha = 1;
+			if (ctx.globalAlpha < 1) ctx.globalAlpha = 1;
 		}
 		// else {
 		// 	// ctx.fillStyle = '#00ffff';
@@ -3072,12 +3030,13 @@ function drawCharacters() {
 		// levelChar["char" + _loc1_].gotoAndStop(char[_loc1_].id + 1);
 		// levelChar["char" + _loc1_].leg1.gotoAndStop(1);
 		// levelChar["char" + _loc1_].leg2.gotoAndStop(1);
-		if (char[_loc1_].charState <= 1) {
+		// if (char[_loc1_].charState <= 1) {
 			// levelChar["char" + _loc1_]._visible = false;
-		}
-		if (charD[char[_loc1_].id][5]) {
+		// }
+		// if (charD[char[_loc1_].id][5]) {
 			// levelChar["char" + _loc1_].cacheAsBitmap = true;
-		}
+		// }
+		// TODO: Move this to setBody()
 		if (char[_loc1_].charState == 9) {
 			char[_loc1_].dire = 2;
 			char[_loc1_].frame = 1;
@@ -3090,7 +3049,6 @@ function drawCharacters() {
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
 			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-41.6);
-			// -29.5, -23.7
 			var radius = svgHPRCCrank.height/2;
 			ctx.save();
 			ctx.translate(char[_loc1_].x+hprcCrankPos.x, char[_loc1_].y+hprcCrankPos.y);

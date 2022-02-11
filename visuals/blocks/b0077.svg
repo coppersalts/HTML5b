@@ -1,13 +1,8 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
-<defs>
-<g id="Symbol_154_0_Layer1_0_FILL">
 <path fill="#532F68" stroke="none" d="
 M 30 30
 L 30 0 0 0 0 30 30 30 Z"/>
-</g>
-
-<g id="Symbol_154_0_Layer0_0_FILL">
 <path fill="#000000" fill-opacity="0.3215686274509804" stroke="none" d="
 M 5 20
 L 5 15 0 15 0 25 10 25 10 30 25 30 25 25 15 25 15 20 5 20
@@ -15,16 +10,4 @@ M 30 15
 L 25 15 25 10 15 10 15 5 5 5 5 0 0 0 0 10 10 10 10 15 20 15 20 20 30 20 30 15
 M 30 5
 L 30 0 20 0 20 5 30 5 Z"/>
-</g>
-</defs>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_154_0_Layer1_0_FILL"/>
-</g>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_154_0_Layer0_0_FILL"/>
-</g>
-</g>
 </svg>

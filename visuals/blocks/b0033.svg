@@ -1,7 +1,6 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="32px" height="32px" viewBox="-1 -1 32 32">
-<defs>
-<path id="Layer0_0_1_STROKES" stroke="#FFCC00" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+<path stroke="#FFCC00" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
 M 25.45 0.4
 L 22.45 0.4
 M 29.6 9.5
@@ -34,9 +33,4 @@ M 26.85 29.3
 Q 28.4 28.8 29.1 27.4
 M 19.85 29.6
 L 22.85 29.6"/>
-</defs>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Layer0_0_1_STROKES"/>
-</g>
 </svg>

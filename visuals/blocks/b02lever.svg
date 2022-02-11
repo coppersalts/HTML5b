@@ -1,22 +1,11 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="-15 -28 30 30">
-<defs>
-<g id="Symbol_215_0_Layer0_0_FILL">
+<g id="lever" transform="matrix( 0.999969482421875, 0, 0, 0.999969482421875, 0,0) ">
 <path fill="#20DF20" stroke="none" d="
 M 2 -5
 L 2 -20 -2 -20 -2 -5 -2 0 2 0 2 -5 Z"/>
-</g>
-
-<path id="Symbol_215_0_Layer0_0_1_STROKES" stroke="#006C00" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+<path fill="none" stroke="#006C00" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" d="
 M -2 -5
 L -2 -20 2 -20 2 -5"/>
-</defs>
-
-<g id="lever" transform="matrix( 0.999969482421875, 0, 0, 0.999969482421875, 0,0) ">
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_215_0_Layer0_0_FILL"/>
-
-<use xlink:href="#Symbol_215_0_Layer0_0_1_STROKES"/>
-</g>
 </g>
 </svg>

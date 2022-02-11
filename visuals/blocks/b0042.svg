@@ -1,22 +1,12 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
-<defs>
-<g id="Layer2_0_FILL">
 <path fill="#303030" stroke="none" d="
-M 30 7.3
-L 25.5 9.45 20.8 4.55 14.15 13 8.2 7.5 3.6 10 0 7.4 0 30 30 30 30 7.3 Z"/>
-
+M 0 0
+L 0 30 30 30 30 0 Z"/>
 <path fill="#202020" stroke="none" d="
 M 30 7.3
-L 30 2.4 0 2.4 0 7.4 3.6 10 8.2 7.5 14.15 13 20.8 4.55 25.5 9.45 30 7.3 Z"/>
-
+L 30 0 0 0 0 7.4 3.6 10 8.2 7.5 14.15 13 20.8 4.55 25.5 9.45 30 7.3 Z"/>
 <path fill="#101010" stroke="none" d="
-M 30 2.4
-L 30 0 0 0 0 2.4 30 2.4 Z"/>
-</g>
-</defs>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Layer2_0_FILL"/>
-</g>
+M 0 0
+L 30 0 30 2.4 0 2.4 Z"/>
 </svg>

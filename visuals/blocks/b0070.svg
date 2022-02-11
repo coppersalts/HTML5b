@@ -1,13 +1,8 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
-<defs>
-<g id="Symbol_125_0_Layer3_0_FILL">
 <path fill="#305A25" stroke="none" d="
 M 0 30
-L 30 30 30 0 0 0 0 30 Z"/>
-</g>
-
-<g id="Symbol_125_0_Layer2_0_FILL">
+L 30 30 30 0 0 0 Z"/>
 <path fill="#000000" fill-opacity="0.3215686274509804" stroke="none" d="
 M 5 30
 L 10 30 0 20 0 25 5 30
@@ -21,36 +16,10 @@ M 30 0
 L 25 0 30 5 30 0
 M 30 15
 L 30 10 20 0 15 0 30 15 Z"/>
-</g>
-
-<g id="Symbol_125_0_Layer1_0_FILL">
 <path fill="#FFFFFF" fill-opacity="0.4980392156862745" stroke="none" d="
 M 10.05 0
 L 0.05 0 0.05 30 10.05 30 10.05 0 Z"/>
-</g>
-
-<g id="Symbol_125_0_Layer0_0_FILL">
 <path fill="#FFFFFF" stroke="none" d="
 M 3.1 0
 L 0.1 0 0.1 30 3.1 30 3.1 0 Z"/>
-</g>
-</defs>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_125_0_Layer3_0_FILL"/>
-</g>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_125_0_Layer2_0_FILL"/>
-</g>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_125_0_Layer1_0_FILL"/>
-</g>
-
-<g transform="matrix( 1, 0, 0, 1, 0,0) ">
-<use xlink:href="#Symbol_125_0_Layer0_0_FILL"/>
-</g>
-</g>
 </svg>
