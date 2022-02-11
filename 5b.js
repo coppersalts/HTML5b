@@ -17,6 +17,7 @@ const pixelRatio = window.devicePixelRatio;
 // offscreen canvases
 var osc1, osctx1;
 var osc2, osctx2;
+var osc3, osctx3;
 
 var _xmouse = 0;
 var _ymouse = 0;
@@ -2888,10 +2889,10 @@ function drawCharacters() {
 			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2 && char[_loc1_].charState > 2) ctx.globalAlpha = 0.3;
 			if (currCharID > 34) {
 				if (charD[currCharID][7] == 1) {
-					ctx.drawImage(svgChars[currCharID], char[_loc1_].x+svgCharsVB[currCharID][0], char[_loc1_].y+svgCharsVB[currCharID][1]);
+					drawPossiblyTintedImage(svgChars[currCharID], char[_loc1_].x+svgCharsVB[currCharID][0], char[_loc1_].y+svgCharsVB[currCharID][1], char[_loc1_].temp);
 				} else {
 					var currCharFrame = _frameCount%charD[currCharID][7];
-					ctx.drawImage(svgChars[currCharID][currCharFrame], char[_loc1_].x+svgCharsVB[currCharID][currCharFrame][0], char[_loc1_].y+svgCharsVB[currCharID][currCharFrame][1]);
+					drawPossiblyTintedImage(svgChars[currCharID][currCharFrame], char[_loc1_].x+svgCharsVB[currCharID][currCharFrame][0], char[_loc1_].y+svgCharsVB[currCharID][currCharFrame][1], char[_loc1_].temp);
 				}
 
 				// Hitboxes
@@ -2913,7 +2914,7 @@ function drawCharacters() {
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg1skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65},
 					{a:0.3648529052734375,b:0,c:char[_loc1_].leg2skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65}
 				];
-				// If we're not bubble and also not dying
+				// If we're not bubble dying, draw the legs
 				if (!(char[_loc1_].id == 5 && Math.floor(char[_loc1_].frame/2) == 4)) {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
@@ -2948,7 +2949,8 @@ function drawCharacters() {
 						char[_loc1_].y+model.legy[0]+legmat[0].ty
 					);
 					var leg1img = svgBodyParts[f[0]];
-					ctx.drawImage(leg1img, -leg1img.width/2, -leg1img.height/2);
+					drawPossiblyTintedImage(leg1img, -leg1img.width/2, -leg1img.height/2, char[_loc1_].temp);
+					// ctx.drawImage(leg1img, -leg1img.width/2, -leg1img.height/2);
 					ctx.restore();
 					ctx.save();
 					ctx.transform(
@@ -2960,7 +2962,8 @@ function drawCharacters() {
 						char[_loc1_].y+model.legy[1]+legmat[1].ty
 					);
 					var leg2img = svgBodyParts[f[1]];
-					ctx.drawImage(leg2img, -leg2img.width/2, -leg2img.height/2);
+					drawPossiblyTintedImage(leg2img, -leg2img.width/2, -leg2img.height/2, char[_loc1_].temp);
+					// ctx.drawImage(leg2img, -leg2img.width/2, -leg2img.height/2);
 					ctx.restore();
 				}
 
@@ -3026,7 +3029,8 @@ function drawCharacters() {
 						var mat = diaMouths[model.defaultExpr].frames[dmf].mat;
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					}
-					ctx.drawImage(img, -img.width/2, -img.height/2);
+					drawPossiblyTintedImage(img, -img.width/2, -img.height/2, char[_loc1_].temp);
+					// ctx.drawImage(img, -img.width/2, -img.height/2);
 					ctx.restore();
 				}
 				ctx.restore();
@@ -3100,11 +3104,11 @@ function drawCharacters() {
 					drawHPRCBubbleCharImg(recover2, 1, 0);
 					drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
 				}
-			} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer < 64) {
-				if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/30;
-				ctx.drawImage(svgHPRCBubble[3], char[_loc1_].x-svgHPRCBubble[3].width/2, char[_loc1_].y-128);
+			} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
+				if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
+				ctx.drawImage(svgHPRCBubble[3], char[_loc1_].x-svgHPRCBubble[3].width/2, char[_loc1_].y-120);
 				ctx.globalAlpha = 1;
-				ctx.drawImage(svgHPRCBubble[4], char[_loc1_].x-svgHPRCBubble[4].width/2, char[_loc1_].y-128);
+				ctx.drawImage(svgHPRCBubble[4], char[_loc1_].x-svgHPRCBubble[4].width/2, char[_loc1_].y-120);
 				hprcBubbleAnimationTimer++;
 			}
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
@@ -3120,6 +3124,29 @@ function drawCharacters() {
 			ctx.drawImage(fireImg, -fireImg.width/2, -fireImg.height/2);
 			ctx.restore();
 		}
+	}
+}
+
+function getTintedCanvasImage(img, a, color) {
+	osc3.width = img.width * pixelRatio;
+	osc3.height = img.height * pixelRatio;
+	osctx3.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	osctx3.save();
+	osctx3.fillStyle = color;
+	osctx3.globalAlpha = a;
+	osctx3.fillRect(0, 0, osc3.width, osc3.height);
+	osctx3.globalCompositeOperation = 'destination-atop';
+	osctx3.globalAlpha = 1;
+	osctx3.drawImage(img, 0, 0);
+	osctx3.restore();
+	return osc3;
+}
+
+function drawPossiblyTintedImage(img, x, y, temp) {
+	if (temp > 0 && temp < 50) {
+		ctx.drawImage(getTintedCanvasImage(img, temp/100, 'rgb(255,' + (100-temp) + ',' + (100-temp) + ')'), x, y, img.width, img.height);
+	} else {
+		ctx.drawImage(img, x, y);
 	}
 }
 
@@ -4327,10 +4354,16 @@ function setup() {
 	osc1.width = cwidth;
 	osc1.height = cheight;
 	osctx1 = osc1.getContext('2d');
+
 	osc2 = document.createElement('canvas');
 	osc2.width = cwidth;
 	osc2.height = cheight;
 	osctx2 = osc2.getContext('2d');
+
+	osc3 = document.createElement('canvas');
+	osc3.width = cwidth;
+	osc3.height = cheight;
+	osctx3 = osc3.getContext('2d');
 
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
