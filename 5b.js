@@ -15,6 +15,10 @@ const cwidth = 960;
 const cheight = 540;
 const pixelRatio = window.devicePixelRatio;
 
+// offscreen canvases
+var osc1;
+var osctx1;
+
 var _xmouse = 0;
 var _ymouse = 0;
 var _cursor = 'default';
@@ -2414,6 +2418,11 @@ function playLevel(i) {
 	toSeeCS = true;
 	transitionType = 1;
 	resetLevel();
+
+	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
+	osc1.height = Math.floor(levelHeight*30 * pixelRatio);
+	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	drawStaticTiles();
 	// levelButtons.levelMapButton.onRelease = function()
 	// {
 	// 	timer += getTimer() - levelTimer2;
@@ -2492,6 +2501,7 @@ function resetLevel() {
 		}
 	}
 	getTileDepths();
+	calculateShadowsAndBorders();
 	// drawLevel();
 	// drawCharacters();
 	recover = false;
@@ -2515,7 +2525,6 @@ function resetLevel() {
 	levelTimer = 0;
 	levelTimer2 = getTimer();
 	if (char[0].charState <= 9)  changeControl();
-	calculateShadowsAndBorders();
 }
 
 function copyLevel(thatLevel) {
@@ -2545,6 +2554,23 @@ function drawLevelButtons() {
 	ctx.font = 'bold 32px Helvetica';
 	ctx.fillText(numberToText(currentLevel + 1,true) + '. ' + levelName[currentLevel], 12.85, 489.45);
 	drawMenu2_3Button(0, 837.5, 486.95, menu3Menu);
+}
+
+function drawStaticTiles() {
+	for (var j = 0; j < tileDepths[0].length; j++) {
+		addTileMovieClip(tileDepths[0][j].x,tileDepths[0][j].y, osctx1);
+	}
+
+	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
+		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
+			for (var i = 0; i < tileShadows[_loc2_][_loc1_].length; i++) {
+				osctx1.drawImage(svgShadows[tileShadows[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
+			}
+			for (var i = 0; i < tileBorders[_loc2_][_loc1_].length; i++) {
+				osctx1.drawImage(svgTileBorders[tileBorders[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
+			}
+		}
+	}
 }
 
 function getTileDepths() {
@@ -2598,27 +2624,12 @@ function drawLevel() {
 	// 	addTileMovieClips();
 	// }
 
-	// Draw Static & Active1
-	for (var i = 0; i < 2; i++) {
+	// Draw Static
+	ctx.drawImage(osc1, 0, 0, osc1.width/2, osc1.height/2)
+	// Draw Active
+	for (var i = 1; i < tileDepths.length; i++) {
 		for (var j = 0; j < tileDepths[i].length; j++) {
-			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
-		}
-	}
-	// Draw Borders and Shadows
-	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-			for (var i = 0; i < tileShadows[_loc2_][_loc1_].length; i++) {
-				ctx.drawImage(svgShadows[tileShadows[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
-			}
-			for (var i = 0; i < tileBorders[_loc2_][_loc1_].length; i++) {
-				ctx.drawImage(svgTileBorders[tileBorders[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
-			}
-		}
-	}
-	// Draw Active2+
-	for (var i = 2; i < tileDepths.length; i++) {
-		for (var j = 0; j < tileDepths[i].length; j++) {
-			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y);
+			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y, ctx);
 		}
 	}
 }
@@ -2626,25 +2637,25 @@ function drawLevel() {
 
 // draws a tile
 // TODO: precalculate a this stuff and only do the drawing in here. Unless it's actually all necesarry. Then you can just leave it.
-function addTileMovieClip(x, y) {
+function addTileMovieClip(x, y, context) {
 	var _loc5_ = thisLevel[y][x];
 	if (typeof svgTiles[_loc5_] !== 'undefined') {
 		if (!blockProperties[_loc5_][15]) {
 			if (blockProperties[_loc5_][11] > 0 && typeof svgLevers[(blockProperties[_loc5_][11]-1)%6] !== 'undefined') {
-				ctx.save();
-				ctx.translate(x*30+15, y*30+28);
-				ctx.rotate(tileFrames[y][x].rotation*(Math.PI/180));
-				ctx.translate(-x*30-15, -y*30-28); // TODO: find out how to remove this line
-				ctx.drawImage(svgLevers[(blockProperties[_loc5_][11]-1)%6], x*30, y*30);
-				ctx.restore();
+				context.save();
+				context.translate(x*30+15, y*30+28);
+				context.rotate(tileFrames[y][x].rotation*(Math.PI/180));
+				context.translate(-x*30-15, -y*30-28); // TODO: find out how to remove this line
+				context.drawImage(svgLevers[(blockProperties[_loc5_][11]-1)%6], x*30, y*30);
+				context.restore();
 				// Math.floor(blockProperties[_loc5_][11]/6);
 				// Math.floor(blockProperties[_loc5_][11]/6)
-				// ctx.fillStyle = '#505050';
-				// ctx.fillRect(x*30, y*30, 30, 30);
+				// context.fillStyle = '#505050';
+				// context.fillRect(x*30, y*30, 30, 30);
 			}
-			// ctx.fillStyle = '#cc33ff';
-			// ctx.fillRect(x*30, y*30, 30, 30);
-			ctx.drawImage(svgTiles[_loc5_], x*30+svgTilesVB[_loc5_][0], y*30+svgTilesVB[_loc5_][1]);
+			// context.fillStyle = '#cc33ff';
+			// context.fillRect(x*30, y*30, 30, 30);
+			context.drawImage(svgTiles[_loc5_], x*30+svgTilesVB[_loc5_][0], y*30+svgTilesVB[_loc5_][1]);
 		} else {
 			var frame = 0;
 			if (blockProperties[_loc5_][17]) frame = blockProperties[_loc5_][18][_frameCount%blockProperties[_loc5_][18].length];
@@ -2656,18 +2667,18 @@ function addTileMovieClip(x, y) {
 					tileFrames[y][x].cf = 0;
 				}
 			}
-			// ctx.fillStyle = '#00ffcc';
-			// ctx.fillRect(x*30, y*30, 30, 30);
-			ctx.drawImage(svgTiles[_loc5_][frame], x*30+svgTilesVB[_loc5_][frame][0], y*30+svgTilesVB[_loc5_][frame][1]);
-			// ctx.drawImage(svgTiles[_loc5_][0], x*30, y*30);
+			// context.fillStyle = '#00ffcc';
+			// context.fillRect(x*30, y*30, 30, 30);
+			context.drawImage(svgTiles[_loc5_][frame], x*30+svgTilesVB[_loc5_][frame][0], y*30+svgTilesVB[_loc5_][frame][1]);
+			// context.drawImage(svgTiles[_loc5_][0], x*30, y*30);
 		}
 	} else if (_loc5_ == 6) {
 		// Door
-		ctx.fillStyle = '#505050';
-		ctx.fillRect((x-1)*30, (y-3)*30, 60, 120);
+		context.fillStyle = '#505050';
+		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
 		for (var i = 0; i < charCount2; i++) {
-			ctx.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
-			ctx.fillRect((x-1)*30+doorLightX[charCount2-1][i], y*30-80, 5, 5);
+			context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
+			context.fillRect((x-1)*30+doorLightX[charCount2-1][i], y*30-80, 5, 5);
 			if (doorLightFadeDire[i] != 0) {
 				doorLightFade[i] = Math.max(Math.min(doorLightFade[i]+doorLightFadeDire[i]*0.0625, 1), 0);
 				if (doorLightFade[i] == 1 || doorLightFade[i] == 0) doorLightFadeDire[i] = 0;
@@ -2677,16 +2688,16 @@ function addTileMovieClip(x, y) {
 		// Coin
 		if (!gotThisCoin) {
 			if (locations[4] < 200) {
-				ctx.save();
-				ctx.translate(x*30+15, y*30+15);
+				context.save();
+				context.translate(x*30+15, y*30+15);
 				var wtrot = Math.sin((_frameCount*Math.PI)/20)*0.5235987756;
-				ctx.transform(Math.cos(wtrot),-Math.sin(wtrot),Math.sin(wtrot),Math.cos(wtrot),0,0);
-				ctx.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7)/100, 1), 0);
-				ctx.drawImage(svgCoin, -15, -15, 30, 30);
-				ctx.restore();
+				context.transform(Math.cos(wtrot),-Math.sin(wtrot),Math.sin(wtrot),Math.cos(wtrot),0,0);
+				context.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7)/100, 1), 0);
+				context.drawImage(svgCoin, -15, -15, 30, 30);
+				context.restore();
 			}
 		} else if (tileFrames[y][x].cf < svgCoinGet.length) {
-			ctx.drawImage(svgCoinGet[tileFrames[y][x].cf], x*30-21, y*30-21);
+			context.drawImage(svgCoinGet[tileFrames[y][x].cf], x*30-21, y*30-21);
 			tileFrames[y][x].cf++;
 		}
 	}
@@ -4274,6 +4285,7 @@ function toggleSound() {
 
 
 // TODO: optimize
+// I have no idea what I even wanted to optimize about this when I wrote that comment.
 function mousemove(event){
 	_xmouse = event.pageX - canvas.getBoundingClientRect().left;
 	_ymouse = event.pageY - canvas.getBoundingClientRect().top;
@@ -4298,13 +4310,18 @@ function keyup(event){
 
 
 function setup() {
+	osc1 = document.createElement('canvas');
+	osc1.width = cwidth;
+	osc1.height = cheight;
+	osctx1 = osc1.getContext('2d');
+
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
 	window.addEventListener('mouseup', mouseup);
 	window.addEventListener('keydown', keydown);
 	window.addEventListener('keyup', keyup);
 
-	setInterval(draw, 17);  // TODO: find out how to use fps over milis
+	setInterval(draw, 17);  // TODO: find out how to use fps over millis
 }
 
 function playGame() {
@@ -4313,7 +4330,6 @@ function playGame() {
 	musicSound.loop = true;
 }
 
-// I think the draw loop coule be a good place to start optimisation when you get there.
 function draw() {
 	onButton = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
