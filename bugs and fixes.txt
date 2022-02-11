@@ -1,16 +1,4 @@
 this is a text file where I'm keeping track of things to fix/change.
 
 fixes:
-make the walking animations only restart when the player starts pressing or lets go of the key.
-fix the fonts.
 the music loops badly.
-you can change your direction while dying
-
-known bugs:
-Uncaught TypeError: Cannot set properties of undefined (setting 'landTimer')
-    at land2 (5b.js:2873:26)
-    at draw (5b.js:4073:7)
-5b.js:3203 Uncaught TypeError: Cannot set properties of undefined (setting 'landTimer')
-    at land2 (5b.js:3203:26)
-    at draw (5b.js:4381:7)
-happens sometimes when dying after throwing ^^

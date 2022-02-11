@@ -1718,6 +1718,7 @@ var HPRCBubbleFrame; // TODO: refactor this thing out
 var HPRCText = '';
 var HPRCCrankRot = 0;
 var hprcCrankPos = {x:-29.5,y:-23.7}
+var hprcBubbleAnimationTimer = 0;
 var charDepths = [];
 var tileDepths;
 var doorLightX = [[27.5],[15,40],[10,27.5,45],[10,21.75,33.25,45],[4,16.25,27.5,38.75,50],[4,14,23,32,41,50]];
@@ -1828,8 +1829,7 @@ var svgTileBorders = new Array(34);
 var svgChars = new Array(charD.length);
 var svgBodyParts = [];
 
-// var svgHPRCBubble = new Array(4);
-var svgHPRCBubble = new Array(3);
+var svgHPRCBubble = new Array(5);
 var svgCSBubble;
 var svgHPRCCrank;
 
@@ -3067,49 +3067,45 @@ function drawCharacters() {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
-			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-38.6);
+			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-39.6);
 			var radius = svgHPRCCrank.height/2;
 			ctx.save();
 			ctx.translate(char[_loc1_].x+hprcCrankPos.x, char[_loc1_].y+hprcCrankPos.y);
 			ctx.rotate(HPRCCrankRot);
 			ctx.drawImage(svgHPRCCrank, -radius, -radius);
 			ctx.restore();
+
 			// TODO: make this not so hard coded.
 			if (HPRCBubbleFrame == 1) {
 				ctx.drawImage(svgHPRCBubble[0], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-128+bounceY(9, 30, _frameCount));
 			} else if (HPRCBubbleFrame == 2) {
 				ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[1].width/2, char[_loc1_].y-150);
-				ctx.save();
-				var charimgmat = charModels[char[recover2].id].charimgmat;
-				ctx.transform(charimgmat.a,charimgmat.b,charimgmat.c,charimgmat.d,charimgmat.tx/2+char[_loc1_].x,charimgmat.ty/2+char[_loc1_].y-107);
-				ctx.drawImage(svgChars[char[recover2].id], -svgChars[char[recover2].id].width/2, -svgChars[char[recover2].id].height/2);
-				ctx.restore();
+				drawHPRCBubbleCharImg(recover2, 1, 0);
 			} else if (HPRCBubbleFrame == 3) {
 				ctx.drawImage(svgHPRCBubble[2], char[_loc1_].x-svgHPRCBubble[2].width/2, char[_loc1_].y-150);
-				
-				var dead = recover2;
-
-				ctx.save();
-				var charimgmat = charModels[char[dead].id].charimgmat;
-				ctx.transform(charimgmat.a,charimgmat.b,charimgmat.c,charimgmat.d,charimgmat.tx/2+char[_loc1_].x,charimgmat.ty/2+char[_loc1_].y-107);
-				ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
-				ctx.restore();
-				
-				dead = nextDeadPerson(recover2,-1);
-
-				ctx.save();
-				var charimgmat = charModels[char[dead].id].charimgmat;
-				ctx.transform(charimgmat.a*0.6,charimgmat.b,charimgmat.c,charimgmat.d*0.6,charimgmat.tx/2+char[_loc1_].x-31.45,charimgmat.ty/2+char[_loc1_].y-107);
-				ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
-				ctx.restore();
-				
-				dead = nextDeadPerson(recover2,1);
-
-				ctx.save();
-				var charimgmat = charModels[char[dead].id].charimgmat;
-				ctx.transform(charimgmat.a*0.6,charimgmat.b,charimgmat.c,charimgmat.d*0.6,charimgmat.tx/2+char[_loc1_].x+31.45,charimgmat.ty/2+char[_loc1_].y-107);
-				ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
-				ctx.restore();
+				if (hprcBubbleAnimationTimer > 0) {
+					drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
+					drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
+					drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer/16), inter(44.75, 31.45, hprcBubbleAnimationTimer/16));
+					hprcBubbleAnimationTimer++;
+					if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
+				}else if (hprcBubbleAnimationTimer < 0) {
+					drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer/16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer/16));
+					drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer/16), inter(-31.45, 0, -hprcBubbleAnimationTimer/16));
+					drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer/16), inter(0, 31.45, -hprcBubbleAnimationTimer/16));
+					hprcBubbleAnimationTimer--;
+					if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
+				} else {
+					drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), 0.6, -31.45);
+					drawHPRCBubbleCharImg(recover2, 1, 0);
+					drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
+				}
+			} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer < 64) {
+				if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/30;
+				ctx.drawImage(svgHPRCBubble[3], char[_loc1_].x-svgHPRCBubble[3].width/2, char[_loc1_].y-128);
+				ctx.globalAlpha = 1;
+				ctx.drawImage(svgHPRCBubble[4], char[_loc1_].x-svgHPRCBubble[4].width/2, char[_loc1_].y-128);
+				hprcBubbleAnimationTimer++;
 			}
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
 		}
@@ -3158,6 +3154,14 @@ function drawCharacters() {
 //     b = Math.round(b * 255);
 //     return 'rgb(' + r + ',' + g + ',' + b + ')';
 // }
+
+function drawHPRCBubbleCharImg(dead, sc, xoff) {
+	var charimgmat = charModels[char[dead].id].charimgmat;
+	ctx.save();
+	ctx.transform(charimgmat.a*sc,charimgmat.b,charimgmat.c,charimgmat.d*sc,(charimgmat.tx*sc)/2+char[HPRC2].x+xoff,(charimgmat.ty*sc)/2+char[HPRC2].y-107);
+	ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
+	ctx.restore();
+}
 
 
 function setBody(i) {
@@ -4113,6 +4117,7 @@ function near2(c1, c2) {
 	var _loc2_ = char[c2].y - 23 - (char[c1].y - char[c1].h2 / 2);
 	return Math.abs(_loc2_) <= 20 && Math.abs(char[c1].x + xOff2(c1) - char[c2].x) < 50;
 }
+// linear interpolation
 function inter(a, b, x) {
 	return a + (b - a) * x;
 }
@@ -4187,6 +4192,7 @@ function recoverCycle(i, dire) {
 	}
 	if (_loc1_ == 10) {
 		HPRCBubbleFrame = 4;
+		hprcBubbleAnimationTimer = 0;
 		// HPRCBubble.charImage.gotoAndPlay(5);
 		recover = false;
 		recover2 = 0;
@@ -4196,11 +4202,10 @@ function recoverCycle(i, dire) {
 		// HPRCBubble.charImage.anim.charBody.gotoAndStop(char[recover2].id + 1);
 	} else {
 		HPRCBubbleFrame = 3;
-		// HPRCBubble.charImage.gotoAndStop(4);
 		if (dire == 0) {
-			// HPRCBubble.charImage.anim.gotoAndStop(1);
+			hprcBubbleAnimationTimer = 0;
 		} else {
-			// HPRCBubble.charImage.anim.gotoAndPlay(dire * 8 + 10);
+			hprcBubbleAnimationTimer = dire;
 		}
 		// HPRCBubble.charImage.anim.charBody.gotoAndStop(char[recover2].id + 1);
 		// HPRCBubble.charImage.anim.charBody1.gotoAndStop(char[nextDeadPerson(recover2,-1)].id + 1);

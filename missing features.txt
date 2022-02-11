@@ -1,9 +1,4 @@
-
-things I'll add/fix next:
 - acid drops
 - tints
-- menu fonts
-
-- autosave
+- the rest of the hprcui
 - the level editor
-- music loops badly
