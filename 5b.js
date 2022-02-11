@@ -15,8 +15,8 @@ const cheight = 540;
 const pixelRatio = window.devicePixelRatio;
 
 // offscreen canvases
-var osc1;
-var osctx1;
+var osc1, osctx1;
+var osc2, osctx2;
 
 var _xmouse = 0;
 var _ymouse = 0;
@@ -1991,7 +1991,7 @@ async function loadingScreen() {
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
 	for (var i = 0; i < svgCoinGet.length; i++) {
-		svgCoinGet[i] = await asyncLoadImage('visuals/wtgetf' + i.toString(10).padStart(4, '0') + '.svg');
+		svgCoinGet[i] = await asyncLoadImage('visuals/effects/wtgetf' + i.toString(10).padStart(4, '0') + '.svg');
 		loadedResources++;
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
@@ -2016,7 +2016,7 @@ async function loadingScreen() {
 	svgMenu2border = await asyncLoadImage('visuals/menu2border.svg');
 	loadedResources++;
 	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
-	svgMenu2borderimg = await asyncLoadImage('visuals/bitmap737.jpg');
+	svgMenu2borderimg = await asyncLoadImage('visuals/brushed metal.jpg');
 	loadedResources++;
 	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	preMenuBG = await asyncLoadImage('visuals/premenubg.png');
@@ -2500,6 +2500,9 @@ function resetLevel() {
 	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
 	osc1.height = Math.floor(levelHeight*30 * pixelRatio);
 	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	osc2.width = Math.floor(levelWidth*30 * pixelRatio);
+	osc2.height = Math.floor(levelHeight*30 * pixelRatio);
+	osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	drawStaticTiles();
 	// drawLevel();
 	// drawCharacters();
@@ -2563,10 +2566,10 @@ function drawStaticTiles() {
 	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
 			for (var i = 0; i < tileShadows[_loc2_][_loc1_].length; i++) {
-				osctx1.drawImage(svgShadows[tileShadows[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
+				osctx2.drawImage(svgShadows[tileShadows[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
 			}
 			for (var i = 0; i < tileBorders[_loc2_][_loc1_].length; i++) {
-				osctx1.drawImage(svgTileBorders[tileBorders[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
+				osctx2.drawImage(svgTileBorders[tileBorders[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
 			}
 		}
 	}
@@ -2624,9 +2627,15 @@ function drawLevel() {
 	// }
 
 	// Draw Static
-	ctx.drawImage(osc1, 0, 0, osc1.width/2, osc1.height/2)
-	// Draw Active
-	for (var i = 1; i < tileDepths.length; i++) {
+	ctx.drawImage(osc1, 0, 0, osc1.width/2, osc1.height/2);
+	// Draw Active 1
+	for (var j = 0; j < tileDepths[1].length; j++) {
+		addTileMovieClip(tileDepths[1][j].x,tileDepths[1][j].y, ctx);
+	}
+	// Draw Borders and Shadows
+	ctx.drawImage(osc2, 0, 0, osc2.width/2, osc2.height/2);
+	// Draw Active 2+
+	for (var i = 2; i < tileDepths.length; i++) {
 		for (var j = 0; j < tileDepths[i].length; j++) {
 			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y, ctx);
 		}
@@ -4313,6 +4322,10 @@ function setup() {
 	osc1.width = cwidth;
 	osc1.height = cheight;
 	osctx1 = osc1.getContext('2d');
+	osc2 = document.createElement('canvas');
+	osc2.width = cwidth;
+	osc2.height = cheight;
+	osctx2 = osc2.getContext('2d');
 
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
