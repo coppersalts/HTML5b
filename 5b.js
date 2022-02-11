@@ -7,7 +7,6 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, cashe some things as bitmaps for better performance.
 // TODO: remove some of the commented out actionscript stuff.
-// TODO: start drawing static tiles to an offscreen canvas
 
 var canvas;
 var ctx;
@@ -2418,11 +2417,6 @@ function playLevel(i) {
 	toSeeCS = true;
 	transitionType = 1;
 	resetLevel();
-
-	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
-	osc1.height = Math.floor(levelHeight*30 * pixelRatio);
-	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-	drawStaticTiles();
 	// levelButtons.levelMapButton.onRelease = function()
 	// {
 	// 	timer += getTimer() - levelTimer2;
@@ -2502,6 +2496,11 @@ function resetLevel() {
 	}
 	getTileDepths();
 	calculateShadowsAndBorders();
+
+	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
+	osc1.height = Math.floor(levelHeight*30 * pixelRatio);
+	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	drawStaticTiles();
 	// drawLevel();
 	// drawCharacters();
 	recover = false;
