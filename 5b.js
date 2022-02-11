@@ -3058,7 +3058,7 @@ function drawCharacters() {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
-			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-41.6);
+			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-38.6);
 			var radius = svgHPRCCrank.height/2;
 			ctx.save();
 			ctx.translate(char[_loc1_].x+hprcCrankPos.x, char[_loc1_].y+hprcCrankPos.y);
