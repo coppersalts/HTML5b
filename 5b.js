@@ -225,7 +225,7 @@ var blockProperties = [
 	[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,14,false,[0,1,2,3,4,5,6,7,8,9,10,11,12,13]],
 	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
+	[false,false,false,false,false,false,false,false,true,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
 	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,true],
 	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
@@ -3079,38 +3079,38 @@ function drawCharacters() {
 			ctx.drawImage(svgHPRCCrank, -radius, -radius);
 			ctx.restore();
 
-			// TODO: make this not so hard coded.
-			if (HPRCBubbleFrame == 1) {
-				ctx.drawImage(svgHPRCBubble[0], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-128+bounceY(9, 30, _frameCount));
-			} else if (HPRCBubbleFrame == 2) {
-				ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[1].width/2, char[_loc1_].y-150);
-				drawHPRCBubbleCharImg(recover2, 1, 0);
-			} else if (HPRCBubbleFrame == 3) {
-				ctx.drawImage(svgHPRCBubble[2], char[_loc1_].x-svgHPRCBubble[2].width/2, char[_loc1_].y-150);
-				if (hprcBubbleAnimationTimer > 0) {
-					drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
-					drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
-					drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer/16), inter(44.75, 31.45, hprcBubbleAnimationTimer/16));
-					hprcBubbleAnimationTimer++;
-					if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
-				}else if (hprcBubbleAnimationTimer < 0) {
-					drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer/16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer/16));
-					drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer/16), inter(-31.45, 0, -hprcBubbleAnimationTimer/16));
-					drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer/16), inter(0, 31.45, -hprcBubbleAnimationTimer/16));
-					hprcBubbleAnimationTimer--;
-					if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
-				} else {
-					drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), 0.6, -31.45);
-					drawHPRCBubbleCharImg(recover2, 1, 0);
-					drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
-				}
-			} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
-				if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
-				ctx.drawImage(svgHPRCBubble[3], char[_loc1_].x-svgHPRCBubble[3].width/2, char[_loc1_].y-120);
-				ctx.globalAlpha = 1;
-				ctx.drawImage(svgHPRCBubble[4], char[_loc1_].x-svgHPRCBubble[4].width/2, char[_loc1_].y-120);
-				hprcBubbleAnimationTimer++;
-			}
+			// // TODO: make this not so hard coded.
+			// if (HPRCBubbleFrame == 1) {
+			// 	ctx.drawImage(svgHPRCBubble[0], char[_loc1_].x-svgHPRCBubble[0].width/2, char[_loc1_].y-128+bounceY(9, 30, _frameCount));
+			// } else if (HPRCBubbleFrame == 2) {
+			// 	ctx.drawImage(svgHPRCBubble[1], char[_loc1_].x-svgHPRCBubble[1].width/2, char[_loc1_].y-150);
+			// 	drawHPRCBubbleCharImg(recover2, 1, 0);
+			// } else if (HPRCBubbleFrame == 3) {
+			// 	ctx.drawImage(svgHPRCBubble[2], char[_loc1_].x-svgHPRCBubble[2].width/2, char[_loc1_].y-150);
+			// 	if (hprcBubbleAnimationTimer > 0) {
+			// 		drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
+			// 		drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
+			// 		drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer/16), inter(44.75, 31.45, hprcBubbleAnimationTimer/16));
+			// 		hprcBubbleAnimationTimer++;
+			// 		if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
+			// 	}else if (hprcBubbleAnimationTimer < 0) {
+			// 		drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer/16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer/16));
+			// 		drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer/16), inter(-31.45, 0, -hprcBubbleAnimationTimer/16));
+			// 		drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer/16), inter(0, 31.45, -hprcBubbleAnimationTimer/16));
+			// 		hprcBubbleAnimationTimer--;
+			// 		if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
+			// 	} else {
+			// 		drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), 0.6, -31.45);
+			// 		drawHPRCBubbleCharImg(recover2, 1, 0);
+			// 		drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
+			// 	}
+			// } else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
+			// 	if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
+			// 	ctx.drawImage(svgHPRCBubble[3], char[_loc1_].x-svgHPRCBubble[3].width/2, char[_loc1_].y-120);
+			// 	ctx.globalAlpha = 1;
+			// 	ctx.drawImage(svgHPRCBubble[4], char[_loc1_].x-svgHPRCBubble[4].width/2, char[_loc1_].y-120);
+			// 	hprcBubbleAnimationTimer++;
+			// }
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
 		}
 
@@ -4940,6 +4940,38 @@ function draw() {
 							HPRCBubbleFrame = 0;
 					// 		HPRCBubble.charImage.gotoAndStop(1);
 						}
+					}
+					// TODO: make this not so hard coded.
+					if (HPRCBubbleFrame == 1) {
+						ctx.drawImage(svgHPRCBubble[0], char[_loc2_].x-svgHPRCBubble[0].width/2, char[_loc2_].y-128+bounceY(9, 30, _frameCount));
+					} else if (HPRCBubbleFrame == 2) {
+						ctx.drawImage(svgHPRCBubble[1], char[_loc2_].x-svgHPRCBubble[1].width/2, char[_loc2_].y-150);
+						drawHPRCBubbleCharImg(recover2, 1, 0);
+					} else if (HPRCBubbleFrame == 3) {
+						ctx.drawImage(svgHPRCBubble[2], char[_loc2_].x-svgHPRCBubble[2].width/2, char[_loc2_].y-150);
+						if (hprcBubbleAnimationTimer > 0) {
+							drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
+							drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
+							drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer/16), inter(44.75, 31.45, hprcBubbleAnimationTimer/16));
+							hprcBubbleAnimationTimer++;
+							if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
+						}else if (hprcBubbleAnimationTimer < 0) {
+							drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer/16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer/16));
+							drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer/16), inter(-31.45, 0, -hprcBubbleAnimationTimer/16));
+							drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer/16), inter(0, 31.45, -hprcBubbleAnimationTimer/16));
+							hprcBubbleAnimationTimer--;
+							if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
+						} else {
+							drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), 0.6, -31.45);
+							drawHPRCBubbleCharImg(recover2, 1, 0);
+							drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
+						}
+					} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
+						if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
+						ctx.drawImage(svgHPRCBubble[3], char[_loc2_].x-svgHPRCBubble[3].width/2, char[_loc2_].y-120);
+						ctx.globalAlpha = 1;
+						ctx.drawImage(svgHPRCBubble[4], char[_loc2_].x-svgHPRCBubble[4].width/2, char[_loc2_].y-120);
+						hprcBubbleAnimationTimer++;
 					}
 				}
 				// if (char[_loc2_].y > levelHeight * 30 + 160 && char[_loc2_].charState >= 7 && char[_loc2_].deathTimer == 30) {
