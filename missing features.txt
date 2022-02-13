@@ -1,4 +1,9 @@
 - acid drops
-- tints
-- the rest of the hprcui
+- door color with certain backgrounds
+- fixing a few character poses
+- fixing mouth after dialog and changing frame
+- smooth pan when switching characters
+- characters layered behind water
+- the start of the walk cycle
+- border alpha is wrong on metal blocks
 - the level editor

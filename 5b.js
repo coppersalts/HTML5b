@@ -1654,6 +1654,8 @@ var charModels = [
 ];
 var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
 var selectedTab = 0;
+var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue'];
+var tabHeight = 30;
 var power = 1;
 var jumpPower = 11;
 var qPress = false;
@@ -2271,7 +2273,8 @@ function menuContGame() {
 	menuScreen = 2;
 }
 function menuLevelCreator() {
-	window.open('https://zolo101.github.io/BFDIA5bLevelEditor/');
+	menuScreen = 5;
+	resetLevelCreator();
 }
 function menuExplore() {
 	//
@@ -2628,13 +2631,13 @@ function drawLevel() {
 	// }
 
 	// Draw Static
-	ctx.drawImage(osc1, 0, 0, osc1.width/2, osc1.height/2);
+	ctx.drawImage(osc1, 0, 0, osc1.width/pixelRatio, osc1.height/pixelRatio);
 	// Draw Active 1
 	for (var j = 0; j < tileDepths[1].length; j++) {
 		addTileMovieClip(tileDepths[1][j].x,tileDepths[1][j].y, ctx);
 	}
 	// Draw Borders and Shadows
-	ctx.drawImage(osc2, 0, 0, osc2.width/2, osc2.height/2);
+	ctx.drawImage(osc2, 0, 0, osc2.width/pixelRatio, osc2.height/pixelRatio);
 	// Draw Active 2+
 	for (var i = 2; i < tileDepths.length; i++) {
 		for (var j = 0; j < tileDepths[i].length; j++) {
@@ -4253,10 +4256,89 @@ function toggleSound() {
 
 
 
+function mouseOnGrid() {
+	return _xmouse >= 330 - scale * levelWidth / 2 && _xmouse <= 330 + scale * levelWidth / 2 && _ymouse >= 240 - scale * levelHeight / 2 && _ymouse <= 240 + scale * levelHeight / 2;
+}
+function resetLevelCreator() {
+	// _root.attachMovie("levelCreator","levelCreator",0,{_x:0,_y:0});
+	// levelCreator.createEmptyMovieClip("grid",100);
+	// levelCreator.createEmptyMovieClip("tiles",98);
+	// levelCreator.createEmptyMovieClip("rectSelect",99);
+	menuScreen = 5;
+	selectedTab = 0;
+	levelWidth = 32;
+	tool = 0;
+	levelHeight = 18;
+	clearMyWholeLevel();
+	// drawLCGrid();
+	// fillTilesTab();
+	charCount2 = 0;
+	charCount = 0;
+	// setEndGateLights();
+	LCEndGateX = -1;
+	LCEndGateY = -1;
+	// levelCreator.sideBar.tab1.gotoAndStop(1);
+	// var _loc2_ = 0;
+	// while(_loc2_ < 10)
+	// {
+	// 	levelCreator.tools["tool" + _loc2_].gotoAndStop(2);
+	// 	_loc2_ = _loc2_ + 1;
+	// }
+	// levelCreator.tools.tool9.gotoAndStop(1);
+}
+function drawLCGrid() {
+	scale = Math.min(640 / levelWidth, 460 / levelHeight);
+	// levelCreator.grid.lineStyle(scale / 9,0,50);
+	ctx.lineWidth = Math.ceil(scale / 14);
+	ctx.strokeStyle = '#000000';
+	ctx.beginPath();
+	for (var _loc1_ = 0; _loc1_ <= levelWidth; _loc1_++) {
+		ctx.moveTo(330 - scale * levelWidth / 2 + _loc1_ * scale,240 - scale * levelHeight / 2);
+		ctx.lineTo(330 - scale * levelWidth / 2 + _loc1_ * scale,240 + scale * levelHeight / 2);
+	}
+	for (var _loc1_ = 0; _loc1_ <= levelHeight; _loc1_++) {
+		ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + _loc1_ * scale);
+		ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + _loc1_ * scale);
+	}
+	ctx.stroke();
+	// addLCTiles();
+	// updateLCTiles();
+}
 
+function drawLCTiles() {
+	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
+		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
+			var tile = myLevel[1][_loc2_][_loc1_];
+			if (blockProperties[tile][16] > 0) {
+				ctx.drawImage(svgTiles[tile], 330 - scale * levelWidth / 2 + _loc1_ * scale, 240 - scale * levelHeight / 2 + _loc2_ * scale, scale, scale);
+			}
+		}
+	}
+	// addLCTiles();
+	// updateLCTiles();
+}
 
-
-
+function clearMyWholeLevel() {
+	myLevel = new Array(3);
+	for (var _loc1_ = 0; _loc1_ < 3; _loc1_++) {
+		clearMyLevel(_loc1_);
+	}
+}
+function clearMyLevel(i) {
+	myLevel[i] = new Array(levelHeight);
+	var _loc2_ = 0;
+	while(_loc2_ < levelHeight)
+	{
+		myLevel[i][_loc2_] = new Array(levelWidth);
+		var _loc1_ = 0;
+		while(_loc1_ < levelWidth)
+		{
+			myLevel[i][_loc2_][_loc1_] = 0;
+			_loc1_ = _loc1_ + 1;
+		}
+		_loc2_ = _loc2_ + 1;
+	}
+}
 
 
 
@@ -5067,85 +5149,148 @@ function draw() {
 		// setMovieClipCoordinates(_loc9_,_loc3_);
 		levelTimer++;
 	}
-	// if (menuScreen == 5) {
-	// 	_loc9_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-	// 	_loc3_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-	// 	if (mouseIsDown) {
-	// 		if (selectedTab == 3) {
-	// 			if (tool <= 1 && mouseOnGrid()) {
-	// 				if (tool == 1) {
-	// 					_loc2_ = 0;
-	// 				} else {
-	// 					_loc2_ = selectedTile;
-	// 				}
-	// 				if (_loc2_ >= 0 && _loc2_ < tileCount) {
-	// 					myLevel[1][_loc3_][_loc9_] = _loc2_;
-	// 					levelCreator.tiles["tileX" + _loc9_ + "Y" + _loc3_].gotoAndStop(_loc2_ + 1);
-	// 					if (_loc2_ == 6 && (_loc9_ != LCEndGateX || _loc3_ != LCEndGateY)) {
-	// 						myLevel[1][LCEndGateY][LCEndGateX] = 0;
-	// 						levelCreator.tiles["tileX" + LCEndGateX + "Y" + LCEndGateY].gotoAndStop(1);
-	// 						LCEndGateX = _loc9_;
-	// 						LCEndGateY = _loc3_;
-	// 						setEndGateLights();
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		if ((tool == 2 || tool == 5) && LCRect[0] != -1) {
-	// 			if (_loc9_ != LCRect[2] || _loc3_ != LCRect[3]) {
-	// 				LCRect[2] = Math.min(Math.max(_loc9_,0),levelWidth - 1);
-	// 				LCRect[3] = Math.min(Math.max(_loc3_,0),levelHeight - 1);
-	// 				drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
-	// 			}
-	// 		}
-	// 	}
-	// 	if (mouseOnGrid()) {
-	// 		if (tool == 6) {
-	// 			levelCreator.rectSelect.clear();
-	// 			var _loc13_ = undefined;
-	// 			var _loc12_ = undefined;
-	// 			if (closeToEdgeY()) {
-	// 				levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
-	// 				_loc13_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-	// 				_loc12_ = 0;
-	// 			} else {
-	// 				levelCreator.rectSelect.lineStyle(2 * scale / 9,8388608,100);
-	// 				_loc13_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-	// 				_loc12_ = 0.5;
-	// 			}
-	// 			levelCreator.rectSelect.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
-	// 			levelCreator.rectSelect.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
-	// 		} else if (tool == 7) {
-	// 			levelCreator.rectSelect.clear();
-	// 			var _loc14_ = undefined;
-	// 			var _loc10_ = undefined;
-	// 			if (closeToEdgeX()) {
-	// 				levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
-	// 				_loc14_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-	// 				_loc10_ = 0;
-	// 			} else {
-	// 				levelCreator.rectSelect.lineStyle(2 * scale / 9,8388608,100);
-	// 				_loc14_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-	// 				_loc10_ = 0.5;
-	// 			}
-	// 			levelCreator.rectSelect.moveTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 - scale * levelHeight / 2);
-	// 			levelCreator.rectSelect.lineTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 + scale * levelHeight / 2);
-	// 		}
-	// 	} else if (tool == 6 || tool == 7) {
-	// 		levelCreator.rectSelect.clear();
-	// 	}
-	// 	for (var _loc2_ = 0; _loc2_ < 6; _loc2_++) {
-	// 		_loc3_ = _loc2_ * 40;
-	// 		if (_loc2_ > selectedTab) {
-	// 			_loc3_ += 300;
-	// 		}
-	// 		if (Math.abs(levelCreator.sideBar["tab" + (_loc2_ + 1)]._y - _loc3_) < 0.5) {
-	// 			levelCreator.sideBar["tab" + (_loc2_ + 1)]._y = _loc3_;
-	// 		} else {
-	// 			levelCreator.sideBar["tab" + (_loc2_ + 1)]._y += (_loc3_ - levelCreator.sideBar["tab" + (_loc2_ + 1)]._y) * 0.2;
-	// 		}
-	// 	}
-	// }
+	if (menuScreen == 5) {
+		ctx.fillStyle = '#ffffff';
+		ctx.fillRect(0,0,960,540);
+		ctx.fillStyle = '#aeaeae';
+		ctx.fillRect(0,480,660,60);
+		ctx.fillStyle = '#cccccc';
+		ctx.fillRect(660,0,300,540);
+
+		ctx.textAlign = 'left';
+		ctx.font = '25px Helvetica';
+		ctx.textBaseline = 'middle';
+		for (var i = 0; i < tabNames.length; i++) {
+			if (i%2 == 0) ctx.fillStyle = '#808080';
+			else ctx.fillStyle = '#626262';
+			var tabY = i>selectedTab?cheight-((tabNames.length-i)*tabHeight):i*tabHeight;
+			ctx.fillRect(660, tabY, 300, tabHeight);
+			ctx.fillStyle = '#ffffff';
+			ctx.fillText(tabNames[i], 664, tabY+tabHeight*0.6);
+
+			if (onRect(_xmouse, _ymouse, 660, tabY, 300, tabHeight)) {
+				if (mouseIsDown) {
+					selectedTab = i;
+				}
+			}
+		}
+		if (selectedTab == 0) {
+			//
+		} else if (selectedTab == 1) {
+			//
+		} else if (selectedTab == 2) {
+			var j = 0;
+			var bpr = 5;
+			var bs = 40;
+			var bdist = 53;
+			// var h = _frameCount;
+			for (var i = 0; i < blockProperties.length; i++) {
+				if (blockProperties[i][16] > 0) {
+					var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
+					var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
+					var sc = vb[2]>60?bs/vb[2]:bs/30;
+					ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist + vb[0]*sc, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist + vb[1]*sc, vb[2]*sc, vb[3]*sc);
+					j++;
+				}
+			}
+		} else if (selectedTab == 3) {
+			//
+		} else if (selectedTab == 4) {
+			//
+		}
+
+		for (var i = 0; i < 8; i++) {
+			if (i == tool) ctx.fillStyle = '#999999';
+			else ctx.fillStyle = '#666666';
+			ctx.fillRect(35 + i*50, 490, 40, 40);
+
+			if (onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
+				if (mouseIsDown) {
+					tool = i;
+				}
+			}
+		}
+		drawLCTiles();
+		drawLCGrid();
+
+
+
+		_loc9_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+		_loc3_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+		if (mouseIsDown) {
+			if (selectedTab == 2) {
+				if (tool <= 1 && mouseOnGrid()) {
+					if (tool == 1) _loc2_ = 0;
+					else _loc2_ = selectedTile;
+					if (_loc2_ >= 0 && _loc2_ < tileCount) {
+						myLevel[1][_loc3_][_loc9_] = _loc2_;
+						// levelCreator.tiles["tileX" + _loc9_ + "Y" + _loc3_].gotoAndStop(_loc2_ + 1);
+						if (_loc2_ == 6 && (_loc9_ != LCEndGateX || _loc3_ != LCEndGateY)) {
+							myLevel[1][LCEndGateY][LCEndGateX] = 0;
+							// levelCreator.tiles["tileX" + LCEndGateX + "Y" + LCEndGateY].gotoAndStop(1);
+							LCEndGateX = _loc9_;
+							LCEndGateY = _loc3_;
+							setEndGateLights();
+						}
+					}
+				}
+			}
+		// 	if ((tool == 2 || tool == 5) && LCRect[0] != -1) {
+		// 		if (_loc9_ != LCRect[2] || _loc3_ != LCRect[3]) {
+		// 			LCRect[2] = Math.min(Math.max(_loc9_,0),levelWidth - 1);
+		// 			LCRect[3] = Math.min(Math.max(_loc3_,0),levelHeight - 1);
+		// 			drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
+		// 		}
+		// 	}
+		// }
+		// if (mouseOnGrid()) {
+		// 	if (tool == 6) {
+		// 		levelCreator.rectSelect.clear();
+		// 		var _loc13_ = undefined;
+		// 		var _loc12_ = undefined;
+		// 		if (closeToEdgeY()) {
+		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
+		// 			_loc13_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+		// 			_loc12_ = 0;
+		// 		} else {
+		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,8388608,100);
+		// 			_loc13_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+		// 			_loc12_ = 0.5;
+		// 		}
+		// 		levelCreator.rectSelect.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
+		// 		levelCreator.rectSelect.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
+		// 	} else if (tool == 7) {
+		// 		levelCreator.rectSelect.clear();
+		// 		var _loc14_ = undefined;
+		// 		var _loc10_ = undefined;
+		// 		if (closeToEdgeX()) {
+		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
+		// 			_loc14_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+		// 			_loc10_ = 0;
+		// 		} else {
+		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,8388608,100);
+		// 			_loc14_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+		// 			_loc10_ = 0.5;
+		// 		}
+		// 		levelCreator.rectSelect.moveTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 - scale * levelHeight / 2);
+		// 		levelCreator.rectSelect.lineTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 + scale * levelHeight / 2);
+		// 	}
+		// } else if (tool == 6 || tool == 7) {
+		// 	levelCreator.rectSelect.clear();
+		// }
+		// for (var _loc2_ = 0; _loc2_ < 6; _loc2_++) {
+		// 	_loc3_ = _loc2_ * 40;
+		// 	if (_loc2_ > selectedTab) {
+		// 		_loc3_ += 300;
+		// 	}
+		// 	if (Math.abs(levelCreator.sideBar["tab" + (_loc2_ + 1)]._y - _loc3_) < 0.5) {
+		// 		levelCreator.sideBar["tab" + (_loc2_ + 1)]._y = _loc3_;
+		// 	} else {
+		// 		levelCreator.sideBar["tab" + (_loc2_ + 1)]._y += (_loc3_ - levelCreator.sideBar["tab" + (_loc2_ + 1)]._y) * 0.2;
+		// 	}
+		}
+	}
+
 	if (levelTimer <= 30 || menuScreen != 3) {
 		if (wipeTimer >= 30 && wipeTimer <= 60) {
 			white_alpha = 220 - wipeTimer * 4;
