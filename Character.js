@@ -1,6 +1,6 @@
 class Character {
 	// TODO: remove unnecessary arguments from the constructor. 
-	constructor(tid, tx, ty, tpx, tpy, tvx, tvy, tonob, tdire, tcarry, tcarryObject, tcarriedBy, tlandTimer, tdeathTimer, tcharState, tstandingOn, tstoodOnBy, tw, th, tweight, tweight2, th2, tatEnd, tfriction, tfricGoal, tjustChanged, tspeed, tbuttonsPressed, tpcharState, tsubmerged, ttemp, theated, theatSpeed, thasArms) {
+	constructor(tid, tx, ty, tpx, tpy, tvx, tvy, tonob, tdire, tcarry, tcarryObject, tcarriedBy, tlandTimer, tdeathTimer, tcharState, tstandingOn, tstoodOnBy, tw, th, tweight, tweight2, th2, tatEnd, tfriction, tfricGoal, tjustChanged, tspeed, tbuttonsPressed, tpcharState, tsubmerged, ttemp, theated, theatSpeed, thasArms, tdExpr) {
 		this.id = tid;
 		this.x = tx;
 		this.y = ty;
@@ -47,6 +47,7 @@ class Character {
 		this.burstFrame = -1;
 		this.diaMouthFrame = 0;
 		this.expr = 0;
+		this.dExpr = tdExpr;
 	}
 
 	applyForces(grav, control, waterUpMaxSpeed)
@@ -148,6 +149,7 @@ class Character {
 		if (newFrame != this.frame) {
 			if (!((this.frame == 5 && newFrame == 4) || (this.frame == 4 && newFrame == 5))) this.poseTimer = 0;
 			this.frame = newFrame;
+			if (cutScene == 3 && this.expr != this.dExpr) this.expr = this.dExpr;
 		}
 	}
 }

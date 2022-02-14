@@ -764,22 +764,22 @@ var charModels = [
 				{type:'body',mat:{a:0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:1.5,ty:-23.8}},
 				{type:'static',bodypart:1,mat:{a:-0.399322509765625,b:-0.0230865478515625,c:-0.0230865478515625,d:0.399322509765625,tx:-13,ty:-21.15}},
 				{type:'static',bodypart:0,mat:{a:0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:-19.45,ty:-31.5}},
-				{type:'static',bodypart:0,mat:{a:0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:-5.4,ty:-30.5}},
+				{type:'static',bodypart:0,mat:{a:-0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:-5.4,ty:-30.5}},
 				{type:'static',bodypart:41,mat:{a:0.211151123046875,b:-0.2940673828125,c:-0.300384521484375,d:-0.2069244384765625,tx:-1.35,ty:-17.85}},
 			],
 			[
 				{type:'static',bodypart:41,mat:{a:-0.211151123046875,b:-0.2940673828125,c:0.300384521484375,d:-0.2069244384765625,tx:23.05,ty:-20.6}},
 				{type:'body',mat:{a:-0.3636016845703125,b:0.02899169921875,c:0.02899169921875,d:0.3636016845703125,tx:-1.1,ty:-23.8}},
 				{type:'static',bodypart:1,mat:{a:0.399322509765625,b:-0.0230865478515625,c:0.0230865478515625,d:0.399322509765625,tx:14.8,ty:-21.15}},
-				{type:'static',bodypart:0,mat:{a:-0.3636016845703125,b:0.02899169921875,c:0.02899169921875,d:0.3636016845703125,tx:7.2,ty:-30.5}},
+				{type:'static',bodypart:0,mat:{a:0.3636016845703125,b:0.02899169921875,c:0.02899169921875,d:0.3636016845703125,tx:7.2,ty:-30.5}},
 				{type:'static',bodypart:0,mat:{a:-0.3636016845703125,b:0.02899169921875,c:0.02899169921875,d:0.3636016845703125,tx:21.25,ty:-31.5}},
 				{type:'static',bodypart:41,mat:{a:-0.211151123046875,b:-0.2940673828125,c:0.300384521484375,d:-0.2069244384765625,tx:3.15,ty:-17.85}},
 			],
 			[
 				{type:'static',bodypart:2,mat:{a:-0.12213134765625,b:0.343719482421875,c:-0.343719482421875,d:-0.12213134765625,tx:-21.4,ty:-20.9}},
 				{type:'body',mat:{a:0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:1.5,ty:-23.8}},
-				{type:'static',bodypart:5,mat:{a:0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:-20.8,ty:-32}},
-				{type:'static',bodypart:4,mat:{a:-0.412109375,b:-0.0328521728515625,c:-0.024749755859375,d:0.3104248046875,tx:-9.3,ty:-21.75}},
+				{type:'static',bodypart:5,mat:{a:-0.412109375,b:-0.0328521728515625,c:-0.024749755859375,d:0.3104248046875,tx:-9.3,ty:-21.75}},
+				{type:'static',bodypart:4,mat:{a:0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:-20.8,ty:-32}},
 				{type:'static',bodypart:4,mat:{a:0.3636016845703125,b:0.02899169921875,c:-0.02899169921875,d:0.3636016845703125,tx:-4.85,ty:-31}},
 				{type:'static',bodypart:2,mat:{a:-0.0661163330078125,b:-0.358734130859375,c:0.358734130859375,d:-0.066131591796875,tx:20.35,ty:-18.1}},
 			],
@@ -1224,7 +1224,7 @@ var charModels = [
 		torsomat: {a:0.87811279296875,b:0,c:0,d:0.87811279296875,tx:-0.7,ty:-3},
 		legx: [-5.1, 10.85],
 		legy: [-11.25, -11.25],
-		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:1.8,ty:-4.75},
+		firemat: {a:1,b:0,c:0,d:1,tx:0,ty:0},
 		charimgmat: {a:0.126861572265625,b:0,c:0,d:0.126861572265625,tx:-0.1,ty:-0.3},
 		burstmat: {a:1.35589599609375,b:0,c:0,d:1.2286834716796875,tx:1.8,ty:-39.65},
 		defaultExpr: 0,
@@ -1321,14 +1321,14 @@ var charModels = [
 				{type:'armroot',id:1,pos:{x:31.8,y:-22.9}},
 				{type:'body',mat:{a:0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:2.35,ty:-42}},
 				{type:'static',bodypart:36,mat:{a:-0.1955413818359375,b:0,c:0,d:0.400299072265625,tx:-25.8,ty:-29.65}},
-				{type:'static',bodypart:0,mat:{a:0.193145751953125,b:0,c:0,d:0.3648529052734375,tx:-30.55,ty:-43.05}},
+				{type:'static',bodypart:0,mat:{a:-0.193145751953125,b:0,c:0,d:0.3648529052734375,tx:-30.55,ty:-43.05}},
 			],
 			[
 				{type:'armroot',id:0,pos:{x:31.05,y:-22.9}},
 				{type:'armroot',id:1,pos:{x:-27,y:-22.9}},
 				{type:'body',mat:{a:-0.3648529052734375,b:0,c:0,d:0.3648529052734375,tx:2.35,ty:-42}},
 				{type:'static',bodypart:36,mat:{a:0.1955413818359375,b:0,c:0,d:0.400299072265625,tx:30.5,ty:-29.65}},
-				{type:'static',bodypart:0,mat:{a:-0.193145751953125,b:0,c:0,d:0.3648529052734375,tx:35.25,ty:-43.05}},
+				{type:'static',bodypart:0,mat:{a:0.193145751953125,b:0,c:0,d:0.3648529052734375,tx:35.25,ty:-43.05}},
 			]
 		]
 	},
@@ -1337,7 +1337,7 @@ var charModels = [
 		torsomat: {a:0.2733306884765625,b:0,c:0,d:0.273284912109375,tx:-26,ty:-49.75},
 		legx: [-7.9, 12.5],
 		legy: [-12, -11.85],
-		firemat: {a:0.8855438232421875,b:0,c:0,d:1,tx:-0.2,ty:0.05},
+		firemat: {a:-0.4046630859375,b:0.0060882568359375,c:0.006805419921875,d:0.5772552490234375,tx:-1.15,ty:-51},
 		charimgmat: {a:0.116455078125,b:0,c:0,d:0.116455078125,tx:0.4,ty:20.05},
 		burstmat: {a:1.35589599609375,b:0,c:0,d:0.9438323974609375,tx:2.55,ty:-22.5},
 		defaultExpr: 0,
@@ -1398,7 +1398,7 @@ var charModels = [
 		torsomat: {a:0.2268524169921875,b:0,c:0,d:0.22625732421875,tx:-23.45,ty:-42.7},
 		legx: [-10.15, 16],
 		legy: [-12.25, -11.7],
-		firemat: {a:1.8939666748046875,b:0,c:0,d:1.1790008544921875,tx:2.05,ty:0},
+		firemat: {a:-0.865478515625,b:0.007171630859375,c:0.014556884765625,d:0.680572509765625,tx:0,ty:-60.15},
 		charimgmat: {a:-0.06329345703125,b:0,c:0,d:0.0632781982421875,tx:-0.6,ty:18.65},
 		burstmat: {a:1.55078125,b:0,c:0,d:1.09588623046875,tx:1.55,ty:-36.75},
 		defaultExpr: 0,
@@ -1465,7 +1465,7 @@ var charModels = [
 		torsomat: {a:0.87811279296875,b:0,c:0,d:0.87811279296875,tx:-0.7,ty:-3},
 		legx: [-4.45, 7.7],
 		legy: [-11.25, -11.25],
-		firemat: {a:0.757598876953125,b:0,c:0,d:1,tx:2.3,ty:-2.5},
+		firemat: {a:-0.34619140625,b:0.0060882568359375,c:0.0058135986328125,d:0.5772552490234375,tx:1.45,ty:-53.55},
 		charimgmat: {a:-0.112091064453125,b:0,c:0,d:0.112091064453125,tx:8.05,ty:-5.8},
 		burstmat: {a:0.794342041015625,b:0,c:0,d:0.952484130859375,tx:1.55,ty:-29.75},
 		defaultExpr: 0,
@@ -1827,7 +1827,7 @@ var imgBgs = new Array(12);
 var svgTiles = new Array(blockProperties.length);
 var svgLevers = new Array(6);
 var svgShadows = new Array(19);
-var svgTileBorders = new Array(34);
+var svgTileBorders = new Array(38);
 
 var svgChars = new Array(charD.length);
 var svgBodyParts = [];
@@ -2482,7 +2482,8 @@ function resetLevel() {
 			0,
 			0,
 			charD[_loc2_][6],
-			charD[_loc2_][8]
+			charD[_loc2_][8],
+			_loc2_<35?charModels[_loc2_].defaultExpr:0
 		);
 		if (char[_loc1_].charState == 9) {
 			char[_loc1_].expr = 1;
@@ -2498,6 +2499,7 @@ function resetLevel() {
 			char[_loc1_].speed = startLocations[currentLevel][_loc1_][6][0] * 10 + startLocations[currentLevel][_loc1_][6][1];
 		}
 	}
+	charCount2 = Math.min(charCount2, 6)
 	getTileDepths();
 	calculateShadowsAndBorders();
 
@@ -2586,32 +2588,27 @@ function getTileDepths() {
 	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
 			if (thisLevel[_loc2_][_loc1_] >= 1) {
-				// console.log(thisLevel[_loc2_][_loc1_]);
+				// switchable
 				if (blockProperties[thisLevel[_loc2_][_loc1_]][12] >= 1) {
 					switchable[blockProperties[thisLevel[_loc2_][_loc1_]][12] - 1].push([_loc1_,_loc2_]);
 				}
+				// levelActive3 - liquids
 				if (blockProperties[thisLevel[_loc2_][_loc1_]][14]) {
 					tileDepths[3].push({x:_loc1_,y:_loc2_});
-					// addTileMovieClip(_loc1_,_loc2_); //levelActive3
+				// levelActive2 - switches & buttons
 				} else if (blockProperties[thisLevel[_loc2_][_loc1_]][11] >= 1) {
 					tileDepths[2].push({x:_loc1_,y:_loc2_});
-					// addTileMovieClip(_loc1_,_loc2_); //levelActive2
-					// if (blockProperties[thisLevel[_loc2_][_loc1_]][11] >= 7 && blockProperties[thisLevel[_loc2_][_loc1_]][11] <= 12) {
-						// levelActive2["tileX" + _loc1_ + "Y" + _loc2_].lever._rotation = 60;
-					// }
+				// levelActive - animated blocks
 				} else if (blockProperties[thisLevel[_loc2_][_loc1_]][8]) {
 					tileDepths[1].push({x:_loc1_,y:_loc2_});
-					// addTileMovieClip(_loc1_,_loc2_); //levelActive
+				// levelStill - static blocks
 				} else {
 					tileDepths[0].push({x:_loc1_,y:_loc2_});
-					// addTileMovieClip(_loc1_,_loc2_); //levelStill
 				}
+
 				if (thisLevel[_loc2_][_loc1_] == 6) {
 					locations[0] = _loc1_;
 					locations[1] = _loc2_;
-					// if (bgs[currentLevel] == 9 || bgs[currentLevel] == 10) {
-						// levelActive["tileX" + _loc1_ + "Y" + _loc2_].bg.gotoAndStop(2);
-					// }
 				}
 				if (thisLevel[_loc2_][_loc1_] == 12) {
 					locations[2] = _loc1_;
@@ -2630,19 +2627,23 @@ function drawLevel() {
 	// 	addTileMovieClips();
 	// }
 
-	// Draw Static
+	// Draw Static tiles
 	ctx.drawImage(osc1, 0, 0, osc1.width/pixelRatio, osc1.height/pixelRatio);
-	// Draw Active 1
+	// Draw Normal Animated Tiles
 	for (var j = 0; j < tileDepths[1].length; j++) {
 		addTileMovieClip(tileDepths[1][j].x,tileDepths[1][j].y, ctx);
 	}
 	// Draw Borders and Shadows
 	ctx.drawImage(osc2, 0, 0, osc2.width/pixelRatio, osc2.height/pixelRatio);
-	// Draw Active 2+
-	for (var i = 2; i < tileDepths.length; i++) {
-		for (var j = 0; j < tileDepths[i].length; j++) {
-			addTileMovieClip(tileDepths[i][j].x,tileDepths[i][j].y, ctx);
-		}
+	// Draw Active2 Switches & Buttons
+	for (var j = 0; j < tileDepths[2].length; j++) {
+		addTileMovieClip(tileDepths[2][j].x,tileDepths[2][j].y, ctx);
+	}
+	// We draw the characters in here so we can layer liquids above them.
+	drawCharacters();
+	// Draw Liquids
+	for (var j = 0; j < tileDepths[3].length; j++) {
+		addTileMovieClip(tileDepths[3][j].x,tileDepths[3][j].y, ctx);
 	}
 }
 
@@ -2686,7 +2687,7 @@ function addTileMovieClip(x, y, context) {
 		}
 	} else if (_loc5_ == 6) {
 		// Door
-		context.fillStyle = '#505050';
+		context.fillStyle = bgs[currentLevel]==9||bgs[currentLevel]==10?'#999999':'#505050';
 		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
 		for (var i = 0; i < charCount2; i++) {
 			context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
@@ -2809,6 +2810,9 @@ function setAmbientShadow(x, y) {
 	}
 }
 function setBorder(x, y, s) {
+	var borderset = 0;
+	var metalBlocks = [98,102,105,107];
+	if (metalBlocks.includes(levels[currentLevel][y][x])) borderset = 19;
 	tileBorders[y][x] = [];
 	if (outOfRange(x, y)) return;
 	var _loc6_ = 0;
@@ -2818,16 +2822,14 @@ function setBorder(x, y, s) {
 		}
 	}
 	// if (_loc6_ > 0) ctx.drawImage(svgTileBorders[_loc6_-1], x*30, y*30);
-	if (_loc6_ > 0) tileBorders[y][x].push(_loc6_);
+	if (_loc6_ > 0) tileBorders[y][x].push(_loc6_+borderset);
 		
 	// TODO: remove this hard-coded array
-	var metalBlocks = [98,102,105,107];
-	if (metalBlocks.includes(levels[currentLevel][y][x])) tileBorders[y][x][tileBorders[y][x].length-1] += 19;
 	// tileBorders[_loc2_][_loc1_]
 	// tile.ambientShadow.gotoAndStop(_loc6_ + 1);
 	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
 		if ((!outOfRange(x + diagonal[_loc1_][0],y + diagonal[_loc1_][1])) &&  thisLevel[y][x + diagonal[_loc1_][0]] == s && thisLevel[y + diagonal[_loc1_][1]][x] == s && thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]] != s) {
-			tileBorders[y][x].push(16+_loc1_);
+			tileBorders[y][x].push(16+_loc1_+borderset);
 			// ctx.drawImage(svgTileBorders[15+_loc1_], x*30, y*30);
 			// tile.ambientShadow2["a" + _loc1_].gotoAndStop(2);
 		}
@@ -2914,8 +2916,8 @@ function drawCharacters() {
 				// draw legs
 				var legdire = char[_loc1_].legdire>0?1:-1;
 				var legmat = [
-					{a:0.3648529052734375,b:0,c:char[_loc1_].leg1skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65},
-					{a:0.3648529052734375,b:0,c:char[_loc1_].leg2skew*legdire,d:0.3814697265625,tx:0.35,ty:-0.65}
+					{a:0.3648529052734375,b:0,c:char[_loc1_].leg1skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35},
+					{a:0.3648529052734375,b:0,c:char[_loc1_].leg2skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35}
 				];
 				// If we're not bubble dying, draw the legs
 				if (!(char[_loc1_].id == 5 && Math.floor(char[_loc1_].frame/2) == 4)) {
@@ -3117,7 +3119,7 @@ function drawCharacters() {
 			// HPRCBubble.attachMovie("charImage","charImage",0,{_x:char[_loc1_].x,_y:char[_loc1_].y,_xscale:143,_yscale:143});
 		}
 
-		if (char[_loc1_].temp >= 50) {
+		if (char[_loc1_].temp >= 50 && char[_loc1_].id != 5) {
 			ctx.save();
 			var fireImg = svgFire[_frameCount%svgFire.length];
 			if (char[_loc1_].id == 2) fireImg = svgIceCubeMelt;
@@ -3207,7 +3209,7 @@ function setBody(i) {
 			// levelChar["char" + i]["leg" + _loc5_].gotoAndStop(Math.floor(char[i].dire / 2 + 0.5));
 			// levelChar["char" + i]["leg" + _loc5_].leg.gotoAndStop(51);
 		// }
-		offSetLegs(i, 60, 3, 0, 1);
+		offSetLegs(i, 60, 3);
 		char[i].leg1frame = 3;
 		char[i].leg2frame = 3;
 	} else if (char[i].dire % 2 == 0 && char[i].onob) {
@@ -3280,11 +3282,11 @@ function setBody(i) {
 	} else {
 		if (char[i].dire % 2 == 1 && char[i].onob) {
 			// Walk
-			offSetLegs(i, 28, 2, Math.floor(-(char[i].dire-2)/2), Math.floor((char[i].dire-2)/2));
+			offSetLegs(i, 28, 2);
 		}
 		if (char[i].submerged >= 1 && !char[i].onob) {
 			// Swim
-			offSetLegs(i, 20, 4, 0, 1);
+			offSetLegs(i, 20, 4);
 			char[i].leg1frame = 4;
 			char[i].leg2frame = 4;
 		}
@@ -3329,10 +3331,10 @@ function setBody(i) {
 	}
 }
 
-function offSetLegs(i, duration, frame, l1st, l2st) {
+function offSetLegs(i, duration, frame) {
 	if (char[i].leg1frame != frame) {
-		char[i].legAnimationFrame[0] = l1st*Math.floor(duration / 2);
-		char[i].legAnimationFrame[1] = l2st*Math.floor(duration / 2);
+		char[i].legAnimationFrame[0] = 0;
+		char[i].legAnimationFrame[1] = Math.floor(duration / 2);
 	} else {
 		char[i].legAnimationFrame[0]++;
 		char[i].legAnimationFrame[1]++;
@@ -4490,7 +4492,7 @@ function draw() {
 		ctx.drawImage(imgBgs[bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
 
 		drawLevel();
-		drawCharacters();
+		// drawCharacters();
 
 		if (cutScene == 1 || cutScene == 2) {
 			if (_keysDown[13] || _keysDown[16]) {
