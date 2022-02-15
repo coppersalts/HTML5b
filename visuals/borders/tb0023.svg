@@ -2,13 +2,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
 <defs>
 <g id="Layer0_0_FILL">
-<path fill="#000000" fill-opacity="0.2" stroke="none" d="
+<path fill="#000000" fill-opacity="0.3" stroke="none" d="
 M 20.05 18
 L 18.05 18 18.05 20 20.05 20 20.05 18
 M 24.05 0
 L 24.05 24 -0.05 24 -0.05 26 26.1 26 26.1 0 24.05 0 Z"/>
 
-<path fill="#FFFFFF" fill-opacity="0.3" stroke="none" d="
+<path fill="#FFFFFF" fill-opacity="0.2" stroke="none" d="
 M 28.1 0
 L 26.1 0 26.1 26 -0.05 26 -0.05 28 28.1 28 28.1 0
 M 24.05 24

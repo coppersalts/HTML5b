@@ -188,9 +188,11 @@ function loadLevels() {
 			if (charAt(2) == 24) dialogueFace[_loc3_][_loc5_] = 2;
 			else dialogueFace[_loc3_][_loc5_] = 3;
 			levelStart += 4;
+			lineLength = 0;
 			dialogueText[_loc3_][_loc5_] = '';
-			for (lineLength = 1; charAt(lineLength) != -35; lineLength++) {
-		dialogueText[_loc3_][_loc5_] += charAt2(lineLength - 1);
+			while (charAt(lineLength) != -35) {
+				lineLength++
+				dialogueText[_loc3_][_loc5_] += charAt2(lineLength - 1);
 			}
 			levelStart += lineLength + 2;
 		}
@@ -1840,6 +1842,7 @@ var svgCoin;
 var svgCoinGet = new Array(11);
 var svgFire = new Array(18);
 var svgBurst = new Array(13);
+var svgAcidDrop = new Array(9);
 var svgIceCubeMelt;
 
 var svgCharsVB = new Array(charD.length);
@@ -2005,6 +2008,11 @@ async function loadingScreen() {
 	}
 	for (var i = 0; i < svgBurst.length; i++) {
 		svgBurst[i] = await asyncLoadImage('visuals/effects/burst' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
+	}
+	for (var i = 0; i < svgAcidDrop.length; i++) {
+		svgAcidDrop[i] = await asyncLoadImage('visuals/effects/aciddrop' + i.toString(10).padStart(4, '0') + '.svg');
 		loadedResources++;
 		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
 	}
@@ -2891,6 +2899,30 @@ function drawCharacters() {
 				if (char[_loc1_].burstFrame > svgBurst.length-1) char[_loc1_].burstFrame = -1;
 			}
 
+			ctx.save();
+			if (char[_loc1_].charState >= 3) {
+				if (qTimer > 0 || char[_loc1_].justChanged >= 1) {
+					var _loc6_ = 0;
+					if (_loc1_ == control && qTimer > 0) {
+						_loc6_ = 9 - Math.pow(qTimer - 4,2);
+					}
+					ctx.translate(0, -_loc6_);
+					// levelChar["char" + _loc1_]._x = char[_loc1_].x;
+					// levelChar["char" + _loc1_]._y = char[_loc1_].y - _loc6_;
+					// if (_loc1_ == HPRC2) {
+						// HPRCBubble.charImage._x = char[_loc1_].x;
+						// HPRCBubble.charImage._y = char[_loc1_].y - 78;
+					// }
+					// if (char[_loc1_].deathTimer >= 30) setTint(_loc1_);
+				}
+				char[_loc1_].justChanged--;
+			}
+
+			if (char[_loc1_].charState == 2) {
+				var amt = (60 - recoverTimer) / 60;
+				ctx.transform(1, 0, 0, amt, 0, (1-amt)*char[_loc1_].y);
+			}
+
 			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2 && char[_loc1_].charState > 2) ctx.globalAlpha = 0.3;
 			if (currCharID > 34) {
 				if (charD[currCharID][7] == 1) {
@@ -2900,18 +2932,43 @@ function drawCharacters() {
 					drawPossiblyTintedImage(svgChars[currCharID][currCharFrame], char[_loc1_].x+svgCharsVB[currCharID][currCharFrame][0], char[_loc1_].y+svgCharsVB[currCharID][currCharFrame][1], char[_loc1_].temp);
 				}
 
+				if (currCharID == 50) {
+					if (char[_loc1_].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[_loc1_].acidDropTimer[0]], char[_loc1_].x - 17.7, char[_loc1_].y - 1.5);
+					char[_loc1_].acidDropTimer[0]++;
+					if (char[_loc1_].acidDropTimer[0] > 28) {
+						if (Math.random() < 0.8) {
+							char[_loc1_].acidDropTimer[0] = 9;
+						} else {
+							char[_loc1_].acidDropTimer[0] = 0;
+						}
+					}
+				} else if (currCharID == 51) {
+					if (char[_loc1_].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[_loc1_].acidDropTimer[0]], char[_loc1_].x - 25.75, char[_loc1_].y + 1.6, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
+					if (char[_loc1_].acidDropTimer[1] < 9) ctx.drawImage(svgAcidDrop[char[_loc1_].acidDropTimer[1]], char[_loc1_].x + 18.3, char[_loc1_].y + 6.7, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
+					char[_loc1_].acidDropTimer[0]++;
+					char[_loc1_].acidDropTimer[1]++;
+					if (char[_loc1_].acidDropTimer[0] > 28) {
+						if (Math.random() < 0.8) {
+							char[_loc1_].acidDropTimer[0] = 9;
+						} else {
+							char[_loc1_].acidDropTimer[0] = 0;
+						}
+					}
+					if (char[_loc1_].acidDropTimer[1] > 28) {
+						if (Math.random() < 0.8) {
+							char[_loc1_].acidDropTimer[1] = 9;
+						} else {
+							char[_loc1_].acidDropTimer[1] = 0;
+						}
+					}
+				}
+
 				// Hitboxes
 				// ctx.strokeStyle = '#ff0000';
 				// ctx.lineWidth = 1;
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
 			} else {
 				var model = charModels[char[_loc1_].id];
-
-				if (char[_loc1_].charState == 2) {
-					ctx.save();
-					var amt = (60 - recoverTimer) / 60;
-					ctx.transform(1, 0, 0, amt, 0, (1-amt)*char[_loc1_].y);
-				}
 
 				// draw legs
 				var legdire = char[_loc1_].legdire>0?1:-1;
@@ -3043,12 +3100,9 @@ function drawCharacters() {
 				// Hitboxes
 				// ctx.strokeStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
-
-				if (char[_loc1_].charState == 2) {
-					ctx.restore();
-				}
+				ctx.restore();
 			}
-			if (ctx.globalAlpha < 1) ctx.globalAlpha = 1;
+			ctx.restore();
 		}
 		// else {
 		// 	// ctx.fillStyle = '#00ffff';
@@ -3536,17 +3590,17 @@ function setCamera() {
 	if (levelWidth <= 32) {
 		cameraX = levelWidth * 15 - 480;
 	} else if (char[control].x - cameraX < 384) {
-		cameraX = Math.min(Math.max(cameraX + (char[control].x - 384 - cameraX),0),levelWidth * 30 - 960);
+		cameraX = Math.min(Math.max(cameraX + (char[control].x - 384 - cameraX) * 0.12,0),levelWidth * 30 - 960);
 	} else if (char[control].x - cameraX >= 576) {
-		cameraX = Math.min(Math.max(cameraX + (char[control].x - 576 - cameraX),0),levelWidth * 30 - 960);
+		cameraX = Math.min(Math.max(cameraX + (char[control].x - 576 - cameraX) * 0.12,0),levelWidth * 30 - 960);
 	}
 
 	if (levelHeight <= 18) {
 		cameraY = levelHeight * 15 - 270;
 	} else if (char[control].y - cameraY < 216) {
-		cameraY = Math.min(Math.max(cameraY + (char[control].y - 216 - cameraY),0),levelHeight * 30 - 540);
+		cameraY = Math.min(Math.max(cameraY + (char[control].y - 216 - cameraY) * 0.12,0),levelHeight * 30 - 540);
 	} else if (char[control].y - cameraY >= 324) {
-		cameraY = Math.min(Math.max(cameraY + (char[control].y - 324 - cameraY),0),levelHeight * 30 - 540);
+		cameraY = Math.min(Math.max(cameraY + (char[control].y - 324 - cameraY) * 0.12,0),levelHeight * 30 - 540);
 	}
 }
 
@@ -5089,22 +5143,22 @@ function draw() {
 				}
 				if (_loc2_ == control) setCamera();
 			}
-			if (char[_loc2_].charState >= 3) {
-				if (qTimer > 0 || char[_loc2_].justChanged >= 1) {
-					var _loc6_ = 0;
-					if (_loc2_ == control && qTimer > 0) {
-						_loc6_ = 9 - Math.pow(qTimer - 4,2);
-					}
-					// levelChar["char" + _loc2_]._x = char[_loc2_].x;
-					// levelChar["char" + _loc2_]._y = char[_loc2_].y - _loc6_;
-					if (_loc2_ == HPRC2) {
-						// HPRCBubble.charImage._x = char[_loc2_].x;
-						// HPRCBubble.charImage._y = char[_loc2_].y - 78;
-					}
-					// if (char[_loc2_].deathTimer >= 30) setTint(_loc2_);
-				}
-				char[_loc2_].justChanged--;
-			}
+			// if (char[_loc2_].charState >= 3) {
+			// 	if (qTimer > 0 || char[_loc2_].justChanged >= 1) {
+			// 		var _loc6_ = 0;
+			// 		if (_loc2_ == control && qTimer > 0) {
+			// 			_loc6_ = 9 - Math.pow(qTimer - 4,2);
+			// 		}
+			// 		// levelChar["char" + _loc2_]._x = char[_loc2_].x;
+			// 		// levelChar["char" + _loc2_]._y = char[_loc2_].y - _loc6_;
+			// 		if (_loc2_ == HPRC2) {
+			// 			// HPRCBubble.charImage._x = char[_loc2_].x;
+			// 			// HPRCBubble.charImage._y = char[_loc2_].y - 78;
+			// 		}
+			// 		// if (char[_loc2_].deathTimer >= 30) setTint(_loc2_);
+			// 	}
+			// 	char[_loc2_].justChanged--;
+			// }
 		}
 
 		// This was originally near the start of the level screen code, but I moved it to the end to fix a bug relating to the camera when exiting a level.

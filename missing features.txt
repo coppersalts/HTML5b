@@ -1,4 +1,1 @@
-- the last character of dialogue lines gets cut off
-- acid drops
-- smooth pan when switching characters
 - the level editor

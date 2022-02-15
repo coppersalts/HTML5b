@@ -48,6 +48,7 @@ class Character {
 		this.diaMouthFrame = 0;
 		this.expr = 0;
 		this.dExpr = tdExpr;
+		this.acidDropTimer = [0, 0]; // Why am I doing it like this
 	}
 
 	applyForces(grav, control, waterUpMaxSpeed)
