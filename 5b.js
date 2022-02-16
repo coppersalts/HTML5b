@@ -2929,7 +2929,7 @@ function setBody(i) {
 	char[i].leg1skew = 0;
 	char[i].leg2skew = 0;
 
-	var _loc2_ = undefined;
+	var _loc2_;
 	var _loc3_ = [0,0];
 	char[i].legdire = char[i].dire / 2 - 1;
 	if (ifCarried(i) && cornerHangTimer == 0) {
@@ -3256,7 +3256,7 @@ function checkButton(i) {
 	if (char[i].onob) {
 		var _loc4_ = Math.ceil(char[i].y / 30);
 		if (_loc4_ >= 0 && _loc4_ <= levelHeight - 1) {
-			var _loc6_ = undefined;
+			var _loc6_;
 			for (var _loc3_ = Math.floor((char[i].x - char[i].w) / 30); _loc3_ <= Math.floor((char[i].x + char[i].w) / 30); _loc3_++) {
 				if (!outOfRange(_loc3_, _loc4_)) {
 					_loc6_ = blockProperties[thisLevel[_loc4_][_loc3_]][11];
@@ -3650,10 +3650,10 @@ function displayLine(level, line) {
 		line = line + 1;
 		_loc2_ = dialogueChar[level][line];
 	}
-	var _loc5_ = undefined;
+	var _loc5_;
 	if (_loc2_ == 99) {
 		_loc5_ = 480;
-	} else if (_loc2_ < charCount) {
+	} else if (_loc2_ < char.length) {
 		_loc5_ = Math.min(Math.max(char[_loc2_].x,bubWidth / 2 + bubMargin),960 - bubWidth / 2 - bubMargin);
 		putDown(_loc2_);
 	}
@@ -3664,7 +3664,7 @@ function displayLine(level, line) {
 	} else {
 		bubY = 520 - bubMargin - bubHeight / 2;
 	}
-	if (_loc2_ < charCount) {
+	if (_loc2_ < char.length) {
 		char[_loc2_].expr = dialogueFace[level][line]-2;
 		char[_loc2_].diaMouthFrame = 0;
 	}
@@ -4429,7 +4429,7 @@ function draw() {
 				}
 			}
 		}
-		var _loc11_ = undefined;
+		var _loc11_;
 		if (!gotThisCoin) _loc11_ = 140 - locations[4] * 0.7;
 		if (gotCoin[currentLevel]) _loc11_ = Math.max(_loc11_,30);
 		for (var _loc2_ = 0; _loc2_ < charCount; _loc2_++) {
@@ -4920,8 +4920,8 @@ function draw() {
 		// if (mouseOnGrid()) {
 		// 	if (tool == 6) {
 		// 		levelCreator.rectSelect.clear();
-		// 		var _loc13_ = undefined;
-		// 		var _loc12_ = undefined;
+		// 		var _loc13_;
+		// 		var _loc12_;
 		// 		if (closeToEdgeY()) {
 		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
 		// 			_loc13_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
@@ -4935,8 +4935,8 @@ function draw() {
 		// 		levelCreator.rectSelect.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
 		// 	} else if (tool == 7) {
 		// 		levelCreator.rectSelect.clear();
-		// 		var _loc14_ = undefined;
-		// 		var _loc10_ = undefined;
+		// 		var _loc14_;
+		// 		var _loc10_;
 		// 		if (closeToEdgeX()) {
 		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
 		// 			_loc14_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
