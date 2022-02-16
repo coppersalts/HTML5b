@@ -2971,28 +2971,28 @@ function setBody(i) {
 		if (_loc3_[0] > _loc3_[1] && _loc3_[1] >= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[0]/60;
-			char[i].leg2skew = _loc3_[0]/60;
+			char[i].leg1skew = _loc3_[0]/42;
+			char[i].leg2skew = _loc3_[0]/42;
 		} else if (_loc3_[0] > _loc3_[1] && _loc3_[0] <= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[1]/60;
-			char[i].leg2skew = _loc3_[1]/60;
+			char[i].leg1skew = _loc3_[1]/42;
+			char[i].leg2skew = _loc3_[1]/42;
 		} else if (_loc3_[0] < 0 && _loc3_[1] > 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[0]/60;
-			char[i].leg2skew = _loc3_[1]/60;
+			char[i].leg1skew = _loc3_[0]/42;
+			char[i].leg2skew = _loc3_[1]/42;
 		} else if (_loc3_[1] > 0 && _loc3_[0] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = 0.55;
-			char[i].leg2skew = 0.55;
+			char[i].leg1skew = 0.72;
+			char[i].leg2skew = 0.72;
 		} else if (_loc3_[0] < 0 && _loc3_[1] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = -0.55;
-			char[i].leg2skew = -0.55;
+			char[i].leg1skew = -0.72;
+			char[i].leg2skew = -0.72;
 		} else {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
