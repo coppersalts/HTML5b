@@ -101,7 +101,7 @@ if (bfdia5b.getItem('levelProgress') == undefined) {
 var white_alpha = 0;
 
 function getTimer() {
-	return _frameCount/0.06;
+	return _frameCount / 0.06;
 }
 function charAt(j) {
 	return levelsString.charCodeAt(j + levelStart) - 48;
@@ -121,6 +121,7 @@ function tileAt(j, i, y) {
 function loadLevels() {
 	for (var _loc3_ = 0; _loc3_ < levelCount; _loc3_++) {
 		levelStart += 2;
+
 		// Read Level Name
 		levelName[_loc3_] = '';
 		for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
@@ -162,16 +163,16 @@ function loadLevels() {
 		for (var _loc5_ = 0; _loc5_ < charCount; _loc5_++) {
 			startLocations[_loc3_][_loc5_] = new Array(6);
 			for (var _loc4_ = 0; _loc4_ < (f - 1) / 3; _loc4_++) {
-		startLocations[_loc3_][_loc5_][_loc4_] = charAt(_loc4_ * 3) * 10 + charAt(_loc4_ * 3 + 1);
+				startLocations[_loc3_][_loc5_][_loc4_] = charAt(_loc4_ * 3) * 10 + charAt(_loc4_ * 3 + 1);
 			}
 			levelStart += f - 2;
 			if (startLocations[_loc3_][_loc5_][5] == 3 || startLocations[_loc3_][_loc5_][5] == 4) {
-		levelStart++;
-		startLocations[_loc3_][_loc5_].push(new Array(0));
-		for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
-			startLocations[_loc3_][_loc5_][6].push(charAt(lineLength));
-		}
-		levelStart += lineLength;
+				levelStart++;
+				startLocations[_loc3_][_loc5_].push(new Array(0));
+				for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
+					startLocations[_loc3_][_loc5_][6].push(charAt(lineLength));
+				}
+				levelStart += lineLength;
 			}
 			levelStart += 2;
 		}
@@ -1790,6 +1791,7 @@ async function asyncLoadImage(src) {
 		img.src = src;
 	});
 }
+
 async function asyncLoadVB(src) {
 	return new Promise((resolve, reject) => {
 		let req = new XMLHttpRequest();
@@ -2429,6 +2431,14 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 }
 
 
+
+
+
+
+
+
+
+
 function playLevel(i) {
 	if (i == levelProgress) playMode = 0;
 	else if (i < levelProgress) playMode = 1;
@@ -2467,33 +2477,13 @@ function resetLevel() {
 			startLocations[currentLevel][_loc1_][3] * 30 + startLocations[currentLevel][_loc1_][4] * 30 / 100,
 			70 + _loc1_ * 40,
 			400 - _loc1_ * 30,
-			0,
-			0,
-			false,
-			4,
-			false,
-			0,
-			200,
-			200,
-			30,
 			startLocations[currentLevel][_loc1_][5],
-			-1,
-			new Array(0),
 			charD[_loc2_][0],
 			charD[_loc2_][1],
 			charD[_loc2_][2],
 			charD[_loc2_][2],
 			charD[_loc2_][3],
-			false,
 			charD[_loc2_][4],
-			0,
-			2,
-			0,
-			new Array(0),
-			0,
-			0,
-			0,
-			0,
 			charD[_loc2_][6],
 			charD[_loc2_][8],
 			_loc2_<35?charModels[_loc2_].defaultExpr:0
@@ -3684,6 +3674,9 @@ function startDeath(i) {
 		char[i].deathTimer = 20;
 		char[i].leg1frame = 1;
 		char[i].leg2frame = 1;
+		char[i].leg1skew = 0;
+		char[i].leg2skew = 0;
+
 		char[i].frame = 7 + Math.ceil(char[i].dire / 2);
 	}
 }
@@ -4201,14 +4194,14 @@ function draw() {
 	onButton = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
+
+
 	if (menuScreen == -1) {
 		ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
 		drawMenu0Button('Start Game', (cwidth-menu0ButtonSize.w)/2, (cheight-menu0ButtonSize.h)/2, 0, false, playGame);
-	}
-	if (menuScreen == 0) {
+	} else if (menuScreen == 0) {
 		drawMenu();
-	}
-	if (menuScreen == 2) {
+	} else if (menuScreen == 2) {
 		drawLevelMap();
 		if (_xmouse < 587 || _ymouse < 469) {
 			if (_ymouse <= 180) {
@@ -4217,14 +4210,13 @@ function draw() {
 				cameraY = Math.min(Math.max(cameraY - (_ymouse - 360) * 0.1,-1080),0);
 			}
 		}
-	}
-	if (menuScreen == 3) {
+	} else if (menuScreen == 3) {
+		// TODO: draw the bg to an offscreen canvas when the level is loaded
 		var bgScale = Math.max(bgXScale, bgYScale);
 		ctx.drawImage(imgBgs[bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
-
 		drawLevel();
 
-		if (cutScene == 1 || cutScene == 2) {
+		if (cutScene == 1 || cutScene == 2) { 
 			if (_keysDown[13] || _keysDown[16]) {
 				if (!csPress && cutScene == 1) {
 					cutSceneLine++;
@@ -4237,7 +4229,7 @@ function draw() {
 				if (cutScene == 2) cutScene = 3;
 			}
 		} else {
-			if (control < 10000) {
+			if (control < 1000) {
 				if (recover) {
 					char[control].justChanged = 2;
 					if (recoverTimer == 0) {
@@ -4345,13 +4337,14 @@ function draw() {
 				} else char[control].landTimer = 80;
 			}
 		}
+
+
+
 		if (_keysDown[82] && wipeTimer == 0) {
 			wipeTimer = 1;
 			transitionType = 0;
 			// if (cutScene == 1) csBubble.gotoAndPlay(17);
 		}
-
-
 		locations[4] = 1000;
 		for (var _loc2_ = 0; _loc2_ < charCount; _loc2_++) {
 			if (char[_loc2_].charState >= 5) {
@@ -4822,8 +4815,7 @@ function draw() {
 		shakeX = _loc9_ - cameraX;
 		shakeY = _loc3_ - cameraY;
 		levelTimer++;
-	}
-	if (menuScreen == 5) {
+	} else if (menuScreen == 5) {
 		ctx.fillStyle = '#ffffff';
 		ctx.fillRect(0,0,960,540);
 		ctx.fillStyle = '#aeaeae';
@@ -4964,6 +4956,9 @@ function draw() {
 		// 	}
 		}
 	}
+
+
+
 
 	if (levelTimer <= 30 || menuScreen != 3) {
 		if (wipeTimer >= 30 && wipeTimer <= 60) {

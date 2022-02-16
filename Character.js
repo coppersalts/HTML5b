@@ -1,38 +1,37 @@
 class Character {
-	// TODO: remove unnecessary arguments from the constructor. 
-	constructor(tid, tx, ty, tpx, tpy, tvx, tvy, tonob, tdire, tcarry, tcarryObject, tcarriedBy, tlandTimer, tdeathTimer, tcharState, tstandingOn, tstoodOnBy, tw, th, tweight, tweight2, th2, tatEnd, tfriction, tfricGoal, tjustChanged, tspeed, tbuttonsPressed, tpcharState, tsubmerged, ttemp, theated, theatSpeed, thasArms, tdExpr) {
+	constructor(tid, tx, ty, tpx, tpy, tcharState, tw, th, tweight, tweight2, th2, tfriction, theatSpeed, thasArms, tdExpr) {
 		this.id = tid;
 		this.x = tx;
 		this.y = ty;
 		this.px = tx;
 		this.py = ty;
-		this.vx = tvx;
-		this.vy = tvy;
-		this.onob = tonob;
-		this.dire = tdire;
-		this.carry = tcarry;
-		this.carryObject = tcarryObject;
-		this.carriedBy = tcarriedBy;
-		this.landTimer = tlandTimer;
-		this.deathTimer = tdeathTimer;
+		this.vx = 0;
+		this.vy = 0;
+		this.onob = false;
+		this.dire = 4;
+		this.carry = false;
+		this.carryObject = 0;
+		this.carriedBy = 200;
+		this.landTimer = 200;
+		this.deathTimer = 30;
 		this.charState = tcharState;
-		this.standingOn = tstandingOn;
-		this.stoodOnBy = tstoodOnBy;
+		this.standingOn = -1;
+		this.stoodOnBy = new Array(0);
 		this.w = tw;
 		this.h = th;
 		this.weight = tweight;
 		this.weight2 = tweight2;
 		this.h2 = th2;
-		this.atEnd = tatEnd;
+		this.atEnd = false;
 		this.friction = tfriction;
-		this.fricGoal = tfricGoal;
-		this.justChanged = tjustChanged;
-		this.speed = tspeed;
-		this.buttonsPressed = tbuttonsPressed;
-		this.pcharState = tpcharState;
-		this.submerged = tsubmerged;
-		this.temp = ttemp;
-		this.heated = theated;
+		this.fricGoal = 0;
+		this.justChanged = 2;
+		this.speed = 0;
+		this.buttonsPressed = new Array(0);
+		this.pcharState = 0;
+		this.submerged = 0;
+		this.temp = 0;
+		this.heated = 0;
 		this.heatSpeed = theatSpeed;
 		this.hasArms = thasArms;
 
