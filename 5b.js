@@ -54,7 +54,7 @@ var bonusProgress;
 var bonusesCleared;
 var gotCoin;
 var gotThisCoin = false;
-var tileCount = 11;
+var tileCount = 100;
 var bfdia5b = window.localStorage;
 var deathCount;
 var timer;
@@ -1675,6 +1675,8 @@ var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Wa
 var selectedTab = 0;
 var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue'];
 var tabHeight = 30;
+var tileTabScrollBar = 0;
+var draggingScrollBar = false;
 var power = 1;
 var jumpPower = 11;
 var qPress = false;
@@ -1717,6 +1719,7 @@ var scale = 20;
 var tool = 0;
 var selectedTile = 0;
 var mouseIsDown = false;
+var pmouseIsDown = false;
 var LCEndGateX = 0;
 var LCEndGateY = 0;
 var cardinal = [[0,-1],[0,1],[-1,0],[1,0]];
@@ -2120,6 +2123,10 @@ function menuLevelCreator() {
 	resetLevelCreator();
 }
 
+function menuExitLevelCreator() {
+	menuScreen = 0;
+}
+
 function menuExplore() {
 	//
 }
@@ -2310,7 +2317,7 @@ function drawMenu() {
 	}
 	else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
-	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, true,  menuLevelCreator);
+	drawMenu0Button('L.C. (WIP)', 665.55, 437.7, 3, false,  menuLevelCreator);
 	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, true,  menuExplore);
 
 	// var started = true;
@@ -4107,12 +4114,27 @@ function drawLCTiles() {
 		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 			var tile = myLevel[1][_loc2_][_loc1_];
 			if (blockProperties[tile][16] > 0) {
-				ctx.drawImage(svgTiles[tile], 330 - scale * levelWidth / 2 + _loc1_ * scale, 240 - scale * levelHeight / 2 + _loc2_ * scale, scale, scale);
+				var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
+				ctx.drawImage(img, 330 - scale * levelWidth / 2 + _loc1_ * scale, 240 - scale * levelHeight / 2 + _loc2_ * scale, scale, scale);
 			}
 		}
 	}
 	// addLCTiles();
 	// updateLCTiles();
+}
+
+function drawLCRect(x1, y1, x2, y2) {
+	// levelCreator.rectSelect.lineStyle(1,0,0);
+	// ctx.beginFill(16776960,50);
+	ctx.fillStyle = '#ffff00';
+	ctx.globalAlpha = 0.5;
+	ctx.moveTo(x1 * scale + (330 - scale * levelWidth / 2),y1 * scale + (240 - scale * levelHeight / 2));
+	ctx.lineTo((x2 + 1) * scale + (330 - scale * levelWidth / 2),y1 * scale + (240 - scale * levelHeight / 2));
+	ctx.lineTo((x2 + 1) * scale + (330 - scale * levelWidth / 2),(y2 + 1) * scale + (240 - scale * levelHeight / 2));
+	ctx.lineTo(x1 * scale + (330 - scale * levelWidth / 2),(y2 + 1) * scale + (240 - scale * levelHeight / 2));
+	ctx.lineTo(x1 * scale + (330 - scale * levelWidth / 2),y1 * scale + (240 - scale * levelHeight / 2));
+	ctx.fill();
+	ctx.globalAlpha = 1;
 }
 
 function clearMyWholeLevel() {
@@ -4137,6 +4159,122 @@ function clearMyLevel(i) {
 		_loc2_ = _loc2_ + 1;
 	}
 }
+function clearRectSelect() {
+	LCRect = [-1,-1,-1,-1];
+}
+function fillTile(x, y, after, before) {
+	var _loc4_ = [[x,y]];
+	while (_loc4_.length >= 1) {
+		var _loc1_ = 0;
+		while(_loc1_ < 4) {
+			if (!(_loc1_ == 3 && x == levelWidth - 1 || _loc1_ == 2 && x == 0 || _loc1_ == 1 && y == levelHeight - 1 || _loc1_ == 0 && y == 0)) {
+				var _loc3_ = _loc4_[0][0] + cardinal[_loc1_][0];
+				var _loc2_ = _loc4_[0][1] + cardinal[_loc1_][1];
+				if (!outOfRange(_loc3_,_loc2_) && myLevel[1][_loc2_][_loc3_] == before) {
+					_loc4_.push([_loc3_,_loc2_]);
+					myLevel[1][_loc2_][_loc3_] = after;
+					// levelCreator.tiles["tileX" + _loc3_ + "Y" + _loc2_].gotoAndStop(after + 1);
+				}
+			}
+			_loc1_ = _loc1_ + 1;
+		}
+		_loc4_.shift();
+	}
+}
+function setUndo() {
+	LCSwapLevelData(1,0);
+	undid = false;
+	// levelCreator.tools.tool9.gotoAndStop(1);
+}
+function undo() {
+	LCSwapLevelData(1,2);
+	LCSwapLevelData(0,1);
+	LCSwapLevelData(2,0);
+	// if(undid)
+	// {
+	// 	levelCreator.tools.tool9.gotoAndStop(1);
+	// }
+	// else
+	// {
+	// 	levelCreator.tools.tool9.gotoAndStop(2);
+	// }
+	undid = !undid;
+}
+function LCSwapLevelData(a, b) {
+	myLevel[b] = new Array(myLevel[a].length);
+	var _loc2_ = 0;
+	while(_loc2_ < levelHeight)
+	{
+		myLevel[b][_loc2_] = new Array(myLevel[a][0].length);
+		var _loc1_ = 0;
+		while(_loc1_ < levelWidth)
+		{
+			myLevel[b][_loc2_][_loc1_] = myLevel[a][_loc2_][_loc1_];
+			// if(b == 1)
+			// {
+			// 	levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].gotoAndStop(myLevel[b][_loc2_][_loc1_] + 1);
+			// }
+			_loc1_ = _loc1_ + 1;
+		}
+		_loc2_ = _loc2_ + 1;
+	}
+}
+function mouseOnScreen() {
+	return _xmouse < 660 && _ymouse < 480;
+}
+function setSelectedTile(i) {
+	selectedTile = i;
+	// var _loc3_ = i % 5 * 60 + 30;
+	// var _loc2_ = Math.floor(i / 5) * 60 + 70;
+	// levelCreator.sideBar.tab4.selector._x = _loc3_;
+	// levelCreator.sideBar.tab4.selector._y = _loc2_;
+}
+function closeToEdgeY()
+{
+	var _loc1_ = (_ymouse - (240 - scale * levelHeight / 2)) / scale % 1;
+	return Math.abs(_loc1_ - 0.5) > 0.25;
+}
+function closeToEdgeX()
+{
+	var _loc1_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
+	return Math.abs(_loc1_ - 0.5) > 0.25;
+}
+function removeLCTiles() {
+	console.log('removeLCTiles');
+	// var _loc2_ = 0;
+	// while(_loc2_ < levelHeight)
+	// {
+	// 	var _loc1_ = 0;
+	// 	while(_loc1_ < levelWidth)
+	// 	{
+	// 		levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].removeMovieClip();
+	// 		_loc1_ = _loc1_ + 1;
+	// 	}
+	// 	_loc2_ = _loc2_ + 1;
+	// }
+}
+function updateLCtiles() {
+	console.log('updateLCtiles');
+	// var _loc2_ = 0;
+	// while(_loc2_ < levelHeight)
+	// {
+	// 	var _loc1_ = 0;
+	// 	while(_loc1_ < levelWidth)
+	// 	{
+	// 		levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].gotoAndStop(myLevel[1][_loc2_][_loc1_] + 1);
+	// 		_loc1_ = _loc1_ + 1;
+	// 	}
+	// 	_loc2_ = _loc2_ + 1;
+	// }
+}
+function setTool(i) {
+	// levelCreator.tools["tool" + tool].gotoAndStop(2);
+	tool = i;
+	if (tool == 2 || tool == 5) {
+		clearRectSelect();
+	}
+	// levelCreator.tools["tool" + tool].gotoAndStop(1);
+}
 
 
 
@@ -4151,10 +4289,158 @@ function mousemove(event){
 
 function mousedown(event){
 	mouseIsDown = true;
+
+	if (menuScreen == 5) {
+		if (_xmouse > 660) {
+			// for (var _loc8_ = 0; _loc8_ < 6; _loc8_++) {
+			// 	var _loc9_ = _loc8_ * 40;
+			// 	if (_loc8_ > selectedTab) {
+			// 		_loc9_ += 300;
+			// 	}
+			// 	if (_ymouse >= _loc9_ && _ymouse < _loc9_ + 40) {
+			// 		setSelectedTab(_loc8_);
+			// 		if (_loc8_ == 3 && (selectedTile < 0 || selectedTile > tileCount)) {
+			// 			setTool(0);
+			// 			setSelectedTile(1);
+			// 		}
+			// 		break;
+			// 	}
+			// }
+
+
+			// if (selectedTab == 2) {
+			// 	var _loc10_ = Math.floor((_xmouse - 660) / 60);
+			// 	_loc9_ = Math.floor((_ymouse - 160) / 60);
+			// 	_loc8_ = _loc10_ + _loc9_ * 5;
+			// 	if (_loc8_ >= 0 && _loc8_ < tileCount && (tool != 3 && tool != 2 || !blockProperties[_loc8_][9])) {
+			// 		setSelectedTile(_loc8_);
+			// 		if (_loc8_ >= 1 && tool == 1) {
+			// 			setTool(0);
+			// 		}
+			// 	}
+			// } else {
+			// 	setSelectedTile(1000);
+			// }
+			clearRectSelect();
+		} else if (Math.abs(_ymouse - 510) <= 20 && Math.abs(_xmouse - 330) <= 300) {
+			// var _loc8_ = Math.floor((_xmouse - 30) / 50);
+			// if (_loc8_ != 8) {
+			// 	if (_loc8_ >= 9) {
+			// 		_loc8_ = _loc8_ - 1;
+			// 	}
+			// 	if (_loc8_ == 9) {
+			// 		undo();
+			// 	} else if (_loc8_ == 10) {
+			// 		setUndo();
+			// 		clearMyLevel(1);
+			// 		updateLCtiles();
+			// 	} else {
+			// 		setTool(_loc8_);
+			// 		if(tool <= 3) {
+			// 			setSelectedTab(3);
+			// 			if ((tool == 3 || tool == 2) && blockProperties[selectedTile][9]) {
+			// 				setSelectedTile(1);
+			// 			}
+			// 		}
+			// 	}
+			// }
+		} else {
+			if (tool != 4 && tool != 5) {
+				setUndo();
+			}
+			var _loc10_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+			var _loc9_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+			if (mouseOnScreen()) {
+				if (tool == 2 || tool == 5) {
+					LCRect[0] = LCRect[2] = Math.min(Math.max(_loc10_,0),levelWidth - 1);
+					LCRect[1] = LCRect[3] = Math.min(Math.max(_loc9_,0),levelHeight - 1);
+				}
+			}
+			if (mouseOnGrid()) {
+				if (tool == 3) {
+					var _loc11_ = myLevel[1][_loc9_][_loc10_];
+					fillTile(_loc10_,_loc9_,selectedTile,_loc11_);
+				} else if (tool == 4) {
+					selectedTab = 2;
+					setTool(0);
+					setSelectedTile(myLevel[1][_loc9_][_loc10_]);
+				} else if(tool == 6) {
+					var _loc5_ = 0;
+					if (closeToEdgeY() || levelHeight >= 2) {
+						if (closeToEdgeY()) {
+							_loc5_ = 1;
+						} else {
+							_loc5_ = -1;
+						}
+						removeLCTiles();
+						var _loc7_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+						levelHeight += _loc5_;
+						myLevel[1] = new Array(levelHeight);
+						var _loc4_ = 0;
+						for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
+							if (_loc2_ < _loc7_) {
+								_loc4_ = _loc2_;
+							} else {
+								_loc4_ = Math.max(_loc2_ - _loc5_,0);
+							}
+							myLevel[1][_loc2_] = new Array(levelWidth);
+							for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
+								myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc4_][_loc1_];
+							}
+						}
+						// drawLCGrid();
+					}
+				} else if (tool == 7) {
+					var _loc6_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
+					_loc5_ = 0;
+					if (closeToEdgeX() || levelWidth >= 2) {
+						if (closeToEdgeX()) {
+							_loc5_ = 1;
+						} else {
+							_loc5_ = -1;
+						}
+						removeLCTiles();
+						_loc6_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+						levelWidth += _loc5_;
+						myLevel[1] = new Array(levelHeight);
+						var _loc3_ = 0;
+						for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
+							myLevel[1][_loc2_] = new Array(levelWidth);
+							_loc1_ = 0;
+							for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
+								if(_loc1_ < _loc6_) {
+									_loc3_ = _loc1_;
+								} else {
+									_loc3_ = Math.max(_loc1_ - _loc5_,0);
+								}
+								myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc2_][_loc3_];
+							}
+						}
+						// drawLCGrid();
+					}
+				}
+			}
+		}
+	}
 }
 
 function mouseup(event){
 	mouseIsDown = false;
+	if (menuScreen == 5) {
+		if (tool == 2 && LCRect[0] != -1) {
+			y = Math.min(LCRect[1],LCRect[3]);
+			while (y <= Math.max(LCRect[1],LCRect[3])) {
+				x = Math.min(LCRect[0],LCRect[2]);
+				while (x <= Math.max(LCRect[0],LCRect[2])) {
+					myLevel[1][y][x] = selectedTile;
+					// levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(selectedTile + 1);
+					x++;
+				}
+				y++;
+			}
+			clearRectSelect();
+		}
+	}
 }
 
 function keydown(event){
@@ -4816,13 +5102,98 @@ function draw() {
 		shakeY = _loc3_ - cameraY;
 		levelTimer++;
 	} else if (menuScreen == 5) {
+		// menuExitLevelCreator
+
 		ctx.fillStyle = '#ffffff';
 		ctx.fillRect(0,0,960,540);
 		ctx.fillStyle = '#aeaeae';
 		ctx.fillRect(0,480,660,60);
 		ctx.fillStyle = '#cccccc';
 		ctx.fillRect(660,0,300,540);
+		drawMenu0Button('BACK', 0, 0, 10, false, menuExitLevelCreator);
 
+
+		// Draw Tab Contents
+		if (selectedTab == 0) {
+			//
+		} else if (selectedTab == 1) {
+			//
+		} else if (selectedTab == 2) {
+			var j = 0;
+			var bpr = 5;
+			var bs = 40;
+			var bdist = 53;
+			// var h = _frameCount;
+			ctx.save();
+			ctx.translate(0, -tileTabScrollBar);
+			for (var i = 0; i < blockProperties.length; i++) {
+				if (blockProperties[i][16] > 0) {
+					var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
+					var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
+					if (onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
+						onButton = true;
+						ctx.fillStyle = '#dddddd';
+						// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
+						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+						if (mouseIsDown && !pmouseIsDown) {
+							selectedTile = i;
+							if (tool != 2 && tool != 3) setTool(0);
+						}
+					}
+					if (vb[2] <= 60) {
+						var sc = bs/30;
+						ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist + vb[0]*sc, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist + vb[1]*sc, vb[2]*sc, vb[3]*sc);
+					} else {
+						var sc = bs/vb[2];
+						ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, vb[2]*sc, vb[3]*sc);
+					}
+					j++;
+				}
+			}
+			ctx.restore();
+
+			var tabWindowH = cheight - tabHeight * tabNames.length;
+			var tabContentsHeight = (bdist-bs) + Math.floor(j/bpr)*bdist;
+			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+			var scrollBarY = (selectedTab+1)*tabHeight + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
+			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+				onButton = true;
+				ctx.fillStyle = '#e8e8e8';
+				if (mouseIsDown && !pmouseIsDown) {
+					draggingScrollBar = true;
+				}
+			} else {
+				ctx.fillStyle = '#dddddd';
+			}
+
+			if (draggingScrollBar) {
+				onButton = false;
+				ctx.fillStyle = '#a0a0a0';
+				tileTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				if (!mouseIsDown) draggingScrollBar = false;
+			}
+			//tileTabScrollBar
+			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+		} else if (selectedTab == 3) {
+			//
+		} else if (selectedTab == 4) {
+			//
+		}
+
+		// Draw Tools
+		for (var i = 0; i < 8; i++) {
+			if (i == tool) ctx.fillStyle = '#999999';
+			else ctx.fillStyle = '#666666';
+			ctx.fillRect(35 + i*50, 490, 40, 40);
+
+			if (onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
+				if (mouseIsDown && !pmouseIsDown) {
+					setTool(i);
+				}
+			}
+		}
+
+		// Draw Tabs
 		ctx.textAlign = 'left';
 		ctx.font = '25px Helvetica';
 		ctx.textBaseline = 'middle';
@@ -4835,47 +5206,14 @@ function draw() {
 			ctx.fillText(tabNames[i], 664, tabY+tabHeight*0.6);
 
 			if (onRect(_xmouse, _ymouse, 660, tabY, 300, tabHeight)) {
-				if (mouseIsDown) {
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) {
 					selectedTab = i;
 				}
 			}
 		}
-		if (selectedTab == 0) {
-			//
-		} else if (selectedTab == 1) {
-			//
-		} else if (selectedTab == 2) {
-			var j = 0;
-			var bpr = 5;
-			var bs = 40;
-			var bdist = 53;
-			// var h = _frameCount;
-			for (var i = 0; i < blockProperties.length; i++) {
-				if (blockProperties[i][16] > 0) {
-					var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
-					var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
-					var sc = vb[2]>60?bs/vb[2]:bs/30;
-					ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist + vb[0]*sc, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist + vb[1]*sc, vb[2]*sc, vb[3]*sc);
-					j++;
-				}
-			}
-		} else if (selectedTab == 3) {
-			//
-		} else if (selectedTab == 4) {
-			//
-		}
 
-		for (var i = 0; i < 8; i++) {
-			if (i == tool) ctx.fillStyle = '#999999';
-			else ctx.fillStyle = '#666666';
-			ctx.fillRect(35 + i*50, 490, 40, 40);
 
-			if (onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
-				if (mouseIsDown) {
-					tool = i;
-				}
-			}
-		}
 		drawLCTiles();
 		drawLCGrid();
 
@@ -4890,10 +5228,8 @@ function draw() {
 					else _loc2_ = selectedTile;
 					if (_loc2_ >= 0 && _loc2_ < tileCount) {
 						myLevel[1][_loc3_][_loc9_] = _loc2_;
-						// levelCreator.tiles["tileX" + _loc9_ + "Y" + _loc3_].gotoAndStop(_loc2_ + 1);
 						if (_loc2_ == 6 && (_loc9_ != LCEndGateX || _loc3_ != LCEndGateY)) {
 							myLevel[1][LCEndGateY][LCEndGateX] = 0;
-							// levelCreator.tiles["tileX" + LCEndGateX + "Y" + LCEndGateY].gotoAndStop(1);
 							LCEndGateX = _loc9_;
 							LCEndGateY = _loc3_;
 							setEndGateLights();
@@ -4901,14 +5237,14 @@ function draw() {
 					}
 				}
 			}
-		// 	if ((tool == 2 || tool == 5) && LCRect[0] != -1) {
-		// 		if (_loc9_ != LCRect[2] || _loc3_ != LCRect[3]) {
-		// 			LCRect[2] = Math.min(Math.max(_loc9_,0),levelWidth - 1);
-		// 			LCRect[3] = Math.min(Math.max(_loc3_,0),levelHeight - 1);
-		// 			drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
-		// 		}
-		// 	}
-		// }
+			if ((tool == 2 || tool == 5) && LCRect[0] != -1) {
+				if (_loc9_ != LCRect[2] || _loc3_ != LCRect[3]) {
+					LCRect[2] = Math.min(Math.max(_loc9_,0),levelWidth - 1);
+					LCRect[3] = Math.min(Math.max(_loc3_,0),levelHeight - 1);
+				}
+					drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
+			}
+		}
 		// if (mouseOnGrid()) {
 		// 	if (tool == 6) {
 		// 		levelCreator.rectSelect.clear();
@@ -4954,7 +5290,7 @@ function draw() {
 		// 	} else {
 		// 		levelCreator.sideBar["tab" + (_loc2_ + 1)]._y += (_loc3_ - levelCreator.sideBar["tab" + (_loc2_ + 1)]._y) * 0.2;
 		// 	}
-		}
+		// }
 	}
 
 
@@ -5003,4 +5339,5 @@ function draw() {
 		setCursor('auto');
 	}
 	_frameCount++;
+	pmouseIsDown = mouseIsDown;
 }
