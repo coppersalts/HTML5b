@@ -1,4 +1,0 @@
-this is a text file where I'm keeping track of things to fix/change.
-
-fixes:
-the music loops badly.
