@@ -4100,6 +4100,7 @@ function resetLevelCreator() {
 	LCEndGateY = -1;
 	LCCoinX = -1;
 	LCCoinY = -1;
+	char = [];
 	// levelCreator.sideBar.tab1.gotoAndStop(1);
 	// var _loc2_ = 0;
 	// while(_loc2_ < 10)
@@ -4316,7 +4317,7 @@ function setEndGateLights() {
 	}
 }
 
-function drawLCChar(i, y) {
+function drawLCCharInfo(i, y) {
 	ctx.fillStyle = '#626262';
 	ctx.fillRect(665, y, 260, charInfoHeight);
 	ctx.fillStyle = '#808080';
@@ -4344,19 +4345,24 @@ function drawLCChar(i, y) {
 	ctx.fillText(twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ', ' + twoDecimalPlaceNumFormat(myLevelChars[i][2]), 665 + charInfoHeight + 5, y + charInfoHeight/2);
 	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+260)-charInfoHeight*2 + 5, y + charInfoHeight/2);
 
-	if (charDropdown == -1) {
+	if (charDropdown == -1 && onRect(_xmouse, _ymouse, 665, y, 260, charInfoHeight)) {
 		if (onRect(_xmouse, _ymouse, 665, y, charInfoHeight, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = i;
 				charDropdownType = 0;
 			}
-		}
-		if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight)) {
+		} else if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown) {
 				charDropdown = i;
 				charDropdownType = 1;
+			}
+		} else {
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) {
+				charDropdown = i;
+				charDropdownType = 2;
 			}
 		}
 	}
@@ -4367,8 +4373,117 @@ function drawLCChar(i, y) {
 	// }
 }
 
+function drawLCChars() {
+	ctx.save();
+	var scale2 = scale / 30;
+	ctx.transform(scale2, 0, 0, scale2, 330 - scale * levelWidth / 2, 240 - scale * levelHeight / 2);
+	for (var i = 0; i < char.length; i++) {
+		if (char[i].placed || charDropdown == i && charDropdownType == 2) {
+			if (!char[i].placed) ctx.globalAlpha = 0.5;
+			if (char[i].id < 35) {
+				var model = charModels[char[i].id];
+
+				var legdire = -1;
+				var legf = legFrames[0];
+				var f = [ legf.bodypart, legf.bodypart ];
+				ctx.save();
+				ctx.transform(
+					0.3648529052734375,0,0,0.3648529052734375,
+					char[i].x+model.legx[0]+0.35,
+					char[i].y+model.legy[0]-0.35
+				);
+				var leg1img = svgBodyParts[f[0]];
+				ctx.drawImage(leg1img, -leg1img.width/2, -leg1img.height/2);
+				ctx.restore();
+				ctx.save();
+				ctx.transform(
+					0.3648529052734375,0,0,0.3648529052734375,
+					char[i].x+model.legx[1]+0.35,
+					char[i].y+model.legy[1]-0.35
+				);
+				var leg2img = svgBodyParts[f[1]];
+				ctx.drawImage(leg2img, -leg2img.width/2, -leg2img.height/2);
+				ctx.restore();
+
+				var modelFrame = model.frames[3];
+				ctx.save();
+				ctx.transform(
+					charModels[char[i].id].torsomat.a,
+					charModels[char[i].id].torsomat.b,
+					charModels[char[i].id].torsomat.c,
+					charModels[char[i].id].torsomat.d,
+					char[i].x+charModels[char[i].id].torsomat.tx,
+					char[i].y+charModels[char[i].id].torsomat.ty
+					);
+				for (var j = 0; j < modelFrame.length; j++) {
+					var img = svgBodyParts[modelFrame[j].bodypart];
+					if (modelFrame[j].type == 'body') img = svgChars[char[i].id];
+
+					ctx.save();
+					ctx.transform(
+						modelFrame[j].mat.a,
+						modelFrame[j].mat.b,
+						modelFrame[j].mat.c,
+						modelFrame[j].mat.d,
+						modelFrame[j].mat.tx,
+						modelFrame[j].mat.ty
+					);
+					if (modelFrame[j].type == 'anim') {
+						img = svgBodyParts[bodyPartAnimations[modelFrame[j].anim].bodypart];
+						var bpanimframe = modelFrame[j].loop ? (_frameCount%bodyPartAnimations[modelFrame[j].anim].frames.length) : 0;
+						var mat = bodyPartAnimations[modelFrame[j].anim].frames[bpanimframe];
+						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+					} else if (modelFrame[j].type == 'dia') {
+						img = svgBodyParts[diaMouths[char[i].dExpr + charModels[char[i].id].mouthType*2].frames[0].bodypart];
+						var mat = diaMouths[model.defaultExpr].frames[0].mat;
+						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+					}
+					ctx.drawImage(img, -img.width/2, -img.height/2);
+					ctx.restore();
+				}
+				ctx.restore();
+			} else {
+				if (charD[char[i].id][7] == 1) {
+					var vb = svgCharsVB[char[i].id];
+					var img = svgChars[char[i].id];
+				} else {
+					var f = _frameCount%charD[char[i].id][7];
+					var vb = svgCharsVB[char[i].id][f];
+					var img = svgChars[char[i].id][f];
+				}
+				ctx.drawImage(img,
+					char[i].x + vb[0],
+					char[i].y + vb[1],
+					vb[2],
+					vb[3]);
+			}
+			ctx.globalAlpha = 1;
+		}
+	}
+	ctx.restore();
+}
+
+function resetLCChar(i) {
+	var _loc2_ = myLevelChars[i][0];
+	char[i].id = _loc2_;
+	char[i].x = char[i].px = +myLevelChars[i][1].toFixed(2) * 30;
+	char[i].y = char[i].py = +myLevelChars[i][2].toFixed(2) * 30;
+	// char[i].px = 70 + i * 40;
+	// char[i].py = 400 - i * 30;
+	char[i].charState = myLevelChars[i][3];
+	char[i].w = charD[_loc2_][0];
+	char[i].h = charD[_loc2_][1];
+	char[i].weight = charD[_loc2_][2];
+	char[i].weight2 = charD[_loc2_][2];
+	char[i].h2 = charD[_loc2_][3];
+	char[i].friction = charD[_loc2_][4];
+	char[i].heatSpeed = charD[_loc2_][6];
+	char[i].hasArms = charD[_loc2_][8];
+	char[i].dExpr = _loc2_<35?charModels[_loc2_].defaultExpr:0;
+}
+
 function twoDecimalPlaceNumFormat(num) {
-	return ((Math.round(num * 100) / 100).toFixed(2)).toString(10).padStart(5, '0');
+	return (Math.round(num * 100) / 100).toFixed(2).padStart(5, '0');
 }
 
 
@@ -5219,29 +5334,20 @@ function draw() {
 		if (selectedTab == 0) {
 			//
 		} else if (selectedTab == 1) {
-			// myLevelChars
-			ctx.textAlign = 'left';
-			ctx.textBaseline = 'middle';
-			ctx.font = '20px Helvetica';
-			for (var i = 0; i < myLevelChars.length; i++) {
-				drawLCChar(i, (selectedTab+1)*tabHeight + i*(charInfoHeight+5) + 5);
-				// ctx.fillStyle = '#000000';
-				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
-			}
-			ctx.fillStyle = '#333333';
-			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
-			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				onButton = true;
-				if (mouseIsDown && !pmouseIsDown) {
-					myLevelChars.push([0,0.0,0.0,10]);
-				}
-			}
-
-
 			if (charDropdown != -1) {
-				if (charDropdownType == 1) {
+				if (charDropdownType == 0) {
+					myLevelChars[charDropdown][0]++;
+					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+						myLevelChars[charDropdown][0]++;
+						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					}
+					resetLCChar(charDropdown);
+					charDropdown = -1;
+				} else if (charDropdownType == 1) {
 					ctx.fillStyle = '#ffffff';
 					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
+					ctx.textAlign = 'left';
 					ctx.textBaseline = 'top';
 					ctx.font = '10px Helvetica';
 					ctx.fillStyle = '#000000';
@@ -5260,18 +5366,64 @@ function draw() {
 							j++;
 						}
 					}
+				} else if (charDropdownType == 2) {
+					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
+					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
+					myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
+					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
+					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
 				}
-				if (charDropdownType == 0) {
-					myLevelChars[charDropdown][0]++;
-					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
-					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
-						myLevelChars[charDropdown][0]++;
-						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+
+
+
+				if (charDropdown != -1 && mouseIsDown && !pmouseIsDown) {
+					resetLCChar(charDropdown);
+					if (charDropdownType == 2) {
+						char[charDropdown].placed = true;
 					}
 					charDropdown = -1;
 				}
+			}
+
+
+
+			// myLevelChars
+			ctx.textAlign = 'left';
+			ctx.textBaseline = 'middle';
+			ctx.font = '20px Helvetica';
+			for (var i = 0; i < myLevelChars.length; i++) {
+				drawLCCharInfo(i, (selectedTab+1)*tabHeight + i*(charInfoHeight+5) + 5);
+				// ctx.fillStyle = '#000000';
+				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
+			}
+			ctx.fillStyle = '#333333';
+			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
+			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
-					charDropdown = -1;
+					myLevelChars.push([0,0.0,0.0,10]);
+					var newestCharIndex = myLevelChars.length-1;
+					var _loc2_ = myLevelChars[newestCharIndex][0];
+					char.push(new Character(
+						_loc2_,
+						0.00,
+						0.00,
+						70 + newestCharIndex * 40,
+						400 - newestCharIndex * 30,
+						myLevelChars[newestCharIndex][3],
+						charD[_loc2_][0],
+						charD[_loc2_][1],
+						charD[_loc2_][2],
+						charD[_loc2_][2],
+						charD[_loc2_][3],
+						charD[_loc2_][4],
+						charD[_loc2_][6],
+						charD[_loc2_][8],
+						_loc2_<35?charModels[_loc2_].defaultExpr:0
+						));
+					// resetLCChar(char.length-1);
+					// char[char.length-1].placed = false;
 				}
 			}
 		} else if (selectedTab == 2) {
@@ -5393,6 +5545,7 @@ function draw() {
 
 		drawLCTiles();
 		drawLCGrid();
+		drawLCChars();
 
 
 

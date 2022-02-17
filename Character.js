@@ -34,6 +34,7 @@ class Character {
 		this.heated = 0;
 		this.heatSpeed = theatSpeed;
 		this.hasArms = thasArms;
+		this.placed = false; // used in the level creator
 
 		this.frame = 3;
 		this.poseTimer = 0;
