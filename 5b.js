@@ -54,7 +54,6 @@ var bonusProgress;
 var bonusesCleared;
 var gotCoin;
 var gotThisCoin = false;
-var tileCount = 100;
 var bfdia5b = window.localStorage;
 var deathCount;
 var timer;
@@ -1568,112 +1567,118 @@ var charModels = [
 	{},
 	{},
 	{},
-	{},
-	{},
+	{
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.3,b:0,c:0,d:0.3,tx:0,ty:0},
+	},
+	{
+		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
+		charimgmat: {a:0.3,b:0,c:0,d:0.3,tx:0,ty:0},
+	},
 	{
 		firemat: {a:-0.34619140625,b:0.0040283203125,c:0.0058135986328125,d:0.3830718994140625,tx:-1.25,ty:-27.6},
 		burstmat: {a:-0.34619140625,b:0.0040283203125,c:0.0058135986328125,d:0.3830718994140625,tx:-1.25,ty:-27.6},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.5,b:0,c:0,d:0.5,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.3,b:0,c:0,d:0.3,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.3,b:0,c:0,d:0.3,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.3,b:0,c:0,d:0.3,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.3,b:0,c:0,d:0.3,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.4,b:0,c:0,d:0.4,tx:0,ty:0},
 	},
 	{
 		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
 		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
-	},
-	{
-		firemat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		burstmat: {a:0.89483642578125,b:0,c:0,d:0.7838592529296875,tx:-0.45,ty:4.75},
-		charimgmat: {a:0.15606689453125,b:0,c:0,d:0.15606689453125,tx:0,ty:0},
+		charimgmat: {a:0.1,b:0,c:0,d:0.1,tx:0,ty:0},
 	},
 ];
 var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
 var selectedTab = 0;
 var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue'];
+var charInfoHeight = 40;
+var charStateNames = ['', 'Dead', 'Being Recovered', 'Death On Impact & Movement From String', 'Movement From String', 'Death On Impact', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
+var charStateNamesShort = ['', 'D', 'BR', 'D&M', 'MFS', 'DOI', 'C', '', 'NPC', 'R', 'P'];
+var charDropdown = -1;
+var charDropdownType;
 var tabHeight = 30;
 var tileTabScrollBar = 0;
 var draggingScrollBar = false;
@@ -1715,6 +1720,7 @@ var shakeX = 0;
 var shakeY = 0;
 var menuScreen = -1;
 var myLevel;
+var myLevelChars;
 var scale = 20;
 var tool = 0;
 var selectedTile = 0;
@@ -1849,6 +1855,8 @@ var svgMenu2border;
 var svgMenu2borderimg;
 var preMenuBG;
 
+var svgTools = new Array(12);
+
 var menu2_3Buttons = [];
 var menu2_3Buttons = [];
 var menu0ButtonSize = {w: 273.0, h: 36.9, cr: 6.65};
@@ -1873,7 +1881,7 @@ async function loadingScreen() {
 	ctx.scale(pixelRatio, pixelRatio);
 
 	// Hard-coded value. You can make it calculated later if you want.
-	var totalResources = 1076;
+	var totalResources = 1101;
 	var loadedResources = 0;
 	// Background
 	ctx.fillStyle = '#999966';
@@ -2029,6 +2037,11 @@ async function loadingScreen() {
 	preMenuBG = await asyncLoadImage('visuals/premenubg.png');
 	loadedResources++;
 	drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
+	for (var i = 0; i < svgTools.length; i++) {
+		svgTools[i] = await asyncLoadImage('visuals/lc/tool' + i.toString(10).padStart(4, '0') + '.svg');
+		loadedResources++;
+		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
+	}
 
 	// I don't know why I put these with the resource loading code, but whatever.
 	menu2_3Buttons.push(new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'));
@@ -2036,6 +2049,7 @@ async function loadingScreen() {
 	menu2_3Buttons.push(new Path2D('M 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 97.5 11.4\nL 85.2 11.4 85.2 16.35 96.5 16.35 96.5 20.35 85.2 20.35 85.2 26.1 97.75 26.1 97.75 30.4 80.05 30.4 80.05 7.05 97.5 7.05 97.5 11.4\nM 77.4 7.05\nL 77.4 11.4 70.4 11.4 70.4 30.4 65.25 30.4 65.25 11.4 58.3 11.4 58.3 7.05 77.4 7.05\nM 40.95 21.6\nL 41.1 23.45\nQ 41.25 24.35 41.8 25.1\nL 43.25 26.2 45.75 26.65\nQ 48.5 26.65 49.55 25.4 50.6 24.2 50.6 21.6\nL 50.6 7.05 55.7 7.05 55.7 21.6\nQ 55.7 26.3 53.05 28.65 50.4 30.95 45.75 30.95 41 30.95 38.4 28.65 35.8 26.35 35.8 21.6\nL 35.8 7.05 40.95 7.05 40.95 21.6\nM 26.55 13.85\nL 26.45 13.85 20.75 30.4 16.8 30.4 11.05 14.05 11 14.05 11 30.4 6.2 30.4 6.2 7.05 13.45 7.05 18.9 23.1 18.95 23.1 24.1 7.05 31.35 7.05 31.35 30.4 26.55 30.4 26.55 13.85 Z'));
 	menu2_3Buttons.push(new Path2D('\nM 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nM 86.35 6.35\nL 86.35 26.35 98.3 26.35 98.3 30.85 80.95 30.85 80.95 6.35 86.35 6.35\nM 64.1 6.35\nL 69.6 6.35 78.8 30.85 73.2 30.85 71.35 25.4 62.2 25.4 60.25 30.85 54.8 30.85 64.1 6.35\nM 52.8 6.35\nL 52.8 21.6\nQ 52.8 26.55 50.05 29 47.25 31.45 42.35 31.45 37.35 31.45 34.65 29 31.9 26.6 31.9 21.6\nL 31.9 6.35 37.3 6.35 37.3 21.6 37.45 23.55\nQ 37.65 24.5 38.2 25.25 38.75 26.05 39.7 26.45\nL 42.35 26.9\nQ 45.2 26.9 46.3 25.65 47.4 24.35 47.4 21.6\nL 47.4 6.35 52.8 6.35\nM 21.4 6.75\nQ 23.65 7.8 25.2 9.5 26.75 11.3 27.55 13.65 28.35 16 28.35 18.7 28.35 21.4 27.55 23.7 26.75 26 25.2 27.7\nL 28.25 30.5 25.75 33.15 22.25 30\nQ 21.05 30.7 19.6 31.05\nL 16.35 31.45\nQ 13.5 31.45 11.25 30.45 9.05 29.45 7.5 27.75 5.95 26 5.15 23.7 4.3 21.35 4.3 18.7 4.3 16 5.15 13.65 5.95 11.3 7.5 9.5 9.05 7.8 11.25 6.75 13.5 5.8 16.35 5.8 19.2 5.8 21.4 6.75\nM 21.45 24.35\nQ 22.15 23.4 22.55 22.05 23 20.65 23 18.7 23 17.1 22.65 15.6 22.25 14.05 21.45 12.9 20.7 11.7 19.4 11 18.15 10.3 16.35 10.3 14.5 10.3 13.25 11 12 11.7 11.2 12.9 10.4 14.05 10.05 15.6 9.7 17.1 9.7 18.7 9.7 20.25 10.05 21.7 10.4 23.2 11.2 24.35 12 25.5 13.25 26.2 14.5 26.9 16.35 26.9\nL 17.55 26.9 18.5 26.6 16.2 24.45 18.7 21.8 21.45 24.35\nM 66.85 12.4\nL 66.75 12.4 63.6 21.4 69.9 21.4 66.85 12.4 Z'));
 	console.log('all resources have been loaded');
+	console.log(loadedResources);
 	setup();
 }
 
@@ -4073,10 +4087,12 @@ function resetLevelCreator() {
 	tool = 0;
 	levelHeight = 18;
 	clearMyWholeLevel();
+	charDropdown = -1;
 	// drawLCGrid();
 	// fillTilesTab();
 	charCount2 = 0;
 	charCount = 0;
+	myLevelChars = [];
 	// setEndGateLights();
 	LCEndGateX = -1;
 	LCEndGateY = -1;
@@ -4093,8 +4109,9 @@ function resetLevelCreator() {
 function drawLCGrid() {
 	scale = Math.min(640 / levelWidth, 460 / levelHeight);
 	// levelCreator.grid.lineStyle(scale / 9,0,50);
-	ctx.lineWidth = Math.ceil(scale / 14);
+	ctx.lineWidth = scale / 9;
 	ctx.strokeStyle = '#000000';
+	ctx.globalAlpha = 0.5;
 	ctx.beginPath();
 	for (var _loc1_ = 0; _loc1_ <= levelWidth; _loc1_++) {
 		ctx.moveTo(330 - scale * levelWidth / 2 + _loc1_ * scale,240 - scale * levelHeight / 2);
@@ -4105,6 +4122,7 @@ function drawLCGrid() {
 		ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + _loc1_ * scale);
 	}
 	ctx.stroke();
+	ctx.globalAlpha = 1;
 	// addLCTiles();
 	// updateLCTiles();
 }
@@ -4115,7 +4133,11 @@ function drawLCTiles() {
 			var tile = myLevel[1][_loc2_][_loc1_];
 			if (blockProperties[tile][16] > 0) {
 				var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
-				ctx.drawImage(img, 330 - scale * levelWidth / 2 + _loc1_ * scale, 240 - scale * levelHeight / 2 + _loc2_ * scale, scale, scale);
+				var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
+				ctx.drawImage(img, 330 - scale * levelWidth / 2 + _loc1_ * scale + scale * vb[0]/30, 240 - scale * levelHeight / 2 + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+			} else if (tile == 6) {
+				ctx.fillStyle = '#505050';
+				ctx.fillRect(330 - scale * levelWidth / 2 + (_loc1_-1) * scale, 240 - scale * levelHeight / 2 + (_loc2_-3) * scale, scale*2, scale*4);
 			}
 		}
 	}
@@ -4276,6 +4298,67 @@ function setTool(i) {
 	// levelCreator.tools["tool" + tool].gotoAndStop(1);
 }
 
+function setEndGateLights() {
+	// levelCreator.sideBar.tab4.tiles.tile6.light.gotoAndStop(charCount + 1);
+	if (LCEndGateX >= 0) {
+		// levelCreator.tiles["tileX" + LCEndGateX + "Y" + LCEndGateY].light.gotoAndStop(charCount + 1);
+	}
+}
+
+function drawLCChar(i, y) {
+	ctx.fillStyle = '#626262';
+	ctx.fillRect(665, y, 260, charInfoHeight);
+	ctx.fillStyle = '#808080';
+	ctx.fillRect(665, y, charInfoHeight, charInfoHeight);
+	ctx.fillStyle = '#808080';
+	ctx.fillRect((665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight);
+	var charimgmat = charModels[myLevelChars[i][0]].charimgmat;
+	if (typeof charimgmat !== 'undefined') {
+		var charimg = svgChars[myLevelChars[i][0]];
+		if (Array.isArray(charimg)) charimg = charimg[0];
+		var sc = charInfoHeight/32;
+		ctx.save();
+		ctx.transform(
+			charimgmat.a*sc,
+			charimgmat.b,
+			charimgmat.c,
+			charimgmat.d*sc,
+			(charimgmat.tx*sc)/2 + 665 + charInfoHeight/2,
+			(charimgmat.ty*sc)/2 + y + charInfoHeight/2
+		);
+		ctx.drawImage(charimg, -charimg.width/2, -charimg.height/2);
+		ctx.restore();
+	}
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText(twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ', ' + twoDecimalPlaceNumFormat(myLevelChars[i][2]), 665 + charInfoHeight + 5, y + charInfoHeight/2);
+	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+260)-charInfoHeight*2 + 5, y + charInfoHeight/2);
+
+	if (charDropdown == -1) {
+		if (onRect(_xmouse, _ymouse, 665, y, charInfoHeight, charInfoHeight)) {
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) {
+				charDropdown = i;
+				charDropdownType = 0;
+			}
+		}
+		if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight)) {
+			onButton = true;
+			if (mouseIsDown) {
+				charDropdown = i;
+				charDropdownType = 1;
+			}
+		}
+	}
+	// if (charDropdown == i) {
+	// 	if (mouseIsDown) {
+	// 		charDropdown = -1;
+	// 	}
+	// }
+}
+
+function twoDecimalPlaceNumFormat(num) {
+	return ((Math.round(num * 100) / 100).toFixed(2)).toString(10).padStart(5, '0');
+}
 
 
 
@@ -5117,7 +5200,61 @@ function draw() {
 		if (selectedTab == 0) {
 			//
 		} else if (selectedTab == 1) {
-			//
+			// myLevelChars
+			ctx.textAlign = 'left';
+			ctx.textBaseline = 'middle';
+			ctx.font = '20px Helvetica';
+			for (var i = 0; i < myLevelChars.length; i++) {
+				drawLCChar(i, (selectedTab+1)*tabHeight + i*(charInfoHeight+5) + 5);
+				// ctx.fillStyle = '#000000';
+				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
+			}
+			ctx.fillStyle = '#333333';
+			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
+			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) {
+					myLevelChars.push([0,0.0,0.0,10]);
+				}
+			}
+
+
+			if (charDropdown != -1) {
+				if (charDropdownType == 1) {
+					ctx.fillStyle = '#ffffff';
+					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
+					ctx.textBaseline = 'top';
+					ctx.font = '10px Helvetica';
+					ctx.fillStyle = '#000000';
+					var j = 0;
+					for (var i = 3; i < charStateNames.length; i++) {
+						if (charStateNames[i] != '') {
+							if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10)) {
+								ctx.fillStyle = '#dddddd';
+								ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10);
+								ctx.fillStyle = '#000000';
+								if (mouseIsDown) {
+									myLevelChars[charDropdown][3] = i;
+								}
+							}
+							ctx.fillText(charStateNames[i], (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
+							j++;
+						}
+					}
+				}
+				if (charDropdownType == 0) {
+					myLevelChars[charDropdown][0]++;
+					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+						myLevelChars[charDropdown][0]++;
+						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					}
+					charDropdown = -1;
+				}
+				if (mouseIsDown && !pmouseIsDown) {
+					charDropdown = -1;
+				}
+			}
 		} else if (selectedTab == 2) {
 			var j = 0;
 			var bpr = 5;
@@ -5127,9 +5264,7 @@ function draw() {
 			ctx.save();
 			ctx.translate(0, -tileTabScrollBar);
 			for (var i = 0; i < blockProperties.length; i++) {
-				if (blockProperties[i][16] > 0) {
-					var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
-					var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
+				if (blockProperties[i][16] > 0 || i == 6) {
 					if (onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
 						onButton = true;
 						ctx.fillStyle = '#dddddd';
@@ -5140,15 +5275,22 @@ function draw() {
 							if (tool != 2 && tool != 3) setTool(0);
 						}
 					}
-					if (vb[2] <= 60) {
-						var sc = bs/30;
-						ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist + vb[0]*sc, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist + vb[1]*sc, vb[2]*sc, vb[3]*sc);
-					} else {
-						var sc = bs/vb[2];
-						ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, vb[2]*sc, vb[3]*sc);
+					if (blockProperties[i][16] > 0) {
+						var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
+						var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
+						if (vb[2] <= 60) {
+							var sc = bs/30;
+							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist + vb[0]*sc, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist + vb[1]*sc, vb[2]*sc, vb[3]*sc);
+						} else {
+							var sc = bs/vb[2];
+							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, vb[2]*sc, vb[3]*sc);
+						}
+					} else if (i == 6) {
+						ctx.fillStyle = '#505050';
+						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist + bs/4, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs/2, bs);
 					}
-					j++;
 				}
+				j++;
 			}
 			ctx.restore();
 
@@ -5180,18 +5322,6 @@ function draw() {
 			//
 		}
 
-		// Draw Tools
-		for (var i = 0; i < 8; i++) {
-			if (i == tool) ctx.fillStyle = '#999999';
-			else ctx.fillStyle = '#666666';
-			ctx.fillRect(35 + i*50, 490, 40, 40);
-
-			if (onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
-				if (mouseIsDown && !pmouseIsDown) {
-					setTool(i);
-				}
-			}
-		}
 
 		// Draw Tabs
 		ctx.textAlign = 'left';
@@ -5214,6 +5344,30 @@ function draw() {
 		}
 
 
+		// Draw Tools
+		for (var i = 0; i < 12; i++) {
+			if (i != 8) { 
+				if (i == tool) ctx.fillStyle = '#999999';
+				else ctx.fillStyle = '#666666';
+				ctx.fillRect(35 + i*50, 490, 40, 40);
+				ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490);
+
+				if (onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) {
+						if (i < 8) setTool(i);
+						else if (i == 10) undo();
+						else if (i == 11) {
+							setUndo();
+							clearMyLevel(1);
+							updateLCtiles();
+						}
+					}
+				}
+			}
+		}
+
+
 		drawLCTiles();
 		drawLCGrid();
 
@@ -5226,10 +5380,10 @@ function draw() {
 				if (tool <= 1 && mouseOnGrid()) {
 					if (tool == 1) _loc2_ = 0;
 					else _loc2_ = selectedTile;
-					if (_loc2_ >= 0 && _loc2_ < tileCount) {
+					if (_loc2_ >= 0 && _loc2_ < blockProperties.length) {
 						myLevel[1][_loc3_][_loc9_] = _loc2_;
 						if (_loc2_ == 6 && (_loc9_ != LCEndGateX || _loc3_ != LCEndGateY)) {
-							myLevel[1][LCEndGateY][LCEndGateX] = 0;
+							if (LCEndGateY != -1) myLevel[1][LCEndGateY][LCEndGateX] = 0;
 							LCEndGateX = _loc9_;
 							LCEndGateY = _loc3_;
 							setEndGateLights();
@@ -5245,41 +5399,49 @@ function draw() {
 					drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
 			}
 		}
-		// if (mouseOnGrid()) {
-		// 	if (tool == 6) {
-		// 		levelCreator.rectSelect.clear();
-		// 		var _loc13_;
-		// 		var _loc12_;
-		// 		if (closeToEdgeY()) {
-		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
-		// 			_loc13_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-		// 			_loc12_ = 0;
-		// 		} else {
-		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,8388608,100);
-		// 			_loc13_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-		// 			_loc12_ = 0.5;
-		// 		}
-		// 		levelCreator.rectSelect.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
-		// 		levelCreator.rectSelect.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
-		// 	} else if (tool == 7) {
-		// 		levelCreator.rectSelect.clear();
-		// 		var _loc14_;
-		// 		var _loc10_;
-		// 		if (closeToEdgeX()) {
-		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,32768,100);
-		// 			_loc14_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-		// 			_loc10_ = 0;
-		// 		} else {
-		// 			levelCreator.rectSelect.lineStyle(2 * scale / 9,8388608,100);
-		// 			_loc14_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-		// 			_loc10_ = 0.5;
-		// 		}
-		// 		levelCreator.rectSelect.moveTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 - scale * levelHeight / 2);
-		// 		levelCreator.rectSelect.lineTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 + scale * levelHeight / 2);
-		// 	}
-		// } else if (tool == 6 || tool == 7) {
+		if (mouseOnGrid()) {
+			if (tool == 6) {
+				// levelCreator.rectSelect.clear();
+				var _loc13_;
+				var _loc12_;
+				ctx.lineWidth = 2 * scale / 9;
+				if (closeToEdgeY()) {
+					ctx.strokeStyle = '#008000';
+					_loc13_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+					_loc12_ = 0;
+				} else {
+					ctx.strokeStyle = '#800000';
+					_loc13_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+					_loc12_ = 0.5;
+				}
+				ctx.beginPath();
+				ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
+				ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
+				ctx.stroke();
+			} else if (tool == 7) {
+				// levelCreator.rectSelect.clear();
+				var _loc14_;
+				var _loc10_;
+				ctx.lineWidth = 2 * scale / 9;
+				if (closeToEdgeX()) {
+					ctx.strokeStyle = '#008000';
+					_loc14_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+					_loc10_ = 0;
+				} else {
+					ctx.strokeStyle = '#800000';
+					_loc14_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+					_loc10_ = 0.5;
+				}
+				ctx.beginPath();
+				ctx.moveTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 - scale * levelHeight / 2);
+				ctx.lineTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 + scale * levelHeight / 2);
+				ctx.stroke();
+			}
+		}
+		// else if (tool == 6 || tool == 7) {
 		// 	levelCreator.rectSelect.clear();
 		// }
+
 		// for (var _loc2_ = 0; _loc2_ < 6; _loc2_++) {
 		// 	_loc3_ = _loc2_ * 40;
 		// 	if (_loc2_ > selectedTab) {
