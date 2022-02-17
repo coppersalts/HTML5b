@@ -1,0 +1,14 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
+<path fill="#505050" stroke="none" d="
+M 0 22.5
+L 30 26.25 30 18.75 0 22.5
+M 30 30
+L 30 26.25 0 30 30 30
+M 30 18.75
+L 30 11.25 0 15 30 18.75
+M 30 3.75
+L 30 0 0 0 30 3.75
+M 30 11.25
+L 30 3.75 0 7.5 30 11.25 Z"/>
+</svg>

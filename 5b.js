@@ -220,134 +220,134 @@ var musicSound = new Audio('data/music hq.wav');
 // [12] - switched by
 // [13] - uses borders
 // [14] - is liquid
-// [15] - animated?
+// [15] - availible in level creator
 // [16] - animation frames
 // [17] - loop?
 // [18] - loop frame order
 var blockProperties = [
 	// tile0
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,0,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
+	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,0,false],
 	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,0,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	// tile1
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,false,0,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,0,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,14,false,[0,1,2,3,4,5,6,7,8,9,10,11,12,13]],
 	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 	[false,false,false,false,false,false,false,false,true,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
 	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
-	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,true],
-	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
-	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,true,1,true],
+	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
+	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile2
-	[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,true,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,true,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile3
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,1,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,7,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,2,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,8,0,false,false,false,1,false],
-	[false,true,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,1,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,7,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,2,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,8,0,false,false,true,1,false],
+	[false,true,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile4
 	[true,true,true,true,false,false,false,false,true,false,false,13,0,false,false,true,5,false],
 	[true,true,true,true,false,false,false,false,true,false,false,14,0,false,false,true,5,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,true,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,true,false,true,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,true,true,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,true,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,true,false,true,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,true,true,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,3,true,[0,0,0,0,0,1,1,2,2,1,1]],
 	// tile5
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,false,1,false],
-	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,3,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,9,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
+	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,3,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,9,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
 	// tile6
-	[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-	[false,true,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,true,1,false],
+	[false,true,false,false,false,false,false,false,true,false,false,0,3,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,3,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,2,true,[0,0,0,1,1,1]],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,true,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile7
-	[false,false,false,true,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,true,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,15,0,false,false,true,5,false],
-	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,30,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]],
 	[false,false,false,false,true,true,true,true,true,false,false,0,0,false,false,true,20,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]],
 	[false,false,false,false,true,true,true,true,true,false,false,0,0,false,false,true,20,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-	[true,true,true,true,true,true,true,true,true,false,false,0,1,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
+	[true,true,true,true,true,true,true,true,true,false,false,0,1,false,false,true,1,false],
 	// tile8
 	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
-	[false,true,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,false,1,false],
+	[false,true,false,false,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
 	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
 	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 	[false,true,false,false,false,false,false,false,true,false,false,0,6,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile9
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
 	// tile10
-	[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
+	[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,true,1,false],
 	[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-	[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
+	[false,false,false,false,true,true,true,true,false,false,false,0,1,false,true,true,1,false],
 	[false,false,false,false,false,false,false,false,true,false,false,0,0,false,false,true,60,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,6,0,false,false,false,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,12,0,false,false,false,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,6,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,false,false,12,0,false,false,true,1,false],
 	// tile11
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
@@ -369,8 +369,8 @@ var blockProperties = [
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
 	// tile13
-	[false,false,false,false,false,false,false,false,false,false,false,0,1,false,true,false,1,false],
-	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,1,false,true,true,1,false],
+	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false]
 ];
 var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54],[65,61,60,62,63,64],[],[],[14,16,83,85]];
@@ -1728,6 +1728,8 @@ var mouseIsDown = false;
 var pmouseIsDown = false;
 var LCEndGateX = 0;
 var LCEndGateY = 0;
+var LCCoinX = 0;
+var LCCoinY = 0;
 var cardinal = [[0,-1],[0,1],[-1,0],[1,0]];
 var diagonal = [[-1,-1],[1,-1],[1,1],[-1,1]];
 var diagonal2 = [[0,2],[0,3],[1,2],[1,3]];
@@ -1931,13 +1933,13 @@ async function loadingScreen() {
 	console.log('loading blocks...');
 	for (var i = 0; i < blockProperties.length; i++) {
 		var id = i.toString(10).padStart(4, '0');
-		if (blockProperties[i][16] < 1) continue;
-		else if (blockProperties[i][16] == 1) {
+		// if (blockProperties[i][16] < 1) continue;
+		if (blockProperties[i][16] == 1 || (blockProperties[i][15] && blockProperties[i][16] == 0)) {
 			svgTiles[i] = await asyncLoadImage('visuals/blocks/b' + id + '.svg');
 			svgTilesVB[i] = await asyncLoadVB(svgTiles[i].src);
 			loadedResources++;
 			drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
-		} else {
+		} else if (blockProperties[i][16] > 1) {
 			svgTiles[i] = new Array(blockProperties[i][16]);
 			svgTilesVB[i] = new Array(blockProperties[i][16]);
 			for (var j = 0; j < svgTiles[i].length; j++) {
@@ -3095,8 +3097,8 @@ function getTileDepths() {
 // TODO: precalculate a this stuff and only do the drawing in here. Unless it's actually all necesarry. Then you can just leave it.
 function addTileMovieClip(x, y, context) {
 	var _loc5_ = thisLevel[y][x];
-	if (typeof svgTiles[_loc5_] !== 'undefined') {
-		if (!blockProperties[_loc5_][15]) {
+	if (blockProperties[_loc5_][16] > 0) {
+		if (blockProperties[_loc5_][16] == 1) {
 			if (blockProperties[_loc5_][11] > 0 && typeof svgLevers[(blockProperties[_loc5_][11]-1)%6] !== 'undefined') {
 				context.save();
 				context.translate(x*30+15, y*30+28);
@@ -3112,7 +3114,7 @@ function addTileMovieClip(x, y, context) {
 			// context.fillStyle = '#cc33ff';
 			// context.fillRect(x*30, y*30, 30, 30);
 			context.drawImage(svgTiles[_loc5_], x*30+svgTilesVB[_loc5_][0], y*30+svgTilesVB[_loc5_][1]);
-		} else {
+		} else if (blockProperties[_loc5_][16] > 1) {
 			var frame = 0;
 			if (blockProperties[_loc5_][17]) frame = blockProperties[_loc5_][18][_frameCount%blockProperties[_loc5_][18].length];
 			else {
@@ -4096,6 +4098,8 @@ function resetLevelCreator() {
 	// setEndGateLights();
 	LCEndGateX = -1;
 	LCEndGateY = -1;
+	LCCoinX = -1;
+	LCCoinY = -1;
 	// levelCreator.sideBar.tab1.gotoAndStop(1);
 	// var _loc2_ = 0;
 	// while(_loc2_ < 10)
@@ -4138,6 +4142,10 @@ function drawLCTiles() {
 			} else if (tile == 6) {
 				ctx.fillStyle = '#505050';
 				ctx.fillRect(330 - scale * levelWidth / 2 + (_loc1_-1) * scale, 240 - scale * levelHeight / 2 + (_loc2_-3) * scale, scale*2, scale*4);
+			} else if (blockProperties[tile][15] && tile > 0) {
+				var img = svgTiles[tile];
+				var vb = svgTilesVB[tile];
+				ctx.drawImage(img, 330 - scale * levelWidth / 2 + _loc1_ * scale + scale * vb[0]/30, 240 - scale * levelHeight / 2 + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			}
 		}
 	}
@@ -4246,6 +4254,9 @@ function mouseOnScreen() {
 }
 function setSelectedTile(i) {
 	selectedTile = i;
+	if (blockProperties[selectedTile][9] && (tool == 2 || tool == 3)) {
+		tool = 1
+	}
 	// var _loc3_ = i % 5 * 60 + 30;
 	// var _loc2_ = Math.floor(i / 5) * 60 + 70;
 	// levelCreator.sideBar.tab4.selector._x = _loc3_;
@@ -4441,8 +4452,12 @@ function mousedown(event){
 			}
 			if (mouseOnGrid()) {
 				if (tool == 3) {
-					var _loc11_ = myLevel[1][_loc9_][_loc10_];
-					fillTile(_loc10_,_loc9_,selectedTile,_loc11_);
+					if (!blockProperties[selectedTile][9]) {
+						var _loc11_ = myLevel[1][_loc9_][_loc10_];
+						fillTile(_loc10_,_loc9_,selectedTile,_loc11_);
+					} else {
+						setTool(0);
+					}
 				} else if (tool == 4) {
 					selectedTab = 2;
 					setTool(0);
@@ -4510,18 +4525,22 @@ function mousedown(event){
 function mouseup(event){
 	mouseIsDown = false;
 	if (menuScreen == 5) {
-		if (tool == 2 && LCRect[0] != -1) {
-			y = Math.min(LCRect[1],LCRect[3]);
-			while (y <= Math.max(LCRect[1],LCRect[3])) {
-				x = Math.min(LCRect[0],LCRect[2]);
-				while (x <= Math.max(LCRect[0],LCRect[2])) {
-					myLevel[1][y][x] = selectedTile;
-					// levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(selectedTile + 1);
-					x++;
+		if (!blockProperties[selectedTile][9]) {
+			if (tool == 2 && LCRect[0] != -1) {
+				y = Math.min(LCRect[1],LCRect[3]);
+				while (y <= Math.max(LCRect[1],LCRect[3])) {
+					x = Math.min(LCRect[0],LCRect[2]);
+					while (x <= Math.max(LCRect[0],LCRect[2])) {
+						myLevel[1][y][x] = selectedTile;
+						// levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(selectedTile + 1);
+						x++;
+					}
+					y++;
 				}
-				y++;
+				clearRectSelect();
 			}
-			clearRectSelect();
+		} else {
+			setTool(0);
 		}
 	}
 }
@@ -5264,18 +5283,25 @@ function draw() {
 			ctx.save();
 			ctx.translate(0, -tileTabScrollBar);
 			for (var i = 0; i < blockProperties.length; i++) {
-				if (blockProperties[i][16] > 0 || i == 6) {
-					if (onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
+				if (blockProperties[i][15]) {
+					if (i == selectedTile) {
+						ctx.fillStyle = '#a0a0a0';
+						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+					} else if (onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
 						onButton = true;
 						ctx.fillStyle = '#dddddd';
 						// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
 						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
 						if (mouseIsDown && !pmouseIsDown) {
-							selectedTile = i;
+							// selectedTile = i;
+							setSelectedTile(i)
 							if (tool != 2 && tool != 3) setTool(0);
 						}
 					}
-					if (blockProperties[i][16] > 0) {
+					if (i == 6) {
+						ctx.fillStyle = '#505050';
+						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist + bs/4, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs/2, bs);
+					} else {
 						var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
 						var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
 						if (vb[2] <= 60) {
@@ -5285,17 +5311,14 @@ function draw() {
 							var sc = bs/vb[2];
 							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, vb[2]*sc, vb[3]*sc);
 						}
-					} else if (i == 6) {
-						ctx.fillStyle = '#505050';
-						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist + bs/4, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs/2, bs);
 					}
+					j++;
 				}
-				j++;
 			}
 			ctx.restore();
 
 			var tabWindowH = cheight - tabHeight * tabNames.length;
-			var tabContentsHeight = (bdist-bs) + Math.floor(j/bpr)*bdist;
+			var tabContentsHeight = (bdist-bs) + Math.floor((j-1)/bpr + 1) * bdist;
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
 			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
@@ -5387,6 +5410,11 @@ function draw() {
 							LCEndGateX = _loc9_;
 							LCEndGateY = _loc3_;
 							setEndGateLights();
+						}
+						if (_loc2_ == 12 && (_loc9_ != LCCoinX || _loc3_ != LCCoinY)) {
+							if (LCCoinY != -1) myLevel[1][LCCoinY][LCCoinX] = 0;
+							LCCoinX = _loc9_;
+							LCCoinY = _loc3_;
 						}
 					}
 				}
