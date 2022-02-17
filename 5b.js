@@ -1673,7 +1673,7 @@ var charModels = [
 ];
 var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
 var selectedTab = 0;
-var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue'];
+var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
 var charInfoHeight = 40;
 var charStateNames = ['', 'Dead', 'Being Recovered', 'Death On Impact & Movement From String', 'Movement From String', 'Death On Impact', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
 var charStateNamesShort = ['', 'D', 'BR', 'D&M', 'MFS', 'DOI', 'C', '', 'NPC', 'R', 'P'];
@@ -4185,10 +4185,10 @@ function clearRectSelect() {
 	LCRect = [-1,-1,-1,-1];
 }
 function fillTile(x, y, after, before) {
+	if (after == before) return;
 	var _loc4_ = [[x,y]];
 	while (_loc4_.length >= 1) {
-		var _loc1_ = 0;
-		while(_loc1_ < 4) {
+		for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
 			if (!(_loc1_ == 3 && x == levelWidth - 1 || _loc1_ == 2 && x == 0 || _loc1_ == 1 && y == levelHeight - 1 || _loc1_ == 0 && y == 0)) {
 				var _loc3_ = _loc4_[0][0] + cardinal[_loc1_][0];
 				var _loc2_ = _loc4_[0][1] + cardinal[_loc1_][1];
@@ -4198,16 +4198,17 @@ function fillTile(x, y, after, before) {
 					// levelCreator.tiles["tileX" + _loc3_ + "Y" + _loc2_].gotoAndStop(after + 1);
 				}
 			}
-			_loc1_ = _loc1_ + 1;
 		}
 		_loc4_.shift();
 	}
 }
+
 function setUndo() {
 	LCSwapLevelData(1,0);
 	undid = false;
 	// levelCreator.tools.tool9.gotoAndStop(1);
 }
+
 function undo() {
 	LCSwapLevelData(1,2);
 	LCSwapLevelData(0,1);
@@ -4222,23 +4223,22 @@ function undo() {
 	// }
 	undid = !undid;
 }
+
 function LCSwapLevelData(a, b) {
 	myLevel[b] = new Array(myLevel[a].length);
-	var _loc2_ = 0;
-	while(_loc2_ < levelHeight)
-	{
+	for (var _loc2_ = 0; _loc2_ < myLevel[a].length; _loc2_++) {
 		myLevel[b][_loc2_] = new Array(myLevel[a][0].length);
-		var _loc1_ = 0;
-		while(_loc1_ < levelWidth)
-		{
+		for (var _loc1_ = 0; _loc1_ < myLevel[a][0].length; _loc1_++) {
 			myLevel[b][_loc2_][_loc1_] = myLevel[a][_loc2_][_loc1_];
 			// if(b == 1)
 			// {
 			// 	levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].gotoAndStop(myLevel[b][_loc2_][_loc1_] + 1);
 			// }
-			_loc1_ = _loc1_ + 1;
 		}
-		_loc2_ = _loc2_ + 1;
+	}
+	if (b == 1) {
+		levelHeight = myLevel[b].length;
+		levelWidth = myLevel[b][0].length;
 	}
 }
 function mouseOnScreen() {
