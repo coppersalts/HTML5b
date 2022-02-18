@@ -46,6 +46,9 @@ var lineLength = 0;
 var dialogueChar = new Array(levelCount);
 var dialogueText = new Array(levelCount);
 var dialogueFace = new Array(levelCount);
+var cLevelDialogueChar = new Array(levelCount);
+var cLevelDialogueText = new Array(levelCount);
+var cLevelDialogueFace = new Array(levelCount);
 var levelName = new Array(levelCount);
 var mdao = new Array(levelCount);
 var mdao2 = 0;
@@ -424,23 +427,23 @@ var charD = [
 	[15.1,72.8,0.6,20,0.7,true,0,1,true],
 	[20,40,0.15,20,0.7,true,0.7,1,true],
 	[25,50,0.64,20,0.6,true,0.1,1,true],
-	[25,10,1,0,0.7,true,0.2,1,true],
+	[25,10,1,5,0.7,true,0.2,1,true],
 	[25,50,1,20,0.7,true,0.1,1,true],
 	[25,29,0.1,20,0.8,true,1,1,true],
 	[21.5,43,0.3,20,0.6,true,0.5,1,true],
 	[35,60,1,20,0.7,true,0.1,1,true],
 	[22.5,45,1,20,0.7,true,0.8,1,true],
-	[25,50,1,0,0.7,true,0.1,27,true],
+	[25,50,1,20,0.7,true,0.1,27,true],
 	[15,30,0.64,20,0.6,true,0.2,1,true],
-	[10,55,0.8,0,0.3,true,0.4,1,true],
-	[45,10,1,0,0.7,true,0.2,1,true],
-	[20,40,1,0,0.8,false,0.8,5,true],
+	[10,55,0.8,20,0.3,true,0.4,1,true],
+	[45,10,1,20,0.7,true,0.2,1,true],
+	[20,40,1,20,0.8,false,0.8,5,true],
 	[16,45,0.4,20,0.94,false,1.1,60,true],
-	[25,10,1,0,0.7,true,0.3,1,true],
-	[45,10,0.4,0,0.7,true,0.7,1,true],
-	[15,50,0.1,0,0.8,true,1.9,1,true],
-	[25,25,0.1,0,0.8,true,1.7,1,true],
-	[30,540,10,10,0.4,true,0,1,true]
+	[25,10,1,20,0.7,true,0.3,1,true],
+	[45,10,0.4,20,0.7,true,0.7,1,true],
+	[15,50,0.1,20,0.8,true,1.9,1,true],
+	[25,25,0.1,20,0.8,true,1.7,1,true],
+	[30,540,10,20,0.4,true,0,1,true]
 ];
 
 var diaMouths = [
@@ -1675,6 +1678,7 @@ var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Wa
 var selectedTab = 0;
 var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
 var charInfoHeight = 40;
+var diaInfoHeight = 20;
 var charStateNames = ['', 'Dead', 'Being Recovered', 'Death On Impact & Movement From String', 'Movement From String', 'Death On Impact', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
 var charStateNamesShort = ['', 'D', 'BR', 'D&M', 'MFS', 'DOI', 'C', '', 'NPC', 'R', 'P'];
 var charDropdown = -1;
@@ -1723,6 +1727,7 @@ var shakeY = 0;
 var menuScreen = -1;
 var myLevel;
 var myLevelChars;
+var myLevelDialogue;
 var scale = 20;
 var tool = 0;
 var selectedTile = 0;
@@ -2555,6 +2560,10 @@ function resetLevel() {
 		getTileDepths();
 		calculateShadowsAndBorders();
 
+		cLevelDialogueChar = dialogueChar[currentLevel];
+		cLevelDialogueFace = dialogueFace[currentLevel];
+		cLevelDialogueText = dialogueText[currentLevel];
+
 		osc1.width = Math.floor(levelWidth*30 * pixelRatio);
 		osc1.height = Math.floor(levelHeight*30 * pixelRatio);
 		osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -2635,6 +2644,15 @@ function resetMyLevel() {
 	charCount2 = Math.min(charCount2, 6)
 	getTileDepths();
 	calculateShadowsAndBorders();
+
+	cLevelDialogueChar = [];
+	cLevelDialogueFace = [];
+	cLevelDialogueText = [];
+	for (var i = 0; i < myLevelDialogue.length; i++) {
+		cLevelDialogueChar.push(myLevelDialogue[i].char);
+		cLevelDialogueFace.push(myLevelDialogue[i].face);
+		cLevelDialogueText.push(myLevelDialogue[i].text);
+	}
 
 	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
 	osc1.height = Math.floor(levelHeight*30 * pixelRatio);
@@ -2971,7 +2989,7 @@ function drawCutScene() {
 	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y)
 	var textwidth = 386.55;
 	var textx = 106.7;
-	var currdiachar = dialogueChar[currentLevel][Math.min(cutSceneLine, dialogueChar[currentLevel].length-1)]
+	var currdiachar = cLevelDialogueChar[Math.min(cutSceneLine, cLevelDialogueChar.length-1)]
 	if (currdiachar == 99) {
 		textwidth = 488.25;
 		textx = 4.25;
@@ -3144,7 +3162,7 @@ function setBody(i) {
 			}
 		}
 	}
-	if (cutScene == 1 && dialogueChar[currentLevel][cutSceneLine] == i) {
+	if (cutScene == 1 && cLevelDialogueChar[cutSceneLine] == i) {
 		char[i].setFrame(Math.ceil(char[i].dire / 2) * 2 - 1);
 	} else if (i == control && recoverTimer >= 1) {
 		if (char[i].x - (char[HPRC2].x - 33) < 25) {
@@ -3738,8 +3756,8 @@ function startCutScene() {
 			char[control].dire = Math.ceil(char[control].dire / 2) * 2;
 		} else {
 			rescue();
-			for (var _loc2_ = 0; _loc2_ < dialogueChar[currentLevel].length; _loc2_++) {
-				var _loc1_ = dialogueChar[currentLevel][_loc2_];
+			for (var _loc2_ = 0; _loc2_ < cLevelDialogueChar.length; _loc2_++) {
+				var _loc1_ = cLevelDialogueChar[_loc2_];
 				if (_loc1_ >= 50 && _loc1_ < 60) leverSwitch(_loc1_ - 50);
 			}
 			cutScene = 3;
@@ -3764,12 +3782,12 @@ function rescue() {
 }
 
 function displayLine(level, line) {
-	var _loc2_ = dialogueChar[level][line];
+	var _loc2_ = cLevelDialogueChar[line];
 	if (_loc2_ >= 50 && _loc2_ < 60) {
 		leverSwitch(_loc2_ - 50);
 		cutSceneLine++;
 		line = line + 1;
-		_loc2_ = dialogueChar[level][line];
+		_loc2_ = cLevelDialogueChar[line];
 	}
 	var _loc5_;
 	if (_loc2_ == 99) {
@@ -3786,10 +3804,10 @@ function displayLine(level, line) {
 		bubY = 520 - bubMargin - bubHeight / 2;
 	}
 	if (_loc2_ < char.length) {
-		char[_loc2_].expr = dialogueFace[level][line]-2;
+		char[_loc2_].expr = cLevelDialogueFace[line]-2;
 		char[_loc2_].diaMouthFrame = 0;
 	}
-	csText = dialogueText[level][line];
+	csText = cLevelDialogueText[line];
 }
 
 function startDeath(i) {
@@ -4205,6 +4223,7 @@ function resetLevelCreator() {
 	charCount2 = 0;
 	charCount = 0;
 	myLevelChars = [];
+	myLevelDialogue = [];
 	// setEndGateLights();
 	LCEndGateX = -1;
 	LCEndGateY = -1;
@@ -4366,7 +4385,7 @@ function mouseOnScreen() {
 function setSelectedTile(i) {
 	selectedTile = i;
 	if (blockProperties[selectedTile][9] && (tool == 2 || tool == 3)) {
-		tool = 1
+		tool = 1;
 	}
 	// var _loc3_ = i % 5 * 60 + 30;
 	// var _loc2_ = Math.floor(i / 5) * 60 + 70;
@@ -4483,6 +4502,44 @@ function drawLCCharInfo(i, y) {
 		}
 		ctx.fillStyle = '#ee3333';
 		ctx.fillRect(665+240, y + charInfoHeight/2 - 10, 20, 20);
+	}
+	// if (charDropdown == i) {
+	// 	if (mouseIsDown) {
+	// 		charDropdown = -1;
+	// 	}
+	// }
+}
+
+function drawLCDiaInfo(i, y) {
+	ctx.fillStyle = '#626262';
+	ctx.fillRect(665, y, 240, diaInfoHeight);
+	ctx.fillStyle = '#808080';
+	ctx.fillRect(665, y, diaInfoHeight*2, diaInfoHeight);
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText(myLevelDialogue[i].text, 665 + diaInfoHeight*2 + 5, y + diaInfoHeight/2);
+	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
+
+	if (charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, diaInfoHeight)) {
+		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight)) {
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) {
+				// charDropdown = -i-3;
+				// charDropdownType = 0;
+			}
+		} else if (_xmouse < 665+240) {
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) {
+				// charDropdown = -i-3;
+				// charDropdownType = 2;
+			}
+		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + diaInfoHeight/2 - 10, 20, 20)) {
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) {
+				myLevelDialogue.splice(i,1);
+			}
+		}
+		ctx.fillStyle = '#ee3333';
+		ctx.fillRect(665+240, y + diaInfoHeight/2 - 10, 20, 20);
 	}
 	// if (charDropdown == i) {
 	// 	if (mouseIsDown) {
@@ -4909,7 +4966,7 @@ function draw() {
 			if (_keysDown[13] || _keysDown[16]) {
 				if (!csPress && cutScene == 1) {
 					cutSceneLine++;
-					if (cutSceneLine >= dialogueChar[currentLevel].length) endCutScene();
+					if (cutSceneLine >= cLevelDialogueChar.length) endCutScene();
 					else displayLine(currentLevel,cutSceneLine);
 				}
 				csPress = true;
@@ -5704,9 +5761,103 @@ function draw() {
 			//tileTabScrollBar
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 		} else if (selectedTab == 3) {
-			//
+			//backgrounds
 		} else if (selectedTab == 4) {
-			//
+			var tabWindowH = cheight - tabHeight * tabNames.length;
+			var tabContentsHeight = (diaInfoHeight+5) * (char.length+2);
+			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
+			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+				onButton = true;
+				ctx.fillStyle = '#e8e8e8';
+				if (mouseIsDown && !pmouseIsDown) {
+					draggingScrollBar = true;
+				}
+			} else {
+				ctx.fillStyle = '#dddddd';
+			}
+
+			if (draggingScrollBar) {
+				onButton = false;
+				ctx.fillStyle = '#a0a0a0';
+				charsTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				if (!mouseIsDown) draggingScrollBar = false;
+			}
+			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+			// ctx.save();
+			// ctx.translate(0, -charsTabScrollBar);
+			ctx.textAlign = 'left';
+			ctx.textBaseline = 'middle';
+			ctx.font = '20px Helvetica';
+			for (var i = 0; i < myLevelDialogue.length; i++) {
+				drawLCDiaInfo(i, (selectedTab+1)*tabHeight + i*(diaInfoHeight+5) + 5);
+				// ctx.fillStyle = '#000000';
+				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
+			}
+			addButtonPressed = false;
+			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) {
+					myLevelDialogue.push({char:0,face:2,text:'(plorbal)'});
+				}
+				addButtonPressed = true;
+			}
+			// if (charDropdown == -2) charDropdown = -1;
+			// if (charDropdown >= 0) {
+			// 	if (charDropdownType == 0) {
+			// 		myLevelChars[charDropdown][0]++;
+			// 		if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+			// 		while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+			// 			myLevelChars[charDropdown][0]++;
+			// 			if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+			// 		}
+			// 		resetLCChar(charDropdown);
+			// 		charDropdown = -2;
+			// 	} else if (charDropdownType == 1) {
+			// 		ctx.fillStyle = '#ffffff';
+			// 		ctx.fillRect((665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(diaInfoHeight+5), diaInfoHeight*1.5, 70);
+			// 		ctx.textBaseline = 'top';
+			// 		ctx.font = '10px Helvetica';
+			// 		ctx.fillStyle = '#000000';
+			// 		var j = 0;
+			// 		for (var i = 3; i < charStateNames.length; i++) {
+			// 			if (charStateNames[i] != '') {
+			// 				if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(diaInfoHeight+5) + j*10, diaInfoHeight*1.5, 10)) {
+			// 					ctx.fillStyle = '#dddddd';
+			// 					ctx.fillRect((665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(diaInfoHeight+5) + j*10, diaInfoHeight*1.5, 10);
+			// 					ctx.fillStyle = '#000000';
+			// 					if (mouseIsDown && !addButtonPressed) {
+			// 						myLevelChars[charDropdown][3] = i;
+			// 					}
+			// 				}
+			// 				ctx.fillText(charStateNames[i], (665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(diaInfoHeight+5) + j*10);
+			// 				j++;
+			// 			}
+			// 		}
+			// 	} else if (charDropdownType == 2) {
+			// 		var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
+			// 		var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
+			// 		myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
+			// 		myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+			// 		char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
+			// 		char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
+			// 	}
+
+
+
+			// 	if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
+			// 		resetLCChar(charDropdown);
+			// 		if (charDropdownType == 2) {
+			// 			char[charDropdown].placed = true;
+			// 		}
+			// 		charDropdown = -2;
+			// 	}
+			// }
+			// if (charDropdown < -2) charDropdown = -charDropdown-3;
+			// ctx.restore();
+
+			ctx.fillStyle = '#33ee33';
+			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 5) {
 			drawMenu0Button('COPY LEVEL', 673, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
 			drawMenu0Button('TEST LEVEL',673, (selectedTab+1)*tabHeight + 60, 10, false, testLevelCreator);
