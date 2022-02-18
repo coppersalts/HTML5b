@@ -4852,7 +4852,7 @@ function setup() {
 function draw() {
 	onButton = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
+	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
 
 
 	if (menuScreen == -1) {
