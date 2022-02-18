@@ -4601,14 +4601,36 @@ function resetLCChar(i) {
 }
 
 function copyLevelString() {
-	var lcLevelString = '\r\n';
-	lcLevelString += 'Untitled level\r\n';
-	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + (char.length).toString(10).padStart(2, '0') + ',00,L\r\n';
+	longMode = false;
 	for (var y = 0; y < levelHeight; y++) {
 		for (var x = 0; x < levelWidth; x++) {
-			lcLevelString += tileCharFromID(myLevel[1][y][x]);
+			if (myLevel[1][y][x] > 120) longMode = true;
 		}
 		lcLevelString += '\r\n';
+	}
+
+	var lcLevelString = '\r\n';
+	lcLevelString += 'Untitled level\r\n';
+	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + (char.length).toString(10).padStart(2, '0') + ',00,' + (longMode?'H':'L') +'\r\n';
+	if (longMode) {
+		for (var y = 0; y < levelHeight; y++) {
+			for (var x = 0; x < levelWidth; x++) {
+				if (myLevel[1][y][x] > 120) {
+					lcLevelString += '/';
+				} else {
+					lcLevelString += '.';
+				}
+				lcLevelString += tileCharFromID(myLevel[1][y][x]);
+			}
+			lcLevelString += '\r\n';
+		}
+	} else {
+		for (var y = 0; y < levelHeight; y++) {
+			for (var x = 0; x < levelWidth; x++) {
+				lcLevelString += tileCharFromID(myLevel[1][y][x]);
+			}
+			lcLevelString += '\r\n';
+		}
 	}
 	for (var i = 0; i < char.length; i++) {
 		lcLevelString += myLevelChars[i][0].toString(10).padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][2]) + ',' + myLevelChars[i][3].toString(10).padStart(2, '0') + '\r\n';
@@ -4630,6 +4652,7 @@ function tileCharFromID(id) {
 	else if (id <= 80) tileCharCode = id + 46;
 	else if (id <= 102) tileCharCode = id + 80;
 	else tileCharCode = id + 81;
+	if (id > 120) tileCharCode -= 144;
 	return String.fromCharCode(tileCharCode);
 }
 
@@ -5532,7 +5555,7 @@ function draw() {
 				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
 			}
 			addButtonPressed = false;
-			if (onRect(_xmouse, _ymouse+charsTabScrollBar, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					myLevelChars.push([0,0.0,0.0,10]);
