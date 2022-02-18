@@ -4494,6 +4494,39 @@ function resetLCChar(i) {
 	char[i].dExpr = _loc2_<35?charModels[_loc2_].defaultExpr:0;
 }
 
+function copyLevelString() {
+	var lcLevelString = '\r\n';
+	lcLevelString += 'Untitled level\r\n';
+	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + (char.length).toString(10).padStart(2, '0') + ',00,L\r\n';
+	for (var y = 0; y < levelHeight; y++) {
+		for (var x = 0; x < levelWidth; x++) {
+			lcLevelString += tileCharFromID(myLevel[1][y][x]);
+		}
+		lcLevelString += '\r\n';
+	}
+	for (var i = 0; i < char.length; i++) {
+		lcLevelString += myLevelChars[i][0].toString(10).padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][2]) + ',' + myLevelChars[i][3].toString(10).padStart(2, '0') + '\r\n';
+	}
+	lcLevelString += '00\r\n000000\r\n';
+
+	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+	console.log(lcLevelString);
+	navigator.clipboard.writeText(lcLevelString).then(function() {
+		console.log('Successfuly copied to clipboard!');
+	}, function(err) {
+		console.error('Could not copy text: ', err);
+	});
+}
+
+function tileCharFromID(id) {
+	var tileCharCode;
+	if (id == 93) tileCharCode = 8364;
+	else if (id <= 80) tileCharCode = id + 46;
+	else if (id <= 102) tileCharCode = id + 80;
+	else tileCharCode = id + 81;
+	return String.fromCharCode(tileCharCode);
+}
+
 function twoDecimalPlaceNumFormat(num) {
 	return (Math.round(num * 100) / 100).toFixed(2).padStart(5, '0');
 }
@@ -5351,7 +5384,6 @@ function draw() {
 		ctx.fillRect(0,480,660,60);
 		ctx.fillStyle = '#cccccc';
 		ctx.fillRect(660,0,300,540);
-		drawMenu0Button('BACK', 0, 0, 10, false, menuExitLevelCreator);
 
 
 		// Draw Tab Contents
@@ -5541,6 +5573,9 @@ function draw() {
 			//
 		} else if (selectedTab == 4) {
 			//
+		} else if (selectedTab == 5) {
+			drawMenu0Button('COPY LEVEL', 675, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
+			drawMenu0Button('EXIT',675, (selectedTab+1)*tabHeight + 50, 10, false, menuExitLevelCreator);
 		}
 
 
