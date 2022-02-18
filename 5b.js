@@ -1746,6 +1746,7 @@ var stopY = 0;
 var toBounce = false;
 var toSeeCS = true;
 var csText = '';
+var currentLevelDisplayName = '';
 
 var tileShadows;
 var tileBorders;
@@ -2189,6 +2190,19 @@ function playGame() {
 	musicSound.loop = true;
 }
 
+function testLevelCreator() {
+	if (myLevelChars.length > 0) {
+		playMode = 2;
+		currentLevel = -1;
+		wipeTimer = 30;
+		// bg.cacheAsBitmap = true;
+		menuScreen = 3;
+		toSeeCS = true;
+		transitionType = 1;
+		resetMyLevel();
+	}
+}
+
 function drawMenu0Button(text, x, y, id, grayed, action) {
 	var fill = '#ffffff';
 	if (!grayed) {
@@ -2335,7 +2349,7 @@ function drawMenu() {
 	}
 	else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
-	drawMenu0Button('L.C. (WIP)', 665.55, 437.7, 3, false,  menuLevelCreator);
+	drawMenu0Button('L.C. (beta)', 665.55, 437.7, 3, false,  menuLevelCreator);
 	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, true,  menuExplore);
 
 	// var started = true;
@@ -2424,7 +2438,7 @@ function drawLevelButtons() {
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	ctx.font = 'bold 32px Helvetica';
-	ctx.fillText((currentLevel + 1).toString(10).padStart(3, '0') + '. ' + levelName[currentLevel], 12.85, 489.45);
+	ctx.fillText(currentLevelDisplayName, 12.85, 489.45);
 	drawMenu2_3Button(0, 837.5, 486.95, menu3Menu);
 }
 
@@ -2477,32 +2491,116 @@ function playLevel(i) {
 }
 
 function resetLevel() {
+	if (playMode == 2) {
+		resetMyLevel();
+	} else {
+		HPRCBubbleFrame = 0;
+		doorLightFade = [0,0,0,0,0,0];
+		doorLightFadeDire = [0,0,0,0,0,0];
+		charCount = startLocations[currentLevel].length;
+		levelWidth = levels[currentLevel][0].length;
+		levelHeight = levels[currentLevel].length;
+		charDepths = new Array((charCount + 1) * 2).fill(-1);
+		for (var i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
+
+		// move the control to the front
+		charDepths[(charCount-1)*2] = -1;
+		charDepths[charCount*2] = 0;
+		copyLevel(levels[currentLevel]);
+		charDepth = levelWidth * levelHeight + charCount * 2;
+		tileDepths = [[],[],[],[]];
+		charCount2 = 0;
+		HPRC1 = HPRC2 = 1000000;
+		for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
+			var _loc2_ = startLocations[currentLevel][_loc1_][0];
+			char[_loc1_] = new Character(
+				_loc2_,
+				startLocations[currentLevel][_loc1_][1] * 30 + startLocations[currentLevel][_loc1_][2] * 30 / 100,
+				startLocations[currentLevel][_loc1_][3] * 30 + startLocations[currentLevel][_loc1_][4] * 30 / 100,
+				70 + _loc1_ * 40,
+				400 - _loc1_ * 30,
+				startLocations[currentLevel][_loc1_][5],
+				charD[_loc2_][0],
+				charD[_loc2_][1],
+				charD[_loc2_][2],
+				charD[_loc2_][2],
+				charD[_loc2_][3],
+				charD[_loc2_][4],
+				charD[_loc2_][6],
+				charD[_loc2_][8],
+				_loc2_<35?charModels[_loc2_].defaultExpr:0
+			);
+			if (char[_loc1_].charState == 9) {
+				char[_loc1_].expr = 1;
+				char[_loc1_].diaMouthFrame = 0;
+			} else if (char[_loc1_].charState >= 7) {
+				char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+			}
+			
+			if (char[_loc1_].charState >= 9) charCount2++;
+			if (_loc2_ == 36) HPRC1 = _loc1_;
+			if (_loc2_ == 35) HPRC2 = _loc1_;
+			if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
+				char[_loc1_].speed = startLocations[currentLevel][_loc1_][6][0] * 10 + startLocations[currentLevel][_loc1_][6][1];
+			}
+		}
+		charCount2 = Math.min(charCount2, 6)
+		getTileDepths();
+		calculateShadowsAndBorders();
+
+		osc1.width = Math.floor(levelWidth*30 * pixelRatio);
+		osc1.height = Math.floor(levelHeight*30 * pixelRatio);
+		osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+		osc2.width = Math.floor(levelWidth*30 * pixelRatio);
+		osc2.height = Math.floor(levelHeight*30 * pixelRatio);
+		osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+		drawStaticTiles();
+		recover = false;
+		cornerHangTimer = 0;
+		charsAtEnd = 0;
+		control = 0;
+		cutScene = 0;
+		bgXScale = ((levelWidth - 32) * 10 + 960) / 9.6;
+		bgYScale = ((levelHeight - 18) * 10 + 540) / 5.4;
+		// bg.cacheAsBitmap = true;
+		cameraX = Math.min(Math.max(char[0].x - 480,0),levelWidth * 30 - 960);
+		cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
+		gotThisCoin = false;
+		levelTimer = 0;
+		levelTimer2 = getTimer();
+		if (char[0].charState <= 9)  changeControl();
+		currentLevelDisplayName = (currentLevel + 1).toString(10).padStart(3, '0') + '. ' + levelName[currentLevel];
+	}
+}
+
+function resetMyLevel() {
 	HPRCBubbleFrame = 0;
 	doorLightFade = [0,0,0,0,0,0];
 	doorLightFadeDire = [0,0,0,0,0,0];
-	charCount = startLocations[currentLevel].length;
-	levelWidth = levels[currentLevel][0].length;
-	levelHeight = levels[currentLevel].length;
+	charCount = myLevelChars.length;
+	levelWidth = myLevel[1][0].length;
+	levelHeight = myLevel[1].length;
 	charDepths = new Array((charCount + 1) * 2).fill(-1);
 	for (var i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
 
 	// move the control to the front
 	charDepths[(charCount-1)*2] = -1;
 	charDepths[charCount*2] = 0;
-	copyLevel(levels[currentLevel]);
+	copyLevel(myLevel[1]);
 	charDepth = levelWidth * levelHeight + charCount * 2;
 	tileDepths = [[],[],[],[]];
+	char = new Array(charCount);
 	charCount2 = 0;
 	HPRC1 = HPRC2 = 1000000;
 	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		var _loc2_ = startLocations[currentLevel][_loc1_][0];
+		var _loc2_ = myLevelChars[_loc1_][0];
 		char[_loc1_] = new Character(
 			_loc2_,
-			startLocations[currentLevel][_loc1_][1] * 30 + startLocations[currentLevel][_loc1_][2] * 30 / 100,
-			startLocations[currentLevel][_loc1_][3] * 30 + startLocations[currentLevel][_loc1_][4] * 30 / 100,
+			myLevelChars[_loc1_][1] * 30,
+			myLevelChars[_loc1_][2] * 30,
 			70 + _loc1_ * 40,
 			400 - _loc1_ * 30,
-			startLocations[currentLevel][_loc1_][5],
+			myLevelChars[_loc1_][3],
 			charD[_loc2_][0],
 			charD[_loc2_][1],
 			charD[_loc2_][2],
@@ -2524,7 +2622,7 @@ function resetLevel() {
 		if (_loc2_ == 36) HPRC1 = _loc1_;
 		if (_loc2_ == 35) HPRC2 = _loc1_;
 		if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
-			char[_loc1_].speed = startLocations[currentLevel][_loc1_][6][0] * 10 + startLocations[currentLevel][_loc1_][6][1];
+			char[_loc1_].speed = myLevelChars[_loc1_][4][0] * 10 + myLevelChars[_loc1_][4][1];
 		}
 	}
 	charCount2 = Math.min(charCount2, 6)
@@ -2552,6 +2650,7 @@ function resetLevel() {
 	levelTimer = 0;
 	levelTimer2 = getTimer();
 	if (char[0].charState <= 9)  changeControl();
+	currentLevelDisplayName = 'My level';
 }
 
 function copyLevel(thatLevel) {
@@ -3215,7 +3314,7 @@ function setBorder(x, y, s) {
 	var borderset = 0;
 	// TODO: remove this hard-coded array
 	var metalBlocks = [98,102,105,107];
-	if (metalBlocks.includes(levels[currentLevel][y][x])) borderset = 19;
+	if (metalBlocks.includes(thisLevel[y][x])) borderset = 19;
 	tileBorders[y][x] = [];
 	if (outOfRange(x, y)) return;
 	var _loc6_ = 0;
@@ -4773,7 +4872,7 @@ function draw() {
 	} else if (menuScreen == 3) {
 		// TODO: draw the bg to an offscreen canvas when the level is loaded
 		var bgScale = Math.max(bgXScale, bgYScale);
-		ctx.drawImage(imgBgs[bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
+		ctx.drawImage(imgBgs[playMode==2?0:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
 		drawLevel();
 
 		if (cutScene == 1 || cutScene == 2) { 
@@ -4984,7 +5083,7 @@ function draw() {
 		}
 		var _loc11_;
 		if (!gotThisCoin) _loc11_ = 140 - locations[4] * 0.7;
-		if (gotCoin[currentLevel]) _loc11_ = Math.max(_loc11_,30);
+		if (playMode != 2 && gotCoin[currentLevel]) _loc11_ = Math.max(_loc11_,30);
 		for (var _loc2_ = 0; _loc2_ < charCount; _loc2_++) {
 			if (char[_loc2_].vy != 0 || char[_loc2_].vx != 0 || char[_loc2_].x != char[_loc2_].px || char[_loc2_].py != char[_loc2_].y) char[_loc2_].justChanged = 2;
 			if (char[_loc2_].charState == 2) {
@@ -5337,7 +5436,7 @@ function draw() {
 		if (wipeTimer == 30) {
 			if (transitionType == 0) resetLevel();
 			else if (charsAtEnd >= charCount2) {
-				if (gotThisCoin && !gotCoin[currentLevel]) {
+				if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
 					gotCoin[currentLevel] = true;
 					coins++;
 					bonusProgress = Math.floor(coins*0.33);
@@ -5349,9 +5448,16 @@ function draw() {
 					levelProgress = currentLevel;
 					resetLevel();
 				} else {
-					exitLevel();
-					if (currentLevel > 99) {
-						bonusesCleared[currentLevel-100] = true;
+					if (playMode == 2) {
+						menuScreen = 5;
+						cameraX = 0;
+						cameraY = 0;
+						resetLevel();
+					} else {
+						exitLevel();
+						if (currentLevel > 99) {
+							bonusesCleared[currentLevel-100] = true;
+						}
 					}
 				}
 				saveGame();
@@ -5445,6 +5551,7 @@ function draw() {
 						charD[_loc2_][8],
 						_loc2_<35?charModels[_loc2_].defaultExpr:0
 						));
+					char[char.length-1].placed = false;
 				}
 				addButtonPressed = true;
 			}
@@ -5574,8 +5681,9 @@ function draw() {
 		} else if (selectedTab == 4) {
 			//
 		} else if (selectedTab == 5) {
-			drawMenu0Button('COPY LEVEL', 675, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
-			drawMenu0Button('EXIT',675, (selectedTab+1)*tabHeight + 50, 10, false, menuExitLevelCreator);
+			drawMenu0Button('COPY LEVEL', 673, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
+			drawMenu0Button('TEST LEVEL',673, (selectedTab+1)*tabHeight + 60, 10, false, testLevelCreator);
+			drawMenu0Button('EXIT',673, (selectedTab+1)*tabHeight + 110, 15, false, menuExitLevelCreator);
 		}
 
 
