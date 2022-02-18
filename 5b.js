@@ -1681,7 +1681,9 @@ var charDropdown = -1;
 var charDropdownType;
 var tabHeight = 30;
 var tileTabScrollBar = 0;
+var charsTabScrollBar = 0;
 var draggingScrollBar = false;
+var addButtonPressed = false;
 var power = 1;
 var jumpPower = 11;
 var qPress = false;
@@ -4090,6 +4092,8 @@ function resetLevelCreator() {
 	levelHeight = 18;
 	clearMyWholeLevel();
 	charDropdown = -1;
+	charsTabScrollBar = 0;
+	tileTabScrollBar = 0;
 	// drawLCGrid();
 	// fillTilesTab();
 	charCount2 = 0;
@@ -4345,14 +4349,14 @@ function drawLCCharInfo(i, y) {
 	ctx.fillText(twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ', ' + twoDecimalPlaceNumFormat(myLevelChars[i][2]), 665 + charInfoHeight + 5, y + charInfoHeight/2);
 	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+260)-charInfoHeight*2 + 5, y + charInfoHeight/2);
 
-	if (charDropdown == -1 && onRect(_xmouse, _ymouse, 665, y, 260, charInfoHeight)) {
-		if (onRect(_xmouse, _ymouse, 665, y, charInfoHeight, charInfoHeight)) {
+	if (charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
+		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
 				charDropdownType = 0;
 			}
-		} else if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight)) {
+		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
@@ -5346,6 +5350,29 @@ function draw() {
 		if (selectedTab == 0) {
 			//
 		} else if (selectedTab == 1) {
+			var tabWindowH = cheight - tabHeight * tabNames.length;
+			var tabContentsHeight = (charInfoHeight+5) * (char.length+2);
+			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
+			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+				onButton = true;
+				ctx.fillStyle = '#e8e8e8';
+				if (mouseIsDown && !pmouseIsDown) {
+					draggingScrollBar = true;
+				}
+			} else {
+				ctx.fillStyle = '#dddddd';
+			}
+
+			if (draggingScrollBar) {
+				onButton = false;
+				ctx.fillStyle = '#a0a0a0';
+				charsTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				if (!mouseIsDown) draggingScrollBar = false;
+			}
+			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+			ctx.save();
+			ctx.translate(0, -charsTabScrollBar);
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
@@ -5354,62 +5381,8 @@ function draw() {
 				// ctx.fillStyle = '#000000';
 				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
 			}
-			if (charDropdown == -2) charDropdown = -1;
-			if (charDropdown >= 0) {
-				if (charDropdownType == 0) {
-					myLevelChars[charDropdown][0]++;
-					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
-					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
-						myLevelChars[charDropdown][0]++;
-						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
-					}
-					resetLCChar(charDropdown);
-					charDropdown = -2;
-				} else if (charDropdownType == 1) {
-					ctx.fillStyle = '#ffffff';
-					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
-					ctx.textBaseline = 'top';
-					ctx.font = '10px Helvetica';
-					ctx.fillStyle = '#000000';
-					var j = 0;
-					for (var i = 3; i < charStateNames.length; i++) {
-						if (charStateNames[i] != '') {
-							if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10)) {
-								ctx.fillStyle = '#dddddd';
-								ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10);
-								ctx.fillStyle = '#000000';
-								if (mouseIsDown) {
-									myLevelChars[charDropdown][3] = i;
-								}
-							}
-							ctx.fillText(charStateNames[i], (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
-							j++;
-						}
-					}
-				} else if (charDropdownType == 2) {
-					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
-					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
-					myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
-					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
-					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
-					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
-				}
-
-
-
-				if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown) {
-					resetLCChar(charDropdown);
-					if (charDropdownType == 2) {
-						char[charDropdown].placed = true;
-					}
-					charDropdown = -2;
-				}
-			}
-			if (charDropdown < -2) charDropdown = -charDropdown-3;
-
-			ctx.fillStyle = '#333333';
-			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
-			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+			addButtonPressed = false;
+			if (onRect(_xmouse, _ymouse+charsTabScrollBar, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					myLevelChars.push([0,0.0,0.0,10]);
@@ -5433,7 +5406,64 @@ function draw() {
 						_loc2_<35?charModels[_loc2_].defaultExpr:0
 						));
 				}
+				addButtonPressed = true;
 			}
+			if (charDropdown == -2) charDropdown = -1;
+			if (charDropdown >= 0) {
+				if (charDropdownType == 0) {
+					myLevelChars[charDropdown][0]++;
+					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+						myLevelChars[charDropdown][0]++;
+						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					}
+					resetLCChar(charDropdown);
+					charDropdown = -2;
+				} else if (charDropdownType == 1) {
+					ctx.fillStyle = '#ffffff';
+					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
+					ctx.textBaseline = 'top';
+					ctx.font = '10px Helvetica';
+					ctx.fillStyle = '#000000';
+					var j = 0;
+					for (var i = 3; i < charStateNames.length; i++) {
+						if (charStateNames[i] != '') {
+							if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10)) {
+								ctx.fillStyle = '#dddddd';
+								ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10);
+								ctx.fillStyle = '#000000';
+								if (mouseIsDown && !addButtonPressed) {
+									myLevelChars[charDropdown][3] = i;
+								}
+							}
+							ctx.fillText(charStateNames[i], (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
+							j++;
+						}
+					}
+				} else if (charDropdownType == 2) {
+					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
+					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
+					myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
+					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
+					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
+				}
+
+
+
+				if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
+					resetLCChar(charDropdown);
+					if (charDropdownType == 2) {
+						char[charDropdown].placed = true;
+					}
+					charDropdown = -2;
+				}
+			}
+			if (charDropdown < -2) charDropdown = -charDropdown-3;
+			ctx.restore();
+
+			ctx.fillStyle = '#333333';
+			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 2) {
 			var j = 0;
 			var bpr = 5;
