@@ -2203,6 +2203,13 @@ function testLevelCreator() {
 	}
 }
 
+function exitTestLevel() {
+	menuScreen = 5;
+	cameraX = 0;
+	cameraY = 0;
+	resetLevel();
+}
+
 function drawMenu0Button(text, x, y, id, grayed, action) {
 	var fill = '#ffffff';
 	if (!grayed) {
@@ -2439,7 +2446,7 @@ function drawLevelButtons() {
 	ctx.textBaseline = 'top';
 	ctx.font = 'bold 32px Helvetica';
 	ctx.fillText(currentLevelDisplayName, 12.85, 489.45);
-	drawMenu2_3Button(0, 837.5, 486.95, menu3Menu);
+	drawMenu2_3Button(0, 837.5, 486.95, playMode==2?exitTestLevel:menu3Menu);
 }
 
 //https://thewebdev.info/2021/05/15/how-to-add-line-breaks-into-the-html5-canvas-with-filltext/
@@ -5449,10 +5456,7 @@ function draw() {
 					resetLevel();
 				} else {
 					if (playMode == 2) {
-						menuScreen = 5;
-						cameraX = 0;
-						cameraY = 0;
-						resetLevel();
+						exitTestLevel();
 					} else {
 						exitLevel();
 						if (currentLevel > 99) {
