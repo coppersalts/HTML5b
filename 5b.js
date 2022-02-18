@@ -1883,7 +1883,7 @@ async function loadingScreen() {
 	ctx.scale(pixelRatio, pixelRatio);
 
 	// Hard-coded value. You can make it calculated later if you want.
-	var totalResources = 1101;
+	var totalResources = 1105;
 	var loadedResources = 0;
 	// Background
 	ctx.fillStyle = '#999966';
@@ -4577,7 +4577,7 @@ function mousedown(event){
 					selectedTab = 2;
 					setTool(0);
 					setSelectedTile(myLevel[1][_loc9_][_loc10_]);
-				} else if(tool == 6) {
+				} else if (tool == 6) {
 					var _loc5_ = 0;
 					if (closeToEdgeY() || levelHeight >= 2) {
 						if (closeToEdgeY()) {
@@ -4599,6 +4599,12 @@ function mousedown(event){
 							myLevel[1][_loc2_] = new Array(levelWidth);
 							for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
 								myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc4_][_loc1_];
+							}
+						}
+						for (var i = 0; i < myLevelChars.length; i++) {
+							if (myLevelChars[i][2] > _loc7_) {
+								myLevelChars[i][2] += _loc5_;
+								char[i].y += _loc5_ * 30;
 							}
 						}
 						// drawLCGrid();
@@ -4627,6 +4633,12 @@ function mousedown(event){
 									_loc3_ = Math.max(_loc1_ - _loc5_,0);
 								}
 								myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc2_][_loc3_];
+							}
+						}
+						for (var i = 0; i < myLevelChars.length; i++) {
+							if (myLevelChars[i][1] > _loc6_) {
+								myLevelChars[i][1] += _loc5_;
+								char[i].x += _loc5_ * 30;
 							}
 						}
 						// drawLCGrid();
@@ -5345,27 +5357,6 @@ function draw() {
 					resetLCChar(charDropdown);
 					charDropdown = -1;
 				} else if (charDropdownType == 1) {
-					ctx.fillStyle = '#ffffff';
-					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
-					ctx.textAlign = 'left';
-					ctx.textBaseline = 'top';
-					ctx.font = '10px Helvetica';
-					ctx.fillStyle = '#000000';
-					var j = 0;
-					for (var i = 3; i < charStateNames.length; i++) {
-						if (charStateNames[i] != '') {
-							if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10)) {
-								ctx.fillStyle = '#dddddd';
-								ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10);
-								ctx.fillStyle = '#000000';
-								if (mouseIsDown) {
-									myLevelChars[charDropdown][3] = i;
-								}
-							}
-							ctx.fillText(charStateNames[i], (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
-							j++;
-						}
-					}
 				} else if (charDropdownType == 2) {
 					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
 					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
@@ -5387,8 +5378,6 @@ function draw() {
 			}
 
 
-
-			// myLevelChars
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
@@ -5397,6 +5386,31 @@ function draw() {
 				// ctx.fillStyle = '#000000';
 				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
 			}
+			if (charDropdown != -1) {
+				if (charDropdownType == 1) {
+					ctx.fillStyle = '#ffffff';
+					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
+					ctx.textBaseline = 'top';
+					ctx.font = '10px Helvetica';
+					ctx.fillStyle = '#000000';
+					var j = 0;
+					for (var i = 3; i < charStateNames.length; i++) {
+						if (charStateNames[i] != '') {
+							if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10)) {
+								ctx.fillStyle = '#dddddd';
+								ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10);
+								ctx.fillStyle = '#000000';
+								if (mouseIsDown) {
+									myLevelChars[charDropdown][3] = i;
+								}
+							}
+							ctx.fillText(charStateNames[i], (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
+							j++;
+						}
+					}
+				}
+			}
+
 			ctx.fillStyle = '#333333';
 			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
@@ -5422,8 +5436,6 @@ function draw() {
 						charD[_loc2_][8],
 						_loc2_<35?charModels[_loc2_].defaultExpr:0
 						));
-					// resetLCChar(char.length-1);
-					// char[char.length-1].placed = false;
 				}
 			}
 		} else if (selectedTab == 2) {
