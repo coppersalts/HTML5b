@@ -4652,7 +4652,7 @@ function tileCharFromID(id) {
 	else if (id <= 80) tileCharCode = id + 46;
 	else if (id <= 102) tileCharCode = id + 80;
 	else tileCharCode = id + 81;
-	if (id > 120) tileCharCode -= 144;
+	if (id > 120) tileCharCode -= 146;
 	return String.fromCharCode(tileCharCode);
 }
 
