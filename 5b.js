@@ -4323,11 +4323,11 @@ function setEndGateLights() {
 
 function drawLCCharInfo(i, y) {
 	ctx.fillStyle = '#626262';
-	ctx.fillRect(665, y, 260, charInfoHeight);
+	ctx.fillRect(665, y, 240, charInfoHeight);
 	ctx.fillStyle = '#808080';
 	ctx.fillRect(665, y, charInfoHeight, charInfoHeight);
 	ctx.fillStyle = '#808080';
-	ctx.fillRect((665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight);
+	ctx.fillRect((665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight);
 	var charimgmat = charModels[myLevelChars[i][0]].charimgmat;
 	if (typeof charimgmat !== 'undefined') {
 		var charimg = svgChars[myLevelChars[i][0]];
@@ -4347,7 +4347,7 @@ function drawLCCharInfo(i, y) {
 	}
 	ctx.fillStyle = '#ffffff';
 	ctx.fillText(twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ', ' + twoDecimalPlaceNumFormat(myLevelChars[i][2]), 665 + charInfoHeight + 5, y + charInfoHeight/2);
-	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+260)-charInfoHeight*2 + 5, y + charInfoHeight/2);
+	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-charInfoHeight*1.5 + 5, y + charInfoHeight/2);
 
 	if (charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
 		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
@@ -4356,19 +4356,27 @@ function drawLCCharInfo(i, y) {
 				charDropdown = -i-3;
 				charDropdownType = 0;
 			}
-		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight)) {
+		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
 				charDropdownType = 1;
 			}
-		} else {
+		} else if (_xmouse < 665+240) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
 				charDropdownType = 2;
 			}
+		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + charInfoHeight/2 - 10, 20, 20)) {
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) {
+				char.splice(i,1);
+				myLevelChars.splice(i,1);
+			}
 		}
+		ctx.fillStyle = '#ee3333';
+		ctx.fillRect(665+240, y + charInfoHeight/2 - 10, 20, 20);
 	}
 	// if (charDropdown == i) {
 	// 	if (mouseIsDown) {
@@ -5421,22 +5429,22 @@ function draw() {
 					charDropdown = -2;
 				} else if (charDropdownType == 1) {
 					ctx.fillStyle = '#ffffff';
-					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
+					ctx.fillRect((665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*1.5, 70);
 					ctx.textBaseline = 'top';
 					ctx.font = '10px Helvetica';
 					ctx.fillStyle = '#000000';
 					var j = 0;
 					for (var i = 3; i < charStateNames.length; i++) {
 						if (charStateNames[i] != '') {
-							if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10)) {
+							if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*1.5, 10)) {
 								ctx.fillStyle = '#dddddd';
-								ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*2, 10);
+								ctx.fillRect((665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*1.5, 10);
 								ctx.fillStyle = '#000000';
 								if (mouseIsDown && !addButtonPressed) {
 									myLevelChars[charDropdown][3] = i;
 								}
 							}
-							ctx.fillText(charStateNames[i], (665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
+							ctx.fillText(charStateNames[i], (665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
 							j++;
 						}
 					}
@@ -5462,7 +5470,7 @@ function draw() {
 			if (charDropdown < -2) charDropdown = -charDropdown-3;
 			ctx.restore();
 
-			ctx.fillStyle = '#333333';
+			ctx.fillStyle = '#33ee33';
 			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 2) {
 			var j = 0;
