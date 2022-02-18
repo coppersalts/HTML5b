@@ -4349,19 +4349,19 @@ function drawLCCharInfo(i, y) {
 		if (onRect(_xmouse, _ymouse, 665, y, charInfoHeight, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
-				charDropdown = i;
+				charDropdown = -i-3;
 				charDropdownType = 0;
 			}
 		} else if (onRect(_xmouse, _ymouse, (665+260)-charInfoHeight*2, y, charInfoHeight*2, charInfoHeight)) {
 			onButton = true;
-			if (mouseIsDown) {
-				charDropdown = i;
+			if (mouseIsDown && !pmouseIsDown) {
+				charDropdown = -i-3;
 				charDropdownType = 1;
 			}
 		} else {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
-				charDropdown = i;
+				charDropdown = -i-3;
 				charDropdownType = 2;
 			}
 		}
@@ -5346,38 +5346,6 @@ function draw() {
 		if (selectedTab == 0) {
 			//
 		} else if (selectedTab == 1) {
-			if (charDropdown != -1) {
-				if (charDropdownType == 0) {
-					myLevelChars[charDropdown][0]++;
-					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
-					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
-						myLevelChars[charDropdown][0]++;
-						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
-					}
-					resetLCChar(charDropdown);
-					charDropdown = -1;
-				} else if (charDropdownType == 1) {
-				} else if (charDropdownType == 2) {
-					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
-					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
-					myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
-					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
-					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
-					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
-				}
-
-
-
-				if (charDropdown != -1 && mouseIsDown && !pmouseIsDown) {
-					resetLCChar(charDropdown);
-					if (charDropdownType == 2) {
-						char[charDropdown].placed = true;
-					}
-					charDropdown = -1;
-				}
-			}
-
-
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
@@ -5386,8 +5354,18 @@ function draw() {
 				// ctx.fillStyle = '#000000';
 				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
 			}
-			if (charDropdown != -1) {
-				if (charDropdownType == 1) {
+			if (charDropdown == -2) charDropdown = -1;
+			if (charDropdown >= 0) {
+				if (charDropdownType == 0) {
+					myLevelChars[charDropdown][0]++;
+					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+						myLevelChars[charDropdown][0]++;
+						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+					}
+					resetLCChar(charDropdown);
+					charDropdown = -2;
+				} else if (charDropdownType == 1) {
 					ctx.fillStyle = '#ffffff';
 					ctx.fillRect((665+260)-charInfoHeight*2, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*2, 70);
 					ctx.textBaseline = 'top';
@@ -5408,8 +5386,26 @@ function draw() {
 							j++;
 						}
 					}
+				} else if (charDropdownType == 2) {
+					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
+					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
+					myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
+					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
+					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
+				}
+
+
+
+				if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown) {
+					resetLCChar(charDropdown);
+					if (charDropdownType == 2) {
+						char[charDropdown].placed = true;
+					}
+					charDropdown = -2;
 				}
 			}
+			if (charDropdown < -2) charDropdown = -charDropdown-3;
 
 			ctx.fillStyle = '#333333';
 			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
