@@ -4541,6 +4541,8 @@ function drawLCDiaInfo(i, y) {
 
 //myLevelDialogue[diaDropdown].face
 	if (diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
+		ctx.fillStyle = '#ee3333';
+		ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
 		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
@@ -4567,8 +4569,6 @@ function drawLCDiaInfo(i, y) {
 				myLevelDialogue.splice(i,1);
 			}
 		}
-		ctx.fillStyle = '#ee3333';
-		ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
 	}
 }
 
