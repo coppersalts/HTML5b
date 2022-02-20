@@ -24,6 +24,7 @@ var _cursor = 'default';
 const _keysDown = new Array(222).fill(false);
 var _frameCount = 0;
 var qTimer = 0;
+var inputText = '';
 
 var levelsString = '';
 var levelCount = 133;
@@ -1876,6 +1877,7 @@ var menu2_3ButtonSize = {w: 104.5, h: 37.3};
 var levelButtonSize = {w: 100, h: 40};
 var menu0ButtonClicked = -1;
 var onButton = false;
+var onTextBox = false;
 var menu2_3ButtonClicked = -1;
 var levelButtonClicked = -1;
 var showingNewGame2 = false;
@@ -2195,6 +2197,7 @@ function playGame() {
 	menuScreen = 0;
 	musicSound.play();
 	musicSound.loop = true;
+	// toggleSound();
 }
 
 function testLevelCreator() {
@@ -2468,6 +2471,7 @@ function linebreakText(text, x, y, lineheight) {
 function wrapText(text, x, y, maxWidth, lineHeight) {
 	const words = text.split(' ');
 	let line = '';
+	let linecount = 1;
 	for (const [index, w] of words.entries()) {
 		const testLine = line + w + ' ';
 		const metrics = ctx.measureText(testLine);
@@ -2476,11 +2480,13 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 			ctx.fillText(line, x, y);
 			line = w + ' ';
 			y += lineHeight;
+			linecount++;
 		} else {
 			line = testLine;
 		}
 	}
 	ctx.fillText(line, x, y);
+	return [line,linecount];
 }
 
 
@@ -4514,49 +4520,56 @@ function drawLCCharInfo(i, y) {
 
 function drawLCDiaInfo(i, y) {
 	ctx.fillStyle = '#626262';
-	ctx.fillRect(665, y, 240, diaInfoHeight);
+	ctx.fillRect(665, y, 240, diaInfoHeight*myLevelDialogue[i].linecount);
 	ctx.fillStyle = '#808080';
-	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight);
+	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount);
 	ctx.fillStyle = '#ffffff';
-	ctx.fillText(myLevelDialogue[i].text, 665 + diaInfoHeight*3 + 5, y + diaInfoHeight/2);
+	var lastLine = wrapText(myLevelDialogue[i].text, 665 + diaInfoHeight*3 + 5, y + diaInfoHeight/2, 240 - diaInfoHeight*3, diaInfoHeight);
+	myLevelDialogue[i].linecount = lastLine[1];
 	ctx.fillText(myLevelDialogue[i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y + diaInfoHeight/2);
 	ctx.fillText(myLevelDialogue[i].char.toString(10).padStart(2, '0'), 665 + 5, y + diaInfoHeight/2);
+	if (diaDropdown == i && _frameCount%60 < 30) {
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = '#ffffff';
+		ctx.beginPath();
+		var blinkyLineX = ctx.measureText(lastLine[0].slice(0,-1)).width + 665 + diaInfoHeight*3 + 5; 
+		ctx.moveTo(blinkyLineX, y+diaInfoHeight*(myLevelDialogue[i].linecount-1));
+		ctx.lineTo(blinkyLineX, y+diaInfoHeight*myLevelDialogue[i].linecount);
+		ctx.stroke();
+	}
 	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 //myLevelDialogue[diaDropdown].face
-	if (diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, diaInfoHeight)) {
-		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight)) {
+	if (diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
+		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 1;
 			}
-		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight)) {
+		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[i].linecount)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 0;
 			}
-		} else if (_xmouse < 665+240) {
-			onButton = true;
+		} else if (_xmouse < 665+240 && _xmouse > 665 + diaInfoHeight*3) {
+			onTextBox = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 2;
+				if (myLevelDialogue[i].text == 'Enter text') inputText = '';
+				else inputText = myLevelDialogue[i].text;
 			}
-		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + diaInfoHeight/2 - 10, 20, 20)) {
+		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				myLevelDialogue.splice(i,1);
 			}
 		}
 		ctx.fillStyle = '#ee3333';
-		ctx.fillRect(665+240, y + diaInfoHeight/2 - 10, 20, 20);
+		ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
 	}
-	// if (charDropdown == i) {
-	// 	if (mouseIsDown) {
-	// 		charDropdown = -1;
-	// 	}
-	// }
 }
 
 function drawLCChars() {
@@ -4920,6 +4933,13 @@ function mouseup(event){
 
 function keydown(event){
 	_keysDown[event.keyCode || event.charCode] = true;
+	if (event.keyCode) {
+		if (event.key.length == 1) {
+			inputText += event.key;
+		} else if (event.key == 'Backspace') {
+			inputText = inputText.slice(0,-1);
+		}
+	}
 }
 
 function keyup(event){
@@ -4953,6 +4973,7 @@ function setup() {
 
 function draw() {
 	onButton = false;
+	onTextBox = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
 
@@ -5804,8 +5825,12 @@ function draw() {
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
+			//myLevelDialogue[i].linecount
+			var diaInfoY = (selectedTab+1)*tabHeight + 5;
 			for (var i = 0; i < myLevelDialogue.length; i++) {
-				drawLCDiaInfo(i, (selectedTab+1)*tabHeight + i*(diaInfoHeight+5) + 5);
+				drawLCDiaInfo(i, diaInfoY);
+				if (i >= myLevelDialogue.length) break;
+				diaInfoY += diaInfoHeight*myLevelDialogue[i].linecount + 5;
 				// ctx.fillStyle = '#000000';
 				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
 			}
@@ -5813,7 +5838,7 @@ function draw() {
 			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
-					myLevelDialogue.push({char:99,face:2,text:'(plorbal)'});
+					myLevelDialogue.push({char:99,face:2,text:'Enter text',linecount:1});
 				}
 				addButtonPressed = true;
 			}
@@ -5849,7 +5874,8 @@ function draw() {
 					// 	}
 					// }
 				} else if (diaDropdownType == 2) {
-					diaDropdown = -2;
+					myLevelDialogue[diaDropdown].text = inputText;
+					if (_keysDown[13]) diaDropdown = -2;
 				}
 
 
@@ -6050,7 +6076,9 @@ function draw() {
 
 	if (onButton) {
 		setCursor('pointer');
-	} else {
+	} else if (onTextBox) {
+		setCursor('text');
+	} else {	
 		setCursor('auto');
 	}
 	_frameCount++;
