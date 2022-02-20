@@ -1689,6 +1689,7 @@ var diaDropdownType;
 var tabHeight = 30;
 var tileTabScrollBar = 0;
 var charsTabScrollBar = 0;
+var diaTabScrollBar = 0;
 var draggingScrollBar = false;
 var addButtonPressed = false;
 var power = 1;
@@ -4540,16 +4541,16 @@ function drawLCDiaInfo(i, y) {
 	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 //myLevelDialogue[diaDropdown].face
-	if (diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
+	if (diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
 		ctx.fillStyle = '#ee3333';
 		ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
-		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
+		if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 1;
 			}
-		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[i].linecount)) {
+		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[i].linecount)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
@@ -4563,7 +4564,7 @@ function drawLCDiaInfo(i, y) {
 				if (myLevelDialogue[i].text == 'Enter text') inputText = '';
 				else inputText = myLevelDialogue[i].text;
 			}
-		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20)) {
+		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				myLevelDialogue.splice(i,1);
@@ -5800,9 +5801,12 @@ function draw() {
 			//backgrounds
 		} else if (selectedTab == 4) {
 			var tabWindowH = cheight - tabHeight * tabNames.length;
-			var tabContentsHeight = (diaInfoHeight+5) * (char.length+2);
+			var tabContentsHeight = 5;
+			for (var i = 0; i < myLevelDialogue.length; i++) {
+				tabContentsHeight += diaInfoHeight*myLevelDialogue[i].linecount + 5;
+			}
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
+			var scrollBarY = (selectedTab+1)*tabHeight + (diaTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
 			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
@@ -5816,12 +5820,12 @@ function draw() {
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				charsTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				diaTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
-			// ctx.save();
-			// ctx.translate(0, -charsTabScrollBar);
+			ctx.save();
+			ctx.translate(0, -diaTabScrollBar);
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
@@ -5885,7 +5889,7 @@ function draw() {
 				}
 			}
 			if (diaDropdown < -2) diaDropdown = -diaDropdown-3;
-			// ctx.restore();
+			ctx.restore();
 
 			ctx.fillStyle = '#33ee33';
 			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
@@ -5912,6 +5916,7 @@ function draw() {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					selectedTab = i;
+					draggingScrollBar = false;	
 				}
 			}
 		}
