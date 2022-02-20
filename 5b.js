@@ -4696,7 +4696,7 @@ function copyLevelString() {
 
 	var lcLevelString = '\r\n';
 	lcLevelString += 'Untitled level\r\n';
-	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + char.length.toString(10).padStart(2, '0') + ',00,' + (longMode?'H':'L') +'\r\n';
+	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + char.length.toString(10).padStart(2, '0') + ',' + selectedBg.toString(10).padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
 	if (longMode) {
 		for (var y = 0; y < levelHeight; y++) {
 			for (var x = 0; x < levelWidth; x++) {
@@ -4999,7 +4999,7 @@ function draw() {
 	} else if (menuScreen == 3) {
 		// TODO: draw the bg to an offscreen canvas when the level is loaded
 		var bgScale = Math.max(bgXScale, bgYScale);
-		ctx.drawImage(imgBgs[playMode==2?0:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
+		ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
 		drawLevel();
 
 		if (cutScene == 1 || cutScene == 2) { 
