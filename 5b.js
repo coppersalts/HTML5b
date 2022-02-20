@@ -1677,6 +1677,7 @@ var charModels = [
 ];
 var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
 var selectedTab = 0;
+var selectedBg = 0;
 var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
 var charInfoHeight = 40;
 var diaInfoHeight = 20;
@@ -1690,6 +1691,7 @@ var tabHeight = 30;
 var tileTabScrollBar = 0;
 var charsTabScrollBar = 0;
 var diaTabScrollBar = 0;
+var bgsTabScrollBar = 0;
 var draggingScrollBar = false;
 var addButtonPressed = false;
 var power = 1;
@@ -4220,6 +4222,7 @@ function resetLevelCreator() {
 	// levelCreator.createEmptyMovieClip("rectSelect",99);
 	menuScreen = 5;
 	selectedTab = 0;
+	selectedBg = 0;
 	levelWidth = 32;
 	tool = 0;
 	levelHeight = 18;
@@ -5607,6 +5610,7 @@ function draw() {
 
 		ctx.fillStyle = '#ffffff';
 		ctx.fillRect(0,0,960,540);
+		ctx.drawImage(imgBgs[selectedBg],-97,0,854,480);
 		ctx.fillStyle = '#aeaeae';
 		ctx.fillRect(0,480,660,60);
 		ctx.fillStyle = '#cccccc';
@@ -5798,7 +5802,70 @@ function draw() {
 			//tileTabScrollBar
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 		} else if (selectedTab == 3) {
-			//backgrounds
+			// var j = 0;
+			var bgpr = 2;
+			var bgw = 96;
+			var bgh = 54;
+			var bgdist = 110;
+			// var h = _frameCount;
+			ctx.save();
+			ctx.translate(0, -bgsTabScrollBar);
+			for (var i = 0; i < imgBgs.length; i++) {
+				if (i == selectedBg) {
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect(
+						660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
+						(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
+						bgw + bgdist-bgw,
+						bgh + bgdist-bgh
+					);
+				} else if (onRect(_xmouse, _ymouse+bgsTabScrollBar,
+					660 + (bgdist-bgw) + (i%bgpr)*bgdist,
+					(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
+					bgw,
+					bgh)) {
+					onButton = true;
+					ctx.fillStyle = '#dddddd';
+					ctx.fillRect(
+						660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
+						(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
+						bgw + bgdist-bgw,
+						bgh + bgdist-bgh
+					);
+					if (mouseIsDown && !pmouseIsDown) {
+						selectedBg = i;
+					}
+				}
+				ctx.drawImage(imgBgs[i],
+					660 + (bgdist-bgw) + (i%bgpr)*bgdist,
+					(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
+					bgw,
+					bgh
+				);
+			}
+			ctx.restore();
+
+			var tabWindowH = cheight - tabHeight * tabNames.length;
+			var tabContentsHeight = (bgdist-bgh) + Math.floor((i-1)/bgpr + 1) * bgdist;
+			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+			var scrollBarY = (selectedTab+1)*tabHeight + (bgsTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
+			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+				onButton = true;
+				ctx.fillStyle = '#e8e8e8';
+				if (mouseIsDown && !pmouseIsDown) {
+					draggingScrollBar = true;
+				}
+			} else {
+				ctx.fillStyle = '#dddddd';
+			}
+
+			if (draggingScrollBar) {
+				onButton = false;
+				ctx.fillStyle = '#a0a0a0';
+				bgsTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				if (!mouseIsDown) draggingScrollBar = false;
+			}
+			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 		} else if (selectedTab == 4) {
 			var tabWindowH = cheight - tabHeight * tabNames.length;
 			var tabContentsHeight = 5;
@@ -5944,7 +6011,6 @@ function draw() {
 				}
 			}
 		}
-
 
 		drawLCTiles();
 		drawLCGrid();
