@@ -4243,6 +4243,8 @@ function resetLevelCreator() {
 	charDropdown = -1;
 	charsTabScrollBar = 0;
 	tileTabScrollBar = 0;
+	diaTabScrollBar = 0;
+	bgsTabScrollBar = 0;
 	// drawLCGrid();
 	// fillTilesTab();
 	charCount2 = 0;
@@ -5831,8 +5833,16 @@ function draw() {
 		if (selectedTab == 0) {
 			//
 		} else if (selectedTab == 1) {
+			var charInfoY = (selectedTab+1)*tabHeight + 5;
+			// TODO: only compute the look up table when it changes
+			var charInfoYLookUp = [];
+			for (var i = 0; i < myLevelChars.length; i++) {
+				charInfoYLookUp.push(charInfoY);
+				charInfoY += charInfoHeight + 5;
+				if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[i][5].length;
+			}
 			var tabWindowH = cheight - tabHeight * tabNames.length;
-			var tabContentsHeight = (charInfoHeight+5) * (char.length+2);
+			var tabContentsHeight = Math.max(charInfoY, charInfoYLookUp[myLevelChars.length-1] + (charInfoHeight*2));
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
 			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
@@ -5848,7 +5858,7 @@ function draw() {
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				charsTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				charsTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -5858,9 +5868,8 @@ function draw() {
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
 			for (var i = 0; i < myLevelChars.length; i++) {
-				drawLCCharInfo(i, (selectedTab+1)*tabHeight + i*(charInfoHeight+5) + 5);
-				// ctx.fillStyle = '#000000';
-				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
+				drawLCCharInfo(i, charInfoYLookUp[i]);
+				if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
 			}
 			addButtonPressed = false;
 			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
@@ -5903,16 +5912,16 @@ function draw() {
 					charDropdown = -2;
 				} else if (charDropdownType == 1) {
 					ctx.fillStyle = '#ffffff';
-					ctx.fillRect((665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5), charInfoHeight*1.5, 70);
+					ctx.fillRect((665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight, charInfoHeight*1.5, 70);
 					ctx.textBaseline = 'top';
 					ctx.font = '10px Helvetica';
 					ctx.fillStyle = '#000000';
 					var j = 0;
 					for (var i = 3; i < charStateNames.length; i++) {
 						if (charStateNames[i] != '') {
-							if (!lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*1.5, 10)) {
+							if (!lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10, charInfoHeight*1.5, 10)) {
 								ctx.fillStyle = '#dddddd';
-								ctx.fillRect((665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*1.5, 10);
+								ctx.fillRect((665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10, charInfoHeight*1.5, 10);
 								ctx.fillStyle = '#000000';
 								if (mouseIsDown && !addButtonPressed) {
 									myLevelChars[charDropdown][3] = i;
@@ -5929,7 +5938,7 @@ function draw() {
 									}
 								}
 							}
-							ctx.fillText(charStateNames[i], (665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
+							ctx.fillText(charStateNames[i], (665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10);
 							j++;
 						}
 					}
@@ -6047,7 +6056,7 @@ function draw() {
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				tileTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				tileTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			//tileTabScrollBar
@@ -6113,7 +6122,7 @@ function draw() {
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				bgsTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				bgsTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -6138,7 +6147,7 @@ function draw() {
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				diaTabScrollBar = Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0);
+				diaTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
