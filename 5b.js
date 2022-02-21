@@ -4735,6 +4735,80 @@ function copyLevelString() {
 	});
 }
 
+function readLevelString() {
+	navigator.clipboard.readText().then(clipText => {
+		console.log(clipText);
+		let lines = clipText.split('\r\n');
+		if (lines.length == 1) lines = clipText.split('\n');
+		let i = 0;
+		// skip past any blank lines at the start
+		while (i < lines.length && lines[i] == '') i++;
+		// levelName = lines[i];
+		i++;
+		let levelInfo = lines[i].split(',');
+		levelWidth = parseInt(levelInfo[0]);
+		levelHeight = parseInt(levelInfo[1]);
+		myLevelChars = new Array(parseInt(levelInfo[2]));
+		selectedBg = parseInt(levelInfo[3]);
+		longMode = levelInfo[4]=='H';
+		i++;
+
+		if (longMode) {
+			for (var y = 0; y < levelHeight; y++) {
+				for (var x = 0; x < levelWidth; x++) {
+					myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
+				}
+			}
+		} else {
+			for (var y = 0; y < levelHeight; y++) {
+				for (var x = 0; x < levelWidth; x++) {
+					myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
+				}
+			}
+		}
+		i += levelHeight;
+
+		for (var e = 0; e < myLevelChars.length; e++) {
+			let entityInfo = lines[i+e].split(',');
+			myLevelChars[e] = [0,0.0,0.0,10];
+			myLevelChars[e][0] = parseInt(entityInfo[0]);
+			myLevelChars[e][1] = parseFloat(entityInfo[1]);
+			myLevelChars[e][2] = parseFloat(entityInfo[2]);
+			myLevelChars[e][3] = parseInt(entityInfo[3]);
+			let _loc2_ = myLevelChars[e][0];
+			char[e] = new Character(
+				_loc2_,
+				+myLevelChars[e][1].toFixed(2) * 30,
+				+myLevelChars[e][2].toFixed(2) * 30,
+				70 + e * 40,
+				400 - e * 30,
+				myLevelChars[e][3],
+				charD[_loc2_][0],
+				charD[_loc2_][1],
+				charD[_loc2_][2],
+				charD[_loc2_][2],
+				charD[_loc2_][3],
+				charD[_loc2_][4],
+				charD[_loc2_][6],
+				charD[_loc2_][8],
+				_loc2_<35?charModels[_loc2_].defaultExpr:0
+			)
+		}
+		i += myLevelChars.length;
+		myLevelDialogue = new Array(parseInt(lines[i]));
+		i++;
+		for (var d = 0; d < myLevelDialogue.length; d++) {
+			let dialogueInfo = lines[i+d].split(' ');
+			myLevelDialogue[d] = {char:0,face:2,text:''};
+			myLevelDialogue[d].char = parseInt(dialogueInfo[0].slice(0,2));
+			myLevelDialogue[d].face = dialogueInfo[0].charAt(2);
+			myLevelDialogue[d].text = dialogueInfo[1];
+		}
+		i += myLevelDialogue.length;
+		// necesarryDeaths = parseInt(lines[i]);
+	});
+}
+
 function tileCharFromID(id) {
 	var tileCharCode;
 	if (id == 93) tileCharCode = 8364;
@@ -4743,6 +4817,13 @@ function tileCharFromID(id) {
 	else tileCharCode = id + 81;
 	if (id > 120) tileCharCode -= 146;
 	return String.fromCharCode(tileCharCode);
+}
+
+function tileIDFromChar(c) {
+	if (c == 8364) return 93;
+	if (c <= 126) return c - 46;
+	if (c <= 182) return c - 80;
+	return c - 81;
 }
 
 function twoDecimalPlaceNumFormat(num) {
@@ -5961,9 +6042,10 @@ function draw() {
 			ctx.fillStyle = '#33ee33';
 			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 5) {
-			drawMenu0Button('COPY LEVEL', 673, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
-			drawMenu0Button('TEST LEVEL',673, (selectedTab+1)*tabHeight + 60, 10, false, testLevelCreator);
-			drawMenu0Button('EXIT',673, (selectedTab+1)*tabHeight + 110, 15, false, menuExitLevelCreator);
+			drawMenu0Button('COPY LEVEL',673, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
+			drawMenu0Button('LOAD LEVEL',673, (selectedTab+1)*tabHeight + 60, 14, false, readLevelString);
+			drawMenu0Button('TEST LEVEL',673, (selectedTab+1)*tabHeight + 110, 10, false, testLevelCreator);
+			drawMenu0Button('EXIT',673, (selectedTab+1)*tabHeight + 160, 15, false, menuExitLevelCreator);
 		}
 
 
