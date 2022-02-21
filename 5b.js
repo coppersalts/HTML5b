@@ -25,6 +25,7 @@ const _keysDown = new Array(222).fill(false);
 var _frameCount = 0;
 var qTimer = 0;
 var inputText = '';
+var controlOrCommandPress = false;
 
 var levelsString = '';
 var levelCount = 133;
@@ -1687,6 +1688,8 @@ var charDropdown = -1;
 var charDropdownType;
 var diaDropdown = -1;
 var diaDropdownType;
+var lcPopUp = false;
+var lcPopUpType = 0;
 var tabHeight = 30;
 var tileTabScrollBar = 0;
 var charsTabScrollBar = 0;
@@ -2226,7 +2229,7 @@ function exitTestLevel() {
 function drawMenu0Button(text, x, y, id, grayed, action) {
 	var fill = '#ffffff';
 	if (!grayed) {
-		if (onRect(_xmouse, _ymouse, x, y, menu0ButtonSize.w, menu0ButtonSize.h)) {
+		if (!lcPopUp && onRect(_xmouse, _ymouse, x, y, menu0ButtonSize.w, menu0ButtonSize.h)) {
 			onButton = true;
 			if (mouseIsDown) {
 				fill = '#b8b8b8';
@@ -4220,6 +4223,7 @@ function resetLevelCreator() {
 	// levelCreator.createEmptyMovieClip("grid",100);
 	// levelCreator.createEmptyMovieClip("tiles",98);
 	// levelCreator.createEmptyMovieClip("rectSelect",99);
+	lcPopUp = false;
 	menuScreen = 5;
 	selectedTab = 0;
 	selectedBg = 0;
@@ -4486,7 +4490,7 @@ function drawLCCharInfo(i, y) {
 	ctx.fillText(twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ', ' + twoDecimalPlaceNumFormat(myLevelChars[i][2]), 665 + charInfoHeight + 5, y + charInfoHeight/2);
 	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-charInfoHeight*1.5 + 5, y + charInfoHeight/2);
 
-	if (charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
+	if (!lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
 		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
@@ -4544,7 +4548,7 @@ function drawLCDiaInfo(i, y) {
 	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 //myLevelDialogue[diaDropdown].face
-	if (diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
+	if (!lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
 		ctx.fillStyle = '#ee3333';
 		ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
 		if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
@@ -4733,6 +4737,11 @@ function copyLevelString() {
 	}, function(err) {
 		console.error('Could not copy text: ', err);
 	});
+}
+
+function openLevelLoader() {
+	lcPopUp = true;
+	lcPopUpType = 0;
 }
 
 function readLevelString() {
@@ -5025,10 +5034,12 @@ function keydown(event){
 			inputText = inputText.slice(0,-1);
 		}
 	}
+	if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
 }
 
 function keyup(event){
 	_keysDown[event.keyCode || event.charCode] = false;
+	if (!event.metaKey || !event.ctrlKey) controlOrCommandPress = false;
 }
 
 function setup() {
@@ -5706,7 +5717,7 @@ function draw() {
 			var tabContentsHeight = (charInfoHeight+5) * (char.length+2);
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
@@ -5734,7 +5745,7 @@ function draw() {
 				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
 			}
 			addButtonPressed = false;
-			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					myLevelChars.push([0,0.0,0.0,10]);
@@ -5781,7 +5792,7 @@ function draw() {
 					var j = 0;
 					for (var i = 3; i < charStateNames.length; i++) {
 						if (charStateNames[i] != '') {
-							if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*1.5, 10)) {
+							if (!lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*1.5, 10)) {
 								ctx.fillStyle = '#dddddd';
 								ctx.fillRect((665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10, charInfoHeight*1.5, 10);
 								ctx.fillStyle = '#000000';
@@ -5830,7 +5841,7 @@ function draw() {
 					if (i == selectedTile) {
 						ctx.fillStyle = '#a0a0a0';
 						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
-					} else if (onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
+					} else if (!lcPopUp && onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
 						onButton = true;
 						ctx.fillStyle = '#dddddd';
 						// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
@@ -5864,7 +5875,7 @@ function draw() {
 			var tabContentsHeight = (bdist-bs) + Math.floor((j-1)/bpr + 1) * bdist;
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
@@ -5900,7 +5911,7 @@ function draw() {
 						bgw + bgdist-bgw,
 						bgh + bgdist-bgh
 					);
-				} else if (onRect(_xmouse, _ymouse+bgsTabScrollBar,
+				} else if (!lcPopUp && onRect(_xmouse, _ymouse+bgsTabScrollBar,
 					660 + (bgdist-bgw) + (i%bgpr)*bgdist,
 					(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
 					bgw,
@@ -5930,7 +5941,7 @@ function draw() {
 			var tabContentsHeight = (bgdist-bgh) + Math.floor((i-1)/bgpr + 1) * bgdist;
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (bgsTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
@@ -5955,7 +5966,7 @@ function draw() {
 			}
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (diaTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-			if (onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
@@ -5987,7 +5998,7 @@ function draw() {
 				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
 			}
 			addButtonPressed = false;
-			if (onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					myLevelDialogue.push({char:99,face:2,text:'Enter text',linecount:1});
@@ -6043,7 +6054,7 @@ function draw() {
 			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 5) {
 			drawMenu0Button('COPY LEVEL',673, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
-			drawMenu0Button('LOAD LEVEL',673, (selectedTab+1)*tabHeight + 60, 14, false, readLevelString);
+			drawMenu0Button('LOAD LEVEL',673, (selectedTab+1)*tabHeight + 60, 14, false, openLevelLoader);
 			drawMenu0Button('TEST LEVEL',673, (selectedTab+1)*tabHeight + 110, 10, false, testLevelCreator);
 			drawMenu0Button('EXIT',673, (selectedTab+1)*tabHeight + 160, 15, false, menuExitLevelCreator);
 		}
@@ -6061,7 +6072,7 @@ function draw() {
 			ctx.fillStyle = '#ffffff';
 			ctx.fillText(tabNames[i], 664, tabY+tabHeight*0.6);
 
-			if (onRect(_xmouse, _ymouse, 660, tabY, 300, tabHeight)) {
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660, tabY, 300, tabHeight)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					selectedTab = i;
@@ -6079,7 +6090,7 @@ function draw() {
 				ctx.fillRect(35 + i*50, 490, 40, 40);
 				ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490);
 
-				if (onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
+				if (!lcPopUp && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
 					onButton = true;
 					if (mouseIsDown && !pmouseIsDown) {
 						if (i < 8) setTool(i);
@@ -6185,6 +6196,32 @@ function draw() {
 		// 		levelCreator.sideBar["tab" + (_loc2_ + 1)]._y += (_loc3_ - levelCreator.sideBar["tab" + (_loc2_ + 1)]._y) * 0.2;
 		// 	}
 		// }
+
+		if (lcPopUp) {
+			if (lcPopUpType == 0) {
+				ctx.globalAlpha = 0.2;
+				ctx.fillStyle = '#000000';
+				ctx.fillRect(0, 0, cwidth, cheight);
+				ctx.globalAlpha = 1;
+				var lcPopUpW = 750;
+				var lcPopUpH = 450;
+				ctx.fillStyle = '#ffffff';
+				ctx.fillRect((cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH);
+				if (mouseIsDown && !pmouseIsDown && !onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH)) {
+					lcPopUp = false;
+				}
+				ctx.fillStyle = '#000000';
+				ctx.font = '20px Helvetica';
+				ctx.textBaseline = 'top';
+				ctx.textAlign = 'left';
+				linebreakText('Paste your level\'s string here:\nThere\'s not actually a text box here yet, so just do the paste shortcut to\nload it directly from your clipboard.', (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 10, 30);
+				if (controlOrCommandPress && _keysDown[86]) {
+					lcPopUp = false;
+					_keysDown[86] = false; // this is kinda hacky
+					readLevelString();
+				}
+			}
+		}
 	}
 
 
