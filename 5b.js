@@ -4798,7 +4798,11 @@ function copyLevelString() {
 		}
 	}
 	for (var i = 0; i < char.length; i++) {
-		lcLevelString += myLevelChars[i][0].toString(10).padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][2]) + ',' + myLevelChars[i][3].toString(10).padStart(2, '0') + '\r\n';
+		lcLevelString += myLevelChars[i][0].toString(10).padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][2]) + ',' + myLevelChars[i][3].toString(10).padStart(2, '0');
+		if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) {
+			lcLevelString += ' ' + char[i].motionString.map(String).join('');
+		}
+		lcLevelString += '\r\n';
 	}
 	lcLevelString += myLevelDialogue.length.toString(10).padStart(2, '0') + '\r\n';
 	for (var i = 0; i < myLevelDialogue.length; i++) {
@@ -4858,7 +4862,7 @@ function readLevelString() {
 		i += levelHeight;
 
 		for (var e = 0; e < myLevelChars.length; e++) {
-			let entityInfo = lines[i+e].split(',');
+			let entityInfo = lines[i+e].split(',').join(' ').split(' ');
 			myLevelChars[e] = [0,0.0,0.0,10];
 			myLevelChars[e][0] = parseInt(entityInfo[0]);
 			myLevelChars[e][1] = parseFloat(entityInfo[1]);
@@ -4881,7 +4885,27 @@ function readLevelString() {
 				charD[_loc2_][6],
 				charD[_loc2_][8],
 				_loc2_<35?charModels[_loc2_].defaultExpr:0
-			)
+			);
+			if (myLevelChars[e][3] == 3 || myLevelChars[e][3] == 4) {
+				myLevelChars[e][4] = parseInt(entityInfo[4].slice(0,2));
+				myLevelChars[e][5] = [];
+				let d = entityInfo[4].charCodeAt(2)-48;
+				let btm = 1;
+				for (var m = 2; m < entityInfo[4].length-1; m++) {
+					if (d != entityInfo[4].charCodeAt(m+1)-48) {
+						myLevelChars[e][5].push([d,btm]);
+						btm = 1;
+						d = entityInfo[4].charCodeAt(m+1)-48;
+					} else {
+						btm++;
+					}
+				}
+				myLevelChars[e][5].push([d,btm]);
+				console.log(myLevelChars[e][5]);
+				char[e].motionString = generateMS(e);
+				char[e].speed = myLevelChars[e][4];
+				//entityInfo[4]
+			}
 		}
 		i += myLevelChars.length;
 		myLevelDialogue = new Array(parseInt(lines[i]));
