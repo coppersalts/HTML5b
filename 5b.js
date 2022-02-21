@@ -4762,14 +4762,17 @@ function readLevelString() {
 		longMode = levelInfo[4]=='H';
 		i++;
 
+		myLevel[1] = new Array(levelHeight);
 		if (longMode) {
 			for (var y = 0; y < levelHeight; y++) {
+				myLevel[1][y] = new Array(levelWidth);
 				for (var x = 0; x < levelWidth; x++) {
 					myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
 				}
 			}
 		} else {
 			for (var y = 0; y < levelHeight; y++) {
+				myLevel[1][y] = new Array(levelWidth);
 				for (var x = 0; x < levelWidth; x++) {
 					myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
 				}
@@ -4809,7 +4812,7 @@ function readLevelString() {
 		for (var d = 0; d < myLevelDialogue.length; d++) {
 			myLevelDialogue[d] = {char:0,face:2,text:''};
 			myLevelDialogue[d].char = parseInt(lines[i+d].slice(0,2));
-			myLevelDialogue[d].face = lines[i+d].charAt(2)=='S'?2:3;
+			myLevelDialogue[d].face = lines[i+d].charAt(2)=='S'?3:2;
 			myLevelDialogue[d].text = lines[i+d].substring(4);
 		}
 		i += myLevelDialogue.length;
