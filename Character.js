@@ -27,6 +27,7 @@ class Character {
 		this.fricGoal = 0;
 		this.justChanged = 2;
 		this.speed = 0;
+		this.motionString = [];
 		this.buttonsPressed = new Array(0);
 		this.pcharState = 0;
 		this.submerged = 0;

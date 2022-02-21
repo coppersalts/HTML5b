@@ -181,7 +181,7 @@ function loadLevels() {
 			levelStart += 2;
 		}
 
-		// Read Dilogue
+		// Read Dialogue
 		lineCount = 10 * charAt(0) + charAt(1);
 		levelStart += 4;
 		dialogueText[_loc3_] = new Array(lineCount);
@@ -2568,6 +2568,7 @@ function resetLevel() {
 			if (_loc2_ == 35) HPRC2 = _loc1_;
 			if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
 				char[_loc1_].speed = startLocations[currentLevel][_loc1_][6][0] * 10 + startLocations[currentLevel][_loc1_][6][1];
+				char[_loc1_].motionString = startLocations[currentLevel][_loc1_][6];
 			}
 		}
 		charCount2 = Math.min(charCount2, 6)
@@ -2653,6 +2654,7 @@ function resetMyLevel() {
 		if (_loc2_ == 35) HPRC2 = _loc1_;
 		if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
 			char[_loc1_].speed = myLevelChars[_loc1_][4][0] * 10 + myLevelChars[_loc1_][4][1];
+			char[_loc1_].motionString = myLevelChars[_loc1_][4];
 		}
 	}
 	charCount2 = Math.min(charCount2, 6)
@@ -4408,13 +4410,11 @@ function setSelectedTile(i) {
 	// levelCreator.sideBar.tab4.selector._x = _loc3_;
 	// levelCreator.sideBar.tab4.selector._y = _loc2_;
 }
-function closeToEdgeY()
-{
+function closeToEdgeY() {
 	var _loc1_ = (_ymouse - (240 - scale * levelHeight / 2)) / scale % 1;
 	return Math.abs(_loc1_ - 0.5) > 0.25;
 }
-function closeToEdgeX()
-{
+function closeToEdgeX() {
 	var _loc1_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
 	return Math.abs(_loc1_ - 0.5) > 0.25;
 }
@@ -4758,6 +4758,7 @@ function readLevelString() {
 		levelWidth = parseInt(levelInfo[0]);
 		levelHeight = parseInt(levelInfo[1]);
 		myLevelChars = new Array(parseInt(levelInfo[2]));
+		char = new Array(parseInt(levelInfo[2]));
 		selectedBg = parseInt(levelInfo[3]);
 		longMode = levelInfo[4]=='H';
 		i++;
@@ -5255,9 +5256,9 @@ function draw() {
 					}
 				}
 			} else if (char[_loc2_].charState >= 3) {
-				var _loc8_ = Math.floor(levelTimer / char[_loc2_].speed) % (startLocations[currentLevel][_loc2_][6].length - 2);
-				char[_loc2_].vx = cardinal[startLocations[currentLevel][_loc2_][6][_loc8_ + 2]][0] * (30 / char[_loc2_].speed);
-				char[_loc2_].vy = cardinal[startLocations[currentLevel][_loc2_][6][_loc8_ + 2]][1] * (30 / char[_loc2_].speed);
+				var _loc8_ = Math.floor(levelTimer / char[_loc2_].speed) % (char[_loc2_].motionString.length - 2);
+				char[_loc2_].vx = cardinal[char[_loc2_].motionString[_loc8_ + 2]][0] * (30 / char[_loc2_].speed);
+				char[_loc2_].vy = cardinal[char[_loc2_].motionString[_loc8_ + 2]][1] * (30 / char[_loc2_].speed);
 				char[_loc2_].px = char[_loc2_].x;
 				char[_loc2_].py = char[_loc2_].y;
 				char[_loc2_].charMove();
@@ -5800,6 +5801,12 @@ function draw() {
 								ctx.fillStyle = '#000000';
 								if (mouseIsDown && !addButtonPressed) {
 									myLevelChars[charDropdown][3] = i;
+									if (i == 3 || i == 4) {
+										if (myLevelChars[charDropdown].length < 5) myLevelChars[charDropdown].push([]);
+										myLevelChars[charDropdown][4] = [0,7,2,2,2,2,3,3,3,3];
+									} else if (myLevelChars[charDropdown].length == 5) {
+										myLevelChars[charDropdown].pop();
+									}
 								}
 							}
 							ctx.fillText(charStateNames[i], (665+240)-charInfoHeight*1.5, (selectedTab+1)*tabHeight + (charDropdown+1)*(charInfoHeight+5) + j*10);
@@ -5821,6 +5828,14 @@ function draw() {
 					resetLCChar(charDropdown);
 					if (charDropdownType == 2) {
 						char[charDropdown].placed = true;
+					} else if (charDropdownType == 1) {
+						if (char[charDropdown].charState == 3 || char[charDropdown].charState == 4) {
+							char[charDropdown].speed = myLevelChars[charDropdown][4][0] * 10 + myLevelChars[charDropdown][4][1];
+							char[charDropdown].motionString = myLevelChars[charDropdown][4];
+						} else {
+							char[charDropdown].speed = 0;
+							char[charDropdown].motionString = [];
+						}
 					}
 					charDropdown = -2;
 				}
