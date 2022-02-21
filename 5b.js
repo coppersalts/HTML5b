@@ -4810,7 +4810,7 @@ function readLevelString() {
 			let dialogueInfo = lines[i+d].split(' ');
 			myLevelDialogue[d] = {char:0,face:2,text:''};
 			myLevelDialogue[d].char = parseInt(dialogueInfo[0].slice(0,2));
-			myLevelDialogue[d].face = dialogueInfo[0].charAt(2);
+			myLevelDialogue[d].face = dialogueInfo[0].charAt(2)=='S'?2:3;
 			myLevelDialogue[d].text = dialogueInfo[1];
 		}
 		i += myLevelDialogue.length;
