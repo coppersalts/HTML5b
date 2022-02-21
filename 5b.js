@@ -20,6 +20,11 @@ var osc3, osctx3;
 
 var _xmouse = 0;
 var _ymouse = 0;
+var _pxmouse = 0;
+var _pymouse = 0;
+var lastClickX = 0;
+var lastClickY = 0;
+var valueAtClick = 0;
 var _cursor = 'default';
 const _keysDown = new Array(222).fill(false);
 var _frameCount = 0;
@@ -1685,6 +1690,7 @@ var diaInfoHeight = 20;
 var charStateNames = ['', 'Dead', 'Being Recovered', 'Death On Impact & Movement From String', 'Movement From String', 'Death On Impact', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
 var charStateNamesShort = ['', 'D', 'BR', 'D&M', 'MFS', 'DOI', 'C', '', 'NPC', 'R', 'P'];
 var charDropdown = -1;
+var charDropdownMS = -1;
 var charDropdownType;
 var diaDropdown = -1;
 var diaDropdownType;
@@ -1749,6 +1755,7 @@ var LCCoinY = 0;
 var cardinal = [[0,-1],[0,1],[-1,0],[1,0]];
 var diagonal = [[-1,-1],[1,-1],[1,1],[-1,1]];
 var diagonal2 = [[0,2],[0,3],[1,2],[1,3]];
+var direLetters = ['U','D','L','R'];
 var undid = false;
 var LCRect = [-1,-1,-1,-1];
 var levelTimer = 0;
@@ -2653,8 +2660,8 @@ function resetMyLevel() {
 		if (_loc2_ == 36) HPRC1 = _loc1_;
 		if (_loc2_ == 35) HPRC2 = _loc1_;
 		if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
-			char[_loc1_].speed = myLevelChars[_loc1_][4][0] * 10 + myLevelChars[_loc1_][4][1];
-			char[_loc1_].motionString = myLevelChars[_loc1_][4];
+			char[_loc1_].speed = myLevelChars[_loc1_][4];
+			char[_loc1_].motionString = generateMS(_loc1_);
 		}
 	}
 	charCount2 = Math.min(charCount2, 6)
@@ -4490,6 +4497,75 @@ function drawLCCharInfo(i, y) {
 	ctx.fillText(twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ', ' + twoDecimalPlaceNumFormat(myLevelChars[i][2]), 665 + charInfoHeight + 5, y + charInfoHeight/2);
 	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-charInfoHeight*1.5 + 5, y + charInfoHeight/2);
 
+	if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) {
+		ctx.fillStyle = '#808080';
+		ctx.fillRect(665, y+charInfoHeight, charInfoHeight, diaInfoHeight);
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(char[i].speed.toString().padStart(2, '0'), 665 + 5, y + charInfoHeight + diaInfoHeight*0.5);
+		var canDropDown = !lcPopUp && charDropdown == -1 && !addButtonPressed;
+		if (canDropDown && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y+charInfoHeight, charInfoHeight, diaInfoHeight)) {
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) {
+				charDropdown = -i-3;
+				charDropdownType = 3;
+				valueAtClick = char[i].speed;
+			}
+		}
+
+		var drawingDeleteButtons = myLevelChars[i][5].length>1;
+
+		for (var j = 0; j < myLevelChars[i][5].length; j++) {
+			ctx.fillStyle = '#626262';
+			ctx.fillRect(665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 100-charInfoHeight, diaInfoHeight);
+			ctx.fillStyle = '#ffffff';
+			ctx.fillText(direLetters[myLevelChars[i][5][j][0]], 665 + charInfoHeight + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
+			ctx.fillText(myLevelChars[i][5][j][1], 665 + charInfoHeight*1.5 + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
+
+			if (canDropDown) {
+				if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 120-charInfoHeight, diaInfoHeight)) {
+					if (_xmouse < 665 + charInfoHeight*1.5) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							charDropdown = -i-3;
+							charDropdownType = 4;
+							charDropdownMS = j;
+						}
+					} else if (_xmouse < 665 + charInfoHeight + 100-charInfoHeight) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							charDropdown = -i-3;
+							charDropdownType = 5;
+							charDropdownMS = j;
+							valueAtClick = myLevelChars[i][5][j][1]
+						}
+					} else if (drawingDeleteButtons) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							myLevelChars[i][5].splice(j,1);
+							char[i].motionString = generateMS(i);
+						}
+					}
+					if (drawingDeleteButtons) {
+						ctx.fillStyle = '#ee3333';
+						ctx.fillRect(665 + charInfoHeight + 100-charInfoHeight, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight);
+					}
+				}
+				// Draw add button
+				if (j == myLevelChars[i][5].length - 1) {
+					ctx.fillStyle = '#33ee33';
+					ctx.fillRect((665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight);
+					if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight)) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							myLevelChars[i][5].push([0,1]);
+							char[i].motionString = generateMS(i);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if (!lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
 		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
 			onButton = true;
@@ -4547,7 +4623,7 @@ function drawLCDiaInfo(i, y) {
 	}
 	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
-//myLevelDialogue[diaDropdown].face
+	//myLevelDialogue[diaDropdown].face
 	if (!lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
 		ctx.fillStyle = '#ee3333';
 		ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
@@ -4842,6 +4918,19 @@ function twoDecimalPlaceNumFormat(num) {
 	return (Math.round(num * 100) / 100).toFixed(2).padStart(5, '0');
 }
 
+function generateMS(c) {
+	var out = [];
+	out.push(Math.floor(myLevelChars[c][4]/10));
+	out.push(myLevelChars[c][4]%10);
+	var a = myLevelChars[c][5];
+	for (var i = 0; i < a.length; i++) {
+		for (var j = 0; j < a[i][1]; j++) {
+			out.push(a[i][0]);
+		}
+	}
+	return out;
+}
+
 
 
 
@@ -4854,6 +4943,8 @@ function mousemove(event){
 
 function mousedown(event){
 	mouseIsDown = true;
+	lastClickX = _xmouse;
+	lastClickY = _ymouse;
 
 	if (menuScreen == 5) {
 		if (_xmouse > 660) {
@@ -5802,10 +5893,15 @@ function draw() {
 								if (mouseIsDown && !addButtonPressed) {
 									myLevelChars[charDropdown][3] = i;
 									if (i == 3 || i == 4) {
-										if (myLevelChars[charDropdown].length < 5) myLevelChars[charDropdown].push([]);
-										myLevelChars[charDropdown][4] = [0,7,2,2,2,2,3,3,3,3];
-									} else if (myLevelChars[charDropdown].length == 5) {
-										myLevelChars[charDropdown].pop();
+										while (myLevelChars[charDropdown].length < 6) {
+											myLevelChars[charDropdown].push([]);
+										}
+										myLevelChars[charDropdown][4] = 10;
+										myLevelChars[charDropdown][5] = [[3,1],[2,1]];
+									} else {
+										while (myLevelChars[charDropdown].length > 4) {
+											myLevelChars[charDropdown].pop();
+										}
 									}
 								}
 							}
@@ -5820,6 +5916,28 @@ function draw() {
 					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
 					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
 					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
+				} else if (charDropdownType == 3) {
+					var flat = (valueAtClick + (lastClickY-_ymouse));
+					char[charDropdown].speed = flat>100?100:-Math.log(1 - flat / 100) * 100;
+					char[charDropdown].speed = Math.floor(Math.max(Math.min(char[charDropdown].speed, 99), 1));
+					myLevelChars[charDropdown][4] = char[charDropdown].speed;
+					if (!mouseIsDown && pmouseIsDown) {
+						char[charDropdown].motionString = generateMS(charDropdown);
+						charDropdown = -2;
+					}
+				} else if (charDropdownType == 4) {
+					var newDire = myLevelChars[charDropdown][5][charDropdownMS][0]+1;
+					if (newDire > 3) newDire = 0;
+					myLevelChars[charDropdown][5][charDropdownMS][0] = newDire;
+					char[charDropdown].motionString = generateMS(charDropdown);
+					charDropdown = -2;
+				} else if (charDropdownType == 5) {
+					// var flat = (valueAtClick + (lastClickY-_ymouse));
+					myLevelChars[charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 30), 1));
+					if (!mouseIsDown && pmouseIsDown) {
+						char[charDropdown].motionString = generateMS(charDropdown);
+						charDropdown = -2;
+					}
 				}
 
 
@@ -5830,8 +5948,8 @@ function draw() {
 						char[charDropdown].placed = true;
 					} else if (charDropdownType == 1) {
 						if (char[charDropdown].charState == 3 || char[charDropdown].charState == 4) {
-							char[charDropdown].speed = myLevelChars[charDropdown][4][0] * 10 + myLevelChars[charDropdown][4][1];
-							char[charDropdown].motionString = myLevelChars[charDropdown][4];
+							char[charDropdown].speed = myLevelChars[charDropdown][4];
+							char[charDropdown].motionString = generateMS(charDropdown);
 						} else {
 							char[charDropdown].speed = 0;
 							char[charDropdown].motionString = [];
@@ -6290,4 +6408,6 @@ function draw() {
 	}
 	_frameCount++;
 	pmouseIsDown = mouseIsDown;
+	_pxmouse = _xmouse;
+	_pymouse = _ymouse;
 }
