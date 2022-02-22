@@ -4257,6 +4257,7 @@ function resetLevelCreator() {
 	LCCoinX = -1;
 	LCCoinY = -1;
 	char = [];
+	levelTimer = 0;
 	// levelCreator.sideBar.tab1.gotoAndStop(1);
 	// var _loc2_ = 0;
 	// while(_loc2_ < 10)
@@ -4743,6 +4744,14 @@ function drawLCChars() {
 					vb[3]);
 			}
 			ctx.globalAlpha = 1;
+		}
+		if (char[i].placed && (char[i].charState == 3 || char[i].charState == 4)) {
+			var _loc8_ = Math.floor(levelTimer / char[i].speed) % (char[i].motionString.length - 2);
+			char[i].vx = cardinal[char[i].motionString[_loc8_ + 2]][0] * (30 / char[i].speed);
+			char[i].vy = cardinal[char[i].motionString[_loc8_ + 2]][1] * (30 / char[i].speed);
+			char[i].px = char[i].x;
+			char[i].py = char[i].y;
+			char[i].charMove();
 		}
 	}
 	ctx.restore();
@@ -5926,11 +5935,13 @@ function draw() {
 								if (mouseIsDown && !addButtonPressed) {
 									myLevelChars[charDropdown][3] = i;
 									if (i == 3 || i == 4) {
-										while (myLevelChars[charDropdown].length < 6) {
-											myLevelChars[charDropdown].push([]);
+										if (char[charDropdown].charState != 3 && char[charDropdown].charState != 4) {
+											while (myLevelChars[charDropdown].length < 6) {
+												myLevelChars[charDropdown].push([]);
+											}
+											myLevelChars[charDropdown][4] = 10;
+											myLevelChars[charDropdown][5] = [[3,1],[2,1]];
 										}
-										myLevelChars[charDropdown][4] = 10;
-										myLevelChars[charDropdown][5] = [[3,1],[2,1]];
 									} else {
 										while (myLevelChars[charDropdown].length > 4) {
 											myLevelChars[charDropdown].pop();
@@ -5956,6 +5967,9 @@ function draw() {
 					myLevelChars[charDropdown][4] = char[charDropdown].speed;
 					if (!mouseIsDown && pmouseIsDown) {
 						char[charDropdown].motionString = generateMS(charDropdown);
+						levelTimer = 0;
+						char[charDropdown].x = myLevelChars[charDropdown][1]*30;
+						char[charDropdown].y = myLevelChars[charDropdown][2]*30;
 						charDropdown = -2;
 					}
 				} else if (charDropdownType == 4) {
@@ -5963,12 +5977,18 @@ function draw() {
 					if (newDire > 3) newDire = 0;
 					myLevelChars[charDropdown][5][charDropdownMS][0] = newDire;
 					char[charDropdown].motionString = generateMS(charDropdown);
+					levelTimer = 0;
+					char[charDropdown].x = myLevelChars[charDropdown][1]*30;
+					char[charDropdown].y = myLevelChars[charDropdown][2]*30;
 					charDropdown = -2;
 				} else if (charDropdownType == 5) {
 					// var flat = (valueAtClick + (lastClickY-_ymouse));
 					myLevelChars[charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 30), 1));
 					if (!mouseIsDown && pmouseIsDown) {
 						char[charDropdown].motionString = generateMS(charDropdown);
+						levelTimer = 0;
+						char[charDropdown].x = myLevelChars[charDropdown][1]*30;
+						char[charDropdown].y = myLevelChars[charDropdown][2]*30;
 						charDropdown = -2;
 					}
 				}
@@ -5976,13 +5996,17 @@ function draw() {
 
 
 				if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
+					var pCharState = char[charDropdown].charState;
 					resetLCChar(charDropdown);
 					if (charDropdownType == 2) {
 						char[charDropdown].placed = true;
+						levelTimer = 0;
 					} else if (charDropdownType == 1) {
 						if (char[charDropdown].charState == 3 || char[charDropdown].charState == 4) {
-							char[charDropdown].speed = myLevelChars[charDropdown][4];
-							char[charDropdown].motionString = generateMS(charDropdown);
+							if (pCharState != 3 && pCharState != 4) {
+								char[charDropdown].speed = myLevelChars[charDropdown][4];
+								char[charDropdown].motionString = generateMS(charDropdown);
+							}
 						} else {
 							char[charDropdown].speed = 0;
 							char[charDropdown].motionString = [];
@@ -6016,7 +6040,7 @@ function draw() {
 						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
 						if (mouseIsDown && !pmouseIsDown) {
 							// selectedTile = i;
-							setSelectedTile(i)
+							setSelectedTile(i);
 							if (tool != 2 && tool != 3) setTool(0);
 						}
 					}
@@ -6390,6 +6414,7 @@ function draw() {
 				}
 			}
 		}
+		levelTimer++;
 	}
 
 
