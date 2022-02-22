@@ -6005,6 +6005,7 @@ function draw() {
 					if (charDropdownType == 2) {
 						char[charDropdown].placed = true;
 						levelTimer = 0;
+						resetCharPositions();
 					} else if (charDropdownType == 1) {
 						if (char[charDropdown].charState == 3 || char[charDropdown].charState == 4) {
 							if (pCharState != 3 && pCharState != 4) {
