@@ -4966,6 +4966,13 @@ function generateMS(c) {
 	return out;
 }
 
+function resetCharPositions() {
+	for (var i = 0; i < myLevelChars.length; i++) {
+		char[i].x = myLevelChars[i][1]*30;
+		char[i].y = myLevelChars[i][2]*30;
+	}
+}
+
 
 
 
@@ -5965,11 +5972,10 @@ function draw() {
 					char[charDropdown].speed = flat>100?100:-Math.log(1 - flat / 100) * 100;
 					char[charDropdown].speed = Math.floor(Math.max(Math.min(char[charDropdown].speed, 99), 1));
 					myLevelChars[charDropdown][4] = char[charDropdown].speed;
+					levelTimer = 0;
+					resetCharPositions();
 					if (!mouseIsDown && pmouseIsDown) {
 						char[charDropdown].motionString = generateMS(charDropdown);
-						levelTimer = 0;
-						char[charDropdown].x = myLevelChars[charDropdown][1]*30;
-						char[charDropdown].y = myLevelChars[charDropdown][2]*30;
 						charDropdown = -2;
 					}
 				} else if (charDropdownType == 4) {
@@ -5978,8 +5984,7 @@ function draw() {
 					myLevelChars[charDropdown][5][charDropdownMS][0] = newDire;
 					char[charDropdown].motionString = generateMS(charDropdown);
 					levelTimer = 0;
-					char[charDropdown].x = myLevelChars[charDropdown][1]*30;
-					char[charDropdown].y = myLevelChars[charDropdown][2]*30;
+					resetCharPositions();
 					charDropdown = -2;
 				} else if (charDropdownType == 5) {
 					// var flat = (valueAtClick + (lastClickY-_ymouse));
@@ -5987,8 +5992,7 @@ function draw() {
 					if (!mouseIsDown && pmouseIsDown) {
 						char[charDropdown].motionString = generateMS(charDropdown);
 						levelTimer = 0;
-						char[charDropdown].x = myLevelChars[charDropdown][1]*30;
-						char[charDropdown].y = myLevelChars[charDropdown][2]*30;
+						resetCharPositions();
 						charDropdown = -2;
 					}
 				}
