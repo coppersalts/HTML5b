@@ -224,7 +224,7 @@ var musicSound = new Audio('data/music hq.wav');
 // [6]  - hurts right
 // [7]  - hurts left
 // [8]  - uses movieclip
-// [9]  - 
+// [9]  - fill tool not allowed in lc
 // [10] - uses shadows
 // [11] - switches for
 // [12] - switched by
@@ -249,7 +249,7 @@ var blockProperties = [
 	// tile1
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,0,false],
+	[false,false,false,false,false,false,false,false,false,true,false,0,0,false,false,true,0,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,14,false,[0,1,2,3,4,5,6,7,8,9,10,11,12,13]],
 	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 	[false,false,false,false,false,false,false,false,true,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
@@ -274,32 +274,32 @@ var blockProperties = [
 	[true,true,true,true,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,false,false,0,1,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,1,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,7,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,2,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,8,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,1,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,7,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,2,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,8,0,false,false,true,1,false],
 	[false,true,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile4
-	[true,true,true,true,false,false,false,false,true,false,false,13,0,false,false,true,5,false],
-	[true,true,true,true,false,false,false,false,true,false,false,14,0,false,false,true,5,false],
+	[true,true,true,true,false,false,false,false,true,true,false,13,0,false,false,true,5,false],
+	[true,true,true,true,false,false,false,false,true,true,false,14,0,false,false,true,5,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
-	[false,false,true,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
+	[false,false,true,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	[true,true,true,true,false,true,false,true,false,false,false,0,0,false,false,true,1,false],
 	[true,true,true,true,false,true,true,false,false,false,false,0,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,3,true,[0,0,0,0,0,1,1,2,2,1,1]],
 	// tile5
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
-	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
+	[false,true,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,3,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,9,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,3,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,9,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,true,false,0,0,false,false,true,120,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119]],
 	// tile6
 	[true,true,true,true,false,false,false,false,true,false,false,0,3,false,false,true,1,false],
@@ -314,7 +314,7 @@ var blockProperties = [
 	[true,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile7
 	[false,false,false,true,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
-	[true,true,true,true,false,false,false,false,true,false,false,15,0,false,false,true,5,false],
+	[true,true,true,true,false,false,false,false,true,true,false,15,0,false,false,true,5,false],
 	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,30,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]],
@@ -354,8 +354,8 @@ var blockProperties = [
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,6,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,true,false,false,12,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,6,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,true,true,false,12,0,false,false,true,1,false],
 	// tile11
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
@@ -1891,6 +1891,7 @@ var levelButtonSize = {w: 100, h: 40};
 var menu0ButtonClicked = -1;
 var onButton = false;
 var onTextBox = false;
+var mouseOnTabWindow = false;
 var menu2_3ButtonClicked = -1;
 var levelButtonClicked = -1;
 var showingNewGame2 = false;
@@ -3437,7 +3438,7 @@ function checkButton(i) {
 						if (_loc5_) {
 							char[i].buttonsPressed.push([_loc3_,_loc4_]);
 						}
-						break;
+						// break;
 					}
 				}
 			}
@@ -3447,8 +3448,7 @@ function checkButton(i) {
 
 function checkButton2(i, bypass) {
 	if (char[i].y < levelHeight * 30 + 30) {
-		var _loc8_ = char[i].buttonsPressed.length;
-		for (var _loc5_ = 0; _loc5_ < _loc8_; _loc5_++) {
+		for (var _loc5_ = char[i].buttonsPressed.length-1; _loc5_ >= 0; _loc5_--) {
 			var _loc4_ = char[i].buttonsPressed[_loc5_][0];
 			var _loc6_ = char[i].buttonsPressed[_loc5_][1];
 			if (!char[i].onob || char[i].standingOn >= 0 || char[i].x < _loc4_ * 30 - char[i].w || char[i].x >= _loc4_ * 30 + 30 + char[i].w || bypass) {
@@ -3467,7 +3467,7 @@ function checkButton2(i, bypass) {
 					tileFrames[_loc6_][_loc4_].cf = 2;
 					tileFrames[_loc6_][_loc4_].playing = true;
 				}
-				for (var _loc3_ = 0; _loc3_ < _loc8_; _loc3_++) {
+				for (var _loc3_ = 0; _loc3_ < char[i].buttonsPressed.length; _loc3_++) {
 					if (_loc3_ > _loc5_) {
 						char[i].buttonsPressed[_loc3_][0] = char[i].buttonsPressed[_loc3_ - 1][0];
 						char[i].buttonsPressed[_loc3_][1] = char[i].buttonsPressed[_loc3_ - 1][1];
@@ -4505,7 +4505,7 @@ function drawLCCharInfo(i, y) {
 		ctx.fillRect(665, y+charInfoHeight, charInfoHeight, diaInfoHeight);
 		ctx.fillStyle = '#ffffff';
 		ctx.fillText(char[i].speed.toString().padStart(2, '0'), 665 + 5, y + charInfoHeight + diaInfoHeight*0.5);
-		var canDropDown = !lcPopUp && charDropdown == -1 && !addButtonPressed;
+		var canDropDown = mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed;
 		if (canDropDown && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y+charInfoHeight, charInfoHeight, diaInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
@@ -4569,7 +4569,7 @@ function drawLCCharInfo(i, y) {
 		}
 	}
 
-	if (!lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
+	if (mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
 		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
@@ -4627,7 +4627,7 @@ function drawLCDiaInfo(i, y) {
 	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 	//myLevelDialogue[diaDropdown].face
-	if (!lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
+	if (mouseOnTabWindow && !lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
 		ctx.fillStyle = '#ee3333';
 		ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
 		if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
@@ -4929,6 +4929,7 @@ function readLevelString() {
 		}
 		i += myLevelDialogue.length;
 		// necesarryDeaths = parseInt(lines[i]);
+		levelTimer = 0;
 	});
 }
 
@@ -4973,6 +4974,29 @@ function resetCharPositions() {
 	}
 }
 
+function setCoinAndDoorPos() {
+	LCEndGateX = LCEndGateY = LCCoinX = LCCoinY = -1;
+	for (var i = 0; i < myLevel[1].length; i++) {
+		for (var j = 0; j < myLevel[1][i].length; j++) {
+			if (myLevel[1][i][j] == 6) {
+				if (LCEndGateX == -1 && LCEndGateY == -1) {
+					LCEndGateX = j;
+					LCEndGateY = i;
+				} else {
+					myLevel[1][i][j] = 0;
+				}
+			}
+			if (myLevel[1][i][j] == 12) {
+				if (LCCoinX == -1 && LCCoinY == -1) {
+					LCCoinX = j;
+					LCCoinY = i;
+				} else {
+					myLevel[1][i][j] = 0;
+				}
+			}
+		}
+	}
+}
 
 
 
@@ -5093,9 +5117,11 @@ function mousedown(event){
 						for (var i = 0; i < myLevelChars.length; i++) {
 							if (myLevelChars[i][2] > _loc7_) {
 								myLevelChars[i][2] += _loc5_;
-								char[i].y += _loc5_ * 30;
+								resetCharPositions();
+								// char[i].y += _loc5_ * 30;
 							}
 						}
+						setCoinAndDoorPos();
 						// drawLCGrid();
 					}
 				} else if (tool == 7) {
@@ -5127,9 +5153,11 @@ function mousedown(event){
 						for (var i = 0; i < myLevelChars.length; i++) {
 							if (myLevelChars[i][1] > _loc6_) {
 								myLevelChars[i][1] += _loc5_;
-								char[i].x += _loc5_ * 30;
+								resetCharPositions();
+								// char[i].x += _loc5_ * 30;
 							}
 						}
+						setCoinAndDoorPos();
 						// drawLCGrid();
 					}
 				}
@@ -5155,8 +5183,6 @@ function mouseup(event){
 				}
 				clearRectSelect();
 			}
-		} else {
-			setTool(0);
 		}
 	}
 }
@@ -5845,6 +5871,9 @@ function draw() {
 		ctx.fillRect(660,0,300,540);
 
 
+		var tabWindowH = cheight - tabHeight * tabNames.length;
+		var tabWindowY = (selectedTab + 1) * tabHeight;
+		mouseOnTabWindow = onRect(_xmouse, _ymouse, 660, (selectedTab+1)*tabHeight, 300, tabWindowH);
 		// Draw Tab Contents
 		if (selectedTab == 0) {
 			//
@@ -5857,24 +5886,23 @@ function draw() {
 				charInfoY += charInfoHeight + 5;
 				if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[i][5].length;
 			}
-			var tabWindowH = cheight - tabHeight * tabNames.length;
 			var tabContentsHeight = Math.max(charInfoY, charInfoYLookUp[myLevelChars.length-1] + (charInfoHeight*2));
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
 					draggingScrollBar = true;
+					valueAtClick = _ymouse - scrollBarY;
 				}
-			} else {
-				ctx.fillStyle = '#dddddd';
-			}
-
+			} else ctx.fillStyle = '#dddddd';
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				charsTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
+				charsTabScrollBar = Math.floor(Math.max(Math.min(
+					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+					tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -5935,7 +5963,7 @@ function draw() {
 					var j = 0;
 					for (var i = 3; i < charStateNames.length; i++) {
 						if (charStateNames[i] != '') {
-							if (!lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10, charInfoHeight*1.5, 10)) {
+							if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10, charInfoHeight*1.5, 10)) {
 								ctx.fillStyle = '#dddddd';
 								ctx.fillRect((665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10, charInfoHeight*1.5, 10);
 								ctx.fillStyle = '#000000';
@@ -6030,7 +6058,6 @@ function draw() {
 			var bpr = 5;
 			var bs = 40;
 			var bdist = 53;
-			// var h = _frameCount;
 			ctx.save();
 			ctx.translate(0, -tileTabScrollBar);
 			for (var i = 0; i < blockProperties.length; i++) {
@@ -6038,7 +6065,7 @@ function draw() {
 					if (i == selectedTile) {
 						ctx.fillStyle = '#a0a0a0';
 						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
-					} else if (!lcPopUp && onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
+					} else if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
 						onButton = true;
 						ctx.fillStyle = '#dddddd';
 						// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
@@ -6068,27 +6095,25 @@ function draw() {
 			}
 			ctx.restore();
 
-			var tabWindowH = cheight - tabHeight * tabNames.length;
 			var tabContentsHeight = (bdist-bs) + Math.floor((j-1)/bpr + 1) * bdist;
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-			var scrollBarY = (selectedTab+1)*tabHeight + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			var scrollBarY = tabWindowY + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
+			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
 					draggingScrollBar = true;
+					valueAtClick = _ymouse - scrollBarY;
 				}
-			} else {
-				ctx.fillStyle = '#dddddd';
-			}
-
+			} else ctx.fillStyle = '#dddddd';
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				tileTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
+				tileTabScrollBar = Math.floor(Math.max(Math.min(
+					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+					tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
-			//tileTabScrollBar
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 		} else if (selectedTab == 3) {
 			// var j = 0;
@@ -6108,7 +6133,7 @@ function draw() {
 						bgw + bgdist-bgw,
 						bgh + bgdist-bgh
 					);
-				} else if (!lcPopUp && onRect(_xmouse, _ymouse+bgsTabScrollBar,
+				} else if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+bgsTabScrollBar,
 					660 + (bgdist-bgw) + (i%bgpr)*bgdist,
 					(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
 					bgw,
@@ -6134,49 +6159,47 @@ function draw() {
 			}
 			ctx.restore();
 
-			var tabWindowH = cheight - tabHeight * tabNames.length;
 			var tabContentsHeight = (bgdist-bgh) + Math.floor((i-1)/bgpr + 1) * bgdist;
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (bgsTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
 					draggingScrollBar = true;
+					valueAtClick = _ymouse - scrollBarY;
 				}
-			} else {
-				ctx.fillStyle = '#dddddd';
-			}
-
+			} else ctx.fillStyle = '#dddddd';
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				bgsTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
+				bgsTabScrollBar = Math.floor(Math.max(Math.min(
+					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+					tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 		} else if (selectedTab == 4) {
-			var tabWindowH = cheight - tabHeight * tabNames.length;
 			var tabContentsHeight = 5;
 			for (var i = 0; i < myLevelDialogue.length; i++) {
 				tabContentsHeight += diaInfoHeight*myLevelDialogue[i].linecount + 5;
 			}
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (diaTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-			if (!lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
 				onButton = true;
 				ctx.fillStyle = '#e8e8e8';
 				if (mouseIsDown && !pmouseIsDown) {
 					draggingScrollBar = true;
+					valueAtClick = _ymouse - scrollBarY;
 				}
-			} else {
-				ctx.fillStyle = '#dddddd';
-			}
-
+			} else ctx.fillStyle = '#dddddd';
 			if (draggingScrollBar) {
 				onButton = false;
 				ctx.fillStyle = '#a0a0a0';
-				diaTabScrollBar = Math.floor(Math.max(Math.min(((_ymouse-(selectedTab+1)*tabHeight)/tabWindowH) * (tabContentsHeight-tabWindowH), tabContentsHeight-tabWindowH), 0));
+				diaTabScrollBar = Math.floor(Math.max(Math.min(
+					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+					tabContentsHeight-tabWindowH), 0));
 				if (!mouseIsDown) draggingScrollBar = false;
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -6290,7 +6313,12 @@ function draw() {
 				if (!lcPopUp && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
 					onButton = true;
 					if (mouseIsDown && !pmouseIsDown) {
-						if (i < 8) setTool(i);
+						if (i < 8) {
+							setTool(i);
+							if ((tool == 2 || tool == 3) && blockProperties[selectedTile][9]) {
+								setSelectedTile(0);
+							}
+						}
 						else if (i == 10) undo();
 						else if (i == 11) {
 							setUndo();
