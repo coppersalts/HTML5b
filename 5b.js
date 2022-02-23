@@ -1779,8 +1779,8 @@ var hprcBubbleAnimationTimer = 0;
 var charDepths = [];
 var tileDepths;
 var doorLightX = [[27.5],[15,40],[10,27.5,45],[10,21.75,33.25,45],[4,16.25,27.5,38.75,50],[4,14,23,32,41,50]];
-var doorLightFade = [0,0,0,0,0,0];
-var doorLightFadeDire = [0,0,0,0,0,0];
+var doorLightFade = [];
+var doorLightFadeDire = [];
 
 function toHMS(i) {
 	var _loc5_ = Math.floor(i / 3600000);
@@ -2223,7 +2223,7 @@ function testLevelCreator() {
 		menuScreen = 3;
 		toSeeCS = true;
 		transitionType = 1;
-		resetMyLevel();
+		resetLevel();
 	}
 }
 
@@ -2529,8 +2529,6 @@ function resetLevel() {
 		resetMyLevel();
 	} else {
 		HPRCBubbleFrame = 0;
-		doorLightFade = [0,0,0,0,0,0];
-		doorLightFadeDire = [0,0,0,0,0,0];
 		charCount = startLocations[currentLevel].length;
 		levelWidth = levels[currentLevel][0].length;
 		levelHeight = levels[currentLevel].length;
@@ -2579,7 +2577,7 @@ function resetLevel() {
 				char[_loc1_].motionString = startLocations[currentLevel][_loc1_][6];
 			}
 		}
-		charCount2 = Math.min(charCount2, 6)
+		// charCount2 = Math.min(charCount2, 6);
 		getTileDepths();
 		calculateShadowsAndBorders();
 
@@ -2606,16 +2604,17 @@ function resetLevel() {
 		cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
 		gotThisCoin = false;
 		levelTimer = 0;
+		recoverTimer = 0;
 		levelTimer2 = getTimer();
 		if (char[0].charState <= 9)  changeControl();
 		currentLevelDisplayName = (currentLevel + 1).toString(10).padStart(3, '0') + '. ' + levelName[currentLevel];
 	}
+	doorLightFade = new Array(charCount2).fill(0);
+	doorLightFadeDire = new Array(charCount2).fill(0);
 }
 
 function resetMyLevel() {
 	HPRCBubbleFrame = 0;
-	doorLightFade = [0,0,0,0,0,0];
-	doorLightFadeDire = [0,0,0,0,0,0];
 	charCount = myLevelChars.length;
 	levelWidth = myLevel[1][0].length;
 	levelHeight = myLevel[1].length;
@@ -2665,7 +2664,7 @@ function resetMyLevel() {
 			char[_loc1_].motionString = generateMS(_loc1_);
 		}
 	}
-	charCount2 = Math.min(charCount2, 6)
+	// charCount2 = Math.min(charCount2, 6)
 	getTileDepths();
 	calculateShadowsAndBorders();
 
@@ -2697,6 +2696,7 @@ function resetMyLevel() {
 	cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
 	gotThisCoin = false;
 	levelTimer = 0;
+	recoverTimer = 0;
 	levelTimer2 = getTimer();
 	if (char[0].charState <= 9)  changeControl();
 	currentLevelDisplayName = 'My level';
@@ -3282,11 +3282,12 @@ function addTileMovieClip(x, y, context) {
 		}
 	} else if (_loc5_ == 6) {
 		// Door
-		context.fillStyle = bgs[currentLevel]==9||bgs[currentLevel]==10?'#999999':'#505050';
+		var bgid = playMode==2?selectedBg:bgs[currentLevel];
+		context.fillStyle = bgid==9||bgid==10?'#999999':'#505050';
 		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
 		for (var i = 0; i < charCount2; i++) {
 			context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
-			context.fillRect((x-1)*30+doorLightX[charCount2-1][i], y*30-80, 5, 5);
+			context.fillRect((x-1)*30+doorLightX[Math.floor(i/6)==Math.floor((charCount2-1)/6)?(charCount2-1)%6:5][i%6], y*30-80 + Math.floor(i/6)*10, 5, 5);
 			if (doorLightFadeDire[i] != 0) {
 				doorLightFade[i] = Math.max(Math.min(doorLightFade[i]+doorLightFadeDire[i]*0.0625, 1), 0);
 				if (doorLightFade[i] == 1 || doorLightFade[i] == 0) doorLightFadeDire[i] = 0;
@@ -3317,8 +3318,8 @@ function calculateShadowsAndBorders() {
 			if (thisLevel[y][x] >= 1) {
 				var _loc5_ = thisLevel[y][x];
 				if (_loc5_ == 6) {
-					for (var _loc2_ = 0; _loc2_ < 2; _loc2_++) {
-						for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
+					for (var _loc2_ = 0; _loc2_ < 2 && x - _loc2_ >= 0; _loc2_++) {
+						for (var _loc1_ = 0; _loc1_ < 4 && y - _loc1_ >= 0; _loc1_++) {
 							setAmbientShadow(x - _loc2_,y - _loc1_);
 						}
 					}
@@ -4298,7 +4299,7 @@ function drawLCTiles() {
 				var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
 				ctx.drawImage(img, 330 - scale * levelWidth / 2 + _loc1_ * scale + scale * vb[0]/30, 240 - scale * levelHeight / 2 + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			} else if (tile == 6) {
-				ctx.fillStyle = '#505050';
+				ctx.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
 				ctx.fillRect(330 - scale * levelWidth / 2 + (_loc1_-1) * scale, 240 - scale * levelHeight / 2 + (_loc2_-3) * scale, scale*2, scale*4);
 			} else if (blockProperties[tile][15] && tile > 0) {
 				var img = svgTiles[tile];
@@ -4347,9 +4348,11 @@ function clearMyLevel(i) {
 		_loc2_ = _loc2_ + 1;
 	}
 }
+
 function clearRectSelect() {
 	LCRect = [-1,-1,-1,-1];
 }
+
 function fillTile(x, y, after, before) {
 	if (after == before) return;
 	var _loc4_ = [[x,y]];
@@ -4407,9 +4410,11 @@ function LCSwapLevelData(a, b) {
 		levelWidth = myLevel[b][0].length;
 	}
 }
+
 function mouseOnScreen() {
 	return _xmouse < 660 && _ymouse < 480;
 }
+
 function setSelectedTile(i) {
 	selectedTile = i;
 	if (blockProperties[selectedTile][9] && (tool == 2 || tool == 3)) {
@@ -4420,14 +4425,17 @@ function setSelectedTile(i) {
 	// levelCreator.sideBar.tab4.selector._x = _loc3_;
 	// levelCreator.sideBar.tab4.selector._y = _loc2_;
 }
+
 function closeToEdgeY() {
 	var _loc1_ = (_ymouse - (240 - scale * levelHeight / 2)) / scale % 1;
 	return Math.abs(_loc1_ - 0.5) > 0.25;
 }
+
 function closeToEdgeX() {
 	var _loc1_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
 	return Math.abs(_loc1_ - 0.5) > 0.25;
 }
+
 function removeLCTiles() {
 	console.log('removeLCTiles');
 	// var _loc2_ = 0;
@@ -4442,6 +4450,7 @@ function removeLCTiles() {
 	// 	_loc2_ = _loc2_ + 1;
 	// }
 }
+
 function updateLCtiles() {
 	console.log('updateLCtiles');
 	// var _loc2_ = 0;
@@ -4456,6 +4465,7 @@ function updateLCtiles() {
 	// 	_loc2_ = _loc2_ + 1;
 	// }
 }
+
 function setTool(i) {
 	// levelCreator.tools["tool" + tool].gotoAndStop(2);
 	tool = i;
@@ -4841,19 +4851,23 @@ function readLevelString() {
 		let lines = clipText.split('\r\n');
 		if (lines.length == 1) lines = clipText.split('\n');
 		let i = 0;
+
 		// skip past any blank lines at the start
 		while (i < lines.length && lines[i] == '') i++;
-		// levelName = lines[i];
 		i++;
+
+		// read level info
 		let levelInfo = lines[i].split(',');
 		levelWidth = parseInt(levelInfo[0]);
 		levelHeight = parseInt(levelInfo[1]);
-		myLevelChars = new Array(parseInt(levelInfo[2]));
-		char = new Array(parseInt(levelInfo[2]));
+		charCount = parseInt(levelInfo[2]);
+		myLevelChars = new Array(charCount);
+		char = new Array(charCount);
 		selectedBg = parseInt(levelInfo[3]);
 		longMode = levelInfo[4]=='H';
 		i++;
 
+		// read block layout data
 		myLevel[1] = new Array(levelHeight);
 		if (longMode) {
 			for (var y = 0; y < levelHeight; y++) {
@@ -4872,6 +4886,7 @@ function readLevelString() {
 		}
 		i += levelHeight;
 
+		// read entity data
 		for (var e = 0; e < myLevelChars.length; e++) {
 			let entityInfo = lines[i+e].split(',').join(' ').split(' ');
 			myLevelChars[e] = [0,0.0,0.0,10];
@@ -4880,6 +4895,7 @@ function readLevelString() {
 			myLevelChars[e][2] = parseFloat(entityInfo[2]);
 			myLevelChars[e][3] = parseInt(entityInfo[3]);
 			let _loc2_ = myLevelChars[e][0];
+			if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
 			char[e] = new Character(
 				_loc2_,
 				+myLevelChars[e][1].toFixed(2) * 30,
@@ -4919,6 +4935,8 @@ function readLevelString() {
 			}
 		}
 		i += myLevelChars.length;
+
+		// read dialogue
 		myLevelDialogue = new Array(parseInt(lines[i]));
 		i++;
 		for (var d = 0; d < myLevelDialogue.length; d++) {
@@ -4928,7 +4946,9 @@ function readLevelString() {
 			myLevelDialogue[d].text = lines[i+d].substring(4);
 		}
 		i += myLevelDialogue.length;
+
 		// necesarryDeaths = parseInt(lines[i]);
+
 		levelTimer = 0;
 	});
 }
