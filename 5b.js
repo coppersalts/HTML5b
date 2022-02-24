@@ -1743,6 +1743,7 @@ var menuScreen = -1;
 var myLevel;
 var myLevelChars;
 var myLevelDialogue;
+var myLevelInfo;
 var scale = 20;
 var tool = 0;
 var selectedTile = 0;
@@ -1891,6 +1892,9 @@ var levelButtonSize = {w: 100, h: 40};
 var menu0ButtonClicked = -1;
 var onButton = false;
 var onTextBox = false;
+var editingTextBox = -1;
+var textBoxCursorLoc = 0;
+var currentTextBoxAllowsLineBreaks = false;
 var mouseOnTabWindow = false;
 var menu2_3ButtonClicked = -1;
 var levelButtonClicked = -1;
@@ -2211,7 +2215,7 @@ function playGame() {
 	menuScreen = 0;
 	musicSound.play();
 	musicSound.loop = true;
-	// toggleSound();
+	toggleSound();
 }
 
 function testLevelCreator() {
@@ -2347,6 +2351,96 @@ function drawNewGame2Button(text, x, y, id, color, action) {
 	ctx.fillText(text, x+size/2, y+size*1.1/2);
 }
 
+function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, c2) {
+	ctx.fillStyle = c1;
+	ctx.fillRect(x, y, w, h);
+
+	ctx.fillStyle = c2;
+	ctx.font = textSize + 'px Helvetica';
+	ctx.textAlign = 'left';
+	ctx.textBaseline = 'top';
+	var lines = wrapText(text, x+pad[0], y+pad[1], w-pad[0]-pad[2], textSize);
+
+	if (onRect(_xmouse, _ymouse, x, y, w, h)) {
+		onTextBox = true;
+		if (mouseIsDown && !pmouseIsDown) {
+			editingTextBox = id;
+			currentTextBoxAllowsLineBreaks = allowsLineBreaks;
+			var textBoxCursorLine = Math.max(Math.floor((_ymouse-y-pad[1])/textSize),0);
+			if (textBoxCursorLine >= lines.length) {
+				textBoxCursorLoc = text.length;
+			} else {
+				var textBoxCursorLoc = 0;
+				for (var i = 0; i < textBoxCursorLine; i++) {
+					textBoxCursorLoc += lines[i].length;
+				}
+				for (var i = 0; i < lines[textBoxCursorLine].length; i++) {
+					if (ctx.measureText(lines[textBoxCursorLine].slice(0,i)).width >= _xmouse-x-pad[0]) break;
+				}
+				textBoxCursorLoc += i-1;
+			}
+			inputText = text.slice(0, textBoxCursorLoc);
+			valueAtClick = text.slice(textBoxCursorLoc, text.length);
+		}
+	}
+	if (editingTextBox == id) {
+		textBoxCursorLoc = inputText.length;
+		if (_keysDown[39]) {
+			if (!rightPress) {
+				textBoxCursorLoc = Math.max(inputText.length+1,0);
+				inputText = text.slice(0, textBoxCursorLoc);
+				valueAtClick = text.slice(textBoxCursorLoc, text.length);
+				rightPress = true;
+			}
+		} else rightPress = false;
+		if (_keysDown[37]) {
+			if (!leftPress) {
+				textBoxCursorLoc = Math.max(inputText.length-1,0);
+				inputText = text.slice(0, textBoxCursorLoc);
+				valueAtClick = text.slice(textBoxCursorLoc, text.length);
+				leftPress = true;
+			}
+		} else leftPress = false;
+		if (_keysDown[38]) {
+			if (!upPress) {
+				textBoxCursorLoc = 0;
+				inputText = '';
+				valueAtClick = text;
+				upPress = true;
+			}
+		} else upPress = false;
+		if (_keysDown[40]) {
+			if (!downPress) {
+				textBoxCursorLoc = text.length;
+				inputText = text;
+				valueAtClick = '';
+				downPress = true;
+			}
+		} else downPress = false;
+		text = inputText + valueAtClick;
+		if (_frameCount%60 < 30) {
+			ctx.strokeStyle = c2;
+			var blinkyLineY = 0;
+			var lineLengthBeforeCursor = 0;
+			while (blinkyLineY < lines.length) {
+				var newlen = lineLengthBeforeCursor + lines[blinkyLineY].length;
+				if (newlen > textBoxCursorLoc || (newlen == textBoxCursorLoc && blinkyLineY == lines.length-1)) break;
+				lineLengthBeforeCursor = newlen;
+				blinkyLineY++;
+			}
+			if (blinkyLineY >= lines.length) blinkyLineY--;
+			var blinkyLineX = ctx.measureText(text.slice(lineLengthBeforeCursor,textBoxCursorLoc)).width + x+pad[0];
+			ctx.beginPath();
+			ctx.moveTo(blinkyLineX, y+pad[1]+textSize*blinkyLineY);
+			ctx.lineTo(blinkyLineX, y+pad[1]+textSize*(blinkyLineY+1));
+			ctx.stroke();
+		}
+		if (_keysDown[13] && !_keysDown[16]) editingTextBox = -1;
+	}
+
+	return [text,lines];
+}
+
 function drawRoundedRect(fill, x, y, w, h, cr) {
 	var x1 = x+cr;
 	var y1 = y+cr;
@@ -2366,6 +2460,11 @@ function drawMenu() {
 	ctx.fillStyle = '#666666';
 	ctx.fillRect(0, 0, cwidth, cheight);
 	ctx.drawImage(svgMenu0, 0, 0);
+	ctx.fillStyle = '#ffffff';
+	ctx.textBaseline = 'bottom';
+	ctx.textAlign = 'left';
+	ctx.font = '20px Helvetica';
+	ctx.fillText('beta 4.1.0', 5, cheight);
 
 	drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatch);
 	if (showingNewGame2) {
@@ -2481,26 +2580,50 @@ function linebreakText(text, x, y, lineheight) {
 	}
 }
 
-//https://thewebdev.info/2021/08/28/how-to-wrap-text-in-a-canvas-element-with-javascript/
 function wrapText(text, x, y, maxWidth, lineHeight) {
-	const words = text.split(' ');
-	let line = '';
-	let linecount = 1;
-	for (const [index, w] of words.entries()) {
-		const testLine = line + w + ' ';
-		const metrics = ctx.measureText(testLine);
-		const testWidth = metrics.width;
-		if (testWidth > maxWidth && index > 0) {
-			ctx.fillText(line, x, y);
-			line = w + ' ';
-			y += lineHeight;
-			linecount++;
-		} else {
-			line = testLine;
+	let words = text.split(' ');
+	let lines = [''];
+	for (var i = 0; i < words.length; i++) {
+		let lb = words[i].split('\n');
+		let back = false;
+		for (var l = 0; l < lb.length; l++) {
+			if (!back && l > 0) {
+				lines.push('');
+			}
+			back = false;
+			if (ctx.measureText(lines[lines.length-1] + lb[l]).width > maxWidth) {
+				if (lines[lines.length-1].length == 0) {
+					for (var j = 0; j < lb[l].length; j++) {
+						if (ctx.measureText(lines[lines.length-1]+lb[l].charAt(j)).width > maxWidth) break;
+						lines[lines.length-1] += lb[l].charAt(j);
+					}
+					lines.push('');
+					if (lb.length == 1) {
+						words[i] = words[i].slice(j,words[i].length);
+						i--;
+					} else {
+						lb[l] = lb[l].slice(j,lb[l].length);
+						l--;
+						back = true;
+					}
+				} else {
+					lines.push('');
+					if (lb.length == 1) {
+						i--;
+					} else {
+						l--;
+						back = true;
+					}
+				}
+			} else {
+				lines[lines.length-1] += lb[l] + ' ';
+			}
 		}
 	}
-	ctx.fillText(line, x, y);
-	return [line,linecount];
+	for (var i = 0; i < lines.length; i++) {
+		ctx.fillText(lines[i], x, y + lineHeight*i);
+	}
+	return lines;
 }
 
 
@@ -4252,6 +4375,7 @@ function resetLevelCreator() {
 	charCount = 0;
 	myLevelChars = [];
 	myLevelDialogue = [];
+	myLevelInfo = {name:'Untitled',creator:'',desc:''};
 	// setEndGateLights();
 	LCEndGateX = -1;
 	LCEndGateY = -1;
@@ -4616,24 +4740,16 @@ function drawLCCharInfo(i, y) {
 }
 
 function drawLCDiaInfo(i, y) {
-	ctx.fillStyle = '#626262';
-	ctx.fillRect(665, y, 240, diaInfoHeight*myLevelDialogue[i].linecount);
+	// ctx.fillStyle = '#626262';
+	// ctx.fillRect(665, y, 240, diaInfoHeight*myLevelDialogue[i].linecount);
 	ctx.fillStyle = '#808080';
 	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount);
 	ctx.fillStyle = '#ffffff';
-	var lastLine = wrapText(myLevelDialogue[i].text, 665 + diaInfoHeight*3 + 5, y + diaInfoHeight/2, 240 - diaInfoHeight*3, diaInfoHeight);
-	myLevelDialogue[i].linecount = lastLine[1];
-	ctx.fillText(myLevelDialogue[i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y + diaInfoHeight/2);
-	ctx.fillText(myLevelDialogue[i].char.toString(10).padStart(2, '0'), 665 + 5, y + diaInfoHeight/2);
-	if (diaDropdown == i && _frameCount%60 < 30) {
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = '#ffffff';
-		ctx.beginPath();
-		var blinkyLineX = ctx.measureText(lastLine[0].slice(0,-1)).width + 665 + diaInfoHeight*3 + 5; 
-		ctx.moveTo(blinkyLineX, y+diaInfoHeight*(myLevelDialogue[i].linecount-1));
-		ctx.lineTo(blinkyLineX, y+diaInfoHeight*myLevelDialogue[i].linecount);
-		ctx.stroke();
-	}
+	var diaTextBox = drawTextBox(myLevelDialogue[i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff');
+	myLevelDialogue[i].text = diaTextBox[0];
+	myLevelDialogue[i].linecount = diaTextBox[1].length;
+	ctx.fillText(myLevelDialogue[i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y);
+	ctx.fillText(myLevelDialogue[i].char.toString(10).padStart(2, '0'), 665 + 5, y);
 	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 	//myLevelDialogue[diaDropdown].face
@@ -4653,12 +4769,9 @@ function drawLCDiaInfo(i, y) {
 				diaDropdownType = 0;
 			}
 		} else if (_xmouse < 665+240 && _xmouse > 665 + diaInfoHeight*3) {
-			onTextBox = true;
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 2;
-				if (myLevelDialogue[i].text == 'Enter text') inputText = '';
-				else inputText = myLevelDialogue[i].text;
 			}
 		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20)) {
 			onButton = true;
@@ -4796,7 +4909,7 @@ function copyLevelString() {
 	}
 
 	var lcLevelString = '\r\n';
-	lcLevelString += 'Untitled level\r\n';
+	lcLevelString += myLevelInfo.name + '\r\n';
 	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + char.length.toString(10).padStart(2, '0') + ',' + selectedBg.toString(10).padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
 	if (longMode) {
 		for (var y = 0; y < levelHeight; y++) {
@@ -4854,6 +4967,7 @@ function readLevelString() {
 
 		// skip past any blank lines at the start
 		while (i < lines.length && lines[i] == '') i++;
+		myLevelInfo.name = lines[i];
 		i++;
 
 		// read level info
@@ -5209,11 +5323,13 @@ function mouseup(event){
 
 function keydown(event){
 	_keysDown[event.keyCode || event.charCode] = true;
-	if (event.keyCode) {
+	if (editingTextBox >= 0 && event.keyCode) {
 		if (event.key.length == 1) {
 			inputText += event.key;
 		} else if (event.key == 'Backspace') {
 			inputText = inputText.slice(0,-1);
+		} else if (currentTextBoxAllowsLineBreaks && (event.key == 'Enter' || event.key == 'Return') && event.shiftKey) {
+			inputText += '\n';
 		}
 	}
 	if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
@@ -5896,7 +6012,19 @@ function draw() {
 		mouseOnTabWindow = onRect(_xmouse, _ymouse, 660, (selectedTab+1)*tabHeight, 300, tabWindowH);
 		// Draw Tab Contents
 		if (selectedTab == 0) {
-			//
+			ctx.textAlign = 'right';
+			ctx.textBaseline = 'top';
+			ctx.font = '18px Helvetica';
+			ctx.fillStyle = '#000000';
+			ctx.fillText('Name:',770,tabWindowY + 10);
+			ctx.fillText('Creator:',770,tabWindowY + 60);
+			ctx.fillText('Description:',770,tabWindowY + 110);
+			myLevelInfo.name = drawTextBox(myLevelInfo.name, 785, tabWindowY + 10, 160, 40, 18, [5,2,2,2], 0, false, '#e0e0e0', '#000000')[0];
+			myLevelInfo.creator = drawTextBox(myLevelInfo.creator, 785, tabWindowY + 60, 160, 40, 18, [5,2,2,2], 1, false, '#e0e0e0', '#000000')[0];
+			myLevelInfo.desc = drawTextBox(myLevelInfo.desc, 785, tabWindowY + 110, 160, 220, 14, [5,2,2,2], 2, true, '#e0e0e0', '#000000')[0];
+			if (mouseIsDown && !pmouseIsDown && !onTextBox) {
+				editingTextBox = -1;
+			}
 		} else if (selectedTab == 1) {
 			var charInfoY = (selectedTab+1)*tabHeight + 5;
 			// TODO: only compute the look up table when it changes
@@ -6225,9 +6353,9 @@ function draw() {
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 			ctx.save();
 			ctx.translate(0, -diaTabScrollBar);
-			ctx.textAlign = 'left';
-			ctx.textBaseline = 'middle';
-			ctx.font = '20px Helvetica';
+			// ctx.textAlign = 'left';
+			// ctx.textBaseline = 'middle';
+			// ctx.font = '20px Helvetica';
 			//myLevelDialogue[i].linecount
 			var diaInfoY = (selectedTab+1)*tabHeight + 5;
 			for (var i = 0; i < myLevelDialogue.length; i++) {
@@ -6277,7 +6405,6 @@ function draw() {
 					// 	}
 					// }
 				} else if (diaDropdownType == 2) {
-					myLevelDialogue[diaDropdown].text = inputText;
 					if (_keysDown[13]) diaDropdown = -2;
 				}
 
