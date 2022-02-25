@@ -1759,6 +1759,8 @@ var diagonal = [[-1,-1],[1,-1],[1,1],[-1,1]];
 var diagonal2 = [[0,2],[0,3],[1,2],[1,3]];
 var direLetters = ['U','D','L','R'];
 var undid = false;
+var copied = false;
+var tileClipboard = [[]];
 var LCRect = [-1,-1,-1,-1];
 var levelTimer = 0;
 var levelTimer2 = 0;
@@ -2465,7 +2467,7 @@ function drawMenu() {
 	ctx.textBaseline = 'bottom';
 	ctx.textAlign = 'left';
 	ctx.font = '20px Helvetica';
-	ctx.fillText('beta 4.1.2', 5, cheight);
+	ctx.fillText('beta 4.2.0', 5, cheight);
 
 	drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatch);
 	if (showingNewGame2) {
@@ -4423,6 +4425,21 @@ function drawLCTiles() {
 	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
 		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 			var tile = myLevel[1][_loc2_][_loc1_];
+			if (tool == 5 && copied && mouseOnGrid()) {
+				var mouseGridX = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+				var mouseGridY = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+				if (_loc1_ >= mouseGridX && _loc1_ < mouseGridX + tileClipboard[0].length && _loc2_ >= mouseGridY && _loc2_ < mouseGridY + tileClipboard.length) {
+					clipboardTileCandidate = tileClipboard[_loc2_ - mouseGridY][_loc1_ - mouseGridX];
+					if (clipboardTileCandidate != 0) {
+						tile = clipboardTileCandidate;
+						ctx.globalAlpha = 0.5;
+					}
+				} else {
+					ctx.globalAlpha = 1;
+				}
+			} else {
+				ctx.globalAlpha = 1;
+			}
 			if (blockProperties[tile][16] > 0) {
 				var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
 				var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
@@ -4522,6 +4539,26 @@ function undo() {
 	undid = !undid;
 }
 
+function copyRect() {
+	if (copied) {
+		copied = false;
+	} else if (tool == 5 && LCRect[0] != -1) {
+		var x1 = Math.min(LCRect[0],LCRect[2]);
+		var y1 = Math.min(LCRect[1],LCRect[3]);
+		var x2 = Math.max(LCRect[0],LCRect[2]);
+		var y2 = Math.max(LCRect[1],LCRect[3]);
+		tileClipboard = new Array(y2-y1);
+		for (var i = y1; i <= y2; i++) {
+			tileClipboard[i-y1] = new Array(x2-x1);
+			for (var j = x1; j <= x2; j++) {
+				tileClipboard[i-y1][j-x1] = myLevel[1][i][j];
+			}
+		}
+		LCRect = [-1,-1,-1,-1];
+		copied = true;
+	}
+}
+
 function LCSwapLevelData(a, b) {
 	myLevel[b] = new Array(myLevel[a].length);
 	for (var _loc2_ = 0; _loc2_ < myLevel[a].length; _loc2_++) {
@@ -4597,10 +4634,11 @@ function updateLCtiles() {
 
 function setTool(i) {
 	// levelCreator.tools["tool" + tool].gotoAndStop(2);
-	tool = i;
 	if (tool == 2 || tool == 5) {
 		clearRectSelect();
+		if (tool == i && tool == 5) copied = false;
 	}
+	tool = i;
 	// levelCreator.tools["tool" + tool].gotoAndStop(1);
 }
 
@@ -5221,13 +5259,13 @@ function mousedown(event){
 			// 	}
 			// }
 		} else {
-			if (tool != 4 && tool != 5) {
+			if (tool != 4) {
 				setUndo();
 			}
 			var _loc10_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
 			var _loc9_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
 			if (mouseOnScreen()) {
-				if (tool == 2 || tool == 5) {
+				if (tool == 2 || tool == 5 && !copied) {
 					LCRect[0] = LCRect[2] = Math.min(Math.max(_loc10_,0),levelWidth - 1);
 					LCRect[1] = LCRect[3] = Math.min(Math.max(_loc9_,0),levelHeight - 1);
 				}
@@ -5244,6 +5282,18 @@ function mousedown(event){
 					selectedTab = 2;
 					setTool(0);
 					setSelectedTile(myLevel[1][_loc9_][_loc10_]);
+				} else if (tool == 5) {
+					if (copied) {
+						for (var i = 0; i < tileClipboard.length && _loc9_+i < levelHeight; i++) {
+							for (var j = 0; j < tileClipboard[i].length && _loc10_+j < levelWidth; j++) {
+								var testTile = tileClipboard[i][j];
+								if (testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][_loc9_+i][_loc10_+j] = testTile;
+							}
+						}
+					}
+					// selectedTab = 2;
+					// setTool(0);
+					// setSelectedTile(myLevel[1][_loc9_][_loc10_]);
 				} else if (tool == 6) {
 					var _loc5_ = 0;
 					if (closeToEdgeY() || levelHeight >= 2) {
@@ -6476,7 +6526,7 @@ function draw() {
 		// Draw Tools
 		for (var i = 0; i < 12; i++) {
 			if (i != 8) { 
-				if (i == tool) ctx.fillStyle = '#999999';
+				if (i == tool || i == 9 && copied) ctx.fillStyle = '#999999';
 				else ctx.fillStyle = '#666666';
 				ctx.fillRect(35 + i*50, 490, 40, 40);
 				ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490);
@@ -6490,6 +6540,7 @@ function draw() {
 								setSelectedTile(0);
 							}
 						}
+						else if (i == 9) copyRect();
 						else if (i == 10) undo();
 						else if (i == 11) {
 							setUndo();
@@ -6530,14 +6581,14 @@ function draw() {
 					}
 				}
 			}
-			if ((tool == 2 || tool == 5) && LCRect[0] != -1) {
+			if ((tool == 2 || tool == 5 && !copied) && LCRect[0] != -1 && mouseOnGrid()) {
 				if (_loc9_ != LCRect[2] || _loc3_ != LCRect[3]) {
 					LCRect[2] = Math.min(Math.max(_loc9_,0),levelWidth - 1);
 					LCRect[3] = Math.min(Math.max(_loc3_,0),levelHeight - 1);
 				}
-					drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
 			}
 		}
+		if (LCRect[0] != -1) drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
 		if (mouseOnGrid()) {
 			if (tool == 6) {
 				// levelCreator.rectSelect.clear();
