@@ -7,6 +7,8 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, cashe some things as bitmaps for better performance.
 
+var version = 'beta 4.2.1'; // putting this up here so I can edit the text on the title screen more easily.
+
 var canvas;
 var ctx;
 const cwidth = 960;
@@ -2467,7 +2469,7 @@ function drawMenu() {
 	ctx.textBaseline = 'bottom';
 	ctx.textAlign = 'left';
 	ctx.font = '20px Helvetica';
-	ctx.fillText('beta 4.2.0', 5, cheight);
+	ctx.fillText(version, 5, cheight);
 
 	drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatch);
 	if (showingNewGame2) {
@@ -4422,9 +4424,12 @@ function drawLCGrid() {
 }
 
 function drawLCTiles() {
+	var tlx = 330 - scale * levelWidth / 2;
+	var tly = 240 - scale * levelHeight / 2;
 	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
 		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 			var tile = myLevel[1][_loc2_][_loc1_];
+			ctx.globalAlpha = 1;
 			if (tool == 5 && copied && mouseOnGrid()) {
 				var mouseGridX = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
 				var mouseGridY = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
@@ -4434,23 +4439,27 @@ function drawLCTiles() {
 						tile = clipboardTileCandidate;
 						ctx.globalAlpha = 0.5;
 					}
-				} else {
-					ctx.globalAlpha = 1;
 				}
-			} else {
-				ctx.globalAlpha = 1;
+			}
+			if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
+				ctx.save();
+				ctx.translate(tlx + (_loc1_+0.5) * scale, tly + (_loc2_+0.9333) * scale);
+				ctx.rotate(blockProperties[tile][11]<7?-1:1);
+				ctx.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
+				ctx.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
+				ctx.restore();
 			}
 			if (blockProperties[tile][16] > 0) {
 				var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
 				var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
-				ctx.drawImage(img, 330 - scale * levelWidth / 2 + _loc1_ * scale + scale * vb[0]/30, 240 - scale * levelHeight / 2 + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+				ctx.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			} else if (tile == 6) {
 				ctx.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
-				ctx.fillRect(330 - scale * levelWidth / 2 + (_loc1_-1) * scale, 240 - scale * levelHeight / 2 + (_loc2_-3) * scale, scale*2, scale*4);
+				ctx.fillRect(tlx + (_loc1_-1) * scale, tly + (_loc2_-3) * scale, scale*2, scale*4);
 			} else if (blockProperties[tile][15] && tile > 0) {
 				var img = svgTiles[tile];
 				var vb = svgTilesVB[tile];
-				ctx.drawImage(img, 330 - scale * levelWidth / 2 + _loc1_ * scale + scale * vb[0]/30, 240 - scale * levelHeight / 2 + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+				ctx.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			}
 		}
 	}
@@ -6306,7 +6315,18 @@ function draw() {
 						var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
 						if (vb[2] <= 60) {
 							var sc = bs/30;
-							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist + vb[0]*sc, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist + vb[1]*sc, vb[2]*sc, vb[3]*sc);
+							var tlx = 660 + (bdist-bs) + (j%bpr)*bdist;
+							var tly = (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist;
+							if (blockProperties[i][11] > 0 && blockProperties[i][11] < 13) {
+								ctx.save();
+								ctx.translate(tlx + 15 * sc, tly + 28 * sc);
+								ctx.rotate(blockProperties[i][11]<7?-1:1);
+								ctx.translate(-tlx - 15 * sc, -tly - 28 * sc);
+								// ctx.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
+								ctx.drawImage(svgLevers[(blockProperties[i][11]-1)%6], tlx, tly, bs, bs);
+								ctx.restore();
+							}
+							ctx.drawImage(img, tlx + vb[0]*sc, tly + vb[1]*sc, vb[2]*sc, vb[3]*sc);
 						} else {
 							var sc = bs/vb[2];
 							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, vb[2]*sc, vb[3]*sc);
