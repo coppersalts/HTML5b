@@ -394,63 +394,64 @@ var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54],[65,61,60,62,63,64],[],[
 // [6] - heat speed
 // [7] - number of frames
 // [8] - has arms
+// [9] - default state (in level creator)
 var charD = [
-	[28,45.4,0.45,27,0.8,false,1,1,true],
-	[23,56,0.36,31,0.8,false,1.7,1,true],
-	[20,51,0.41,20,0.85,false,5,1,false],
-	[10,86,0.26,31,0.8,false,1.6,1,true],
-	[10,84,0.23,31,0.8,false,1.4,1,true],
-	[28,70,0.075,28,0.8,false,9,1,true],
-	[26,49,0.2,20,0.75,false,0.6,1,false],
-	[44,65,0.8,20,0.75,false,0.8,1,false],
-	[16,56,0.25,17,0.76,false,0.8,1,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[0,0,0,0,0,false,1,0,true],
-	[36.5,72.8,1,20,0.6,false,0,1,true],
-	[15.1,72.8,0.6,20,0.7,true,0,1,true],
-	[20,40,0.15,20,0.7,true,0.7,1,true],
-	[25,50,0.64,20,0.6,true,0.1,1,true],
-	[25,10,1,5,0.7,true,0.2,1,true],
-	[25,50,1,20,0.7,true,0.1,1,true],
-	[25,29,0.1,20,0.8,true,1,1,true],
-	[21.5,43,0.3,20,0.6,true,0.5,1,true],
-	[35,60,1,20,0.7,true,0.1,1,true],
-	[22.5,45,1,20,0.7,true,0.8,1,true],
-	[25,50,1,20,0.7,true,0.1,27,true],
-	[15,30,0.64,20,0.6,true,0.2,1,true],
-	[10,55,0.8,20,0.3,true,0.4,1,true],
-	[45,10,1,20,0.7,true,0.2,1,true],
-	[20,40,1,20,0.8,false,0.8,5,true],
-	[16,45,0.4,20,0.94,false,1.1,60,true],
-	[25,10,1,20,0.7,true,0.3,1,true],
-	[45,10,0.4,20,0.7,true,0.7,1,true],
-	[15,50,0.1,20,0.8,true,1.9,1,true],
-	[25,25,0.1,20,0.8,true,1.7,1,true],
-	[30,540,10,20,0.4,true,0,1,true]
+	[28,45.4,0.45,27,0.8,false,1,1,true,10],
+	[23,56,0.36,31,0.8,false,1.7,1,true,10],
+	[20,51,0.41,20,0.85,false,5,1,false,10],
+	[10,86,0.26,31,0.8,false,1.6,1,true,10],
+	[10,84,0.23,31,0.8,false,1.4,1,true,10],
+	[28,70,0.075,28,0.8,false,9,1,true,10],
+	[26,49,0.2,20,0.75,false,0.6,1,false,10],
+	[44,65,0.8,20,0.75,false,0.8,1,false,10],
+	[16,56,0.25,17,0.76,false,0.8,1,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[0,0,0,0,0,false,1,0,true,10],
+	[36.5,72.8,1,20,0.6,false,0,1,true,6],
+	[15.1,72.8,0.6,20,0.7,true,0,1,true,6],
+	[20,40,0.15,20,0.7,true,0.7,1,true,6],
+	[25,50,0.64,20,0.6,true,0.1,1,true,6],
+	[25,10,1,5,0.7,true,0.2,1,true,4],
+	[25,50,1,20,0.7,true,0.1,1,true,3],
+	[25,29,0.1,20,0.8,true,1,1,true,6],
+	[21.5,43,0.3,20,0.6,true,0.5,1,true,6],
+	[35,60,1,20,0.7,true,0.1,1,true,3],
+	[22.5,45,1,20,0.7,true,0.8,1,true,3],
+	[25,50,1,20,0.7,true,0.1,27,true,3],
+	[15,30,0.64,20,0.6,true,0.2,1,true,3],
+	[10,55,0.8,20,0.3,true,0.4,1,true,6],
+	[45,10,1,20,0.7,true,0.2,1,true,4],
+	[20,40,1,20,0.8,false,0.8,5,true,3],
+	[16,45,0.4,20,0.94,false,1.1,60,true,3],
+	[25,10,1,20,0.7,true,0.3,1,true,3],
+	[45,10,0.4,20,0.7,true,0.7,1,true,4],
+	[15,50,0.1,20,0.8,true,1.9,1,true,6],
+	[25,25,0.1,20,0.8,true,1.7,1,true,6],
+	[30,540,10,20,0.4,true,0,1,true,3]
 ];
 
 var diaMouths = [
@@ -1687,8 +1688,8 @@ var selectedBg = 0;
 var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
 var charInfoHeight = 40;
 var diaInfoHeight = 20;
-var charStateNames = ['', 'Dead', 'Being Recovered', 'Death On Impact & Movement From String', 'Movement From String', 'Death On Impact', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
-var charStateNamesShort = ['', 'D', 'BR', 'D&M', 'MFS', 'DOI', 'C', '', 'NPC', 'R', 'P'];
+var charStateNames = ['', 'Dead', 'Being Recovered', 'Deadly & Moving', 'Moving', 'Deadly', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
+var charStateNamesShort = ['', 'D', 'BR', 'D&M', 'M', 'D', 'C', '', 'NPC', 'R', 'P'];
 var charDropdown = -1;
 var charDropdownMS = -1;
 var charDropdownType;
@@ -2215,7 +2216,7 @@ function playGame() {
 	menuScreen = 0;
 	musicSound.play();
 	musicSound.loop = true;
-	toggleSound();
+	// toggleSound();
 }
 
 function testLevelCreator() {
@@ -2464,7 +2465,7 @@ function drawMenu() {
 	ctx.textBaseline = 'bottom';
 	ctx.textAlign = 'left';
 	ctx.font = '20px Helvetica';
-	ctx.fillText('beta 4.1.0', 5, cheight);
+	ctx.fillText('beta 4.1.1', 5, cheight);
 
 	drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatch);
 	if (showingNewGame2) {
@@ -2730,7 +2731,11 @@ function resetLevel() {
 		recoverTimer = 0;
 		levelTimer2 = getTimer();
 		if (char[0].charState <= 9)  changeControl();
-		currentLevelDisplayName = (currentLevel + 1).toString(10).padStart(3, '0') + '. ' + levelName[currentLevel];
+		if (currentLevel > 99) {
+			currentLevelDisplayName = 'B' + (currentLevel - 99).toString(10).padStart(2, '0') + '. ' + levelName[currentLevel];
+		} else {
+			currentLevelDisplayName = (currentLevel + 1).toString(10).padStart(3, '0') + '. ' + levelName[currentLevel];
+		}
 	}
 	doorLightFade = new Array(charCount2).fill(0);
 	doorLightFadeDire = new Array(charCount2).fill(0);
@@ -2822,7 +2827,7 @@ function resetMyLevel() {
 	recoverTimer = 0;
 	levelTimer2 = getTimer();
 	if (char[0].charState <= 9)  changeControl();
-	currentLevelDisplayName = 'My level';
+	currentLevelDisplayName = myLevelInfo.name;
 }
 
 function copyLevel(thatLevel) {
@@ -4881,6 +4886,21 @@ function drawLCChars() {
 }
 
 function resetLCChar(i) {
+	if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) {
+		if (char[i].charState != 3 && char[i].charState != 4) {
+			while (myLevelChars[i].length < 6) {
+				myLevelChars[i].push([]);
+			}
+			myLevelChars[i][4] = 10;
+			myLevelChars[i][5] = [[3,1],[2,1]];
+			char[i].speed = myLevelChars[i][4];
+			char[i].motionString = generateMS(i);
+		}
+	} else {
+		while (myLevelChars[i].length > 4) {
+			myLevelChars[i].pop();
+		}
+	}
 	var _loc2_ = myLevelChars[i][0];
 	char[i].id = _loc2_;
 	char[i].x = char[i].px = +myLevelChars[i][1].toFixed(2) * 30;
@@ -4909,7 +4929,7 @@ function copyLevelString() {
 	}
 
 	var lcLevelString = '\r\n';
-	lcLevelString += myLevelInfo.name + '\r\n';
+	lcLevelString += myLevelInfo.name==''?'Untitled level':myLevelInfo.name + '\r\n';
 	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + char.length.toString(10).padStart(2, '0') + ',' + selectedBg.toString(10).padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
 	if (longMode) {
 		for (var y = 0; y < levelHeight; y++) {
@@ -6091,15 +6111,26 @@ function draw() {
 				}
 				addButtonPressed = true;
 			}
+
 			if (charDropdown == -2) charDropdown = -1;
 			if (charDropdown >= 0) {
 				if (charDropdownType == 0) {
-					myLevelChars[charDropdown][0]++;
-					if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
-					while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+					if (_keysDown[16]) {
+						myLevelChars[charDropdown][0]--;
+						if (myLevelChars[charDropdown][0] < 0) myLevelChars[charDropdown][0] = charD.length-1;
+						while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+							myLevelChars[charDropdown][0]--;
+							if (myLevelChars[charDropdown][0] < 0) myLevelChars[charDropdown][0] = charD.length-1;
+						}
+					} else {
 						myLevelChars[charDropdown][0]++;
 						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+						while (charD[myLevelChars[charDropdown][0]][7] == 0) {
+							myLevelChars[charDropdown][0]++;
+							if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+						}
 					}
+					myLevelChars[charDropdown][3] = charD[myLevelChars[charDropdown][0]][9];
 					resetLCChar(charDropdown);
 					charDropdown = -2;
 				} else if (charDropdownType == 1) {
@@ -6117,19 +6148,19 @@ function draw() {
 								ctx.fillStyle = '#000000';
 								if (mouseIsDown && !addButtonPressed) {
 									myLevelChars[charDropdown][3] = i;
-									if (i == 3 || i == 4) {
-										if (char[charDropdown].charState != 3 && char[charDropdown].charState != 4) {
-											while (myLevelChars[charDropdown].length < 6) {
-												myLevelChars[charDropdown].push([]);
-											}
-											myLevelChars[charDropdown][4] = 10;
-											myLevelChars[charDropdown][5] = [[3,1],[2,1]];
-										}
-									} else {
-										while (myLevelChars[charDropdown].length > 4) {
-											myLevelChars[charDropdown].pop();
-										}
-									}
+									// if (i == 3 || i == 4) {
+									// 	if (char[charDropdown].charState != 3 && char[charDropdown].charState != 4) {
+									// 		while (myLevelChars[charDropdown].length < 6) {
+									// 			myLevelChars[charDropdown].push([]);
+									// 		}
+									// 		myLevelChars[charDropdown][4] = 10;
+									// 		myLevelChars[charDropdown][5] = [[3,1],[2,1]];
+									// 	}
+									// } else {
+									// 	while (myLevelChars[charDropdown].length > 4) {
+									// 		myLevelChars[charDropdown].pop();
+									// 	}
+									// }
 								}
 							}
 							ctx.fillText(charStateNames[i], (665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10);
@@ -6141,6 +6172,10 @@ function draw() {
 					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
 					myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
 					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+					if (_keysDown[16]) {
+						myLevelChars[charDropdown][1] = Math.round(myLevelChars[charDropdown][1]*2) / 2;
+						myLevelChars[charDropdown][2] = Math.round(myLevelChars[charDropdown][2]*2) / 2;
+					}
 					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
 					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
 				} else if (charDropdownType == 3) {
