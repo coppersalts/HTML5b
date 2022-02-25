@@ -5,9 +5,9 @@
 // TODO: go through all the todo's I've put throughout this file.
 // TODO: rename some functions
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
-// TODO: if possible, cashe some things as bitmaps for better performance.
+// TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.3.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.3.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
