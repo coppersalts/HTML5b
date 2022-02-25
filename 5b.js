@@ -6135,35 +6135,24 @@ function draw() {
 					charDropdown = -2;
 				} else if (charDropdownType == 1) {
 					ctx.fillStyle = '#ffffff';
-					ctx.fillRect((665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight, charInfoHeight*1.5, 70);
+					var textSize = 12.5;
+					ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight, charInfoHeight*3.5, textSize*7);
 					ctx.textBaseline = 'top';
-					ctx.font = '10px Helvetica';
+					ctx.textAlign = 'right';
+					ctx.font = textSize + 'px Helvetica';
 					ctx.fillStyle = '#000000';
 					var j = 0;
 					for (var i = 3; i < charStateNames.length; i++) {
 						if (charStateNames[i] != '') {
-							if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10, charInfoHeight*1.5, 10)) {
+							if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize)) {
 								ctx.fillStyle = '#dddddd';
-								ctx.fillRect((665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10, charInfoHeight*1.5, 10);
+								ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize);
 								ctx.fillStyle = '#000000';
 								if (mouseIsDown && !addButtonPressed) {
 									myLevelChars[charDropdown][3] = i;
-									// if (i == 3 || i == 4) {
-									// 	if (char[charDropdown].charState != 3 && char[charDropdown].charState != 4) {
-									// 		while (myLevelChars[charDropdown].length < 6) {
-									// 			myLevelChars[charDropdown].push([]);
-									// 		}
-									// 		myLevelChars[charDropdown][4] = 10;
-									// 		myLevelChars[charDropdown][5] = [[3,1],[2,1]];
-									// 	}
-									// } else {
-									// 	while (myLevelChars[charDropdown].length > 4) {
-									// 		myLevelChars[charDropdown].pop();
-									// 	}
-									// }
 								}
 							}
-							ctx.fillText(charStateNames[i], (665+240)-charInfoHeight*1.5, charDropdownY + charInfoHeight + j*10);
+							ctx.fillText(charStateNames[i], 665+240-1, charDropdownY + charInfoHeight + j*textSize);
 							j++;
 						}
 					}
