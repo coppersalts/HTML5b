@@ -14,6 +14,7 @@ var ctx;
 const cwidth = 960;
 const cheight = 540;
 const pixelRatio = window.devicePixelRatio;
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 // offscreen canvases
 var osc1, osctx1;
@@ -5350,7 +5351,8 @@ function setup() {
 	window.addEventListener('keydown', keydown);
 	window.addEventListener('keyup', keyup);
 
-	setInterval(draw, 17);  // TODO: find out how to use fps over millis
+	// setInterval(draw, 17);
+	requestAnimationFrame(draw);
 }
 
 function draw() {
@@ -6675,4 +6677,7 @@ function draw() {
 	pmouseIsDown = mouseIsDown;
 	_pxmouse = _xmouse;
 	_pymouse = _ymouse;
+
+
+	requestAnimationFrame(draw);
 }
