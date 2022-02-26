@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.4.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.4.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1749,7 +1749,7 @@ var myLevel;
 var myLevelChars;
 var myLevelDialogue;
 var myLevelInfo;
-var myLevelNecesarryDeaths;
+var myLevelNecessaryDeaths;
 var scale = 20;
 var tool = 0;
 var selectedTile = 0;
@@ -2129,6 +2129,13 @@ function playGame() {
 
 function testLevelCreator() {
 	if (myLevelChars.length > 0) {
+		if (myLevelDialogue.length == 0) {
+			for (var i = 0; i < myLevel[1].length; i++) {
+				for (var j = 0; j < myLevel[1][i].length; j++) {
+					if (myLevel[1][i][j] == 8) myLevel[1][i][j] = 0;
+				}
+			}
+		}
 		playMode = 2;
 		currentLevel = -1;
 		wipeTimer = 30;
@@ -3280,7 +3287,7 @@ function getTileDepths() {
 	}
 }
 // draws a tile
-// TODO: precalculate a this stuff and only do the drawing in here. Unless it's actually all necesarry. Then you can just leave it.
+// TODO: precalculate a this stuff and only do the drawing in here. Unless it's actually all necessary. Then you can just leave it.
 function addTileMovieClip(x, y, context) {
 	var _loc5_ = thisLevel[y][x];
 	if (blockProperties[_loc5_][16] > 0) {
@@ -4277,7 +4284,7 @@ function resetLevelCreator() {
 	tool = 0;
 	levelHeight = 18;
 	clearMyWholeLevel();
-	myLevelNecesarryDeaths = 0;
+	myLevelNecessaryDeaths = 0;
 	charDropdown = -1;
 	charsTabScrollBar = 0;
 	tileTabScrollBar = 0;
@@ -4914,7 +4921,7 @@ function copyLevelString() {
 	for (var i = 0; i < myLevelDialogue.length; i++) {
 		lcLevelString += myLevelDialogue[i].char.toString(10).padStart(2, '0') + (myLevelDialogue[i].face==2?'H':'S') + ' ' + myLevelDialogue[i].text + '\r\n';
 	}
-	lcLevelString += myLevelNecesarryDeaths.toString(10).padStart(6, '0') + '\r\n';
+	lcLevelString += myLevelNecessaryDeaths.toString(10).padStart(6, '0') + '\r\n';
 
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
 	console.log(lcLevelString);
@@ -5033,7 +5040,7 @@ function readLevelString() {
 		}
 		i += myLevelDialogue.length;
 
-		myLevelNecesarryDeaths = parseInt(lines[i]);
+		myLevelNecessaryDeaths = parseInt(lines[i]);
 
 		levelTimer = 0;
 	});
@@ -6433,25 +6440,25 @@ function draw() {
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'top';
 			ctx.font = '25px Helvetica';
-			ctx.fillText('Necesarry Deaths:', 660 + (cwidth-660)/2, tabWindowY + 220);
-			var necesarryDeathsW = 100;
+			ctx.fillText('Necessary Deaths:', 660 + (cwidth-660)/2, tabWindowY + 220);
+			var necessaryDeathsW = 100;
 			ctx.fillStyle = '#808080';
-			ctx.fillRect(660 + ((cwidth-660)-necesarryDeathsW)/2, tabWindowY + 250, necesarryDeathsW, 25);
+			ctx.fillRect(660 + ((cwidth-660)-necessaryDeathsW)/2, tabWindowY + 250, necessaryDeathsW, 25);
 			ctx.fillStyle = '#ee3333';
-			ctx.fillRect(660 + (cwidth-660-necesarryDeathsW)/2 - 35, tabWindowY + 250, 25, 25);
-			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necesarryDeathsW)/2 + 10, tabWindowY + 250, 25, 25) && myLevelNecesarryDeaths < 999999) {
-				if (mouseIsDown && !pmouseIsDown) myLevelNecesarryDeaths++;
+			ctx.fillRect(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 25);
+			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths < 999999) {
+				if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
 			}
 			ctx.fillStyle = '#33ee33';
-			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necesarryDeathsW)/2 - 35, tabWindowY + 250, 25, 25) && myLevelNecesarryDeaths > 0) {
-				if (mouseIsDown && !pmouseIsDown) myLevelNecesarryDeaths--;
+			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths > 0) {
+				if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
 			}
-			ctx.fillRect(660 + (cwidth-660+necesarryDeathsW)/2 + 10, tabWindowY + 250, 25, 25);
+			ctx.fillRect(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 25);
 
 			ctx.fillStyle = '#ffffff';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'top';
-			ctx.fillText(myLevelNecesarryDeaths.toString(10).padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
+			ctx.fillText(myLevelNecessaryDeaths.toString(10).padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
 		}
 
 
