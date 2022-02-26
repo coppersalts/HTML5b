@@ -1869,12 +1869,14 @@ var musicSound = new Audio('data/music hq.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
 
+// Creates an image object was a base64 src.
 function createImage(base64) {
 	var img = new Image();
 	img.src = base64;
 	return img;
 }
 
+// Gets the viewbox of an svg from its base64 encoding.
 function getVB(base64) {
 	let svgString = atob(base64.split(',')[1]);
 	let doc = new DOMParser();
@@ -1995,7 +1997,9 @@ async function loadingScreen() {
 }
 
 
-
+window.onload = function() {
+	loadingScreen();
+}
 
 
 
@@ -6499,6 +6503,7 @@ function draw() {
 					if (mouseIsDown && !pmouseIsDown) {
 						if (i < 8) {
 							setTool(i);
+							selectedTab = 2;
 							if ((tool == 2 || tool == 3) && blockProperties[selectedTile][9]) {
 								setSelectedTile(0);
 							}
@@ -6552,7 +6557,7 @@ function draw() {
 			}
 		}
 		if (LCRect[0] != -1) drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
-		
+
 		if (selectedTab == 2 && mouseOnGrid()) {
 			if (tool == 6) {
 				// levelCreator.rectSelect.clear();
@@ -6629,6 +6634,9 @@ function draw() {
 				if (controlOrCommandPress && _keysDown[86]) {
 					lcPopUp = false;
 					_keysDown[86] = false; // this is kinda hacky
+					// I just looked back at this and what the hell?
+					// Whatever. I'll probably be able to get rid of this
+					// when I add an actual text box to the screen.
 					readLevelString();
 				}
 			}
