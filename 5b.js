@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.4.2'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.4.3'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -5185,110 +5185,112 @@ function mousedown(event){
 			// 	}
 			// }
 		} else {
-			if (tool != 4) {
-				setUndo();
-			}
-			var _loc10_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-			var _loc9_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-			if (mouseOnScreen()) {
-				if (tool == 2 || tool == 5 && !copied) {
-					LCRect[0] = LCRect[2] = Math.min(Math.max(_loc10_,0),levelWidth - 1);
-					LCRect[1] = LCRect[3] = Math.min(Math.max(_loc9_,0),levelHeight - 1);
+			if (selectedTab == 2) {
+				if (tool != 4) {
+					setUndo();
 				}
-			}
-			if (mouseOnGrid()) {
-				if (tool == 3) {
-					if (!blockProperties[selectedTile][9]) {
-						var _loc11_ = myLevel[1][_loc9_][_loc10_];
-						fillTile(_loc10_,_loc9_,selectedTile,_loc11_);
-					} else {
+				var _loc10_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+				var _loc9_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+				if (mouseOnScreen()) {
+					if (tool == 2 || tool == 5 && !copied) {
+						LCRect[0] = LCRect[2] = Math.min(Math.max(_loc10_,0),levelWidth - 1);
+						LCRect[1] = LCRect[3] = Math.min(Math.max(_loc9_,0),levelHeight - 1);
+					}
+				}
+				if (mouseOnGrid()) {
+					if (tool == 3) {
+						if (!blockProperties[selectedTile][9]) {
+							var _loc11_ = myLevel[1][_loc9_][_loc10_];
+							fillTile(_loc10_,_loc9_,selectedTile,_loc11_);
+						} else {
+							setTool(0);
+						}
+					} else if (tool == 4) {
+						selectedTab = 2;
 						setTool(0);
-					}
-				} else if (tool == 4) {
-					selectedTab = 2;
-					setTool(0);
-					setSelectedTile(myLevel[1][_loc9_][_loc10_]);
-				} else if (tool == 5) {
-					if (copied) {
-						for (var i = 0; i < tileClipboard.length && _loc9_+i < levelHeight; i++) {
-							for (var j = 0; j < tileClipboard[i].length && _loc10_+j < levelWidth; j++) {
-								var testTile = tileClipboard[i][j];
-								if (testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][_loc9_+i][_loc10_+j] = testTile;
-							}
-						}
-					}
-					// selectedTab = 2;
-					// setTool(0);
-					// setSelectedTile(myLevel[1][_loc9_][_loc10_]);
-				} else if (tool == 6) {
-					var _loc5_ = 0;
-					if (closeToEdgeY() || levelHeight >= 2) {
-						if (closeToEdgeY()) {
-							_loc5_ = 1;
-						} else {
-							_loc5_ = -1;
-						}
-						removeLCTiles();
-						var _loc7_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-						levelHeight += _loc5_;
-						myLevel[1] = new Array(levelHeight);
-						var _loc4_ = 0;
-						for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-							if (_loc2_ < _loc7_) {
-								_loc4_ = _loc2_;
-							} else {
-								_loc4_ = Math.max(_loc2_ - _loc5_,0);
-							}
-							myLevel[1][_loc2_] = new Array(levelWidth);
-							for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-								myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc4_][_loc1_];
-							}
-						}
-						for (var i = 0; i < myLevelChars.length; i++) {
-							if (myLevelChars[i][2] > _loc7_) {
-								myLevelChars[i][2] += _loc5_;
-								resetCharPositions();
-								// char[i].y += _loc5_ * 30;
-							}
-						}
-						setCoinAndDoorPos();
-						// drawLCGrid();
-					}
-				} else if (tool == 7) {
-					var _loc6_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
-					_loc5_ = 0;
-					if (closeToEdgeX() || levelWidth >= 2) {
-						if (closeToEdgeX()) {
-							_loc5_ = 1;
-						} else {
-							_loc5_ = -1;
-						}
-						removeLCTiles();
-						_loc6_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-						levelWidth += _loc5_;
-						myLevel[1] = new Array(levelHeight);
-						var _loc3_ = 0;
-						for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-							myLevel[1][_loc2_] = new Array(levelWidth);
-							_loc1_ = 0;
-							for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-								if(_loc1_ < _loc6_) {
-									_loc3_ = _loc1_;
-								} else {
-									_loc3_ = Math.max(_loc1_ - _loc5_,0);
+						setSelectedTile(myLevel[1][_loc9_][_loc10_]);
+					} else if (tool == 5) {
+						if (copied) {
+							for (var i = 0; i < tileClipboard.length && _loc9_+i < levelHeight; i++) {
+								for (var j = 0; j < tileClipboard[i].length && _loc10_+j < levelWidth; j++) {
+									var testTile = tileClipboard[i][j];
+									if (testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][_loc9_+i][_loc10_+j] = testTile;
 								}
-								myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc2_][_loc3_];
 							}
 						}
-						for (var i = 0; i < myLevelChars.length; i++) {
-							if (myLevelChars[i][1] > _loc6_) {
-								myLevelChars[i][1] += _loc5_;
-								resetCharPositions();
-								// char[i].x += _loc5_ * 30;
+						// selectedTab = 2;
+						// setTool(0);
+						// setSelectedTile(myLevel[1][_loc9_][_loc10_]);
+					} else if (tool == 6) {
+						var _loc5_ = 0;
+						if (closeToEdgeY() || levelHeight >= 2) {
+							if (closeToEdgeY()) {
+								_loc5_ = 1;
+							} else {
+								_loc5_ = -1;
 							}
+							removeLCTiles();
+							var _loc7_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+							levelHeight += _loc5_;
+							myLevel[1] = new Array(levelHeight);
+							var _loc4_ = 0;
+							for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
+								if (_loc2_ < _loc7_) {
+									_loc4_ = _loc2_;
+								} else {
+									_loc4_ = Math.max(_loc2_ - _loc5_,0);
+								}
+								myLevel[1][_loc2_] = new Array(levelWidth);
+								for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
+									myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc4_][_loc1_];
+								}
+							}
+							for (var i = 0; i < myLevelChars.length; i++) {
+								if (myLevelChars[i][2] > _loc7_) {
+									myLevelChars[i][2] += _loc5_;
+									resetCharPositions();
+									// char[i].y += _loc5_ * 30;
+								}
+							}
+							setCoinAndDoorPos();
+							// drawLCGrid();
 						}
-						setCoinAndDoorPos();
-						// drawLCGrid();
+					} else if (tool == 7) {
+						var _loc6_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
+						_loc5_ = 0;
+						if (closeToEdgeX() || levelWidth >= 2) {
+							if (closeToEdgeX()) {
+								_loc5_ = 1;
+							} else {
+								_loc5_ = -1;
+							}
+							removeLCTiles();
+							_loc6_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+							levelWidth += _loc5_;
+							myLevel[1] = new Array(levelHeight);
+							var _loc3_ = 0;
+							for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
+								myLevel[1][_loc2_] = new Array(levelWidth);
+								_loc1_ = 0;
+								for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
+									if(_loc1_ < _loc6_) {
+										_loc3_ = _loc1_;
+									} else {
+										_loc3_ = Math.max(_loc1_ - _loc5_,0);
+									}
+									myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc2_][_loc3_];
+								}
+							}
+							for (var i = 0; i < myLevelChars.length; i++) {
+								if (myLevelChars[i][1] > _loc6_) {
+									myLevelChars[i][1] += _loc5_;
+									resetCharPositions();
+									// char[i].x += _loc5_ * 30;
+								}
+							}
+							setCoinAndDoorPos();
+							// drawLCGrid();
+						}
 					}
 				}
 			}
@@ -6550,7 +6552,8 @@ function draw() {
 			}
 		}
 		if (LCRect[0] != -1) drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
-		if (mouseOnGrid()) {
+		
+		if (selectedTab == 2 && mouseOnGrid()) {
 			if (tool == 6) {
 				// levelCreator.rectSelect.clear();
 				var _loc13_;
