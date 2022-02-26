@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.4.5'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.5.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -4351,7 +4351,7 @@ function drawLCTiles() {
 				var mouseGridY = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
 				if (_loc1_ >= mouseGridX && _loc1_ < mouseGridX + tileClipboard[0].length && _loc2_ >= mouseGridY && _loc2_ < mouseGridY + tileClipboard.length) {
 					clipboardTileCandidate = tileClipboard[_loc2_ - mouseGridY][_loc1_ - mouseGridX];
-					if (clipboardTileCandidate != 0) {
+					if ( !(_keysDown[18] && tile != 0) && clipboardTileCandidate != 0) {
 						tile = clipboardTileCandidate;
 						ctx.globalAlpha = 0.5;
 					}
@@ -5262,7 +5262,7 @@ function mousedown(event){
 							for (var i = 0; i < tileClipboard.length && _loc9_+i < levelHeight; i++) {
 								for (var j = 0; j < tileClipboard[i].length && _loc10_+j < levelWidth; j++) {
 									var testTile = tileClipboard[i][j];
-									if (testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][_loc9_+i][_loc10_+j] = testTile;
+									if (!(_keysDown[18] && myLevel[1][_loc9_+i][_loc10_+j] != 0) && testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][_loc9_+i][_loc10_+j] = testTile;
 								}
 							}
 						}
