@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.4.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.4.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -5116,6 +5116,11 @@ function mousedown(event){
 	mouseIsDown = true;
 	lastClickX = _xmouse;
 	lastClickY = _ymouse;
+	if (onRect(_xmouse, _ymouse, 0, 0, cwidth, cheight)) {
+		document.getElementById('bottomtext').setAttribute('class', 'unselectable');
+	} else {
+		document.getElementById('bottomtext').removeAttribute('class');
+	}
 
 	if (menuScreen == 5) {
 		if (_xmouse > 660) {
