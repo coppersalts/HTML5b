@@ -1132,13 +1132,17 @@ async function getBase64(path, type) {
 		let req = new XMLHttpRequest();
 		req.open('GET', path);
 		req.setRequestHeader('Content-Type', type);
-		req.responseType = 'blob';
-		req.onload = function() {
-			var reader = new FileReader();
-			reader.onloadend = function() {
-				resolve(reader.result);
+		if (type != 'image/svg+xml') req.responseType = 'blob';
+		req.onload = (event) => {
+			if (type == 'image/svg+xml') {
+				resolve('data:' + type + ';base64,' + btoa(event.target.responseText.replace(/\r\n|\n|\r/gm, '')));
+			} else {
+				let reader = new FileReader();
+				reader.onloadend = function() {
+					resolve(reader.result);
+				}
+				reader.readAsDataURL(req.response);
 			}
-			reader.readAsDataURL(req.response);
 		}
 		req.onerror = reject;
 		req.send();
