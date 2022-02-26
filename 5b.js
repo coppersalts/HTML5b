@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.4.4'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.4.5'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -6298,7 +6298,7 @@ function draw() {
 							ctx.drawImage(img, tlx + vb[0]*sc, tly + vb[1]*sc, vb[2]*sc, vb[3]*sc);
 						} else {
 							var sc = bs/vb[2];
-							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, vb[2]*sc, vb[3]*sc);
+							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist - vb[2]*sc/2 + bs/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - vb[3]*sc/2 + bs/2, vb[2]*sc, vb[3]*sc);
 						}
 					}
 					j++;
@@ -6497,17 +6497,15 @@ function draw() {
 			ctx.fillStyle = '#808080';
 			ctx.fillRect(660 + ((cwidth-660)-necessaryDeathsW)/2, tabWindowY + 250, necessaryDeathsW, 25);
 			// ctx.fillStyle = '#ee3333';
-			// ctx.fillRect(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 25);
 			drawMinusButton(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 3);
 			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths < 999999) {
 				if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
 			}
 			// ctx.fillStyle = '#33ee33';
+			drawAddButton(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 3);
 			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths > 0) {
 				if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
 			}
-			drawAddButton(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 3);
-			// ctx.fillRect(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 25);
 
 			ctx.fillStyle = '#ffffff';
 			ctx.textAlign = 'center';
