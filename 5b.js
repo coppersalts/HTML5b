@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.3.3'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.4.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -114,12 +114,15 @@ var white_alpha = 0;
 function getTimer() {
 	return _frameCount / 0.06;
 }
+
 function charAt(j) {
 	return levelsString.charCodeAt(j + levelStart) - 48;
 }
+
 function charAt2(j) {
 	return levelsString.charAt(j + levelStart);
 }
+
 function tileAt(j, i, y) {
 	var _loc1_ = levelsString.charCodeAt(j + levelStart);
 	if (_loc1_ == 8364) return 93;
@@ -1745,6 +1748,7 @@ var myLevel;
 var myLevelChars;
 var myLevelDialogue;
 var myLevelInfo;
+var myLevelNecesarryDeaths;
 var scale = 20;
 var tool = 0;
 var selectedTile = 0;
@@ -4272,6 +4276,7 @@ function resetLevelCreator() {
 	tool = 0;
 	levelHeight = 18;
 	clearMyWholeLevel();
+	myLevelNecesarryDeaths = 0;
 	charDropdown = -1;
 	charsTabScrollBar = 0;
 	tileTabScrollBar = 0;
@@ -4908,7 +4913,7 @@ function copyLevelString() {
 	for (var i = 0; i < myLevelDialogue.length; i++) {
 		lcLevelString += myLevelDialogue[i].char.toString(10).padStart(2, '0') + (myLevelDialogue[i].face==2?'H':'S') + ' ' + myLevelDialogue[i].text + '\r\n';
 	}
-	lcLevelString += '000000\r\n';
+	lcLevelString += myLevelNecesarryDeaths.toString(10).padStart(6, '0') + '\r\n';
 
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
 	console.log(lcLevelString);
@@ -5027,7 +5032,7 @@ function readLevelString() {
 		}
 		i += myLevelDialogue.length;
 
-		// necesarryDeaths = parseInt(lines[i]);
+		myLevelNecesarryDeaths = parseInt(lines[i]);
 
 		levelTimer = 0;
 	});
@@ -6413,10 +6418,33 @@ function draw() {
 			ctx.fillStyle = '#33ee33';
 			ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 5) {
-			drawMenu0Button('COPY LEVEL',673, (selectedTab+1)*tabHeight + 10, 11, false, copyLevelString);
-			drawMenu0Button('LOAD LEVEL',673, (selectedTab+1)*tabHeight + 60, 14, false, openLevelLoader);
-			drawMenu0Button('TEST LEVEL',673, (selectedTab+1)*tabHeight + 110, 10, false, testLevelCreator);
-			drawMenu0Button('EXIT',673, (selectedTab+1)*tabHeight + 160, 15, false, menuExitLevelCreator);
+			drawMenu0Button('COPY LEVEL',673, tabWindowY + 10, 11, false, copyLevelString);
+			drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
+			drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
+			drawMenu0Button('EXIT',673, tabWindowY + 160, 15, false, menuExitLevelCreator);
+			ctx.fillStyle = '#000000';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'top';
+			ctx.font = '25px Helvetica';
+			ctx.fillText('Necesarry Deaths:', 660 + (cwidth-660)/2, tabWindowY + 220);
+			var necesarryDeathsW = 100;
+			ctx.fillStyle = '#808080';
+			ctx.fillRect(660 + ((cwidth-660)-necesarryDeathsW)/2, tabWindowY + 250, necesarryDeathsW, 25);
+			ctx.fillStyle = '#ee3333';
+			ctx.fillRect(660 + (cwidth-660-necesarryDeathsW)/2 - 35, tabWindowY + 250, 25, 25);
+			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necesarryDeathsW)/2 + 10, tabWindowY + 250, 25, 25) && myLevelNecesarryDeaths < 999999) {
+				if (mouseIsDown && !pmouseIsDown) myLevelNecesarryDeaths++;
+			}
+			ctx.fillStyle = '#33ee33';
+			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necesarryDeathsW)/2 - 35, tabWindowY + 250, 25, 25) && myLevelNecesarryDeaths > 0) {
+				if (mouseIsDown && !pmouseIsDown) myLevelNecesarryDeaths--;
+			}
+			ctx.fillRect(660 + (cwidth-660+necesarryDeathsW)/2 + 10, tabWindowY + 250, 25, 25);
+
+			ctx.fillStyle = '#ffffff';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'top';
+			ctx.fillText(myLevelNecesarryDeaths.toString(10).padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
 		}
 
 
