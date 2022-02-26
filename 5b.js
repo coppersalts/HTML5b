@@ -1860,58 +1860,22 @@ var menu2_3ButtonClicked = -1;
 var levelButtonClicked = -1;
 var showingNewGame2 = false;
 
-var loadedResources = 0;
-var lastLoadTime;
-var totalResources = 1993;
-var progressBarW;
-var progressBarH;
-var progressBarPad;
-
 var musicSound = new Audio('data/music hq.wav');
-musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
+// musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
-function initImage(src) {
-	let img = new Image();
-	img.onload = incrementCounter;
-	img.src = src;
+
+function createImage(base64) {
+	var img = new Image();
+	img.src = base64;
 	return img;
 }
 
-function loadVB(src) {
-	return new Promise((resolve, reject) => {
-		let req = new XMLHttpRequest();
-		req.open('GET', src);
-		req.setRequestHeader('Content-Type', 'image/svg+xml');
-		req.onload = (event) => {
-			let response = event.target.responseText;
-			let doc = new DOMParser();
-			let xml = doc.parseFromString(response, 'image/svg+xml');
-			let svg = xml.getElementsByTagName('svg')[0];
-			resolve(svg.getAttribute('viewBox').split(' ').map(Number));
-			incrementCounter();
-		}
-		req.onerror = reject;
-		req.send();
-	});
-}
-
-function drawLoadingScreen(total, progress, w, h, pad) {
-	ctx.fillRect((cwidth-w+pad)/2, (cheight+pad)/2, mapRange(progress, 0, total, 0, w-pad), h-pad);
-}
-
-function incrementCounter() {
-	loadedResources++;
-	var thisLoadTime = performance.now();
-	// console.log(loadedResources);
-	if (thisLoadTime - lastLoadTime > 50) {
-		lastLoadTime = thisLoadTime;
-		drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
-	}
-	if (loadedResources == totalResources) {
-		console.log(loadedResources);
-		console.log('all resources have been loaded');
-		setup();
-	}
+function getVB(base64) {
+	let svgString = atob(base64.split(',')[1]);
+	let doc = new DOMParser();
+	let xml = doc.parseFromString(svgString, 'image/svg+xml');
+	let svg = xml.getElementsByTagName('svg')[0];
+	return svg.getAttribute('viewBox').split(' ').map(Number);
 }
 
 async function loadingScreen() {
@@ -1933,14 +1897,7 @@ async function loadingScreen() {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.font = '30px Helvetica';
-	ctx.fillText('Loading Resources...', cwidth/2, cheight*0.4);
-	progressBarW = cwidth*0.6;
-	progressBarH = 40;
-	progressBarPad = 15;
-	ctx.strokeStyle = '#000000';
-	ctx.lineWidth = 2;
-	ctx.strokeRect((cwidth-progressBarW)/2, cheight/2, progressBarW, progressBarH);
-	ctx.fillStyle = '#4cccb3';
+	ctx.fillText('Loading...', cwidth / 2, cheight / 2);
 
 	// I don't know why I put these with the resource loading code, but whatever.
 	menu2_3Buttons.push(new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'));
@@ -1953,83 +1910,83 @@ async function loadingScreen() {
 	levelsString = text;
 	loadLevels();
 
-	lastLoadTime = performance.now();
-	svgCSBubble = initImage('visuals/ui/csbubble/dia.svg');
-	svgHPRCCrank = initImage('visuals/entities/e0035crank.svg');
-	svgCoin = initImage('visuals/wintoken.svg');
-	svgIceCubeMelt = initImage('visuals/effects/icecubemelt.svg');
+	var req = await fetch('data/images.json');
+	var resourceData = await req.text();
+	resourceData = JSON.parse(resourceData);
+
+	svgCSBubble = createImage(resourceData['ui/csbubble/dia.svg']);
+	svgHPRCCrank = createImage(resourceData['entities/e0035crank.svg']);
+	svgCoin = createImage(resourceData['wintoken.svg']);
+	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
+	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
 	for (var i = 0; i < imgBgs.length; i++) {
-		imgBgs[i] = initImage('visuals/bg/bg' + i.toString(10).padStart(4, '0') + '.png');
-		// loadedResources++;
-		// drawLoadingScreen(totalResources, loadedResources, progressBarW, progressBarH, progressBarPad);
+		imgBgs[i] = createImage(resourceData['bg/bg' + i.toString(10).padStart(4, '0') + '.png']);
 	}
-	for (let i = 0; i < blockProperties.length; i++) {
+	for (var i = 0; i < blockProperties.length; i++) {
 		var id = i.toString(10).padStart(4, '0');
-		// if (blockProperties[i][16] < 1) continue;
 		if (blockProperties[i][16] == 1 || (blockProperties[i][15] && blockProperties[i][16] == 0)) {
-			svgTiles[i] = initImage('visuals/blocks/b' + id + '.svg');
-			loadVB(svgTiles[i].src).then(function(val) {svgTilesVB[i] = val;});
+			svgTiles[i] = createImage(resourceData['blocks/b' + id + '.svg']);
+			svgTilesVB[i] = getVB(svgTiles[i].src);
 		} else if (blockProperties[i][16] > 1) {
 			svgTiles[i] = new Array(blockProperties[i][16]);
 			svgTilesVB[i] = new Array(blockProperties[i][16]);
-			for (let j = 0; j < svgTiles[i].length; j++) {
-				svgTiles[i][j] = initImage('visuals/blocks/b' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg');
-				loadVB(svgTiles[i][j].src).then(function(val) {svgTilesVB[i][j] = val;});
+			for (var j = 0; j < svgTiles[i].length; j++) {
+				svgTiles[i][j] = createImage(resourceData['blocks/b' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg']);
+				svgTilesVB[i][j] = getVB(svgTiles[i][j].src);
 			}
 		}
 	}
 	for (var i = 0; i < svgLevers.length; i++) {
-		var filename = 'visuals/blocks/b' + i.toString(10).padStart(2, '0') + 'lever.svg';
-			svgLevers[i] = initImage(filename);
+		svgLevers[i] = createImage(resourceData['blocks/b' + i.toString(10).padStart(2, '0') + 'lever.svg']);
 	}
 	for (var i = 0; i < svgShadows.length; i++) {
-		svgShadows[i] = initImage('visuals/shadows/s' + i.toString(10).padStart(4, '0') + '.svg');
+		svgShadows[i] = createImage(resourceData['shadows/s' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgTileBorders.length; i++) {
-		svgTileBorders[i] = initImage('visuals/borders/tb' + i.toString(10).padStart(4, '0') + '.svg');
+		svgTileBorders[i] = createImage(resourceData['borders/tb' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < charD.length; i++) {
 		var id = i.toString(10).padStart(4, '0');
 		if (charD[i][7] < 1) continue;
 		else if (charD[i][7] == 1) {
-			svgChars[i] = initImage('visuals/entities/e' + id + '.svg');
-			loadVB(svgChars[i].src).then(function(val) {svgCharsVB[i] = val;});
+			svgChars[i] = createImage(resourceData['entities/e' + id + '.svg']);
+			svgCharsVB[i] = getVB(svgChars[i].src);
 		} else {
 			svgChars[i] = new Array(charD[i][7]);
 			svgCharsVB[i] = new Array(charD[i][7]);
-			loadedResources++;
 			for (let j = 0; j < svgChars[i].length; j++) {
-				svgChars[i][j] = initImage('visuals/entities/e' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg');
-				loadVB(svgChars[i][j].src).then(function(val) {svgCharsVB[i][j] = val;});
+				svgChars[i][j] = createImage(resourceData['entities/e' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg']);
+				svgCharsVB[i][j] = getVB(svgChars[i][j].src);
 			}
 		}
 	}
 	for (var i = 0; i < svgBodyParts.length; i++) {
-		svgBodyParts[i] = initImage('visuals/bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg');
+		svgBodyParts[i] = createImage(resourceData['bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgHPRCBubble.length; i++) {
-		svgHPRCBubble[i] = initImage('visuals/ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg');
+		svgHPRCBubble[i] = createImage(resourceData['ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgCoinGet.length; i++) {
-		svgCoinGet[i] = initImage('visuals/effects/wtgetf' + i.toString(10).padStart(4, '0') + '.svg');
+		svgCoinGet[i] = createImage(resourceData['effects/wtgetf' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgFire.length; i++) {
-		svgFire[i] = initImage('visuals/effects/fire' + i.toString(10).padStart(4, '0') + '.svg');
+		svgFire[i] = createImage(resourceData['effects/fire' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgBurst.length; i++) {
-		svgBurst[i] = initImage('visuals/effects/burst' + i.toString(10).padStart(4, '0') + '.svg');
+		svgBurst[i] = createImage(resourceData['effects/burst' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgAcidDrop.length; i++) {
-		svgAcidDrop[i] = initImage('visuals/effects/aciddrop' + i.toString(10).padStart(4, '0') + '.svg');
+		svgAcidDrop[i] = createImage(resourceData['effects/aciddrop' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
-	svgMenu0 = initImage('visuals/menu0.svg');
-	svgMenu2 = initImage('visuals/menu2.svg');
-	svgMenu2border = initImage('visuals/menu2border.svg');
-	svgMenu2borderimg = initImage('visuals/brushed metal.jpg');
-	preMenuBG = initImage('visuals/premenubg.png');
+	svgMenu0 = createImage(resourceData['menu0.svg']);
+	svgMenu2 = createImage(resourceData['menu2.svg']);
+	svgMenu2border = createImage(resourceData['menu2border.svg']);
+	svgMenu2borderimg = createImage(resourceData['menu2borderimg.png']);
+	preMenuBG = createImage(resourceData['premenubg.png']);
 	for (var i = 0; i < svgTools.length; i++) {
-		svgTools[i] = initImage('visuals/lc/tool' + i.toString(10).padStart(4, '0') + '.svg');
+		svgTools[i] = createImage(resourceData['lc/tool' + i.toString(10).padStart(4, '0') + '.svg']);
 	}
+	setup();
 }
 
 
