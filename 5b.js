@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.5.2'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.5.3'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -4334,7 +4334,6 @@ function resetLCOSC() {
 	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	setLCBG();
 
-
 	var bgpr = 2;
 	var bgw = 96;
 	var bgh = 54;
@@ -4345,6 +4344,12 @@ function resetLCOSC() {
 	for (var i = 0; i < imgBgs.length; i++) {
 		osctx2.drawImage(imgBgs[i], (bgdist-bgw) + (i%bgpr)*bgdist, (bgdist-bgh) + Math.floor(i/bgpr)*bgdist, bgw, bgh);
 	}
+
+
+	osc3.width = Math.floor(cwidth * pixelRatio);
+	osc3.height = Math.floor(cheight * pixelRatio);
+	osctx3.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	updateLCtiles();
 }
 
 function setLCBG() {
@@ -4373,12 +4378,15 @@ function drawLCGrid() {
 }
 
 function drawLCTiles() {
+	ctx.drawImage(osc3, 0, 0, cwidth, cheight);
+
 	var tlx = 330 - scale * levelWidth / 2;
 	var tly = 240 - scale * levelHeight / 2;
 	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
 		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
 			var tile = myLevel[1][_loc2_][_loc1_];
 			ctx.globalAlpha = 1;
+			var showTile = blockProperties[tile][16] > 1;
 			if (tool == 5 && copied && mouseOnGrid()) {
 				var mouseGridX = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
 				var mouseGridY = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
@@ -4387,29 +4395,31 @@ function drawLCTiles() {
 					if ( !(_keysDown[18] && tile != 0) && clipboardTileCandidate != 0) {
 						tile = clipboardTileCandidate;
 						ctx.globalAlpha = 0.5;
+						showTile = true;
 					}
 				}
 			}
-			if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
-				ctx.save();
-				ctx.translate(tlx + (_loc1_+0.5) * scale, tly + (_loc2_+0.9333) * scale);
-				ctx.rotate(blockProperties[tile][11]<7?-1:1);
-				ctx.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
-				ctx.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
-				ctx.restore();
-			}
-			if (blockProperties[tile][16] > 0) {
+			// if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
+			// 	ctx.save();
+			// 	ctx.translate(tlx + (_loc1_+0.5) * scale, tly + (_loc2_+0.9333) * scale);
+			// 	ctx.rotate(blockProperties[tile][11]<7?-1:1);
+			// 	ctx.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
+			// 	ctx.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
+			// 	ctx.restore();
+			// }
+			if (showTile) {
 				var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
 				var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
 				ctx.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
-			} else if (tile == 6) {
-				ctx.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
-				ctx.fillRect(tlx + (_loc1_-1) * scale, tly + (_loc2_-3) * scale, scale*2, scale*4);
-			} else if (blockProperties[tile][15] && tile > 0) {
-				var img = svgTiles[tile];
-				var vb = svgTilesVB[tile];
-				ctx.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			}
+			// else if (tile == 6) {
+			// 	ctx.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
+			// 	ctx.fillRect(tlx + (_loc1_-1) * scale, tly + (_loc2_-3) * scale, scale*2, scale*4);
+			// } else if (blockProperties[tile][15] && tile > 0) {
+			// 	var img = svgTiles[tile];
+			// 	var vb = svgTilesVB[tile];
+			// 	ctx.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+			// }
 		}
 	}
 	// addLCTiles();
@@ -4474,6 +4484,7 @@ function fillTile(x, y, after, before) {
 		}
 		_loc4_.shift();
 	}
+	updateLCtiles();
 }
 
 function setUndo() {
@@ -4495,6 +4506,7 @@ function undo() {
 	// 	levelCreator.tools.tool9.gotoAndStop(2);
 	// }
 	undid = !undid;
+	updateLCtiles();
 }
 
 function copyRect() {
@@ -4562,6 +4574,7 @@ function closeToEdgeX() {
 
 function removeLCTiles() {
 	console.log('removeLCTiles');
+	// osctx3.clearRect(0, 0, osc3.width, osc3.height);
 	// var _loc2_ = 0;
 	// while(_loc2_ < levelHeight)
 	// {
@@ -4576,18 +4589,54 @@ function removeLCTiles() {
 }
 
 function updateLCtiles() {
-	console.log('updateLCtiles');
+	// console.log('updateLCtiles');
+	scale = Math.min(640 / levelWidth, 460 / levelHeight);
+	osctx3.clearRect(0, 0, osc3.width, osc3.height);
 	// var _loc2_ = 0;
-	// while(_loc2_ < levelHeight)
-	// {
+	// while (_loc2_ < levelHeight) {
 	// 	var _loc1_ = 0;
-	// 	while(_loc1_ < levelWidth)
-	// 	{
-	// 		levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].gotoAndStop(myLevel[1][_loc2_][_loc1_] + 1);
+	// 	while (_loc1_ < levelWidth) {
+	// 		var tile = myLevel[1][_loc2_][_loc1_];
+	// 		if (blockProperties[tile][16] == 1) {
+	// 			//
+	// 		}	
+	// 		// levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].gotoAndStop(myLevel[1][_loc2_][_loc1_] + 1);
 	// 		_loc1_ = _loc1_ + 1;
 	// 	}
 	// 	_loc2_ = _loc2_ + 1;
 	// }
+
+
+	var tlx = 330 - scale * levelWidth / 2;
+	var tly = 240 - scale * levelHeight / 2;
+	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
+		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
+			var tile = myLevel[1][_loc2_][_loc1_];
+			if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
+				osctx3.save();
+				osctx3.translate(tlx + (_loc1_+0.5) * scale, tly + (_loc2_+0.9333) * scale);
+				osctx3.rotate(blockProperties[tile][11]<7?-1:1);
+				osctx3.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
+				osctx3.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
+				osctx3.restore();
+			}
+			
+			if (blockProperties[tile][16] > 0) {
+				if (blockProperties[tile][16] == 1) {
+					var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
+					var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
+					osctx3.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+				}
+			} else if (tile == 6) {
+				osctx3.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
+				osctx3.fillRect(tlx + (_loc1_-1) * scale, tly + (_loc2_-3) * scale, scale*2, scale*4);
+			} else if (blockProperties[tile][15] && tile > 0) {
+				var img = svgTiles[tile];
+				var vb = svgTilesVB[tile];
+				osctx3.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+			}
+		}
+	}
 }
 
 function setTool(i) {
@@ -5299,6 +5348,7 @@ function mousedown(event){
 								}
 							}
 						}
+						updateLCtiles();
 						// selectedTab = 2;
 						// setTool(0);
 						// setSelectedTile(myLevel[1][_loc9_][_loc10_]);
@@ -5334,6 +5384,7 @@ function mousedown(event){
 								}
 							}
 							setCoinAndDoorPos();
+							updateLCtiles();
 							// drawLCGrid();
 						}
 					} else if (tool == 7) {
@@ -5370,6 +5421,7 @@ function mousedown(event){
 								}
 							}
 							setCoinAndDoorPos();
+							updateLCtiles();
 							// drawLCGrid();
 						}
 					}
@@ -5395,6 +5447,7 @@ function mouseup(event){
 					y++;
 				}
 				clearRectSelect();
+				updateLCtiles();
 			}
 		}
 	}
@@ -6399,6 +6452,7 @@ function draw() {
 					if (mouseIsDown && !pmouseIsDown) {
 						selectedBg = i;
 						setLCBG();
+						updateLCtiles();
 					}
 				}
 				// ctx.drawImage(imgBgs[i],
@@ -6621,18 +6675,25 @@ function draw() {
 					if (tool == 1) _loc2_ = 0;
 					else _loc2_ = selectedTile;
 					if (_loc2_ >= 0 && _loc2_ < blockProperties.length) {
-						myLevel[1][_loc3_][_loc9_] = _loc2_;
+						var redraw = false;
+						if (myLevel[1][_loc3_][_loc9_] != _loc2_) {
+							myLevel[1][_loc3_][_loc9_] = _loc2_;
+							redraw = true;
+						}
 						if (_loc2_ == 6 && (_loc9_ != LCEndGateX || _loc3_ != LCEndGateY)) {
 							if (LCEndGateY != -1) myLevel[1][LCEndGateY][LCEndGateX] = 0;
 							LCEndGateX = _loc9_;
 							LCEndGateY = _loc3_;
 							setEndGateLights();
+							redraw = true;
 						}
 						if (_loc2_ == 12 && (_loc9_ != LCCoinX || _loc3_ != LCCoinY)) {
 							if (LCCoinY != -1) myLevel[1][LCCoinY][LCCoinX] = 0;
 							LCCoinX = _loc9_;
 							LCCoinY = _loc3_;
+							redraw = true;
 						}
+						if (redraw) updateLCtiles();
 					}
 				}
 			}
