@@ -1,4 +1,4 @@
-const enclosingDir = '../visuals/';
+const enclosingDir = '../../visuals/';
 // currently only svg and png files are supported
 const filePaths = [
 	'menu0.svg',
