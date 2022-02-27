@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.5.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.5.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -4333,6 +4333,18 @@ function resetLCOSC() {
 	osc1.height = Math.floor(cheight * pixelRatio);
 	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	setLCBG();
+
+
+	var bgpr = 2;
+	var bgw = 96;
+	var bgh = 54;
+	var bgdist = 110;
+	osc2.width = Math.floor(300 * pixelRatio);
+	osc2.height = Math.floor((Math.floor(imgBgs.length/bgpr + 1) * bgdist) * pixelRatio);
+	osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	for (var i = 0; i < imgBgs.length; i++) {
+		osctx2.drawImage(imgBgs[i], (bgdist-bgw) + (i%bgpr)*bgdist, (bgdist-bgh) + Math.floor(i/bgpr)*bgdist, bgw, bgh);
+	}
 }
 
 function setLCBG() {
@@ -6367,20 +6379,20 @@ function draw() {
 					ctx.fillStyle = '#a0a0a0';
 					ctx.fillRect(
 						660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
-						(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
+						tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
 						bgw + bgdist-bgw,
 						bgh + bgdist-bgh
 					);
 				} else if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+bgsTabScrollBar,
 					660 + (bgdist-bgw) + (i%bgpr)*bgdist,
-					(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
+					tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
 					bgw,
 					bgh)) {
 					onButton = true;
 					ctx.fillStyle = '#dddddd';
 					ctx.fillRect(
 						660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
-						(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
+						tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
 						bgw + bgdist-bgw,
 						bgh + bgdist-bgh
 					);
@@ -6389,13 +6401,14 @@ function draw() {
 						setLCBG();
 					}
 				}
-				ctx.drawImage(imgBgs[i],
-					660 + (bgdist-bgw) + (i%bgpr)*bgdist,
-					(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
-					bgw,
-					bgh
-				);
+				// ctx.drawImage(imgBgs[i],
+				// 	660 + (bgdist-bgw) + (i%bgpr)*bgdist,
+				// 	(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
+				// 	bgw,
+				// 	bgh
+				// );
 			}
+			ctx.drawImage(osc2, 660, tabWindowY, osc2.width / pixelRatio, osc2.height / pixelRatio);
 			ctx.restore();
 
 			var tabContentsHeight = (bgdist-bgh) + Math.floor((i-1)/bgpr + 1) * bgdist;
