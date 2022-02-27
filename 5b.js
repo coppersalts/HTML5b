@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.5.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.5.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -20,6 +20,7 @@ var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAni
 var osc1, osctx1;
 var osc2, osctx2;
 var osc3, osctx3;
+var osc4, osctx4;
 
 var _xmouse = 0;
 var _ymouse = 0;
@@ -2642,7 +2643,7 @@ function resetLevel() {
 		cutScene = 0;
 		bgXScale = ((levelWidth - 32) * 10 + 960) / 9.6;
 		bgYScale = ((levelHeight - 18) * 10 + 540) / 5.4;
-		// bg.cacheAsBitmap = true;
+		drawLevelBG();
 		cameraX = Math.min(Math.max(char[0].x - 480,0),levelWidth * 30 - 960);
 		cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
 		gotThisCoin = false;
@@ -2738,7 +2739,7 @@ function resetMyLevel() {
 	cutScene = 0;
 	bgXScale = ((levelWidth - 32) * 10 + 960) / 9.6;
 	bgYScale = ((levelHeight - 18) * 10 + 540) / 5.4;
-	// bg.cacheAsBitmap = true;
+	drawLevelBG();
 	cameraX = Math.min(Math.max(char[0].x - 480,0),levelWidth * 30 - 960);
 	cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
 	gotThisCoin = false;
@@ -2784,6 +2785,13 @@ function drawStaticTiles() {
 			}
 		}
 	}
+}
+function drawLevelBG() {
+	var bgScale = Math.max(bgXScale, bgYScale);
+	osc4.width = Math.floor((bgScale/100)*cwidth * pixelRatio);
+	osc4.height = Math.floor((bgScale/100)*cheight * pixelRatio);
+	osctx4.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	osctx4.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], 0, 0, (bgScale/100)*cwidth, (bgScale/100)*cheight);
 }
 
 function drawLevel() {
@@ -5402,6 +5410,11 @@ function setup() {
 	osc3.height = cheight;
 	osctx3 = osc3.getContext('2d');
 
+	osc4 = document.createElement('canvas');
+	osc4.width = cwidth;
+	osc4.height = cheight;
+	osctx4 = osc4.getContext('2d');
+
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
 	window.addEventListener('mouseup', mouseup);
@@ -5435,8 +5448,9 @@ function draw() {
 		}
 	} else if (menuScreen == 3) {
 		// TODO: draw the bg to an offscreen canvas when the level is loaded
-		var bgScale = Math.max(bgXScale, bgYScale);
-		ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
+		// var bgScale = Math.max(bgXScale, bgYScale);
+		// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
+		ctx.drawImage(osc4, -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), osc4.width/pixelRatio, osc4.height/pixelRatio);
 		drawLevel();
 
 		if (cutScene == 1 || cutScene == 2) { 
