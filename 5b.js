@@ -2157,6 +2157,7 @@ function exitTestLevel() {
 	cameraX = 0;
 	cameraY = 0;
 	resetLevel();
+	resetLCOSC();
 }
 
 function drawMenu0Button(text, x, y, id, grayed, action) {
@@ -4324,6 +4325,18 @@ function resetLevelCreator() {
 	// 	_loc2_ = _loc2_ + 1;
 	// }
 	// levelCreator.tools.tool9.gotoAndStop(1);
+	resetLCOSC();
+}
+
+function resetLCOSC() {
+	osc1.width = Math.floor(cwidth * pixelRatio);
+	osc1.height = Math.floor(cheight * pixelRatio);
+	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	setLCBG();
+}
+
+function setLCBG() {
+	osctx1.drawImage(imgBgs[selectedBg],-97,0,854,480);
 }
 
 function drawLCGrid() {
@@ -6061,7 +6074,7 @@ function draw() {
 
 		ctx.fillStyle = '#ffffff';
 		ctx.fillRect(0,0,960,540);
-		ctx.drawImage(imgBgs[selectedBg],-97,0,854,480);
+		ctx.drawImage(osc1,0,0,cwidth,cheight);
 		ctx.fillStyle = '#aeaeae';
 		ctx.fillRect(0,480,660,60);
 		ctx.fillStyle = '#cccccc';
@@ -6373,6 +6386,7 @@ function draw() {
 					);
 					if (mouseIsDown && !pmouseIsDown) {
 						selectedBg = i;
+						setLCBG();
 					}
 				}
 				ctx.drawImage(imgBgs[i],
