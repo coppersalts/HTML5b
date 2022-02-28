@@ -1,0 +1,36 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="32px" height="32px" viewBox="-1 -1 32 32">
+<path stroke="#9933FF" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 29.6 24.35
+L 29.6 21.35
+M 29.6 17.35
+L 29.6 14.35
+M 29.6 10.35
+L 29.6 7.35
+M 29.35 3.45
+Q 28.95 1.8 27.7 1.05
+M 23.8 0.4
+L 20.8 0.4
+M 2.9 0.8
+Q 1.45 1.4 0.85 2.8
+M 0.4 6.8
+L 0.4 9.8
+M 16.8 0.4
+L 13.8 0.4
+M 9.8 0.4
+L 6.8 0.4
+M 0.4 20.8
+L 0.4 23.8
+M 0.4 13.8
+L 0.4 16.8
+M 1.1 27.7
+Q 1.9 29 3.6 29.4
+M 5 29.6
+L 8 29.6
+M 12 29.6
+L 15 29.6
+M 26 29.55
+Q 27.7 29.25 28.6 28.15
+M 19 29.6
+L 22 29.6"/>
+</svg>

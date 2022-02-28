@@ -5468,6 +5468,16 @@ function keydown(event){
 		}
 	}
 	if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
+	if (menuScreen == 5 && mouseOnGrid()) {
+		if (event.key == '1') setTool(0);
+		else if (event.key == '2') setTool(1);
+		else if (event.key == '3') setTool(2);
+		else if (event.key == '4') setTool(3);
+		else if (event.key == '5') setTool(4);
+		else if (event.key == '6') setTool(5);
+		else if (event.key == '7') setTool(6);
+		else if (event.key == '8') setTool(7);
+	}
 }
 
 function keyup(event){

@@ -1,0 +1,10 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
+<path fill="#FF0000" stroke="none" d="
+M 5 30
+L 25 30
+Q 25 25.85 22.05 22.95 19.15 20 15 20 10.85 20 7.9 22.95 5 25.85 5 30 Z"/>
+<path stroke="#660000" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 5 30
+Q 5 25.85 7.9 22.95 10.85 20 15 20 19.15 20 22.05 22.95 25 25.85 25 30"/>
+</svg>

@@ -1,0 +1,24 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="35px" viewBox="0 -5 30 35">
+<path fill="#9933FF" stroke="none" d="
+M 28.5 -3.8
+L 1.5 -3.8 1.5 -0.55 4 -0.55 4 14.95 26 14.95 26 -0.55 28.5 -0.55 28.5 -3.8 Z"/>
+<path stroke="#480091" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 4 14.95
+L 4 -0.55 1.5 -0.55 1.5 -3.8 28.5 -3.8 28.5 -0.55 26 -0.55 26 14.95"/>
+<path fill="#666666" stroke="none" d="
+M 0.5 29.55
+L 29.5 29.55 29.5 6 0.5 6 0.5 29.55 Z"/>
+<path stroke="#333333" stroke-width="1" stroke-linejoin="miter" stroke-linecap="square" stroke-miterlimit="3" fill="none" d="
+M 0.5 29.55
+L 29.5 29.55 29.5 6 0.5 6 0.5 29.55 Z"/>
+<path fill="#333333" stroke="none" d="
+M 27.5 27.5
+L 27.5 25.5 25.5 25.5 25.5 27.5 27.5 27.5
+M 4.45 25.5
+L 2.45 25.5 2.45 27.5 4.45 27.5 4.45 25.5
+M 4.45 9.95
+L 4.45 7.95 2.45 7.95 2.45 9.95 4.45 9.95
+M 25.5 7.95
+L 25.5 9.95 27.5 9.95 27.5 7.95 25.5 7.95 Z"/>
+</svg>

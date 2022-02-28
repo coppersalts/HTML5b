@@ -1,0 +1,26 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="32px" height="31px" viewBox="-1 -1 32 31">
+<path stroke="#0066FF" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" fill="none" d="
+M 2 0
+L 0 0 0 1
+M 9 0
+L 6 0
+M 16 0
+L 13 0
+M 23 0
+L 20 0
+M 30 3
+L 30 0 27 0
+M 30 10
+L 30 10
+M 23 10
+L 26 10
+M 16 10
+L 19 10
+M 9 10
+L 12 10
+M 2 10
+L 5 10
+M 0 5
+L 0 8"/>
+</svg>
