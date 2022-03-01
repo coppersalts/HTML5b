@@ -1749,6 +1749,7 @@ var cameraY = 0;
 var shakeX = 0;
 var shakeY = 0;
 var menuScreen = -1;
+var pmenuScreen = -1;
 var myLevel;
 var myLevelChars;
 var myLevelDialogue;
@@ -2054,8 +2055,12 @@ function setCursor(newCursor) {
 	}
 }
 
-function menuWatch() {
+function menuWatchA() {
 	window.open('https://www.youtube.com/watch?v=4q77g4xo9ic');
+}
+
+function menuWatchC() {
+	window.open('https://www.youtube.com/watch?v=YrsRLT3u0Cg');
 }
 
 function menuNewGame() {
@@ -2192,7 +2197,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 
 	drawRoundedRect(fill, x, y, menu0ButtonSize.w, menu0ButtonSize.h, menu0ButtonSize.cr);
 
-	ctx.font = 'bold 30px Helvetica';
+	// ctx.font = 'bold 30px Helvetica';
 	ctx.fillStyle = '#666666';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
@@ -2400,7 +2405,9 @@ function drawMenu() {
 	ctx.font = '20px Helvetica';
 	ctx.fillText(version, 5, cheight);
 
-	drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatch);
+	ctx.font = 'bold 30px Helvetica';
+	if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 303.75, 0, false, menuWatchC);
+	else drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatchA);
 	if (showingNewGame2) {
 		drawRoundedRect('#ffffff', 665.5, 81, 273, 72.95, 15);
 		ctx.font = '20px Helvetica';
@@ -2410,11 +2417,11 @@ function drawMenu() {
 		linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
 		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
 		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1A4D1A', menuNewGame2no);
-	}
-	else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
+	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
-	drawMenu0Button('L.C. (beta)', 665.55, 437.7, 3, false,  menuLevelCreator);
 	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, true,  menuExplore);
+	ctx.font = 'bold 23px Helvetica';
+	drawMenu0Button('LEVEL CREATOR (beta)', 665.55, 437.7, 3, false,  menuLevelCreator);
 
 	// var started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -5539,7 +5546,8 @@ function draw() {
 
 	if (menuScreen == -1) {
 		ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
-		drawMenu0Button('Start Game', (cwidth-menu0ButtonSize.w)/2, (cheight-menu0ButtonSize.h)/2, 0, false, playGame);
+		ctx.font = 'bold 30px Helvetica';
+		drawMenu0Button('START GAME', (cwidth-menu0ButtonSize.w)/2, (cheight-menu0ButtonSize.h)/2, 0, false, playGame);
 	} else if (menuScreen == 0) {
 		drawMenu();
 	} else if (menuScreen == 2) {
@@ -6606,6 +6614,7 @@ function draw() {
 			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
 		} else if (selectedTab == 5) {
+			ctx.font = 'bold 30px Helvetica';
 			drawMenu0Button('COPY LEVEL',673, tabWindowY + 10, 11, false, copyLevelString);
 			drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
 			drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
@@ -6826,25 +6835,17 @@ function draw() {
 		if (wipeTimer >= 30 && wipeTimer <= 60) {
 			white_alpha = 220 - wipeTimer * 4;
 		}
-	} else {
-		white_alpha = 0;
-	}
-	if (wipeTimer == 29 && menuScreen == 3 && (charsAtEnd >= charCount2 || transitionType == 0)) {
-		white_alpha = 100;
-	}
-	if (wipeTimer >= 60) {
-		wipeTimer = 0;
-	}
-	if (wipeTimer >= 1) {
-		wipeTimer++;
-	}
+	} else white_alpha = 0;
+	if (wipeTimer == 29 && menuScreen == 3 && (charsAtEnd >= charCount2 || transitionType == 0)) white_alpha = 100;
+	if (wipeTimer >= 60) wipeTimer = 0;
+	if (wipeTimer >= 1) wipeTimer++;
 
 	ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-	if (menuScreen == 2) {
+	if (pmenuScreen == 2) {
 		drawLevelMapBorder();
 		shakeX = 0;
 		shakeY = 0;
-	} else if (menuScreen == 3) {
+	} else if (pmenuScreen == 3) {
 		if (cutScene == 1 || cutScene == 2) {
 			drawCutScene();
 		}
@@ -6870,6 +6871,7 @@ function draw() {
 	pmouseIsDown = mouseIsDown;
 	_pxmouse = _xmouse;
 	_pymouse = _ymouse;
+	pmenuScreen = menuScreen;
 
 
 	requestAnimationFrame(draw);
