@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.5.5'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.5.6'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -2197,6 +2197,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 
 	drawRoundedRect(fill, x, y, menu0ButtonSize.w, menu0ButtonSize.h, menu0ButtonSize.cr);
 
+	// TODO: when the lc is out of beta; uncomment this line and remove the lines like it from around when this function is called.
 	// ctx.font = 'bold 30px Helvetica';
 	ctx.fillStyle = '#666666';
 	ctx.textAlign = 'center';
@@ -5489,7 +5490,7 @@ function keydown(event){
 		}
 	}
 	if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
-	if (menuScreen == 5 && mouseOnGrid()) {
+	if (menuScreen == 5 && editingTextBox == -1 && selectedTab == 2 && _xmouse < 660) {
 		if (event.key == '1') setTool(0);
 		else if (event.key == '2') setTool(1);
 		else if (event.key == '3') setTool(2);
