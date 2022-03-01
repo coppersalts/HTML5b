@@ -792,6 +792,8 @@ const filePaths = [
 	'blocks/b0130.svg',
 	'blocks/b0131.svg',
 	'blocks/b0132.svg',
+	'blocks/b0133.svg',
+	'blocks/b0134.svg',
 	'blocks/b01lever.svg',
 	'blocks/b02lever.svg',
 	'blocks/b03lever.svg',
