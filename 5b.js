@@ -2419,6 +2419,7 @@ function drawMenu() {
 		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
 		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1A4D1A', menuNewGame2no);
 	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
+	ctx.font = 'bold 30px Helvetica';
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
 	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, true,  menuExplore);
 	ctx.font = 'bold 23px Helvetica';
