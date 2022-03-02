@@ -5491,21 +5491,28 @@ function keydown(event){
 		}
 	}
 	if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
-	if (menuScreen == 5 && editingTextBox == -1 && selectedTab == 2 && _xmouse < 660) {
-		if (event.key == '1') setTool(0);
-		else if (event.key == '2') setTool(1);
-		else if (event.key == '3') setTool(2);
-		else if (event.key == '4') setTool(3);
-		else if (event.key == '5') setTool(4);
-		else if (event.key == '6') setTool(5);
-		else if (event.key == '7') setTool(6);
-		else if (event.key == '8') setTool(7);
+	if (menuScreen == 5 && !lcPopUp && editingTextBox == -1) {
+		// tool shortcuts
+		if (_xmouse < 660 && selectedTab == 2) {
+			if (event.key == '1') setTool(0);
+			else if (event.key == '2') setTool(1);
+			else if (event.key == '3') setTool(2);
+			else if (event.key == '4') setTool(3);
+			else if (event.key == '5') setTool(4);
+			else if (event.key == '6') setTool(5);
+			else if (event.key == '7') setTool(6);
+			else if (event.key == '8') setTool(7);
+		}
+		// undo shortcut
+		if (event.key == 'z' && controlOrCommandPress) {
+			undo();
+		}
 	}
 }
 
 function keyup(event){
 	_keysDown[event.keyCode || event.charCode] = false;
-	if (!event.metaKey || !event.ctrlKey) controlOrCommandPress = false;
+	if (event.metaKey || event.ctrlKey) controlOrCommandPress = false;
 }
 
 function setup() {
@@ -6698,6 +6705,7 @@ function draw() {
 				}
 			}
 		}
+
 
 		drawLCTiles();
 		drawLCGrid();
