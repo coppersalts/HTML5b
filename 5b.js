@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.5.6'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.6.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -240,7 +240,7 @@ function loadLevels() {
 // [16] - animation frames
 // [17] - loop?
 // [18] - loop frame order
-var blockProperties = [
+const blockProperties = [
 	// tile0
 	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,0,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
@@ -261,7 +261,7 @@ var blockProperties = [
 	[false,false,false,false,false,false,false,false,true,false,true,0,0,false,false,true,41,true,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]],
 	[true,true,true,true,false,false,false,false,true,false,false,0,6,false,false,true,12,true,[0,1,2,3,4,5,6,7,8,9,10,11]],
 	[true,true,true,true,true,true,true,true,false,false,false,0,0,false,false,true,1,true],
-	[false,true,false,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
+	[false,true,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	[true,true,true,true,true,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	// tile2
 	[true,true,true,true,false,true,false,false,false,false,false,0,0,false,false,true,1,false],
@@ -291,9 +291,9 @@ var blockProperties = [
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
 	[false,false,true,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
-	[true,true,true,true,false,true,false,true,false,false,false,0,0,false,false,true,1,false],
-	[true,true,true,true,false,true,true,false,false,false,false,0,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,true,false,true,false,true,false,0,0,false,false,true,1,false],
+	[true,true,true,true,false,true,true,false,false,true,false,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,true,false,0,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
 	[true,true,true,true,false,false,false,false,true,false,false,0,0,false,false,true,3,true,[0,0,0,0,0,1,1,2,2,1,1]],
 	// tile5
@@ -363,35 +363,35 @@ var blockProperties = [
 	[false,false,false,false,false,false,false,false,true,true,false,6,0,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,true,false,12,0,false,false,true,1,false],
 	// tile11
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,true,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,true,1,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
 	// tile12
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,0,false],
 	// tile13
-	[false,false,false,false,false,false,false,false,false,false,false,0,1,false,true,true,1,false],
+	[false,false,false,false,false,false,false,false,false,false,false,0,0,false,true,true,1,false],
 	[true,true,true,true,false,false,false,false,false,false,false,0,0,true,false,true,1,false],
-	[false,false,false,false,false,false,false,false,false,false,true,0,0,false,false,false,1,false],
+	[false,false,false,false,false,false,false,false,false,true,true,0,0,false,false,false,1,false],
 	[false,true,false,false,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
 	[false,false,false,false,false,false,false,false,true,false,false,0,2,false,false,true,1,false],
 ];
-var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54,133,134],[65,61,60,62,63,64],[],[],[14,16,83,85]];
+const switches = [[31,33,32,34,79,78,81,82],[51,53,52,54,133,134],[65,61,60,62,63,64],[],[],[14,16,83,85]];
 
 // [0] - hitbox width
 // [1] - hitbox height
@@ -403,7 +403,7 @@ var switches = [[31,33,32,34,79,78,81,82],[51,53,52,54,133,134],[65,61,60,62,63,
 // [7] - number of frames
 // [8] - has arms
 // [9] - default state (in level creator)
-var charD = [
+const charD = [
 	[28,45.4,0.45,27,0.8,false,1,1,true,10],
 	[23,56,0.36,31,0.8,false,1.7,1,true,10],
 	[20,51,0.41,20,0.85,false,5,1,false,10],
@@ -462,7 +462,7 @@ var charD = [
 	[30,540,10,20,0.4,true,0,1,true,3]
 ];
 
-var diaMouths = [
+const diaMouths = [
 	{
 		frameorder: [1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0,0,1,2,3,2,1,0],
 		frames: [
@@ -498,7 +498,7 @@ var diaMouths = [
 		]
 	}
 ]
-var bodyPartAnimations = [
+const bodyPartAnimations = [
 	{
 		// Running Arm
 		bodypart: 41,
@@ -629,7 +629,7 @@ var bodyPartAnimations = [
 		]
 	}
 ]
-var legFrames = [
+const legFrames = [
 	{type:'static',bodypart:6},
 	{type:'static',bodypart:7},
 	{type:'anim',usesMats:false,frames:[8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]},
@@ -736,7 +736,7 @@ var legFrames = [
 // 13 - recover2 right
 
 // TODO: load this externally?
-var charModels = [
+const charModels = [
 	{
 		// Ruby
 		torsomat: {a:1,b:0,c:0,d:1,tx:0.05,ty:-3.1},
@@ -1690,14 +1690,14 @@ var charModels = [
 		charimgmat: {a:0.1,b:0,c:0,d:0.1,tx:0,ty:0},
 	},
 ];
-var names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
+const names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
 var selectedTab = 0;
 var selectedBg = 0;
-var tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
+const tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
 var charInfoHeight = 40;
 var diaInfoHeight = 20;
-var charStateNames = ['', 'Dead', 'Being Recovered', 'Deadly & Moving', 'Moving', 'Deadly', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
-var charStateNamesShort = ['', 'D', 'BR', 'D&M', 'M', 'D', 'C', '', 'NPC', 'R', 'P'];
+const charStateNames = ['', 'Dead', 'Being Recovered', 'Deadly & Moving', 'Moving', 'Deadly', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
+const charStateNamesShort = ['', 'D', 'BR', 'D&M', 'M', 'D', 'C', '', 'NPC', 'R', 'P'];
 var charDropdown = -1;
 var charDropdownMS = -1;
 var charDropdownType;
@@ -1767,7 +1767,7 @@ var LCCoinY = 0;
 var cardinal = [[0,-1],[0,1],[-1,0],[1,0]];
 var diagonal = [[-1,-1],[1,-1],[1,1],[-1,1]];
 var diagonal2 = [[0,2],[0,3],[1,2],[1,3]];
-var direLetters = ['U','D','L','R'];
+const direLetters = ['U','D','L','R'];
 var undid = false;
 var copied = false;
 var tileClipboard = [[]];
@@ -4821,7 +4821,38 @@ function drawLCDiaInfo(i, y) {
 	ctx.fillStyle = '#808080';
 	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount);
 	ctx.fillStyle = '#ffffff';
-	var diaTextBox = drawTextBox(myLevelDialogue[i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff');
+	if (myLevelDialogue[i].char>=50&&myLevelDialogue[i].char<99) {
+		var diaTextBox = [myLevelDialogue[i].text,['lever switch']];
+		switch (myLevelDialogue[i].char) {
+			case 50:
+				ctx.fillStyle = '#ffcc00';
+				break;
+			case 51:
+				ctx.fillStyle = '#0066ff';
+				break;
+			case 52:
+				ctx.fillStyle = '#20df20';
+				break;
+			case 53:
+				ctx.fillStyle = '#ff0000';
+				break;
+			case 54:
+				ctx.fillStyle = '#9933ff';
+				break;
+			case 55:
+				ctx.fillStyle = '#505050';
+				break;
+		}
+		ctx.fillRect(665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight);
+
+		ctx.fillStyle = '#ffffff';
+		ctx.font = diaInfoHeight + 'px Helvetica';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'top';
+		ctx.fillText('lever switch', 665 + diaInfoHeight*3 + 5, y);
+	} else {
+		var diaTextBox = drawTextBox(myLevelDialogue[i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff');
+	}
 	myLevelDialogue[i].text = diaTextBox[0];
 	myLevelDialogue[i].linecount = diaTextBox[1].length;
 	ctx.fillText(myLevelDialogue[i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y);
@@ -6195,6 +6226,7 @@ function draw() {
 		mouseOnTabWindow = onRect(_xmouse, _ymouse, 660, (selectedTab+1)*tabHeight, 300, tabWindowH);
 		// Draw Tab Contents
 		if (selectedTab == 0) {
+			// Level Info
 			ctx.textAlign = 'right';
 			ctx.textBaseline = 'top';
 			ctx.font = '18px Helvetica';
@@ -6209,6 +6241,7 @@ function draw() {
 				editingTextBox = -1;
 			}
 		} else if (selectedTab == 1) {
+			// Entities
 			var charInfoY = (selectedTab+1)*tabHeight + 5;
 			// TODO: only compute the look up table when it changes
 			var charInfoYLookUp = [];
@@ -6360,8 +6393,6 @@ function draw() {
 					}
 				}
 
-
-
 				if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
 					var pCharState = char[charDropdown].charState;
 					resetLCChar(charDropdown);
@@ -6390,6 +6421,7 @@ function draw() {
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
 			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 2) {
+			// Tiles
 			var j = 0;
 			var bpr = 5;
 			var bs = 40;
@@ -6463,6 +6495,7 @@ function draw() {
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 		} else if (selectedTab == 3) {
+			// Background
 			// var j = 0;
 			var bgpr = 2;
 			var bgw = 96;
@@ -6530,6 +6563,7 @@ function draw() {
 			}
 			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 		} else if (selectedTab == 4) {
+			// Dialogue
 			var tabContentsHeight = 5;
 			for (var i = 0; i < myLevelDialogue.length; i++) {
 				tabContentsHeight += diaInfoHeight*myLevelDialogue[i].linecount + 5;
@@ -6582,30 +6616,19 @@ function draw() {
 					else if (myLevelDialogue[diaDropdown].face == 3) myLevelDialogue[diaDropdown].face = 2;
 					diaDropdown = -2;
 				} else if (diaDropdownType == 1) {
-					myLevelDialogue[diaDropdown].char++;
-					if (myLevelDialogue[diaDropdown].char < 99 && myLevelDialogue[diaDropdown].char >= myLevelChars.length) myLevelDialogue[diaDropdown].char = 99;
-					else if (myLevelDialogue[diaDropdown].char > 99) myLevelDialogue[diaDropdown].char = myLevelChars.length<1?99:0;
+					// [0, 1, 4, 5, 50, 51, 52, 55, 99]
+					var allowedDiaCharIndices = [99, 55, 52, 51, 50];
+					for (var i = myLevelChars.length - 1; i >= 0; i--) if (myLevelChars[i][3] > 6) allowedDiaCharIndices.push(i);
+					var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[diaDropdown].char);
+					if (_keysDown[16]) {
+						ourCurrentIndex++;
+						if (ourCurrentIndex >= allowedDiaCharIndices.length) ourCurrentIndex = 0;
+					} else {
+						ourCurrentIndex--;
+						if (ourCurrentIndex < 0) ourCurrentIndex = allowedDiaCharIndices.length - 1;
+					}
+					myLevelDialogue[diaDropdown].char = allowedDiaCharIndices[ourCurrentIndex];
 					diaDropdown = -2;
-					// ctx.fillStyle = '#ffffff';
-					// ctx.fillRect((665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (diaDropdown+1)*(diaInfoHeight+5), diaInfoHeight*1.5, 70);
-					// ctx.textBaseline = 'top';
-					// ctx.font = '10px Helvetica';
-					// ctx.fillStyle = '#000000';
-					// var j = 0;
-					// for (var i = 3; i < charStateNames.length; i++) {
-					// 	if (charStateNames[i] != '') {
-					// 		if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (diaDropdown+1)*(diaInfoHeight+5) + j*10, diaInfoHeight*1.5, 10)) {
-					// 			ctx.fillStyle = '#dddddd';
-					// 			ctx.fillRect((665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (diaDropdown+1)*(diaInfoHeight+5) + j*10, diaInfoHeight*1.5, 10);
-					// 			ctx.fillStyle = '#000000';
-					// 			if (mouseIsDown && !addButtonPressed) {
-					// 				myLevelDialogue[diaDropdown][3] = i;
-					// 			}
-					// 		}
-					// 		ctx.fillText(charStateNames[i], (665+240)-diaInfoHeight*1.5, (selectedTab+1)*tabHeight + (diaDropdown+1)*(diaInfoHeight+5) + j*10);
-					// 		j++;
-					// 	}
-					// }
 				} else if (diaDropdownType == 2) {
 					if (_keysDown[13]) diaDropdown = -2;
 				}
@@ -6623,6 +6646,7 @@ function draw() {
 			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
 		} else if (selectedTab == 5) {
+			// Options
 			ctx.font = 'bold 30px Helvetica';
 			drawMenu0Button('COPY LEVEL',673, tabWindowY + 10, 11, false, copyLevelString);
 			drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
