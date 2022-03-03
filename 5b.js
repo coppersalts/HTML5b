@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.7.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.7.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -6449,13 +6449,27 @@ function draw() {
 			var bdist = 53;
 			ctx.save();
 			ctx.translate(0, -tileTabScrollBar);
+			if (mouseOnTabWindow && !lcPopUp) {
+				var mouseTileRow = _ymouse+tileTabScrollBar-tabWindowY;
+				var mouseTileColumn = _xmouse-660;
+				if (mouseTileRow%bdist < (bdist-bs) || mouseTileColumn%bdist < (bdist-bs)) {
+					mouseTileRow = -1;
+					mouseTileColumn = -1;
+				} else {
+					mouseTileRow = Math.floor((mouseTileRow-(bdist-bs)) / bdist);
+					mouseTileColumn = Math.floor((mouseTileColumn-(bdist-bs)) / bdist);
+				}
+			} else {
+				var mouseTileRow = -1;
+				var mouseTileColumn = -1;
+			}
 			for (var i = 0; i < blockProperties.length; i++) {
 				if (blockProperties[i][15]) {
 					if (i == selectedTile) {
 						ctx.fillStyle = '#a0a0a0';
 						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
 					}
-					if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
+					if ((j%bpr) == mouseTileColumn && Math.floor(j/bpr) == mouseTileRow) {
 						hoverText = tileNames[i];
 						if (i != selectedTile) {
 							onButton = true;
@@ -6733,7 +6747,7 @@ function draw() {
 				ctx.fillRect(35 + i*50, 490, 40, 40);
 				ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490);
 
-				if (!lcPopUp && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
+				if (!lcPopUp && _ymouse > 480 && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
 					onButton = true;
 					hoverText = toolNames[i];
 					if (mouseIsDown && !pmouseIsDown) {
