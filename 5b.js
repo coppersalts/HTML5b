@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.7.2'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.7.3'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -6321,30 +6321,32 @@ function draw() {
 			}
 			addButtonPressed = false;
 			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				onButton = true;
-				hoverText = 'Add New Character or Object';
-				if (mouseIsDown && !pmouseIsDown) {
-					myLevelChars.push([0,0.0,0.0,10]);
-					var newestCharIndex = myLevelChars.length-1;
-					var _loc2_ = myLevelChars[newestCharIndex][0];
-					char.push(new Character(
-						_loc2_,
-						0.00,
-						0.00,
-						70 + newestCharIndex * 40,
-						400 - newestCharIndex * 30,
-						myLevelChars[newestCharIndex][3],
-						charD[_loc2_][0],
-						charD[_loc2_][1],
-						charD[_loc2_][2],
-						charD[_loc2_][2],
-						charD[_loc2_][3],
-						charD[_loc2_][4],
-						charD[_loc2_][6],
-						charD[_loc2_][8],
-						_loc2_<35?charModels[_loc2_].defaultExpr:0
-						));
-					char[char.length-1].placed = false;
+				if (myLevelChars.length < 50) {
+					onButton = true;
+					hoverText = 'Add New Character or Object';
+					if (mouseIsDown && !pmouseIsDown) {
+						myLevelChars.push([0,0.0,0.0,10]);
+						var newestCharIndex = myLevelChars.length-1;
+						var _loc2_ = myLevelChars[newestCharIndex][0];
+						char.push(new Character(
+							_loc2_,
+							0.00,
+							0.00,
+							70 + newestCharIndex * 40,
+							400 - newestCharIndex * 30,
+							myLevelChars[newestCharIndex][3],
+							charD[_loc2_][0],
+							charD[_loc2_][1],
+							charD[_loc2_][2],
+							charD[_loc2_][2],
+							charD[_loc2_][3],
+							charD[_loc2_][4],
+							charD[_loc2_][6],
+							charD[_loc2_][8],
+							_loc2_<35?charModels[_loc2_].defaultExpr:0
+							));
+						char[char.length-1].placed = false;
+					}
 				}
 				addButtonPressed = true;
 			}
