@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.6.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.7.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -31,6 +31,7 @@ var lastClickX = 0;
 var lastClickY = 0;
 var valueAtClick = 0;
 var _cursor = 'default';
+var hoverText = '';
 const _keysDown = new Array(222).fill(false);
 var _frameCount = 0;
 var qTimer = 0;
@@ -1698,6 +1699,8 @@ var charInfoHeight = 40;
 var diaInfoHeight = 20;
 const charStateNames = ['', 'Dead', 'Being Recovered', 'Deadly & Moving', 'Moving', 'Deadly', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
 const charStateNamesShort = ['', 'D', 'BR', 'D&M', 'M', 'D', 'C', '', 'NPC', 'R', 'P'];
+const toolNames = ['Pencil Tool', 'Eraser Tool', 'Fill Rectangle Tool', 'Fill Tool', 'Eyedropper Tool', 'Selection Tool', 'Row Tool', 'Column Tool', '', 'Copy', 'Undo / Redo', 'Clear'];
+const tileNames = ['Air','Red Ground Block','Downward Facing Gray Spikes','Upward Facing Gray Spikes','Right Facing Gray Spikes','Left Facing Gray Spikes','End Gate','"E" Tree','Dialogue Starter','Red Background Block','Green Ground Block','Green Background Block','Win Token','Spring Block','Left Conveyer','Heater','Right Conveyer','Gray Spike Ball','Upward One-Way Platform','Downward Facing Black Spikes','Upward Facing Black Spikes','Right Facing Black Spikes','Left Facing Black Spikes','Downward Facing Black Spikes with Support Cable','Vertical Support Cable','Vertical Support Cable Connected Right','Horizontal Support Cable','Top Left Support Cable Connector','Horizontal Support Cable Connected Down','Horizontal Support Cable Connected Up','Vertical Support Cable Connected Left','Yellow Switch Block Solid','Dark Yellow Switch Block Solid','Yellow Switch Block Passable','Dark Yellow Switch Block Passable','Yellow Lever Facing Left','Yellow Lever Facing Right','Blue Lever Facing Left','Blue Lever Facing Right','Green Background Block with Upward One-Way Platform','Yellow Button','Blue Button','Gray Grass','Gray Dirt','Right Facing One-Way Platform','Two-Way Gray Spikes Top Left','Two-Way Gray Spikes Top Right','Crumbling Rock','Conglomerate-Like Background Block','Lamp','Gray Gems','Blue Switch Block Solid','Dark Blue Switch Block Solid','Blue Switch Block Passable','Dark Blue Switch Block Passable','Conglomerate-Like Background Block with Upward One-Way Platform','Gray Block','Green Lever Facing Left','Green Lever Facing Right','"V" Tree','Dark Green Switch Block Solid','Green Switch Block Passable','Dark Green Switch Block Passable','Green Switch Platform Up Solid','Green Switch Platform Up Passable','Green Switch Block Solid','Spotlight','Black Block','Left Facing One-Way Platform','Downward One-Way Platform','Green Background Block with Left Facing One-Way Platform','Green Button','Black Spike Ball','Purple Ground Block','"Wind Gust" Block','Vertical Electric Barrier','Horiontal Electric Barrier','Purple Background Block','Yellow Switch Spike Ball Passable','Yellow Switch Spike Ball Solid','"I" Tree','Yellow Switch Platform Up Solid','Yellow Switch Platform Up Passable','One-Way Conveyer Left','One-Way Conveyer Left (not moving)','One-Way Conveyer Right','One-Way Conveyer Right (not moving)','Purple Background Block Slanted Bottom Left','Purple Background Block Slanted Bottom Right','Light Gray Vertical Support Cable','Light Gray Horizontal Support Cable','Light Gray Horizontal Support Cable Connected Down','Light Gray Horizontal Support Cable Connected Up','Wood Block','Wood Background Block','Danger Zone Background Block','Purple Background Block Slanted Top Right','Purple Background Block Slanted Top Left','Gray Metal Ground Block','Wooden Background Block... again?','Acid','Acid Glow','Yellow Metal Ground Block','Lava','Lava Glow','Red Metal Ground Block','Yellow Metal Background Block','Dark Gray Metal Ground Block','Conveyer Lever Facing Left','Conveyer Lever Facing Right','Picture','','','','','','','','','','','','','','','','','','','','Water','Brick Ground Block','Wall of Text','Blue Switch Platform Up Solid','Blue Switch Platform Up Passable'];
 var charDropdown = -1;
 var charDropdownMS = -1;
 var charDropdownType;
@@ -2052,6 +2055,13 @@ function setCursor(newCursor) {
 	if (_cursor != newCursor) {
 		_cursor = newCursor;
 		document.body.style.cursor = _cursor;
+	}
+}
+
+function setHoverText() {
+	if (canvas.getAttribute('title') != hoverText) {
+		if (hoverText == '') canvas.removeAttribute('title');
+		else canvas.setAttribute('title', hoverText);
 	}
 }
 
@@ -4715,6 +4725,7 @@ function drawLCCharInfo(i, y) {
 		var canDropDown = mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed;
 		if (canDropDown && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y+charInfoHeight, charInfoHeight, diaInfoHeight)) {
 			onButton = true;
+			hoverText = 'Movement Speed';
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
 				charDropdownType = 3;
@@ -4735,6 +4746,7 @@ function drawLCCharInfo(i, y) {
 				if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 120-charInfoHeight, diaInfoHeight)) {
 					if (_xmouse < 665 + charInfoHeight*1.5) {
 						onButton = true;
+						hoverText = 'Direction';
 						if (mouseIsDown && !pmouseIsDown) {
 							charDropdown = -i-3;
 							charDropdownType = 4;
@@ -4742,6 +4754,7 @@ function drawLCCharInfo(i, y) {
 						}
 					} else if (_xmouse < 665 + charInfoHeight + 100-charInfoHeight) {
 						onButton = true;
+						hoverText = 'Block Count';
 						if (mouseIsDown && !pmouseIsDown) {
 							charDropdown = -i-3;
 							charDropdownType = 5;
@@ -4768,6 +4781,7 @@ function drawLCCharInfo(i, y) {
 					// ctx.fillRect((665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight);
 					if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight)) {
 						onButton = true;
+						hoverText = 'Add to Path';
 						if (mouseIsDown && !pmouseIsDown) {
 							myLevelChars[i][5].push([0,1]);
 							char[i].motionString = generateMS(i);
@@ -4784,18 +4798,21 @@ function drawLCCharInfo(i, y) {
 		// ctx.fillRect(665+240, y + charInfoHeight/2 - 10, 20, 20);
 		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
 			onButton = true;
+			hoverText = 'ID';
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
 				charDropdownType = 0;
 			}
 		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight)) {
 			onButton = true;
+			hoverText = 'State';
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
 				charDropdownType = 1;
 			}
 		} else if (_xmouse < 665+240) {
 			onButton = true;
+			hoverText = 'Start Location';
 			if (mouseIsDown && !pmouseIsDown) {
 				charDropdown = -i-3;
 				charDropdownType = 2;
@@ -4866,12 +4883,14 @@ function drawLCDiaInfo(i, y) {
 		// ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
 		if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
 			onButton = true;
+			hoverText = 'Character';
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 1;
 			}
 		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[i].linecount)) {
 			onButton = true;
+			hoverText = 'Face';
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 0;
@@ -5579,6 +5598,7 @@ function setup() {
 
 function draw() {
 	onButton = false;
+	hoverText = '';
 	onTextBox = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
@@ -6282,6 +6302,7 @@ function draw() {
 			addButtonPressed = false;
 			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
 				onButton = true;
+				hoverText = 'Add New Character or Object';
 				if (mouseIsDown && !pmouseIsDown) {
 					myLevelChars.push([0,0.0,0.0,10]);
 					var newestCharIndex = myLevelChars.length-1;
@@ -6364,7 +6385,7 @@ function draw() {
 					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
 					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
 				} else if (charDropdownType == 3) {
-					var flat = (valueAtClick + (lastClickY-_ymouse));
+					var flat = (valueAtClick + (lastClickY-_ymouse)) * 0.5;
 					char[charDropdown].speed = flat>100?100:-Math.log(1 - flat / 100) * 100;
 					char[charDropdown].speed = Math.floor(Math.max(Math.min(char[charDropdown].speed, 99), 1));
 					myLevelChars[charDropdown][4] = char[charDropdown].speed;
@@ -6384,7 +6405,7 @@ function draw() {
 					charDropdown = -2;
 				} else if (charDropdownType == 5) {
 					// var flat = (valueAtClick + (lastClickY-_ymouse));
-					myLevelChars[charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 30), 1));
+					myLevelChars[charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 32), 1));
 					if (!mouseIsDown && pmouseIsDown) {
 						char[charDropdown].motionString = generateMS(charDropdown);
 						levelTimer = 0;
@@ -6433,15 +6454,19 @@ function draw() {
 					if (i == selectedTile) {
 						ctx.fillStyle = '#a0a0a0';
 						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
-					} else if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
-						onButton = true;
-						ctx.fillStyle = '#dddddd';
-						// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
-						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
-						if (mouseIsDown && !pmouseIsDown) {
-							// selectedTile = i;
-							setSelectedTile(i);
-							if (tool != 2 && tool != 3) setTool(0);
+					}
+					if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+tileTabScrollBar, 660 + (bdist-bs) + (j%bpr)*bdist, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs, bs)) {
+						hoverText = tileNames[i];
+						if (i != selectedTile) {
+							onButton = true;
+							ctx.fillStyle = '#dddddd';
+							// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
+							ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+							if (mouseIsDown && !pmouseIsDown) {
+								// selectedTile = i;
+								setSelectedTile(i);
+								if (tool != 2 && tool != 3) setTool(0);
+							}
 						}
 					}
 					if (i == 6) {
@@ -6604,6 +6629,7 @@ function draw() {
 			addButtonPressed = false;
 			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
 				onButton = true;
+				hoverText = 'Add New Dialogue Line';
 				if (mouseIsDown && !pmouseIsDown) {
 					myLevelDialogue.push({char:99,face:2,text:'Enter text',linecount:1});
 				}
@@ -6616,7 +6642,6 @@ function draw() {
 					else if (myLevelDialogue[diaDropdown].face == 3) myLevelDialogue[diaDropdown].face = 2;
 					diaDropdown = -2;
 				} else if (diaDropdownType == 1) {
-					// [0, 1, 4, 5, 50, 51, 52, 55, 99]
 					var allowedDiaCharIndices = [99, 55, 52, 51, 50];
 					for (var i = myLevelChars.length - 1; i >= 0; i--) if (myLevelChars[i][3] > 6) allowedDiaCharIndices.push(i);
 					var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[diaDropdown].char);
@@ -6710,6 +6735,7 @@ function draw() {
 
 				if (!lcPopUp && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
 					onButton = true;
+					hoverText = toolNames[i];
 					if (mouseIsDown && !pmouseIsDown) {
 						if (i < 8) {
 							setTool(i);
@@ -6901,6 +6927,7 @@ function draw() {
 	} else {	
 		setCursor('auto');
 	}
+	setHoverText();
 	_frameCount++;
 	pmouseIsDown = mouseIsDown;
 	_pxmouse = _xmouse;
