@@ -1079,7 +1079,7 @@ S¶¶¶¶cd........²²²....²²²²......
 02S I don't care about any of that!  You will be punished for murdering me!
 00S Uh-oh...
 02S YOU SHALL NOT PASS!
-50S poop
+50S lever switch
 01S EEEEEEEE!
 00S Well, this sucks.
 01S I'm scared!

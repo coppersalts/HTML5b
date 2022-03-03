@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.6.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.6.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -2210,7 +2210,7 @@ function drawMenu2_3Button(id, x, y, action) {
 	if (onRect(_xmouse, _ymouse, x, y, menu2_3ButtonSize.w, menu2_3ButtonSize.h)) {
 		onButton = true;
 		if (mouseIsDown) {
-			fill = '#CCCCCC';
+			fill = '#cccccc';
 			menu2_3ButtonClicked = id;
 		}
 	} else {
@@ -2417,7 +2417,7 @@ function drawMenu() {
 		ctx.textBaseline = 'top';
 		linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
 		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
-		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1A4D1A', menuNewGame2no);
+		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
 	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
 	ctx.font = 'bold 30px Helvetica';
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
@@ -4188,10 +4188,10 @@ function changeControl() {
 		}
 	}
 	control = (control + 1) % charCount;
-	for (var _loc1_ = 0; char[control].charState != 10 && _loc1_ < 10; _loc1_++) {
+	for (var _loc1_ = 0; char[control].charState != 10 && _loc1_ < charCount; _loc1_++) {
 		control = (control + 1) % charCount;
 	}
-	if (_loc1_ == 10) {
+	if (_loc1_ == charCount) {
 		control = 10000;
 	}
 
