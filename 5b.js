@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.7.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.7.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -5008,8 +5008,8 @@ function drawLCChars() {
 }
 
 function resetLCChar(i) {
-	if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) {
-		if (char[i].charState != 3 && char[i].charState != 4) {
+	if ((myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4)) {
+		if (char[i].motionString.length == 0) {
 			while (myLevelChars[i].length < 6) {
 				myLevelChars[i].push([]);
 			}
@@ -5017,6 +5017,9 @@ function resetLCChar(i) {
 			myLevelChars[i][5] = [[3,1],[2,1]];
 			char[i].speed = myLevelChars[i][4];
 			char[i].motionString = generateMS(i);
+		} else {
+			myLevelChars[i][4] = char[i].speed;
+			myLevelChars[i][5] = generateMSOtherFormatted(i);
 		}
 	} else {
 		while (myLevelChars[i].length > 4) {
@@ -5243,6 +5246,23 @@ function generateMS(c) {
 			out.push(a[i][0]);
 		}
 	}
+	return out;
+}
+
+function generateMSOtherFormatted(c) {
+	var out = [];
+	var d = char[c].motionString[2];
+	var btm = 1;
+	for (var m = 2; m < char[c].motionString.length-1; m++) {
+		if (d != char[c].motionString[m+1]) {
+			out.push([d,btm]);
+			btm = 1;
+			d = char[c].motionString[m+1];
+		} else {
+			btm++;
+		}
+	}
+	out.push([d,btm]);
 	return out;
 }
 
