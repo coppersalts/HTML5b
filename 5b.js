@@ -4796,36 +4796,46 @@ function drawLCCharInfo(i, y) {
 		}
 	}
 
-	if (mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !duplicateChar && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
-		ctx.fillStyle = '#ee3333';
-		drawRemoveButton(665+240, y + charInfoHeight/2 - 10, 20, 3);
-		// ctx.fillRect(665+240, y + charInfoHeight/2 - 10, 20, 20);
-		if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
-			onButton = true;
-			hoverText = 'ID';
+	if (mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
+		if (duplicateChar) {
+			// ctx.fillStyle = '#ffffff';
+			// ctx.fillRect(665, y, 260, charInfoHeight);
 			if (mouseIsDown && !pmouseIsDown) {
-				charDropdown = -i-3;
-				charDropdownType = 0;
+				char.splice(i+1,0,cloneChar(char[i]));
+				myLevelChars.splice(i+1,0,cloneCharInfo(myLevelChars[i]));
+				duplicateChar = false;
 			}
-		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight)) {
-			onButton = true;
-			hoverText = 'State';
-			if (mouseIsDown && !pmouseIsDown) {
-				charDropdown = -i-3;
-				charDropdownType = 1;
-			}
-		} else if (_xmouse < 665+240) {
-			onButton = true;
-			hoverText = 'Start Location';
-			if (mouseIsDown && !pmouseIsDown) {
-				charDropdown = -i-3;
-				charDropdownType = 2;
-			}
-		} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + charInfoHeight/2 - 10, 20, 20)) {
-			onButton = true;
-			if (mouseIsDown && !pmouseIsDown) {
-				char.splice(i,1);
-				myLevelChars.splice(i,1);
+		} else {
+			ctx.fillStyle = '#ee3333';
+			drawRemoveButton(665+240, y + charInfoHeight/2 - 10, 20, 3);
+			// ctx.fillRect(665+240, y + charInfoHeight/2 - 10, 20, 20);
+			if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
+				onButton = true;
+				hoverText = 'ID';
+				if (mouseIsDown && !pmouseIsDown) {
+					charDropdown = -i-3;
+					charDropdownType = 0;
+				}
+			} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight)) {
+				onButton = true;
+				hoverText = 'State';
+				if (mouseIsDown && !pmouseIsDown) {
+					charDropdown = -i-3;
+					charDropdownType = 1;
+				}
+			} else if (_xmouse < 665+240) {
+				onButton = true;
+				hoverText = 'Start Location';
+				if (mouseIsDown && !pmouseIsDown) {
+					charDropdown = -i-3;
+					charDropdownType = 2;
+				}
+			} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + charInfoHeight/2 - 10, 20, 20)) {
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) {
+					char.splice(i,1);
+					myLevelChars.splice(i,1);
+				}
 			}
 		}
 	}
@@ -5046,6 +5056,43 @@ function resetLCChar(i) {
 	char[i].heatSpeed = charD[_loc2_][6];
 	char[i].hasArms = charD[_loc2_][8];
 	char[i].dExpr = _loc2_<35?charModels[_loc2_].defaultExpr:0;
+}
+
+function cloneChar(charObj) {
+	var clone = new Character(
+		charObj.id,
+		0.00,
+		0.00,
+		0.00,
+		0.00,
+		charObj.charState,
+		charObj.w,
+		charObj.h,
+		charObj.weight,
+		charObj.weight2,
+		charObj.h2,
+		charObj.friction,
+		charObj.heatSpeed,
+		charObj.hasArms,
+		charObj.dExpr
+		);
+	clone.placed = false;
+	clone.speed = charObj.speed;
+	clone.motionString = Object.values(charObj.motionString);
+	return clone;
+}
+
+function cloneCharInfo(info) {
+	console.log(info);
+	var clone = [info[0],0,0,info[3]];
+	if (info.length == 6) {
+		clone.push(info[4]);
+		clone.push([]);
+		for (var i = 0; i < info[5].length; i++) {
+			clone[5].push([info[5][i][0], info[5][i][1]]);
+		}
+	}
+	return clone;
 }
 
 function copyLevelString() {
@@ -5593,6 +5640,7 @@ function keyup(event){
 }
 
 // https://stackoverflow.com/questions/2176861/javascript-get-clipboard-data-on-paste-event-cross-browser
+// ni li ike meso
 function handlePaste(e) {
 	if (canvas.getAttribute('contenteditable')) {
 		var clipboardData, pastedData;
@@ -6343,9 +6391,9 @@ function draw() {
 			ctx.translate(0, -charsTabScrollBar);
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
-			ctx.font = '20px Helvetica';
-			for (var i = 0; i < myLevelChars.length; i++) {
-				if (duplicateChar)
+			ctx.font = '20px Helvetica'; 
+			for (var i = 0; i < Math.min(myLevelChars.length, charInfoYLookUp.length); i++) {
+				// if (duplicateChar)
 				drawLCCharInfo(i, charInfoYLookUp[i]);
 				if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
 			}
@@ -6391,6 +6439,7 @@ function draw() {
 				}
 				addButtonPressed = true;
 			}
+			if (duplicateChar && !addButtonPressed && mouseIsDown && !pmouseIsDown) duplicateChar = false;
 
 			if (charDropdown == -2) charDropdown = -1;
 			if (charDropdown >= 0) {
