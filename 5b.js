@@ -5361,6 +5361,22 @@ function drawAddButton(x, y, s, p) {
 	ctx.stroke();
 }
 
+function drawDuplicateButton(x, y, s, p) {
+	ctx.strokeStyle = '#606060';
+	ctx.lineWidth = 3;
+	x += p;
+	y += p;
+	s -= p*2;
+	ctx.strokeRect(x+s/3,y+s/3,s*2/3,s*2/3);
+	ctx.beginPath();
+	ctx.moveTo(x+s/3, y+s*2/3);
+	ctx.lineTo(x, y+s*2/3);
+	ctx.lineTo(x, y);
+	ctx.lineTo(x+s*2/3, y);
+	ctx.lineTo(x+s*2/3, y+s/3);
+	ctx.stroke();
+}
+
 function drawMinusButton(x, y, s, p) {
 	ctx.strokeStyle = '#606060';
 	ctx.lineWidth = 3;
@@ -6393,7 +6409,10 @@ function draw() {
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica'; 
 			for (var i = 0; i < Math.min(myLevelChars.length, charInfoYLookUp.length); i++) {
-				// if (duplicateChar)
+				if (duplicateChar && onRect(_xmouse, _ymouse, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
+					ctx.fillStyle = '#e8e8e8';
+					ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
+				}
 				drawLCCharInfo(i, charInfoYLookUp[i]);
 				if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
 			}
@@ -6552,7 +6571,7 @@ function draw() {
 
 			ctx.fillStyle = '#33ee33';
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
-			drawAddButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
+			drawDuplicateButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
 			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 2) {
 			// Tiles
