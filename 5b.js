@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.8.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.8.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -6802,9 +6802,14 @@ function draw() {
 		drawLCChars();
 
 
-
-		_loc9_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-		_loc3_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+		var shiftedXMouse = _xmouse;
+		var shiftedYMouse = _ymouse;
+		if (_keysDown[16]) {
+			if (Math.abs(_ymouse-lastClickY) > Math.abs(_xmouse-lastClickX)) shiftedXMouse = lastClickX;
+			else shiftedYMouse = lastClickY;
+		}
+		_loc9_ = Math.floor((shiftedXMouse - (330 - scale * levelWidth / 2)) / scale);
+		_loc3_ = Math.floor((shiftedYMouse - (240 - scale * levelHeight / 2)) / scale);
 		if (mouseIsDown) {
 			if (selectedTab == 2) {
 				if (tool <= 1 && mouseOnGrid()) {
