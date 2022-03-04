@@ -5556,9 +5556,9 @@ function keydown(event){
 	_keysDown[event.keyCode || event.charCode] = true;
 	if (editingTextBox >= 0 && event.keyCode) {
 		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
-			// navigator.clipboard.readText().then(clipText => {
-			// 	inputText += clipText;
-			// });
+			navigator.clipboard.readText().then(clipText => {
+				inputText += clipText;
+			}).catch(err => console.log(err));
 		} else if (event.key.length == 1) {
 			inputText += event.key;
 		} else if (event.key == 'Backspace') {
