@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.8.2'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.8.3'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1715,6 +1715,7 @@ var diaTabScrollBar = 0;
 var bgsTabScrollBar = 0;
 var draggingScrollBar = false;
 var addButtonPressed = false;
+var duplicateChar = false;
 var levelLoadString = '';
 var power = 1;
 var jumpPower = 11;
@@ -4325,6 +4326,7 @@ function resetLevelCreator() {
 	// levelCreator.createEmptyMovieClip("tiles",98);
 	// levelCreator.createEmptyMovieClip("rectSelect",99);
 	lcPopUp = false;
+	duplicateChar = false;
 	menuScreen = 5;
 	selectedTab = 0;
 	selectedBg = 0;
@@ -4724,7 +4726,7 @@ function drawLCCharInfo(i, y) {
 		ctx.fillRect(665, y+charInfoHeight, charInfoHeight, diaInfoHeight);
 		ctx.fillStyle = '#ffffff';
 		ctx.fillText(char[i].speed.toString().padStart(2, '0'), 665 + 5, y + charInfoHeight + diaInfoHeight*0.5);
-		var canDropDown = mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed;
+		var canDropDown = mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !duplicateChar && !addButtonPressed;
 		if (canDropDown && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y+charInfoHeight, charInfoHeight, diaInfoHeight)) {
 			onButton = true;
 			hoverText = 'Movement Speed';
@@ -4794,7 +4796,7 @@ function drawLCCharInfo(i, y) {
 		}
 	}
 
-	if (mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
+	if (mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !duplicateChar && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
 		ctx.fillStyle = '#ee3333';
 		drawRemoveButton(665+240, y + charInfoHeight/2 - 10, 20, 3);
 		// ctx.fillRect(665+240, y + charInfoHeight/2 - 10, 20, 20);
@@ -5104,6 +5106,7 @@ function openLevelLoader() {
 	lcPopUp = true;
 	lcPopUpType = 0;
 	levelLoadString = '';
+	canvas.setAttribute('contenteditable', true);
 }
 
 function readLevelString(str) {
@@ -5553,9 +5556,9 @@ function keydown(event){
 	_keysDown[event.keyCode || event.charCode] = true;
 	if (editingTextBox >= 0 && event.keyCode) {
 		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
-			navigator.clipboard.readText().then(clipText => {
-				inputText += clipText;
-			});
+			// navigator.clipboard.readText().then(clipText => {
+			// 	inputText += clipText;
+			// });
 		} else if (event.key.length == 1) {
 			inputText += event.key;
 		} else if (event.key == 'Backspace') {
@@ -5589,6 +5592,27 @@ function keyup(event){
 	if (event.metaKey || event.ctrlKey) controlOrCommandPress = false;
 }
 
+// https://stackoverflow.com/questions/2176861/javascript-get-clipboard-data-on-paste-event-cross-browser
+function handlePaste(e) {
+	if (canvas.getAttribute('contenteditable')) {
+		var clipboardData, pastedData;
+
+		// Stop data actually being pasted into div
+		e.stopPropagation();
+		e.preventDefault();
+
+		// Get pasted data via clipboard API
+		clipboardData = e.clipboardData || window.clipboardData;
+		pastedData = clipboardData.getData('Text');
+
+		// Do whatever with pasteddata
+		if (editingTextBox >= 0 && currentTextBoxAllowsLineBreaks) {
+			inputText += pastedData;
+		}
+	}
+	//canvas.setAttribute('contenteditable', true);
+}
+
 function setup() {
 	osc1 = document.createElement('canvas');
 	osc1.width = cwidth;
@@ -5615,6 +5639,7 @@ function setup() {
 	window.addEventListener('mouseup', mouseup);
 	window.addEventListener('keydown', keydown);
 	window.addEventListener('keyup', keyup);
+	canvas.addEventListener('paste', handlePaste);
 
 	// setInterval(draw, 17);
 	requestAnimationFrame(draw);
@@ -6320,6 +6345,7 @@ function draw() {
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
 			for (var i = 0; i < myLevelChars.length; i++) {
+				if (duplicateChar)
 				drawLCCharInfo(i, charInfoYLookUp[i]);
 				if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
 			}
@@ -6350,6 +6376,17 @@ function draw() {
 							_loc2_<35?charModels[_loc2_].defaultExpr:0
 							));
 						char[char.length-1].placed = false;
+					}
+				}
+				addButtonPressed = true;
+			}
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				if (myLevelChars.length < 50) {
+					onButton = true;
+					hoverText = 'Duplicate Character or Object';
+					if (mouseIsDown && !pmouseIsDown) {
+						// console.log('mi lon ni');
+						duplicateChar = true;
 					}
 				}
 				addButtonPressed = true;
@@ -6466,6 +6503,7 @@ function draw() {
 
 			ctx.fillStyle = '#33ee33';
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
+			drawAddButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
 			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 2) {
 			// Tiles
@@ -6759,7 +6797,8 @@ function draw() {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					selectedTab = i;
-					draggingScrollBar = false;	
+					draggingScrollBar = false;
+					duplicateChar = false;
 				}
 			}
 		}
@@ -6916,6 +6955,7 @@ function draw() {
 					lcPopUp = false;
 					editingTextBox = -1;
 					levelLoadString = '';
+					canvas.setAttribute('contenteditable', false)
 				}
 				ctx.fillStyle = '#000000';
 				ctx.font = '20px Helvetica';
@@ -6940,6 +6980,7 @@ function draw() {
 						lcPopUp = false;
 						editingTextBox = -1;
 						levelLoadString = '';
+						canvas.setAttribute('contenteditable', false)
 					}
 				} else if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
 					onButton = true;
@@ -6948,6 +6989,7 @@ function draw() {
 						lcPopUp = false;
 						editingTextBox = -1;
 						levelLoadString = '';
+						canvas.setAttribute('contenteditable', false)
 					}
 				}
 			}
