@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.7.3'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.8.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1715,6 +1715,7 @@ var diaTabScrollBar = 0;
 var bgsTabScrollBar = 0;
 var draggingScrollBar = false;
 var addButtonPressed = false;
+var levelLoadString = '';
 var power = 1;
 var jumpPower = 11;
 var qPress = false;
@@ -2301,12 +2302,12 @@ function drawNewGame2Button(text, x, y, id, color, action) {
 	ctx.fillText(text, x+size/2, y+size*1.1/2);
 }
 
-function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, c2) {
+function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, c2, font) {
 	ctx.fillStyle = c1;
 	ctx.fillRect(x, y, w, h);
 
 	ctx.fillStyle = c2;
-	ctx.font = textSize + 'px Helvetica';
+	ctx.font = textSize + 'px ' + font;
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	var lines = wrapText(text, x+pad[0], y+pad[1], w-pad[0]-pad[2], textSize);
@@ -2385,6 +2386,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			ctx.lineTo(blinkyLineX, y+pad[1]+textSize*(blinkyLineY+1));
 			ctx.stroke();
 		}
+
 		if (_keysDown[13] && !_keysDown[16]) editingTextBox = -1;
 	}
 
@@ -4868,7 +4870,7 @@ function drawLCDiaInfo(i, y) {
 		ctx.textBaseline = 'top';
 		ctx.fillText('lever switch', 665 + diaInfoHeight*3 + 5, y);
 	} else {
-		var diaTextBox = drawTextBox(myLevelDialogue[i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff');
+		var diaTextBox = drawTextBox(myLevelDialogue[i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff', 'Helvetica');
 	}
 	myLevelDialogue[i].text = diaTextBox[0];
 	myLevelDialogue[i].linecount = diaTextBox[1].length;
@@ -5101,118 +5103,116 @@ function copyLevelString() {
 function openLevelLoader() {
 	lcPopUp = true;
 	lcPopUpType = 0;
+	levelLoadString = '';
 }
 
-function readLevelString() {
-	navigator.clipboard.readText().then(clipText => {
-		console.log(clipText);
-		let lines = clipText.split('\r\n');
-		if (lines.length == 1) lines = clipText.split('\n');
-		let i = 0;
+function readLevelString(str) {
+	let lines = str.split('\r\n');
+	if (lines.length == 1) lines = str.split('\n');
+	let i = 0;
 
-		// skip past any blank lines at the start
-		while (i < lines.length && lines[i] == '') i++;
-		myLevelInfo.name = lines[i];
-		i++;
+	// skip past any blank lines at the start
+	while (i < lines.length && lines[i] == '') i++;
+	myLevelInfo.name = lines[i];
+	i++;
 
-		// read level info
-		let levelInfo = lines[i].split(',');
-		levelWidth = parseInt(levelInfo[0]);
-		levelHeight = parseInt(levelInfo[1]);
-		charCount = parseInt(levelInfo[2]);
-		myLevelChars = new Array(charCount);
-		char = new Array(charCount);
-		selectedBg = parseInt(levelInfo[3]);
-		longMode = levelInfo[4]=='H';
-		i++;
+	// read level info
+	let levelInfo = lines[i].split(',');
+	levelWidth = parseInt(levelInfo[0]);
+	levelHeight = parseInt(levelInfo[1]);
+	charCount = parseInt(levelInfo[2]);
+	myLevelChars = new Array(charCount);
+	char = new Array(charCount);
+	selectedBg = parseInt(levelInfo[3]);
+	longMode = levelInfo[4]=='H';
+	i++;
 
-		// read block layout data
-		myLevel[1] = new Array(levelHeight);
-		if (longMode) {
-			for (var y = 0; y < levelHeight; y++) {
-				myLevel[1][y] = new Array(levelWidth);
-				for (var x = 0; x < levelWidth; x++) {
-					myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
-				}
-			}
-		} else {
-			for (var y = 0; y < levelHeight; y++) {
-				myLevel[1][y] = new Array(levelWidth);
-				for (var x = 0; x < levelWidth; x++) {
-					myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
-				}
+	// read block layout data
+	myLevel[1] = new Array(levelHeight);
+	if (longMode) {
+		for (var y = 0; y < levelHeight; y++) {
+			myLevel[1][y] = new Array(levelWidth);
+			for (var x = 0; x < levelWidth; x++) {
+				myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
 			}
 		}
-		i += levelHeight;
-
-		// read entity data
-		for (var e = 0; e < myLevelChars.length; e++) {
-			let entityInfo = lines[i+e].split(',').join(' ').split(' ');
-			myLevelChars[e] = [0,0.0,0.0,10];
-			myLevelChars[e][0] = parseInt(entityInfo[0]);
-			myLevelChars[e][1] = parseFloat(entityInfo[1]);
-			myLevelChars[e][2] = parseFloat(entityInfo[2]);
-			myLevelChars[e][3] = parseInt(entityInfo[3]);
-			let _loc2_ = myLevelChars[e][0];
-			if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
-			char[e] = new Character(
-				_loc2_,
-				+myLevelChars[e][1].toFixed(2) * 30,
-				+myLevelChars[e][2].toFixed(2) * 30,
-				70 + e * 40,
-				400 - e * 30,
-				myLevelChars[e][3],
-				charD[_loc2_][0],
-				charD[_loc2_][1],
-				charD[_loc2_][2],
-				charD[_loc2_][2],
-				charD[_loc2_][3],
-				charD[_loc2_][4],
-				charD[_loc2_][6],
-				charD[_loc2_][8],
-				_loc2_<35?charModels[_loc2_].defaultExpr:0
-			);
-			if (myLevelChars[e][3] == 3 || myLevelChars[e][3] == 4) {
-				myLevelChars[e][4] = parseInt(entityInfo[4].slice(0,2));
-				myLevelChars[e][5] = [];
-				let d = entityInfo[4].charCodeAt(2)-48;
-				let btm = 1;
-				for (var m = 2; m < entityInfo[4].length-1; m++) {
-					if (d != entityInfo[4].charCodeAt(m+1)-48) {
-						myLevelChars[e][5].push([d,btm]);
-						btm = 1;
-						d = entityInfo[4].charCodeAt(m+1)-48;
-					} else {
-						btm++;
-					}
-				}
-				myLevelChars[e][5].push([d,btm]);
-				console.log(myLevelChars[e][5]);
-				char[e].motionString = generateMS(e);
-				char[e].speed = myLevelChars[e][4];
-				//entityInfo[4]
+	} else {
+		for (var y = 0; y < levelHeight; y++) {
+			myLevel[1][y] = new Array(levelWidth);
+			for (var x = 0; x < levelWidth; x++) {
+				myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
 			}
 		}
-		i += myLevelChars.length;
+	}
+	i += levelHeight;
 
-		// read dialogue
-		myLevelDialogue = new Array(parseInt(lines[i]));
-		i++;
-		for (var d = 0; d < myLevelDialogue.length; d++) {
-			myLevelDialogue[d] = {char:0,face:2,text:''};
-			myLevelDialogue[d].char = parseInt(lines[i+d].slice(0,2));
-			myLevelDialogue[d].face = lines[i+d].charAt(2)=='S'?3:2;
-			myLevelDialogue[d].text = lines[i+d].substring(4);
+	// read entity data
+	for (var e = 0; e < myLevelChars.length; e++) {
+		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
+		myLevelChars[e] = [0,0.0,0.0,10];
+		myLevelChars[e][0] = parseInt(entityInfo[0]);
+		myLevelChars[e][1] = parseFloat(entityInfo[1]);
+		myLevelChars[e][2] = parseFloat(entityInfo[2]);
+		myLevelChars[e][3] = parseInt(entityInfo[3]);
+		let _loc2_ = myLevelChars[e][0];
+		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
+		char[e] = new Character(
+			_loc2_,
+			+myLevelChars[e][1].toFixed(2) * 30,
+			+myLevelChars[e][2].toFixed(2) * 30,
+			70 + e * 40,
+			400 - e * 30,
+			myLevelChars[e][3],
+			charD[_loc2_][0],
+			charD[_loc2_][1],
+			charD[_loc2_][2],
+			charD[_loc2_][2],
+			charD[_loc2_][3],
+			charD[_loc2_][4],
+			charD[_loc2_][6],
+			charD[_loc2_][8],
+			_loc2_<35?charModels[_loc2_].defaultExpr:0
+		);
+		if (myLevelChars[e][3] == 3 || myLevelChars[e][3] == 4) {
+			myLevelChars[e][4] = parseInt(entityInfo[4].slice(0,2));
+			myLevelChars[e][5] = [];
+			let d = entityInfo[4].charCodeAt(2)-48;
+			let btm = 1;
+			for (var m = 2; m < entityInfo[4].length-1; m++) {
+				if (d != entityInfo[4].charCodeAt(m+1)-48) {
+					myLevelChars[e][5].push([d,btm]);
+					btm = 1;
+					d = entityInfo[4].charCodeAt(m+1)-48;
+				} else {
+					btm++;
+				}
+			}
+			myLevelChars[e][5].push([d,btm]);
+			// console.log(myLevelChars[e][5]);
+			char[e].motionString = generateMS(e);
+			char[e].speed = myLevelChars[e][4];
+			//entityInfo[4]
 		}
-		i += myLevelDialogue.length;
+	}
+	i += myLevelChars.length;
 
-		myLevelNecessaryDeaths = parseInt(lines[i]);
+	// read dialogue
+	myLevelDialogue = new Array(parseInt(lines[i]));
+	i++;
+	for (var d = 0; d < myLevelDialogue.length; d++) {
+		myLevelDialogue[d] = {char:0,face:2,text:''};
+		myLevelDialogue[d].char = parseInt(lines[i+d].slice(0,2));
+		myLevelDialogue[d].face = lines[i+d].charAt(2)=='S'?3:2;
+		myLevelDialogue[d].text = lines[i+d].substring(4);
+	}
+	i += myLevelDialogue.length;
 
-		levelTimer = 0;
+	myLevelNecessaryDeaths = parseInt(lines[i]);
 
-		setLCBG();
-		updateLCtiles();
-	});
+	levelTimer = 0;
+
+	setLCBG();
+	updateLCtiles();
 }
 
 function tileCharFromID(id) {
@@ -5552,7 +5552,11 @@ function mouseup(event){
 function keydown(event){
 	_keysDown[event.keyCode || event.charCode] = true;
 	if (editingTextBox >= 0 && event.keyCode) {
-		if (event.key.length == 1) {
+		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
+			navigator.clipboard.readText().then(clipText => {
+				inputText += clipText;
+			});
+		} else if (event.key.length == 1) {
 			inputText += event.key;
 		} else if (event.key == 'Backspace') {
 			inputText = inputText.slice(0,-1);
@@ -6274,9 +6278,9 @@ function draw() {
 			ctx.fillText('Name:',770,tabWindowY + 10);
 			ctx.fillText('Creator:',770,tabWindowY + 60);
 			ctx.fillText('Description:',770,tabWindowY + 110);
-			myLevelInfo.name = drawTextBox(myLevelInfo.name, 785, tabWindowY + 10, 160, 40, 18, [5,2,2,2], 0, false, '#e0e0e0', '#000000')[0];
-			myLevelInfo.creator = drawTextBox(myLevelInfo.creator, 785, tabWindowY + 60, 160, 40, 18, [5,2,2,2], 1, false, '#e0e0e0', '#000000')[0];
-			myLevelInfo.desc = drawTextBox(myLevelInfo.desc, 785, tabWindowY + 110, 160, 220, 14, [5,2,2,2], 2, true, '#e0e0e0', '#000000')[0];
+			myLevelInfo.name = drawTextBox(myLevelInfo.name, 785, tabWindowY + 10, 160, 40, 18, [5,2,2,2], 0, false, '#e0e0e0', '#000000', 'Helvetica')[0];
+			myLevelInfo.creator = drawTextBox(myLevelInfo.creator, 785, tabWindowY + 60, 160, 40, 18, [5,2,2,2], 1, false, '#e0e0e0', '#000000', 'Helvetica')[0];
+			myLevelInfo.desc = drawTextBox(myLevelInfo.desc, 785, tabWindowY + 110, 160, 220, 14, [5,2,2,2], 2, true, '#e0e0e0', '#000000', 'Helvetica')[0];
 			if (mouseIsDown && !pmouseIsDown && !onTextBox) {
 				editingTextBox = -1;
 			}
@@ -6900,24 +6904,46 @@ function draw() {
 				ctx.fillRect(0, 0, cwidth, cheight);
 				ctx.globalAlpha = 1;
 				var lcPopUpW = 750;
-				var lcPopUpH = 450;
-				ctx.fillStyle = '#ffffff';
+				var lcPopUpH = 540;
+				ctx.fillStyle = '#eaeaea';
 				ctx.fillRect((cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH);
 				if (mouseIsDown && !pmouseIsDown && !onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH)) {
 					lcPopUp = false;
+					editingTextBox = -1;
+					levelLoadString = '';
 				}
 				ctx.fillStyle = '#000000';
 				ctx.font = '20px Helvetica';
 				ctx.textBaseline = 'top';
 				ctx.textAlign = 'left';
-				linebreakText('Paste your level\'s string here:\nThere\'s not actually a text box here yet, so just do the paste shortcut to\nload it directly from your clipboard.', (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 10, 30);
-				if (controlOrCommandPress && _keysDown[86]) {
-					lcPopUp = false;
-					_keysDown[86] = false; // this is kinda hacky
-					// I just looked back at this and what the hell?
-					// Whatever. I'll probably be able to get rid of this
-					// when I add an actual text box to the screen.
-					readLevelString();
+				ctx.fillText('Paste your level\'s string here:', (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 5);
+				levelLoadString = drawTextBox(levelLoadString, (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 30, lcPopUpW-20, lcPopUpH-80, 8, [5,5,5,5], 2, true, '#ffffff', '#000000', 'monospace')[0];
+
+				ctx.font = '18px Helvetica';
+				ctx.textAlign = 'center';
+				ctx.fillStyle = '#a0a0a0';
+				ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
+				ctx.fillStyle = '#ffffff';
+				ctx.fillText('Cancel', (cwidth-lcPopUpW)/2 + lcPopUpW-110, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
+				ctx.fillStyle = '#00a0ff';
+				ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
+				ctx.fillStyle = '#ffffff';
+				ctx.fillText('Load', (cwidth-lcPopUpW)/2 + lcPopUpW-40, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
+				if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) {
+						lcPopUp = false;
+						editingTextBox = -1;
+						levelLoadString = '';
+					}
+				} else if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) {
+						readLevelString(levelLoadString);
+						lcPopUp = false;
+						editingTextBox = -1;
+						levelLoadString = '';
+					}
 				}
 			}
 		}
