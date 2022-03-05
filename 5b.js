@@ -7074,6 +7074,7 @@ function draw() {
 		}
 
 		if (lcMessageTimer > 0) {
+			if (lcMessageTimer > 50) ctx.globalAlpha = (100-lcMessageTimer)/50;
 			ctx.font = '25px Helvetica';
 			ctx.textBaseline = 'middle';
 			ctx.textAlign = 'center';
@@ -7086,6 +7087,7 @@ function draw() {
 			if (lcMessageTimer > 100 || (_pxmouse != _xmouse || _pymouse != _ymouse)) {
 				lcMessageTimer = 0;
 			}
+			ctx.globalAlpha = 1;
 		}
 
 		levelTimer++;
