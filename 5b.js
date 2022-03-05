@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.9.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.9.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -4833,6 +4833,14 @@ function drawLCCharInfo(i, y) {
 				setUndo();
 				char.splice(i+1,0,cloneChar(char[i]));
 				myLevelChars[1].splice(i+1,0,cloneCharInfo(myLevelChars[1][i], true));
+				// Update dialogue tab
+				for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+					if (myLevelDialogue[1][j].char < 50) {
+						if (myLevelDialogue[1][j].char > i) {
+							myLevelDialogue[1][j].char++;
+						}
+					}
+				}
 				duplicateChar = false;
 			}
 		} else {
@@ -4868,6 +4876,16 @@ function drawLCCharInfo(i, y) {
 					setUndo();
 					char.splice(i,1);
 					myLevelChars[1].splice(i,1);
+					// Update dialogue tab
+					for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+						if (myLevelDialogue[1][j].char < 50) {
+							if (myLevelDialogue[1][j].char == i) {
+								myLevelDialogue[1].splice(j,1);
+							} else if (myLevelDialogue[1][j].char > i) {
+								myLevelDialogue[1][j].char--;
+							}
+						}
+					}
 				}
 			}
 		}
