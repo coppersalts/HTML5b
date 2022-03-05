@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.8.3'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.8.4'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1717,6 +1717,8 @@ var draggingScrollBar = false;
 var addButtonPressed = false;
 var duplicateChar = false;
 var levelLoadString = '';
+var lcMessageTimer = 0;
+var lcMessageText = '';
 var power = 1;
 var jumpPower = 11;
 var qPress = false;
@@ -2172,6 +2174,7 @@ function testLevelCreator() {
 		}
 		playMode = 2;
 		currentLevel = -1;
+		editingTextBox = -1;
 		wipeTimer = 30;
 		// bg.cacheAsBitmap = true;
 		menuScreen = 3;
@@ -4340,6 +4343,8 @@ function resetLevelCreator() {
 	tileTabScrollBar = 0;
 	diaTabScrollBar = 0;
 	bgsTabScrollBar = 0;
+	lcMessageTimer = 0;
+	lcMessageText = '';
 	// drawLCGrid();
 	// fillTilesTab();
 	charCount2 = 0;
@@ -5141,10 +5146,14 @@ function copyLevelString() {
 	lcLevelString += myLevelNecessaryDeaths.toString(10).padStart(6, '0') + '\r\n';
 
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-	console.log(lcLevelString);
+	// console.log(lcLevelString);
 	navigator.clipboard.writeText(lcLevelString).then(function() {
-		console.log('Successfuly copied to clipboard!');
+		// console.log('Successfuly copied to clipboard!');
+		lcMessageTimer = 1;
+		lcMessageText = 'Level string successfuly copied to clipboard!';
 	}, function(err) {
+		lcMessageTimer = 1;
+		lcMessageText = 'There was an error while copying the level string.';
 		console.error('Could not copy text: ', err);
 	});
 }
@@ -6867,6 +6876,7 @@ function draw() {
 					selectedTab = i;
 					draggingScrollBar = false;
 					duplicateChar = false;
+					editingTextBox = -1;
 				}
 			}
 		}
@@ -7062,6 +7072,22 @@ function draw() {
 				}
 			}
 		}
+
+		if (lcMessageTimer > 0) {
+			ctx.font = '25px Helvetica';
+			ctx.textBaseline = 'middle';
+			ctx.textAlign = 'center';
+			ctx.fillStyle = '#ffffff';
+			var msgWidth = ctx.measureText(lcMessageText).width+10;
+			ctx.fillRect((cwidth-msgWidth)/2, (cheight-30)/2, msgWidth, 30);
+			ctx.fillStyle = '#000000';
+			ctx.fillText(lcMessageText, cwidth/2, cheight/2);
+			lcMessageTimer++;
+			if (lcMessageTimer > 100 || (_pxmouse != _xmouse || _pymouse != _ymouse)) {
+				lcMessageTimer = 0;
+			}
+		}
+
 		levelTimer++;
 	}
 
