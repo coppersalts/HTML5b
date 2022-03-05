@@ -2164,7 +2164,7 @@ function playGame() {
 }
 
 function testLevelCreator() {
-	if (myLevelChars.length > 0) {
+	if (myLevelChars[1].length > 0) {
 		if (myLevelDialogue.length == 0) {
 			for (var i = 0; i < myLevel[1].length; i++) {
 				for (var j = 0; j < myLevel[1][i].length; j++) {
@@ -2703,7 +2703,7 @@ function resetLevel() {
 
 function resetMyLevel() {
 	HPRCBubbleFrame = 0;
-	charCount = myLevelChars.length;
+	charCount = myLevelChars[1].length;
 	levelWidth = myLevel[1][0].length;
 	levelHeight = myLevel[1].length;
 	charDepths = new Array((charCount + 1) * 2).fill(-1);
@@ -2719,14 +2719,14 @@ function resetMyLevel() {
 	charCount2 = 0;
 	HPRC1 = HPRC2 = 1000000;
 	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		var _loc2_ = myLevelChars[_loc1_][0];
+		var _loc2_ = myLevelChars[1][_loc1_][0];
 		char[_loc1_] = new Character(
 			_loc2_,
-			myLevelChars[_loc1_][1] * 30,
-			myLevelChars[_loc1_][2] * 30,
+			myLevelChars[1][_loc1_][1] * 30,
+			myLevelChars[1][_loc1_][2] * 30,
 			70 + _loc1_ * 40,
 			400 - _loc1_ * 30,
-			myLevelChars[_loc1_][3],
+			myLevelChars[1][_loc1_][3],
 			charD[_loc2_][0],
 			charD[_loc2_][1],
 			charD[_loc2_][2],
@@ -2748,8 +2748,8 @@ function resetMyLevel() {
 		if (_loc2_ == 36) HPRC1 = _loc1_;
 		if (_loc2_ == 35) HPRC2 = _loc1_;
 		if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
-			char[_loc1_].speed = myLevelChars[_loc1_][4];
-			char[_loc1_].motionString = generateMS(_loc1_);
+			char[_loc1_].speed = myLevelChars[1][_loc1_][4];
+			char[_loc1_].motionString = generateMS(myLevelChars[1][_loc1_]);
 		}
 	}
 	// charCount2 = Math.min(charCount2, 6)
@@ -4349,7 +4349,6 @@ function resetLevelCreator() {
 	// fillTilesTab();
 	charCount2 = 0;
 	charCount = 0;
-	myLevelChars = [];
 	myLevelDialogue = [];
 	myLevelInfo = {name:'Untitled',creator:'',desc:''};
 	// setEndGateLights();
@@ -4487,6 +4486,7 @@ function clearMyWholeLevel() {
 	for (var _loc1_ = 0; _loc1_ < 3; _loc1_++) {
 		clearMyLevel(_loc1_);
 	}
+	myLevelChars = [[],[],[]];
 }
 
 function clearMyLevel(i) {
@@ -4549,6 +4549,11 @@ function undo() {
 	// }
 	undid = !undid;
 	updateLCtiles();
+	levelTimer = 0;
+	char = new Array(myLevelChars[1].length);
+	for (var i = 0; i < myLevelChars[1].length; i++) {
+		char[i] = generateCharFromInfo(myLevelChars[1][i]);
+	}
 }
 
 function copyRect() {
@@ -4586,6 +4591,11 @@ function LCSwapLevelData(a, b) {
 	if (b == 1) {
 		levelHeight = myLevel[b].length;
 		levelWidth = myLevel[b][0].length;
+	}
+
+	myLevelChars[b] = new Array(myLevelChars[a].length);
+	for (var _loc2_ = 0; _loc2_ < myLevelChars[a].length; _loc2_++) {
+		myLevelChars[b][_loc2_] = cloneCharInfo(myLevelChars[a][_loc2_], false);
 	}
 }
 
@@ -4705,9 +4715,9 @@ function drawLCCharInfo(i, y) {
 	ctx.fillRect(665, y, charInfoHeight, charInfoHeight);
 	ctx.fillStyle = '#808080';
 	ctx.fillRect((665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight);
-	var charimgmat = charModels[myLevelChars[i][0]].charimgmat;
+	var charimgmat = charModels[myLevelChars[1][i][0]].charimgmat;
 	if (typeof charimgmat !== 'undefined') {
-		var charimg = svgChars[myLevelChars[i][0]];
+		var charimg = svgChars[myLevelChars[1][i][0]];
 		if (Array.isArray(charimg)) charimg = charimg[0];
 		var sc = charInfoHeight/32;
 		ctx.save();
@@ -4723,10 +4733,10 @@ function drawLCCharInfo(i, y) {
 		ctx.restore();
 	}
 	ctx.fillStyle = '#ffffff';
-	ctx.fillText(twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ', ' + twoDecimalPlaceNumFormat(myLevelChars[i][2]), 665 + charInfoHeight + 5, y + charInfoHeight/2);
-	ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-charInfoHeight*1.5 + 5, y + charInfoHeight/2);
+	ctx.fillText(twoDecimalPlaceNumFormat(Math.max(myLevelChars[1][i][1],0)) + ', ' + twoDecimalPlaceNumFormat(Math.max(myLevelChars[1][i][2],0)), 665 + charInfoHeight + 5, y + charInfoHeight/2);
+	ctx.fillText(charStateNamesShort[myLevelChars[1][i][3]], (665+240)-charInfoHeight*1.5 + 5, y + charInfoHeight/2);
 
-	if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) {
+	if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) {
 		ctx.fillStyle = '#808080';
 		ctx.fillRect(665, y+charInfoHeight, charInfoHeight, diaInfoHeight);
 		ctx.fillStyle = '#ffffff';
@@ -4736,20 +4746,21 @@ function drawLCCharInfo(i, y) {
 			onButton = true;
 			hoverText = 'Movement Speed';
 			if (mouseIsDown && !pmouseIsDown) {
+				setUndo();
 				charDropdown = -i-3;
 				charDropdownType = 3;
 				valueAtClick = char[i].speed;
 			}
 		}
 
-		var drawingDeleteButtons = myLevelChars[i][5].length>1;
+		var drawingDeleteButtons = myLevelChars[1][i][5].length>1;
 
-		for (var j = 0; j < myLevelChars[i][5].length; j++) {
+		for (var j = 0; j < myLevelChars[1][i][5].length; j++) {
 			ctx.fillStyle = '#626262';
 			ctx.fillRect(665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 100-charInfoHeight, diaInfoHeight);
 			ctx.fillStyle = '#ffffff';
-			ctx.fillText(direLetters[myLevelChars[i][5][j][0]], 665 + charInfoHeight + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
-			ctx.fillText(myLevelChars[i][5][j][1], 665 + charInfoHeight*1.5 + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
+			ctx.fillText(direLetters[myLevelChars[1][i][5][j][0]], 665 + charInfoHeight + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
+			ctx.fillText(myLevelChars[1][i][5][j][1], 665 + charInfoHeight*1.5 + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
 
 			if (canDropDown) {
 				if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 120-charInfoHeight, diaInfoHeight)) {
@@ -4757,6 +4768,7 @@ function drawLCCharInfo(i, y) {
 						onButton = true;
 						hoverText = 'Direction';
 						if (mouseIsDown && !pmouseIsDown) {
+							setUndo();
 							charDropdown = -i-3;
 							charDropdownType = 4;
 							charDropdownMS = j;
@@ -4765,16 +4777,18 @@ function drawLCCharInfo(i, y) {
 						onButton = true;
 						hoverText = 'Block Count';
 						if (mouseIsDown && !pmouseIsDown) {
+							setUndo();
 							charDropdown = -i-3;
 							charDropdownType = 5;
 							charDropdownMS = j;
-							valueAtClick = myLevelChars[i][5][j][1]
+							valueAtClick = myLevelChars[1][i][5][j][1]
 						}
 					} else if (drawingDeleteButtons) {
 						onButton = true;
 						if (mouseIsDown && !pmouseIsDown) {
-							myLevelChars[i][5].splice(j,1);
-							char[i].motionString = generateMS(i);
+							setUndo();
+							myLevelChars[1][i][5].splice(j,1);
+							char[i].motionString = generateMS(myLevelChars[1][i]);
 						}
 					}
 					if (drawingDeleteButtons) {
@@ -4784,7 +4798,7 @@ function drawLCCharInfo(i, y) {
 					}
 				}
 				// Draw add button
-				if (j == myLevelChars[i][5].length - 1) {
+				if (j == myLevelChars[1][i][5].length - 1) {
 					// ctx.fillStyle = '#33ee33';
 					drawAddButton((665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, 3);
 					// ctx.fillRect((665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight);
@@ -4792,8 +4806,9 @@ function drawLCCharInfo(i, y) {
 						onButton = true;
 						hoverText = 'Add to Path';
 						if (mouseIsDown && !pmouseIsDown) {
-							myLevelChars[i][5].push([0,1]);
-							char[i].motionString = generateMS(i);
+							setUndo();
+							myLevelChars[1][i][5].push([0,1]);
+							char[i].motionString = generateMS(myLevelChars[1][i]);
 						}
 					}
 				}
@@ -4803,11 +4818,10 @@ function drawLCCharInfo(i, y) {
 
 	if (mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
 		if (duplicateChar) {
-			// ctx.fillStyle = '#ffffff';
-			// ctx.fillRect(665, y, 260, charInfoHeight);
 			if (mouseIsDown && !pmouseIsDown) {
+				setUndo();
 				char.splice(i+1,0,cloneChar(char[i]));
-				myLevelChars.splice(i+1,0,cloneCharInfo(myLevelChars[i]));
+				myLevelChars[1].splice(i+1,0,cloneCharInfo(myLevelChars[1][i], true));
 				duplicateChar = false;
 			}
 		} else {
@@ -4818,6 +4832,7 @@ function drawLCCharInfo(i, y) {
 				onButton = true;
 				hoverText = 'ID';
 				if (mouseIsDown && !pmouseIsDown) {
+					setUndo();
 					charDropdown = -i-3;
 					charDropdownType = 0;
 				}
@@ -4832,14 +4847,16 @@ function drawLCCharInfo(i, y) {
 				onButton = true;
 				hoverText = 'Start Location';
 				if (mouseIsDown && !pmouseIsDown) {
+					setUndo();
 					charDropdown = -i-3;
 					charDropdownType = 2;
 				}
 			} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + charInfoHeight/2 - 10, 20, 20)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
+					setUndo();
 					char.splice(i,1);
-					myLevelChars.splice(i,1);
+					myLevelChars[1].splice(i,1);
 				}
 			}
 		}
@@ -4893,7 +4910,7 @@ function drawLCDiaInfo(i, y) {
 	myLevelDialogue[i].linecount = diaTextBox[1].length;
 	ctx.fillText(myLevelDialogue[i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y);
 	ctx.fillText(myLevelDialogue[i].char.toString(10).padStart(2, '0'), 665 + 5, y);
-	// ctx.fillText(charStateNamesShort[myLevelChars[i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
+	// ctx.fillText(charStateNamesShort[myLevelChars[1][i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 	//myLevelDialogue[diaDropdown].face
 	if (mouseOnTabWindow && !lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
@@ -5027,31 +5044,31 @@ function drawLCChars() {
 }
 
 function resetLCChar(i) {
-	if ((myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4)) {
+	if ((myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4)) {
 		if (char[i].motionString.length == 0) {
-			while (myLevelChars[i].length < 6) {
-				myLevelChars[i].push([]);
+			while (myLevelChars[1][i].length < 6) {
+				myLevelChars[1][i].push([]);
 			}
-			myLevelChars[i][4] = 10;
-			myLevelChars[i][5] = [[3,1],[2,1]];
-			char[i].speed = myLevelChars[i][4];
-			char[i].motionString = generateMS(i);
+			myLevelChars[1][i][4] = 10;
+			myLevelChars[1][i][5] = [[3,1],[2,1]];
+			char[i].speed = myLevelChars[1][i][4];
+			char[i].motionString = generateMS(myLevelChars[1][i]);
 		} else {
-			myLevelChars[i][4] = char[i].speed;
-			myLevelChars[i][5] = generateMSOtherFormatted(i);
+			myLevelChars[1][i][4] = char[i].speed;
+			myLevelChars[1][i][5] = generateMSOtherFormatted(i);
 		}
 	} else {
-		while (myLevelChars[i].length > 4) {
-			myLevelChars[i].pop();
+		while (myLevelChars[1][i].length > 4) {
+			myLevelChars[1][i].pop();
 		}
 	}
-	var _loc2_ = myLevelChars[i][0];
+	var _loc2_ = myLevelChars[1][i][0];
 	char[i].id = _loc2_;
-	char[i].x = char[i].px = +myLevelChars[i][1].toFixed(2) * 30;
-	char[i].y = char[i].py = +myLevelChars[i][2].toFixed(2) * 30;
+	char[i].x = char[i].px = +myLevelChars[1][i][1].toFixed(2) * 30;
+	char[i].y = char[i].py = +myLevelChars[1][i][2].toFixed(2) * 30;
 	// char[i].px = 70 + i * 40;
 	// char[i].py = 400 - i * 30;
-	char[i].charState = myLevelChars[i][3];
+	char[i].charState = myLevelChars[1][i][3];
 	char[i].w = charD[_loc2_][0];
 	char[i].h = charD[_loc2_][1];
 	char[i].weight = charD[_loc2_][2];
@@ -5087,9 +5104,9 @@ function cloneChar(charObj) {
 	return clone;
 }
 
-function cloneCharInfo(info) {
-	console.log(info);
-	var clone = [info[0],0,0,info[3]];
+function cloneCharInfo(info, unplace) {
+	// console.log(info);
+	var clone = [info[0],unplace?-1:info[1],unplace?-1:info[2],info[3]];
 	if (info.length == 6) {
 		clone.push(info[4]);
 		clone.push([]);
@@ -5098,6 +5115,35 @@ function cloneCharInfo(info) {
 		}
 	}
 	return clone;
+}
+
+function generateCharFromInfo(info) {
+	var _loc2_ = info[0];
+	var newChar = new Character(
+		_loc2_,
+		info[1]*30,
+		info[2]*30,
+		info[1]*30,
+		info[2]*30,
+		info[3],
+		charD[_loc2_][0],
+		charD[_loc2_][1],
+		charD[_loc2_][2],
+		charD[_loc2_][2],
+		charD[_loc2_][3],
+		charD[_loc2_][4],
+		charD[_loc2_][6],
+		charD[_loc2_][8],
+		_loc2_<35?charModels[_loc2_].defaultExpr:0
+	);
+	if (info[1] == -1 || info[2] == -1) {
+		newChar.placed = false;
+	}
+	if (info.length == 6) {
+		newChar.speed = info[4];
+		newChar.motionString = generateMS(info);
+	}
+	return newChar;
 }
 
 function copyLevelString() {
@@ -5133,8 +5179,8 @@ function copyLevelString() {
 		}
 	}
 	for (var i = 0; i < char.length; i++) {
-		lcLevelString += myLevelChars[i][0].toString(10).padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[i][2]) + ',' + myLevelChars[i][3].toString(10).padStart(2, '0');
-		if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) {
+		lcLevelString += myLevelChars[1][i][0].toString(10).padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][2]) + ',' + myLevelChars[1][i][3].toString(10).padStart(2, '0');
+		if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) {
 			lcLevelString += ' ' + char[i].motionString.map(String).join('');
 		}
 		lcLevelString += '\r\n';
@@ -5180,7 +5226,7 @@ function readLevelString(str) {
 	levelWidth = parseInt(levelInfo[0]);
 	levelHeight = parseInt(levelInfo[1]);
 	charCount = parseInt(levelInfo[2]);
-	myLevelChars = new Array(charCount);
+	myLevelChars[1] = new Array(charCount);
 	char = new Array(charCount);
 	selectedBg = parseInt(levelInfo[3]);
 	longMode = levelInfo[4]=='H';
@@ -5206,22 +5252,22 @@ function readLevelString(str) {
 	i += levelHeight;
 
 	// read entity data
-	for (var e = 0; e < myLevelChars.length; e++) {
+	for (var e = 0; e < myLevelChars[1].length; e++) {
 		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
-		myLevelChars[e] = [0,0.0,0.0,10];
-		myLevelChars[e][0] = parseInt(entityInfo[0]);
-		myLevelChars[e][1] = parseFloat(entityInfo[1]);
-		myLevelChars[e][2] = parseFloat(entityInfo[2]);
-		myLevelChars[e][3] = parseInt(entityInfo[3]);
-		let _loc2_ = myLevelChars[e][0];
+		myLevelChars[1][e] = [0,0.0,0.0,10];
+		myLevelChars[1][e][0] = parseInt(entityInfo[0]);
+		myLevelChars[1][e][1] = parseFloat(entityInfo[1]);
+		myLevelChars[1][e][2] = parseFloat(entityInfo[2]);
+		myLevelChars[1][e][3] = parseInt(entityInfo[3]);
+		let _loc2_ = myLevelChars[1][e][0];
 		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
 		char[e] = new Character(
 			_loc2_,
-			+myLevelChars[e][1].toFixed(2) * 30,
-			+myLevelChars[e][2].toFixed(2) * 30,
+			+myLevelChars[1][e][1].toFixed(2) * 30,
+			+myLevelChars[1][e][2].toFixed(2) * 30,
 			70 + e * 40,
 			400 - e * 30,
-			myLevelChars[e][3],
+			myLevelChars[1][e][3],
 			charD[_loc2_][0],
 			charD[_loc2_][1],
 			charD[_loc2_][2],
@@ -5232,28 +5278,28 @@ function readLevelString(str) {
 			charD[_loc2_][8],
 			_loc2_<35?charModels[_loc2_].defaultExpr:0
 		);
-		if (myLevelChars[e][3] == 3 || myLevelChars[e][3] == 4) {
-			myLevelChars[e][4] = parseInt(entityInfo[4].slice(0,2));
-			myLevelChars[e][5] = [];
+		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
+			myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2));
+			myLevelChars[1][e][5] = [];
 			let d = entityInfo[4].charCodeAt(2)-48;
 			let btm = 1;
 			for (var m = 2; m < entityInfo[4].length-1; m++) {
 				if (d != entityInfo[4].charCodeAt(m+1)-48) {
-					myLevelChars[e][5].push([d,btm]);
+					myLevelChars[1][e][5].push([d,btm]);
 					btm = 1;
 					d = entityInfo[4].charCodeAt(m+1)-48;
 				} else {
 					btm++;
 				}
 			}
-			myLevelChars[e][5].push([d,btm]);
-			// console.log(myLevelChars[e][5]);
-			char[e].motionString = generateMS(e);
-			char[e].speed = myLevelChars[e][4];
+			myLevelChars[1][e][5].push([d,btm]);
+			// console.log(myLevelChars[1][e][5]);
+			char[e].motionString = generateMS(myLevelChars[1][e]);
+			char[e].speed = myLevelChars[1][e][4];
 			//entityInfo[4]
 		}
 	}
-	i += myLevelChars.length;
+	i += myLevelChars[1].length;
 
 	// read dialogue
 	myLevelDialogue = new Array(parseInt(lines[i]));
@@ -5295,11 +5341,11 @@ function twoDecimalPlaceNumFormat(num) {
 	return (Math.round(num * 100) / 100).toFixed(2).padStart(5, '0');
 }
 
-function generateMS(c) {
+function generateMS(info) {
 	var out = [];
-	out.push(Math.floor(myLevelChars[c][4]/10));
-	out.push(myLevelChars[c][4]%10);
-	var a = myLevelChars[c][5];
+	out.push(Math.floor(info[4]/10));
+	out.push(info[4]%10);
+	var a = info[5];
 	for (var i = 0; i < a.length; i++) {
 		for (var j = 0; j < a[i][1]; j++) {
 			out.push(a[i][0]);
@@ -5326,9 +5372,9 @@ function generateMSOtherFormatted(c) {
 }
 
 function resetCharPositions() {
-	for (var i = 0; i < myLevelChars.length; i++) {
-		char[i].x = myLevelChars[i][1]*30;
-		char[i].y = myLevelChars[i][2]*30;
+	for (var i = 0; i < myLevelChars[1].length; i++) {
+		char[i].x = myLevelChars[1][i][1]*30;
+		char[i].y = myLevelChars[1][i][2]*30;
 	}
 }
 
@@ -5547,9 +5593,9 @@ function mousedown(event){
 									myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc4_][_loc1_];
 								}
 							}
-							for (var i = 0; i < myLevelChars.length; i++) {
-								if (myLevelChars[i][2] > _loc7_) {
-									myLevelChars[i][2] += _loc5_;
+							for (var i = 0; i < myLevelChars[1].length; i++) {
+								if (myLevelChars[1][i][2] > _loc7_) {
+									myLevelChars[1][i][2] += _loc5_;
 									resetCharPositions();
 									// char[i].y += _loc5_ * 30;
 								}
@@ -5584,9 +5630,9 @@ function mousedown(event){
 									myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc2_][_loc3_];
 								}
 							}
-							for (var i = 0; i < myLevelChars.length; i++) {
-								if (myLevelChars[i][1] > _loc6_) {
-									myLevelChars[i][1] += _loc5_;
+							for (var i = 0; i < myLevelChars[1].length; i++) {
+								if (myLevelChars[1][i][1] > _loc6_) {
+									myLevelChars[1][i][1] += _loc5_;
 									resetCharPositions();
 									// char[i].x += _loc5_ * 30;
 								}
@@ -6387,12 +6433,12 @@ function draw() {
 			var charInfoY = (selectedTab+1)*tabHeight + 5;
 			// TODO: only compute the look up table when it changes
 			var charInfoYLookUp = [];
-			for (var i = 0; i < myLevelChars.length; i++) {
+			for (var i = 0; i < myLevelChars[1].length; i++) {
 				charInfoYLookUp.push(charInfoY);
 				charInfoY += charInfoHeight + 5;
-				if (myLevelChars[i][3] == 3 || myLevelChars[i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[i][5].length;
+				if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[1][i][5].length;
 			}
-			var tabContentsHeight = Math.max(charInfoY, charInfoYLookUp[myLevelChars.length-1] + (charInfoHeight*2));
+			var tabContentsHeight = Math.max(charInfoY, charInfoYLookUp[myLevelChars[1].length-1] + (charInfoHeight*2));
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
 			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
@@ -6417,7 +6463,7 @@ function draw() {
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica'; 
-			for (var i = 0; i < Math.min(myLevelChars.length, charInfoYLookUp.length); i++) {
+			for (var i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
 				if (duplicateChar && onRect(_xmouse, _ymouse, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
 					ctx.fillStyle = '#e8e8e8';
 					ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
@@ -6427,20 +6473,21 @@ function draw() {
 			}
 			addButtonPressed = false;
 			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars.length < 50) {
+				if (myLevelChars[1].length < 50) {
 					onButton = true;
 					hoverText = 'Add New Character or Object';
 					if (mouseIsDown && !pmouseIsDown) {
-						myLevelChars.push([0,0.0,0.0,10]);
-						var newestCharIndex = myLevelChars.length-1;
-						var _loc2_ = myLevelChars[newestCharIndex][0];
+						setUndo();
+						myLevelChars[1].push([0,-1,-1,10]);
+						var newestCharIndex = myLevelChars[1].length-1;
+						var _loc2_ = myLevelChars[1][newestCharIndex][0];
 						char.push(new Character(
 							_loc2_,
 							0.00,
 							0.00,
 							70 + newestCharIndex * 40,
 							400 - newestCharIndex * 30,
-							myLevelChars[newestCharIndex][3],
+							myLevelChars[1][newestCharIndex][3],
 							charD[_loc2_][0],
 							charD[_loc2_][1],
 							charD[_loc2_][2],
@@ -6457,7 +6504,7 @@ function draw() {
 				addButtonPressed = true;
 			}
 			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars.length < 50) {
+				if (myLevelChars[1].length < 50) {
 					onButton = true;
 					hoverText = 'Duplicate Character or Object';
 					if (mouseIsDown && !pmouseIsDown) {
@@ -6473,21 +6520,21 @@ function draw() {
 			if (charDropdown >= 0) {
 				if (charDropdownType == 0) {
 					if (_keysDown[16]) {
-						myLevelChars[charDropdown][0]--;
-						if (myLevelChars[charDropdown][0] < 0) myLevelChars[charDropdown][0] = charD.length-1;
-						while (charD[myLevelChars[charDropdown][0]][7] == 0) {
-							myLevelChars[charDropdown][0]--;
-							if (myLevelChars[charDropdown][0] < 0) myLevelChars[charDropdown][0] = charD.length-1;
+						myLevelChars[1][charDropdown][0]--;
+						if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
+						while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
+							myLevelChars[1][charDropdown][0]--;
+							if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
 						}
 					} else {
-						myLevelChars[charDropdown][0]++;
-						if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
-						while (charD[myLevelChars[charDropdown][0]][7] == 0) {
-							myLevelChars[charDropdown][0]++;
-							if (myLevelChars[charDropdown][0] > charD.length-1) myLevelChars[charDropdown][0] = 0;
+						myLevelChars[1][charDropdown][0]++;
+						if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
+						while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
+							myLevelChars[1][charDropdown][0]++;
+							if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
 						}
 					}
-					myLevelChars[charDropdown][3] = charD[myLevelChars[charDropdown][0]][9];
+					myLevelChars[1][charDropdown][3] = charD[myLevelChars[1][charDropdown][0]][9];
 					resetLCChar(charDropdown);
 					charDropdown = -2;
 				} else if (charDropdownType == 1) {
@@ -6506,7 +6553,8 @@ function draw() {
 								ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize);
 								ctx.fillStyle = '#000000';
 								if (mouseIsDown && !addButtonPressed) {
-									myLevelChars[charDropdown][3] = i;
+									setUndo();
+									myLevelChars[1][charDropdown][3] = i;
 								}
 							}
 							ctx.fillText(charStateNames[i], 665+240-1, charDropdownY + charInfoHeight + j*textSize);
@@ -6516,38 +6564,38 @@ function draw() {
 				} else if (charDropdownType == 2) {
 					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
 					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
-					myLevelChars[charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
-					myLevelChars[charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+					myLevelChars[1][charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
+					myLevelChars[1][charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
 					if (_keysDown[16]) {
-						myLevelChars[charDropdown][1] = Math.round(myLevelChars[charDropdown][1]*2) / 2;
-						myLevelChars[charDropdown][2] = Math.round(myLevelChars[charDropdown][2]*2) / 2;
+						myLevelChars[1][charDropdown][1] = Math.round(myLevelChars[1][charDropdown][1]*2) / 2;
+						myLevelChars[1][charDropdown][2] = Math.round(myLevelChars[1][charDropdown][2]*2) / 2;
 					}
-					char[charDropdown].x = char[charDropdown].px = +myLevelChars[charDropdown][1].toFixed(2) * 30;
-					char[charDropdown].y = char[charDropdown].py = +myLevelChars[charDropdown][2].toFixed(2) * 30;
+					char[charDropdown].x = char[charDropdown].px = +myLevelChars[1][charDropdown][1].toFixed(2) * 30;
+					char[charDropdown].y = char[charDropdown].py = +myLevelChars[1][charDropdown][2].toFixed(2) * 30;
 				} else if (charDropdownType == 3) {
 					var flat = (valueAtClick + (lastClickY-_ymouse)) * 0.5;
 					char[charDropdown].speed = flat>100?100:-Math.log(1 - flat / 100) * 100;
 					char[charDropdown].speed = Math.floor(Math.max(Math.min(char[charDropdown].speed, 99), 1));
-					myLevelChars[charDropdown][4] = char[charDropdown].speed;
+					myLevelChars[1][charDropdown][4] = char[charDropdown].speed;
 					levelTimer = 0;
 					resetCharPositions();
 					if (!mouseIsDown && pmouseIsDown) {
-						char[charDropdown].motionString = generateMS(charDropdown);
+						char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
 						charDropdown = -2;
 					}
 				} else if (charDropdownType == 4) {
-					var newDire = myLevelChars[charDropdown][5][charDropdownMS][0]+1;
+					var newDire = myLevelChars[1][charDropdown][5][charDropdownMS][0]+1;
 					if (newDire > 3) newDire = 0;
-					myLevelChars[charDropdown][5][charDropdownMS][0] = newDire;
-					char[charDropdown].motionString = generateMS(charDropdown);
+					myLevelChars[1][charDropdown][5][charDropdownMS][0] = newDire;
+					char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
 					levelTimer = 0;
 					resetCharPositions();
 					charDropdown = -2;
 				} else if (charDropdownType == 5) {
 					// var flat = (valueAtClick + (lastClickY-_ymouse));
-					myLevelChars[charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 32), 1));
+					myLevelChars[1][charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 32), 1));
 					if (!mouseIsDown && pmouseIsDown) {
-						char[charDropdown].motionString = generateMS(charDropdown);
+						char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
 						levelTimer = 0;
 						resetCharPositions();
 						charDropdown = -2;
@@ -6564,8 +6612,8 @@ function draw() {
 					} else if (charDropdownType == 1) {
 						if (char[charDropdown].charState == 3 || char[charDropdown].charState == 4) {
 							if (pCharState != 3 && pCharState != 4) {
-								char[charDropdown].speed = myLevelChars[charDropdown][4];
-								char[charDropdown].motionString = generateMS(charDropdown);
+								char[charDropdown].speed = myLevelChars[1][charDropdown][4];
+								char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
 							}
 						} else {
 							char[charDropdown].speed = 0;
@@ -6779,7 +6827,7 @@ function draw() {
 				if (i >= myLevelDialogue.length) break;
 				diaInfoY += diaInfoHeight*myLevelDialogue[i].linecount + 5;
 				// ctx.fillStyle = '#000000';
-				// ctx.fillText(myLevelChars[i], 660, 60+i*20);
+				// ctx.fillText(myLevelChars[1][i], 660, 60+i*20);
 			}
 			addButtonPressed = false;
 			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
@@ -6798,7 +6846,7 @@ function draw() {
 					diaDropdown = -2;
 				} else if (diaDropdownType == 1) {
 					var allowedDiaCharIndices = [99, 55, 52, 51, 50];
-					for (var i = myLevelChars.length - 1; i >= 0; i--) if (myLevelChars[i][3] > 6) allowedDiaCharIndices.push(i);
+					for (var i = myLevelChars[1].length - 1; i >= 0; i--) if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
 					var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[diaDropdown].char);
 					if (_keysDown[16]) {
 						ourCurrentIndex++;
