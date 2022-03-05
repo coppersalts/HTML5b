@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.8.4'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.9.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -2165,7 +2165,7 @@ function playGame() {
 
 function testLevelCreator() {
 	if (myLevelChars[1].length > 0) {
-		if (myLevelDialogue.length == 0) {
+		if (myLevelDialogue[1].length == 0) {
 			for (var i = 0; i < myLevel[1].length; i++) {
 				for (var j = 0; j < myLevel[1][i].length; j++) {
 					if (myLevel[1][i][j] == 8) myLevel[1][i][j] = 0;
@@ -2320,6 +2320,10 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 		onTextBox = true;
 		if (mouseIsDown && !pmouseIsDown) {
 			editingTextBox = id;
+			if (menuScreen == 5 && selectedTab == 4 && !lcPopUp) {
+				// && diaDropdown == id && diaDropdownType == 2
+				setUndo();
+			}
 			currentTextBoxAllowsLineBreaks = allowsLineBreaks;
 			var textBoxCursorLine = Math.max(Math.floor((_ymouse-y-pad[1])/textSize),0);
 			if (textBoxCursorLine >= lines.length) {
@@ -2759,10 +2763,10 @@ function resetMyLevel() {
 	cLevelDialogueChar = [];
 	cLevelDialogueFace = [];
 	cLevelDialogueText = [];
-	for (var i = 0; i < myLevelDialogue.length; i++) {
-		cLevelDialogueChar.push(myLevelDialogue[i].char);
-		cLevelDialogueFace.push(myLevelDialogue[i].face);
-		cLevelDialogueText.push(myLevelDialogue[i].text);
+	for (var i = 0; i < myLevelDialogue[1].length; i++) {
+		cLevelDialogueChar.push(myLevelDialogue[1][i].char);
+		cLevelDialogueFace.push(myLevelDialogue[1][i].face);
+		cLevelDialogueText.push(myLevelDialogue[1][i].text);
 	}
 
 	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
@@ -2826,6 +2830,7 @@ function drawStaticTiles() {
 		}
 	}
 }
+
 function drawLevelBG() {
 	var bgScale = Math.max(bgXScale, bgYScale);
 	osc4.width = Math.floor((bgScale/100)*cwidth * pixelRatio);
@@ -4349,7 +4354,7 @@ function resetLevelCreator() {
 	// fillTilesTab();
 	charCount2 = 0;
 	charCount = 0;
-	myLevelDialogue = [];
+	myLevelDialogue = [[],[],[]];
 	myLevelInfo = {name:'Untitled',creator:'',desc:''};
 	// setEndGateLights();
 	LCEndGateX = -1;
@@ -4596,6 +4601,12 @@ function LCSwapLevelData(a, b) {
 	myLevelChars[b] = new Array(myLevelChars[a].length);
 	for (var _loc2_ = 0; _loc2_ < myLevelChars[a].length; _loc2_++) {
 		myLevelChars[b][_loc2_] = cloneCharInfo(myLevelChars[a][_loc2_], false);
+	}
+
+	myLevelDialogue[b] = new Array(myLevelDialogue[a].length);
+	for (var _loc2_ = 0; _loc2_ < myLevelDialogue[a].length; _loc2_++) {
+		var obj = myLevelDialogue[a][_loc2_];
+		myLevelDialogue[b][_loc2_] = {char:obj.char,face:obj.face,text:obj.text,linecount:obj.linecount};
 	}
 }
 
@@ -4870,13 +4881,13 @@ function drawLCCharInfo(i, y) {
 
 function drawLCDiaInfo(i, y) {
 	// ctx.fillStyle = '#626262';
-	// ctx.fillRect(665, y, 240, diaInfoHeight*myLevelDialogue[i].linecount);
+	// ctx.fillRect(665, y, 240, diaInfoHeight*myLevelDialogue[1][i].linecount);
 	ctx.fillStyle = '#808080';
-	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount);
+	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight*myLevelDialogue[1][i].linecount);
 	ctx.fillStyle = '#ffffff';
-	if (myLevelDialogue[i].char>=50&&myLevelDialogue[i].char<99) {
-		var diaTextBox = [myLevelDialogue[i].text,['lever switch']];
-		switch (myLevelDialogue[i].char) {
+	if (myLevelDialogue[1][i].char>=50&&myLevelDialogue[1][i].char<99) {
+		var diaTextBox = [myLevelDialogue[1][i].text,['lever switch']];
+		switch (myLevelDialogue[1][i].char) {
 			case 50:
 				ctx.fillStyle = '#ffcc00';
 				break;
@@ -4904,27 +4915,27 @@ function drawLCDiaInfo(i, y) {
 		ctx.textBaseline = 'top';
 		ctx.fillText('lever switch', 665 + diaInfoHeight*3 + 5, y);
 	} else {
-		var diaTextBox = drawTextBox(myLevelDialogue[i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff', 'Helvetica');
+		var diaTextBox = drawTextBox(myLevelDialogue[1][i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[1][i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff', 'Helvetica');
 	}
-	myLevelDialogue[i].text = diaTextBox[0];
-	myLevelDialogue[i].linecount = diaTextBox[1].length;
-	ctx.fillText(myLevelDialogue[i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y);
-	ctx.fillText(myLevelDialogue[i].char.toString(10).padStart(2, '0'), 665 + 5, y);
+	myLevelDialogue[1][i].text = diaTextBox[0];
+	myLevelDialogue[1][i].linecount = diaTextBox[1].length;
+	ctx.fillText(myLevelDialogue[1][i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y);
+	ctx.fillText(myLevelDialogue[1][i].char.toString(10).padStart(2, '0'), 665 + 5, y);
 	// ctx.fillText(charStateNamesShort[myLevelChars[1][i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
-	//myLevelDialogue[diaDropdown].face
-	if (mouseOnTabWindow && !lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[i].linecount)) {
+	//myLevelDialogue[1][diaDropdown].face
+	if (mouseOnTabWindow && !lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
 		ctx.fillStyle = '#ee3333';
-		drawRemoveButton(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 3);
-		// ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20);
-		if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[i].linecount)) {
+		drawRemoveButton(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 3);
+		// ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20);
+		if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
 			onButton = true;
 			hoverText = 'Character';
 			if (mouseIsDown && !pmouseIsDown) {
 				diaDropdown = -i-3;
 				diaDropdownType = 1;
 			}
-		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[i].linecount)) {
+		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
 			onButton = true;
 			hoverText = 'Face';
 			if (mouseIsDown && !pmouseIsDown) {
@@ -4936,10 +4947,11 @@ function drawLCDiaInfo(i, y) {
 				diaDropdown = -i-3;
 				diaDropdownType = 2;
 			}
-		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[i].linecount)/2 - 10, 20, 20)) {
+		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20)) {
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) {
-				myLevelDialogue.splice(i,1);
+				setUndo();
+				myLevelDialogue[1].splice(i,1);
 			}
 		}
 	}
@@ -5185,9 +5197,9 @@ function copyLevelString() {
 		}
 		lcLevelString += '\r\n';
 	}
-	lcLevelString += myLevelDialogue.length.toString(10).padStart(2, '0') + '\r\n';
-	for (var i = 0; i < myLevelDialogue.length; i++) {
-		lcLevelString += myLevelDialogue[i].char.toString(10).padStart(2, '0') + (myLevelDialogue[i].face==2?'H':'S') + ' ' + myLevelDialogue[i].text + '\r\n';
+	lcLevelString += myLevelDialogue[1].length.toString(10).padStart(2, '0') + '\r\n';
+	for (var i = 0; i < myLevelDialogue[1].length; i++) {
+		lcLevelString += myLevelDialogue[1][i].char.toString(10).padStart(2, '0') + (myLevelDialogue[1][i].face==2?'H':'S') + ' ' + myLevelDialogue[1][i].text + '\r\n';
 	}
 	lcLevelString += myLevelNecessaryDeaths.toString(10).padStart(6, '0') + '\r\n';
 
@@ -5212,6 +5224,7 @@ function openLevelLoader() {
 }
 
 function readLevelString(str) {
+	setUndo();
 	let lines = str.split('\r\n');
 	if (lines.length == 1) lines = str.split('\n');
 	let i = 0;
@@ -5302,15 +5315,15 @@ function readLevelString(str) {
 	i += myLevelChars[1].length;
 
 	// read dialogue
-	myLevelDialogue = new Array(parseInt(lines[i]));
+	myLevelDialogue[1] = new Array(parseInt(lines[i]));
 	i++;
-	for (var d = 0; d < myLevelDialogue.length; d++) {
-		myLevelDialogue[d] = {char:0,face:2,text:''};
-		myLevelDialogue[d].char = parseInt(lines[i+d].slice(0,2));
-		myLevelDialogue[d].face = lines[i+d].charAt(2)=='S'?3:2;
-		myLevelDialogue[d].text = lines[i+d].substring(4);
+	for (var d = 0; d < myLevelDialogue[1].length; d++) {
+		myLevelDialogue[1][d] = {char:0,face:2,text:''};
+		myLevelDialogue[1][d].char = parseInt(lines[i+d].slice(0,2));
+		myLevelDialogue[1][d].face = lines[i+d].charAt(2)=='S'?3:2;
+		myLevelDialogue[1][d].text = lines[i+d].substring(4);
 	}
-	i += myLevelDialogue.length;
+	i += myLevelDialogue[1].length;
 
 	myLevelNecessaryDeaths = parseInt(lines[i]);
 
@@ -6793,8 +6806,8 @@ function draw() {
 		} else if (selectedTab == 4) {
 			// Dialogue
 			var tabContentsHeight = 5;
-			for (var i = 0; i < myLevelDialogue.length; i++) {
-				tabContentsHeight += diaInfoHeight*myLevelDialogue[i].linecount + 5;
+			for (var i = 0; i < myLevelDialogue[1].length; i++) {
+				tabContentsHeight += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
 			}
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
 			var scrollBarY = (selectedTab+1)*tabHeight + (diaTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
@@ -6820,12 +6833,12 @@ function draw() {
 			// ctx.textAlign = 'left';
 			// ctx.textBaseline = 'middle';
 			// ctx.font = '20px Helvetica';
-			//myLevelDialogue[i].linecount
+			//myLevelDialogue[1][i].linecount
 			var diaInfoY = (selectedTab+1)*tabHeight + 5;
-			for (var i = 0; i < myLevelDialogue.length; i++) {
+			for (var i = 0; i < myLevelDialogue[1].length; i++) {
 				drawLCDiaInfo(i, diaInfoY);
-				if (i >= myLevelDialogue.length) break;
-				diaInfoY += diaInfoHeight*myLevelDialogue[i].linecount + 5;
+				if (i >= myLevelDialogue[1].length) break;
+				diaInfoY += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
 				// ctx.fillStyle = '#000000';
 				// ctx.fillText(myLevelChars[1][i], 660, 60+i*20);
 			}
@@ -6834,20 +6847,23 @@ function draw() {
 				onButton = true;
 				hoverText = 'Add New Dialogue Line';
 				if (mouseIsDown && !pmouseIsDown) {
-					myLevelDialogue.push({char:99,face:2,text:'Enter text',linecount:1});
+					setUndo();
+					myLevelDialogue[1].push({char:99,face:2,text:'Enter text',linecount:1});
 				}
 				addButtonPressed = true;
 			}
 			if (diaDropdown == -2) diaDropdown = -1;
 			if (diaDropdown >= 0) {
 				if (diaDropdownType == 0) {
-					if (myLevelDialogue[diaDropdown].face == 2) myLevelDialogue[diaDropdown].face = 3;
-					else if (myLevelDialogue[diaDropdown].face == 3) myLevelDialogue[diaDropdown].face = 2;
+					setUndo();
+					if (myLevelDialogue[1][diaDropdown].face == 2) myLevelDialogue[1][diaDropdown].face = 3;
+					else if (myLevelDialogue[1][diaDropdown].face == 3) myLevelDialogue[1][diaDropdown].face = 2;
 					diaDropdown = -2;
 				} else if (diaDropdownType == 1) {
+					setUndo();
 					var allowedDiaCharIndices = [99, 55, 52, 51, 50];
 					for (var i = myLevelChars[1].length - 1; i >= 0; i--) if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
-					var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[diaDropdown].char);
+					var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[1][diaDropdown].char);
 					if (_keysDown[16]) {
 						ourCurrentIndex++;
 						if (ourCurrentIndex >= allowedDiaCharIndices.length) ourCurrentIndex = 0;
@@ -6855,7 +6871,7 @@ function draw() {
 						ourCurrentIndex--;
 						if (ourCurrentIndex < 0) ourCurrentIndex = allowedDiaCharIndices.length - 1;
 					}
-					myLevelDialogue[diaDropdown].char = allowedDiaCharIndices[ourCurrentIndex];
+					myLevelDialogue[1][diaDropdown].char = allowedDiaCharIndices[ourCurrentIndex];
 					diaDropdown = -2;
 				} else if (diaDropdownType == 2) {
 					if (_keysDown[13]) diaDropdown = -2;
