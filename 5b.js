@@ -2789,7 +2789,8 @@ function resetMyLevel() {
 	gotThisCoin = false;
 	levelTimer = 0;
 	recoverTimer = 0;
-	levelTimer2 = getTimer();
+	// timer += getTimer() - levelTimer2;
+	// levelTimer2 = getTimer();
 	if (char[0].charState <= 9)  changeControl();
 	currentLevelDisplayName = myLevelInfo.name;
 }
@@ -6384,8 +6385,10 @@ function draw() {
 
 		// This was originally near the start of the level screen code, but I moved it to the end to fix a bug relating to the camera when exiting a level.
 		if (wipeTimer == 30) {
-			if (transitionType == 0) resetLevel();
-			else if (charsAtEnd >= charCount2) {
+			if (transitionType == 0) {
+				timer += getTimer() - levelTimer2;
+				resetLevel();	
+			} else if (charsAtEnd >= charCount2) {
 				if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
 					gotCoin[currentLevel] = true;
 					coins++;
