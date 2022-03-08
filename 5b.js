@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.9.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.9.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -4671,6 +4671,9 @@ function updateLCtiles() {
 	// }
 
 
+	var tintBlocks = [33,34,53,54,61,62];
+	var tintColors = ['#ffcc00','#d5aa00','#0066ff','#0051ca','#20df20','#1ab01a'];
+
 	var tlx = 330 - scale * levelWidth / 2;
 	var tly = 240 - scale * levelHeight / 2;
 	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
@@ -4698,6 +4701,12 @@ function updateLCtiles() {
 				var img = svgTiles[tile];
 				var vb = svgTilesVB[tile];
 				osctx3.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+			}
+			if (tintBlocks.indexOf(tile) != -1) {
+				osctx3.globalAlpha = 0.25;
+				osctx3.fillStyle = tintColors[tintBlocks.indexOf(tile)];
+				osctx3.fillRect(tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
+				osctx3.globalAlpha = 1;
 			}
 		}
 	}
