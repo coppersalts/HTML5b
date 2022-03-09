@@ -5,9 +5,9 @@
 // TODO: go through all the todo's I've put throughout this file.
 // TODO: rename some functions
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
-// TODO: if possible, "cashe some things as bitmaps" like in flash for better performance.
+// TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.9.2'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.10.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1716,6 +1716,10 @@ var bgsTabScrollBar = 0;
 var draggingScrollBar = false;
 var addButtonPressed = false;
 var duplicateChar = false;
+var reorderCharUp = false;
+var reorderCharDown = false;
+var reorderDiaUp = false;
+var reorderDiaDown = false;
 var levelLoadString = '';
 var lcMessageTimer = 0;
 var lcMessageText = '';
@@ -3183,7 +3187,7 @@ function getTintedCanvasImage(img, a, color) {
 
 function drawPossiblyTintedImage(img, x, y, temp) {
 	if (temp > 0 && temp < 50) {
-		ctx.drawImage(getTintedCanvasImage(img, temp/100, 'rgb(255,' + (100-temp) + ',' + (100-temp) + ')'), x, y, img.width, img.height);
+		ctx.drawImage(getTintedCanvasImage(img, temp/70, 'rgb(255,' + (100-temp) + ',' + (100-temp) + ')'), x, y, img.width, img.height);
 	} else {
 		ctx.drawImage(img, x, y);
 	}
@@ -4336,6 +4340,10 @@ function resetLevelCreator() {
 	// levelCreator.createEmptyMovieClip("rectSelect",99);
 	lcPopUp = false;
 	duplicateChar = false;
+	reorderCharUp = false;
+	reorderCharDown = false;
+	reorderDiaUp = false;
+	reorderDiaDown = false;
 	menuScreen = 5;
 	selectedTab = 0;
 	selectedBg = 0;
@@ -4762,7 +4770,7 @@ function drawLCCharInfo(i, y) {
 		ctx.fillRect(665, y+charInfoHeight, charInfoHeight, diaInfoHeight);
 		ctx.fillStyle = '#ffffff';
 		ctx.fillText(char[i].speed.toString().padStart(2, '0'), 665 + 5, y + charInfoHeight + diaInfoHeight*0.5);
-		var canDropDown = mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !duplicateChar && !addButtonPressed;
+		var canDropDown = mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !duplicateChar && !reorderCharUp && !reorderCharDown && !addButtonPressed;
 		if (canDropDown && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y+charInfoHeight, charInfoHeight, diaInfoHeight)) {
 			onButton = true;
 			hoverText = 'Movement Speed';
@@ -4852,6 +4860,44 @@ function drawLCCharInfo(i, y) {
 					}
 				}
 				duplicateChar = false;
+			}
+		} else if (reorderCharDown) {
+			if (mouseIsDown && !pmouseIsDown) {
+				if (i < myLevelChars[1].length-1) {
+					setUndo();
+					[char[i], char[i+1]] = [char[i+1], char[i]];
+					[myLevelChars[1][i], myLevelChars[1][i+1]] = [myLevelChars[1][i+1], myLevelChars[1][i]];
+					// Update dialogue tab
+					for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+						if (myLevelDialogue[1][j].char < 50) {
+							if (myLevelDialogue[1][j].char == i) {
+								myLevelDialogue[1][j].char++;
+							} else if (myLevelDialogue[1][j].char == i+1) {
+								myLevelDialogue[1][j].char--;
+							}
+						}
+					}
+				}
+				reorderCharDown = false;
+			}
+		} else if (reorderCharUp) {
+			if (mouseIsDown && !pmouseIsDown) {
+				if (i > 0) {
+					setUndo();
+					[char[i], char[i-1]] = [char[i-1], char[i]];
+					[myLevelChars[1][i], myLevelChars[1][i-1]] = [myLevelChars[1][i-1], myLevelChars[1][i]];
+					// Update dialogue tab
+					for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+						if (myLevelDialogue[1][j].char < 50) {
+							if (myLevelDialogue[1][j].char == i) {
+								myLevelDialogue[1][j].char--;
+							} else if (myLevelDialogue[1][j].char == i-1) {
+								myLevelDialogue[1][j].char++;
+							}
+						}
+					}
+				}
+				reorderCharUp = false;
 			}
 		} else {
 			ctx.fillStyle = '#ee3333';
@@ -4953,33 +4999,56 @@ function drawLCDiaInfo(i, y) {
 
 	//myLevelDialogue[1][diaDropdown].face
 	if (mouseOnTabWindow && !lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
-		ctx.fillStyle = '#ee3333';
-		drawRemoveButton(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 3);
-		// ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20);
-		if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
-			onButton = true;
-			hoverText = 'Character';
+		if (reorderDiaDown) {
 			if (mouseIsDown && !pmouseIsDown) {
-				diaDropdown = -i-3;
-				diaDropdownType = 1;
+				if (i < myLevelDialogue[1].length-1) {
+					setUndo();
+					[myLevelDialogue[1][i], myLevelDialogue[1][i+1]] = [myLevelDialogue[1][i+1], myLevelDialogue[1][i]];
+				}
+				reorderDiaDown = false;
+				editingTextBox = -1;
 			}
-		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
-			onButton = true;
-			hoverText = 'Face';
+		} else if (reorderDiaUp) {
 			if (mouseIsDown && !pmouseIsDown) {
-				diaDropdown = -i-3;
-				diaDropdownType = 0;
+				if (i > 0) {
+					setUndo();
+					[myLevelDialogue[1][i], myLevelDialogue[1][i-1]] = [myLevelDialogue[1][i-1], myLevelDialogue[1][i]];
+				}
+				reorderDiaUp = false;
+				editingTextBox = -1;
 			}
-		} else if (_xmouse < 665+240 && _xmouse > 665 + diaInfoHeight*3) {
-			if (mouseIsDown && !pmouseIsDown) {
-				diaDropdown = -i-3;
-				diaDropdownType = 2;
-			}
-		} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20)) {
-			onButton = true;
-			if (mouseIsDown && !pmouseIsDown) {
-				setUndo();
-				myLevelDialogue[1].splice(i,1);
+		} else {
+			ctx.fillStyle = '#ee3333';
+			drawRemoveButton(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 3);
+			// ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20);
+			if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+				onButton = true;
+				hoverText = 'Character';
+				if (mouseIsDown && !pmouseIsDown) {
+					diaDropdown = -i-3;
+					diaDropdownType = 1;
+					editingTextBox = -1;
+				}
+			} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+				onButton = true;
+				hoverText = 'Face';
+				if (mouseIsDown && !pmouseIsDown) {
+					diaDropdown = -i-3;
+					diaDropdownType = 0;
+					editingTextBox = -1;
+				}
+			} else if (_xmouse < 665+240 && _xmouse > 665 + diaInfoHeight*3) {
+				if (mouseIsDown && !pmouseIsDown) {
+					diaDropdown = -i-3;
+					diaDropdownType = 2;
+				}
+			} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20)) {
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) {
+					setUndo();
+					myLevelDialogue[1].splice(i,1);
+					editingTextBox = -1;
+				}
 			}
 		}
 	}
@@ -4989,7 +5058,7 @@ function drawLCChars() {
 	ctx.save();
 	var scale2 = scale / 30;
 	ctx.transform(scale2, 0, 0, scale2, 330 - scale * levelWidth / 2, 240 - scale * levelHeight / 2);
-	for (var i = 0; i < char.length; i++) {
+	for (var i = char.length-1; i >= 0; i--) {
 		if (char[i].placed || charDropdown == i && charDropdownType == 2) {
 			if (!char[i].placed) ctx.globalAlpha = 0.5;
 			if (char[i].id < 35) {
@@ -5470,6 +5539,36 @@ function drawDuplicateButton(x, y, s, p) {
 	ctx.lineTo(x, y);
 	ctx.lineTo(x+s*2/3, y);
 	ctx.lineTo(x+s*2/3, y+s/3);
+	ctx.stroke();
+}
+
+function drawUpButton(x, y, s, p) {
+	ctx.strokeStyle = '#606060';
+	ctx.lineWidth = 3;
+	x += p;
+	y += p;
+	s -= p*2;
+	ctx.beginPath();
+	ctx.moveTo(x+s/2, y+s);
+	ctx.lineTo(x+s/2, y);
+	ctx.moveTo(x, y+s/2);
+	ctx.lineTo(x+s/2, y);
+	ctx.lineTo(x+s, y+s/2);
+	ctx.stroke();
+}
+
+function drawDownButton(x, y, s, p) {
+	ctx.strokeStyle = '#606060';
+	ctx.lineWidth = 3;
+	x += p;
+	y += p;
+	s -= p*2;
+	ctx.beginPath();
+	ctx.moveTo(x+s/2, y);
+	ctx.lineTo(x+s/2, y+s);
+	ctx.moveTo(x, y+s/2);
+	ctx.lineTo(x+s/2, y+s);
+	ctx.lineTo(x+s, y+s/2);
 	ctx.stroke();
 }
 
@@ -6507,7 +6606,7 @@ function draw() {
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica'; 
 			for (var i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
-				if (duplicateChar && onRect(_xmouse, _ymouse, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
+				if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
 					ctx.fillStyle = '#e8e8e8';
 					ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
 				}
@@ -6520,6 +6619,9 @@ function draw() {
 					onButton = true;
 					hoverText = 'Add New Character or Object';
 					if (mouseIsDown && !pmouseIsDown) {
+						duplicateChar = false;
+						reorderCharUp = false;
+						reorderCharDown = false;
 						setUndo();
 						myLevelChars[1].push([0,-1,-1,10]);
 						var newestCharIndex = myLevelChars[1].length-1;
@@ -6552,12 +6654,40 @@ function draw() {
 					hoverText = 'Duplicate Character or Object';
 					if (mouseIsDown && !pmouseIsDown) {
 						// console.log('mi lon ni');
+						reorderCharUp = false;
+						reorderCharDown = false;
 						duplicateChar = true;
 					}
 				}
 				addButtonPressed = true;
 			}
 			if (duplicateChar && !addButtonPressed && mouseIsDown && !pmouseIsDown) duplicateChar = false;
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				if (myLevelChars[1].length < 50) {
+					onButton = true;
+					hoverText = 'Move Character or Object Up';
+					if (mouseIsDown && !pmouseIsDown) {
+						duplicateChar = false;
+						reorderCharDown = false;
+						reorderCharUp = true;
+					}
+				}
+				addButtonPressed = true;
+			}
+			if (reorderCharUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderCharUp = false;
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				if (myLevelChars[1].length < 50) {
+					onButton = true;
+					hoverText = 'Move Character or Object Down';
+					if (mouseIsDown && !pmouseIsDown) {
+						duplicateChar = false;
+						reorderCharUp = false;
+						reorderCharDown = true;
+					}
+				}
+				addButtonPressed = true;
+			}
+			if (reorderCharDown && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderCharDown = false;
 
 			if (charDropdown == -2) charDropdown = -1;
 			if (charDropdown >= 0) {
@@ -6672,6 +6802,8 @@ function draw() {
 			ctx.fillStyle = '#33ee33';
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
 			drawDuplicateButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+			drawUpButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+			drawDownButton(660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
 			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 2) {
 			// Tiles
@@ -6866,6 +6998,10 @@ function draw() {
 			//myLevelDialogue[1][i].linecount
 			var diaInfoY = (selectedTab+1)*tabHeight + 5;
 			for (var i = 0; i < myLevelDialogue[1].length; i++) {
+				if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse, _ymouse, 665, diaInfoY, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+					ctx.fillStyle = '#e8e8e8';
+					ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight*myLevelDialogue[1][i].linecount + 10);
+				}
 				drawLCDiaInfo(i, diaInfoY);
 				if (i >= myLevelDialogue[1].length) break;
 				diaInfoY += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
@@ -6877,11 +7013,40 @@ function draw() {
 				onButton = true;
 				hoverText = 'Add New Dialogue Line';
 				if (mouseIsDown && !pmouseIsDown) {
+					reorderDiaDown = false;
+					reorderDiaUp = false;
+					editingTextBox = -1;
 					setUndo();
 					myLevelDialogue[1].push({char:99,face:2,text:'Enter text',linecount:1});
 				}
 				addButtonPressed = true;
 			}
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				if (myLevelChars[1].length < 50) {
+					onButton = true;
+					hoverText = 'Move Dialogue Line Up';
+					if (mouseIsDown && !pmouseIsDown) {
+						reorderDiaDown = false;
+						reorderDiaUp = true;
+						editingTextBox = -1;
+					}
+				}
+				addButtonPressed = true;
+			}
+			if (reorderDiaUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaUp = false;
+			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+				if (myLevelChars[1].length < 50) {
+					onButton = true;
+					hoverText = 'Move Dialogue Line Down';
+					if (mouseIsDown && !pmouseIsDown) {
+						reorderDiaUp = false;
+						reorderDiaDown = true;
+						editingTextBox = -1;
+					}
+				}
+				addButtonPressed = true;
+			}
+			if (reorderDiaDown && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaDown = false;
 			if (diaDropdown == -2) diaDropdown = -1;
 			if (diaDropdown >= 0) {
 				if (diaDropdownType == 0) {
@@ -6919,6 +7084,8 @@ function draw() {
 			// ctx.fillStyle = '#33ee33';
 			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
+			drawUpButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+			drawDownButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
 		} else if (selectedTab == 5) {
 			// Options
 			ctx.font = 'bold 30px Helvetica';
@@ -6970,6 +7137,10 @@ function draw() {
 					selectedTab = i;
 					draggingScrollBar = false;
 					duplicateChar = false;
+					reorderCharUp = false;
+					reorderCharDown = false;
+					reorderDiaUp = false;
+					reorderDiaDown = false;
 					editingTextBox = -1;
 				}
 			}
