@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.10.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -4825,16 +4825,14 @@ function drawLCCharInfo(i, y) {
 						drawRemoveButton(665 + charInfoHeight + 100-charInfoHeight, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, 3);
 						// ctx.fillRect(665 + charInfoHeight + 100-charInfoHeight, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight);
 					}
-				} else if (j > 0 && onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * (j-0.5), 120, diaInfoHeight)) {
+				} else if (j > 0 && onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight + 120-charInfoHeight, y + charInfoHeight + diaInfoHeight * (j-0.5), diaInfoHeight, diaInfoHeight)) {
 					drawAddButton(665 + charInfoHeight + 120-charInfoHeight, y + charInfoHeight + diaInfoHeight * (j-0.5), diaInfoHeight, 3);
-					if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight + 120-charInfoHeight, y + charInfoHeight + diaInfoHeight * (j-0.5), diaInfoHeight, diaInfoHeight)) {
-						onButton = true;
-						hoverText = 'Insert Into Path';
-						if (mouseIsDown && !pmouseIsDown) {
-							setUndo();
-							myLevelChars[1][i][5].splice(j, 0, [0,1]);
-							char[i].motionString = generateMS(myLevelChars[1][i]);
-						}
+					onButton = true;
+					hoverText = 'Insert Into Path';
+					if (mouseIsDown && !pmouseIsDown) {
+						setUndo();
+						myLevelChars[1][i][5].splice(j, 0, [0,1]);
+						char[i].motionString = generateMS(myLevelChars[1][i]);
 					}
 				}
 				// Draw add button
