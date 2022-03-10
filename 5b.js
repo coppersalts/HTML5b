@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -5342,6 +5342,7 @@ function readLevelString(str) {
 
 	// read level info
 	let levelInfo = lines[i].split(',');
+	if (levelInfo.length != 5) return;
 	levelWidth = parseInt(levelInfo[0]);
 	levelHeight = parseInt(levelInfo[1]);
 	charCount = parseInt(levelInfo[2]);
@@ -5358,6 +5359,7 @@ function readLevelString(str) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (var x = 0; x < levelWidth; x++) {
 				myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
+				if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
 			}
 		}
 	} else {
@@ -5365,57 +5367,61 @@ function readLevelString(str) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (var x = 0; x < levelWidth; x++) {
 				myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
+				if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
 			}
 		}
 	}
+	setCoinAndDoorPos();
 	i += levelHeight;
 
 	// read entity data
 	for (var e = 0; e < myLevelChars[1].length; e++) {
 		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
 		myLevelChars[1][e] = [0,0.0,0.0,10];
-		myLevelChars[1][e][0] = parseInt(entityInfo[0]);
-		myLevelChars[1][e][1] = parseFloat(entityInfo[1]);
-		myLevelChars[1][e][2] = parseFloat(entityInfo[2]);
-		myLevelChars[1][e][3] = parseInt(entityInfo[3]);
-		let _loc2_ = myLevelChars[1][e][0];
-		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
-		char[e] = new Character(
-			_loc2_,
-			+myLevelChars[1][e][1].toFixed(2) * 30,
-			+myLevelChars[1][e][2].toFixed(2) * 30,
-			70 + e * 40,
-			400 - e * 30,
-			myLevelChars[1][e][3],
-			charD[_loc2_][0],
-			charD[_loc2_][1],
-			charD[_loc2_][2],
-			charD[_loc2_][2],
-			charD[_loc2_][3],
-			charD[_loc2_][4],
-			charD[_loc2_][6],
-			charD[_loc2_][8],
-			_loc2_<35?charModels[_loc2_].defaultExpr:0
-		);
-		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
-			myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2));
-			myLevelChars[1][e][5] = [];
-			let d = entityInfo[4].charCodeAt(2)-48;
-			let btm = 1;
-			for (var m = 2; m < entityInfo[4].length-1; m++) {
-				if (d != entityInfo[4].charCodeAt(m+1)-48) {
-					myLevelChars[1][e][5].push([d,btm]);
-					btm = 1;
-					d = entityInfo[4].charCodeAt(m+1)-48;
-				} else {
-					btm++;
+		if (entityInfo.length > 3) {
+			myLevelChars[1][e][0] = parseInt(entityInfo[0]);
+			myLevelChars[1][e][1] = parseFloat(entityInfo[1]);
+			myLevelChars[1][e][2] = parseFloat(entityInfo[2]);
+			myLevelChars[1][e][3] = parseInt(entityInfo[3]);
+			let _loc2_ = myLevelChars[1][e][0];
+			if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
+			char[e] = new Character(
+				_loc2_,
+				+myLevelChars[1][e][1].toFixed(2) * 30,
+				+myLevelChars[1][e][2].toFixed(2) * 30,
+				70 + e * 40,
+				400 - e * 30,
+				myLevelChars[1][e][3],
+				charD[_loc2_][0],
+				charD[_loc2_][1],
+				charD[_loc2_][2],
+				charD[_loc2_][2],
+				charD[_loc2_][3],
+				charD[_loc2_][4],
+				charD[_loc2_][6],
+				charD[_loc2_][8],
+				_loc2_<35?charModels[_loc2_].defaultExpr:0
+			);
+			if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
+				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2));
+				myLevelChars[1][e][5] = [];
+				let d = entityInfo[4].charCodeAt(2)-48;
+				let btm = 1;
+				for (var m = 2; m < entityInfo[4].length-1; m++) {
+					if (d != entityInfo[4].charCodeAt(m+1)-48) {
+						myLevelChars[1][e][5].push([d,btm]);
+						btm = 1;
+						d = entityInfo[4].charCodeAt(m+1)-48;
+					} else {
+						btm++;
+					}
 				}
+				myLevelChars[1][e][5].push([d,btm]);
+				// console.log(myLevelChars[1][e][5]);
+				char[e].motionString = generateMS(myLevelChars[1][e]);
+				char[e].speed = myLevelChars[1][e][4];
+				//entityInfo[4]
 			}
-			myLevelChars[1][e][5].push([d,btm]);
-			// console.log(myLevelChars[1][e][5]);
-			char[e].motionString = generateMS(myLevelChars[1][e]);
-			char[e].speed = myLevelChars[1][e][4];
-			//entityInfo[4]
 		}
 	}
 	i += myLevelChars[1].length;
