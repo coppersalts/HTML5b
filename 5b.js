@@ -2383,6 +2383,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 		text = inputText + valueAtClick;
 		if (_frameCount%60 < 30) {
 			ctx.strokeStyle = c2;
+			ctx.lineWidth = 2;
 			var blinkyLineY = 0;
 			var lineLengthBeforeCursor = 0;
 			while (blinkyLineY < lines.length) {
@@ -2446,8 +2447,8 @@ function drawMenu() {
 	ctx.font = 'bold 30px Helvetica';
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
 	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, true,  menuExplore);
-	ctx.font = 'bold 23px Helvetica';
-	drawMenu0Button('LEVEL CREATOR (beta)', 665.55, 437.7, 3, false,  menuLevelCreator);
+	// ctx.font = 'bold 23px Helvetica';
+	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false,  menuLevelCreator);
 
 	// var started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -5337,20 +5338,33 @@ function readLevelString(str) {
 
 	// skip past any blank lines at the start
 	while (i < lines.length && lines[i] == '') i++;
+	if (i >= lines.length) return;
 	myLevelInfo.name = lines[i];
 	i++;
+	if (i >= lines.length) return;
 
 	// read level info
 	let levelInfo = lines[i].split(',');
 	if (levelInfo.length != 5) return;
-	levelWidth = parseInt(levelInfo[0]);
-	levelHeight = parseInt(levelInfo[1]);
+	levelWidth = Math.max(parseInt(levelInfo[0]),1);
+	levelHeight = Math.max(parseInt(levelInfo[1]),1);
 	charCount = parseInt(levelInfo[2]);
 	myLevelChars[1] = new Array(charCount);
 	char = new Array(charCount);
 	selectedBg = parseInt(levelInfo[3]);
+	if (selectedBg > imgBgs.length || isNaN(selectedBg)) selectedBg = 0;
+	setLCBG();
 	longMode = levelInfo[4]=='H';
 	i++;
+	// If we're at the end of the lines, or any of these parseInts returned NaN; then stop here and reset some things.
+	if (i >= lines.length || isNaN(levelWidth) || isNaN(levelHeight) || isNaN(charCount) || charCount > 50) {
+		levelWidth = myLevel[1][0].length;
+		levelHeight = myLevel[1].length;
+		charCount = 0;
+		myLevelChars[1] = [];
+		char = [];
+		return;
+	}
 
 	// read block layout data
 	myLevel[1] = new Array(levelHeight);
@@ -5358,58 +5372,87 @@ function readLevelString(str) {
 		for (var y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (var x = 0; x < levelWidth; x++) {
-				myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
-				if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
+				if (i+y >= lines.length || x * 2 + 1 >= lines[i+y].length) {
+					myLevel[1][y][x] = 0;
+				} else {
+					myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
+					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
+				}
 			}
 		}
 	} else {
 		for (var y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (var x = 0; x < levelWidth; x++) {
-				myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
-				if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
+				if (i+y >= lines.length || x >= lines[i+y].length) {
+					myLevel[1][y][x] = 0;
+				} else {
+					myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
+					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
+				}
 			}
 		}
 	}
 	setCoinAndDoorPos();
+	updateLCtiles();
 	i += levelHeight;
+	if (i >= lines.length) {
+		charCount = 0;
+		myLevelChars[1] = [];
+		char = [];
+		return;
+	}
 
 	// read entity data
 	for (var e = 0; e < myLevelChars[1].length; e++) {
+		if (i+e >= lines.length) {
+			myLevelChars[1].slice(0, charCount - e);
+			char.slice(0, charCount - e);
+			return;
+		}
 		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
-		myLevelChars[1][e] = [0,0.0,0.0,10];
+		myLevelChars[1][e] = [0,-1.0,-1.0,10];
 		if (entityInfo.length > 3) {
-			myLevelChars[1][e][0] = parseInt(entityInfo[0]);
-			myLevelChars[1][e][1] = parseFloat(entityInfo[1]);
-			myLevelChars[1][e][2] = parseFloat(entityInfo[2]);
-			myLevelChars[1][e][3] = parseInt(entityInfo[3]);
-			let _loc2_ = myLevelChars[1][e][0];
-			if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
-			char[e] = new Character(
-				_loc2_,
-				+myLevelChars[1][e][1].toFixed(2) * 30,
-				+myLevelChars[1][e][2].toFixed(2) * 30,
-				70 + e * 40,
-				400 - e * 30,
-				myLevelChars[1][e][3],
-				charD[_loc2_][0],
-				charD[_loc2_][1],
-				charD[_loc2_][2],
-				charD[_loc2_][2],
-				charD[_loc2_][3],
-				charD[_loc2_][4],
-				charD[_loc2_][6],
-				charD[_loc2_][8],
-				_loc2_<35?charModels[_loc2_].defaultExpr:0
-			);
-			if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
+			if (isNaN(parseInt(entityInfo[0])) || isNaN(parseFloat(entityInfo[1])) || isNaN(parseFloat(entityInfo[2])) || isNaN(parseInt(entityInfo[3]))) {
+				myLevelChars[1].slice(0, charCount - e);
+				char.slice(0, charCount - e);
+				// myLevelChars[1][e] = [0,0.0,0.0,10];
+				return;
+			}
+			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0]),charD.length),0);
+			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1]),100),0);
+			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2]),100),0);
+			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3]),10),3);
+		}
+		let _loc2_ = myLevelChars[1][e][0];
+		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
+		char[e] = new Character(
+			_loc2_,
+			+myLevelChars[1][e][1].toFixed(2) * 30,
+			+myLevelChars[1][e][2].toFixed(2) * 30,
+			70 + e * 40,
+			400 - e * 30,
+			myLevelChars[1][e][3],
+			charD[_loc2_][0],
+			charD[_loc2_][1],
+			charD[_loc2_][2],
+			charD[_loc2_][2],
+			charD[_loc2_][3],
+			charD[_loc2_][4],
+			charD[_loc2_][6],
+			charD[_loc2_][8],
+			_loc2_<35?charModels[_loc2_].defaultExpr:0
+		);
+		if (myLevelChars[1][e][1] < 0 || myLevelChars[1][e][2] < 0) char[e].placed = false;
+		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
+			if (entityInfo.length == 5) {
 				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2));
 				myLevelChars[1][e][5] = [];
 				let d = entityInfo[4].charCodeAt(2)-48;
 				let btm = 1;
 				for (var m = 2; m < entityInfo[4].length-1; m++) {
 					if (d != entityInfo[4].charCodeAt(m+1)-48) {
-						myLevelChars[1][e][5].push([d,btm]);
+						myLevelChars[1][e][5].push([Math.min(Math.max(d,0),3),btm]);
 						btm = 1;
 						d = entityInfo[4].charCodeAt(m+1)-48;
 					} else {
@@ -5420,29 +5463,31 @@ function readLevelString(str) {
 				// console.log(myLevelChars[1][e][5]);
 				char[e].motionString = generateMS(myLevelChars[1][e]);
 				char[e].speed = myLevelChars[1][e][4];
-				//entityInfo[4]
+			} else {
+				myLevelChars[1][e][3] = 6;
 			}
 		}
 	}
 	i += myLevelChars[1].length;
+	if (i >= lines.length) return;
 
 	// read dialogue
 	myLevelDialogue[1] = new Array(parseInt(lines[i]));
 	i++;
+	if (i >= lines.length) return;
 	for (var d = 0; d < myLevelDialogue[1].length; d++) {
+		if (i+d >= lines.length) return;
 		myLevelDialogue[1][d] = {char:0,face:2,text:''};
 		myLevelDialogue[1][d].char = parseInt(lines[i+d].slice(0,2));
 		myLevelDialogue[1][d].face = lines[i+d].charAt(2)=='S'?3:2;
 		myLevelDialogue[1][d].text = lines[i+d].substring(4);
 	}
 	i += myLevelDialogue[1].length;
+	if (i >= lines.length) return;
 
 	myLevelNecessaryDeaths = parseInt(lines[i]);
 
 	levelTimer = 0;
-
-	setLCBG();
-	updateLCtiles();
 }
 
 function tileCharFromID(id) {
