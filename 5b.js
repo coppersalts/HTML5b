@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level in reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.3'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -4819,6 +4819,8 @@ function drawLCCharInfo(i, y) {
 							setUndo();
 							myLevelChars[1][i][5].splice(j,1);
 							char[i].motionString = generateMS(myLevelChars[1][i]);
+							levelTimer = 0;
+							resetCharPositions();
 						}
 					}
 					if (drawingDeleteButtons) {
@@ -4834,6 +4836,8 @@ function drawLCCharInfo(i, y) {
 						setUndo();
 						myLevelChars[1][i][5].splice(j, 0, [0,1]);
 						char[i].motionString = generateMS(myLevelChars[1][i]);
+						levelTimer = 0;
+						resetCharPositions();
 					}
 				}
 				// Draw add button
@@ -4848,6 +4852,8 @@ function drawLCCharInfo(i, y) {
 							setUndo();
 							myLevelChars[1][i][5].push([0,1]);
 							char[i].motionString = generateMS(myLevelChars[1][i]);
+							levelTimer = 0;
+							resetCharPositions();
 						}
 					}
 				}
@@ -5313,7 +5319,6 @@ function copyLevelString() {
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
 	// console.log(lcLevelString);
 	navigator.clipboard.writeText(lcLevelString).then(function() {
-		// console.log('Successfuly copied to clipboard!');
 		lcMessageTimer = 1;
 		lcMessageText = 'Level string successfuly copied to clipboard!';
 	}, function(err) {
@@ -5346,12 +5351,10 @@ function readLevelString(str) {
 	// read level info
 	let levelInfo = lines[i].split(',');
 	if (levelInfo.length != 5) return;
-	levelWidth = Math.max(parseInt(levelInfo[0]),1);
-	levelHeight = Math.max(parseInt(levelInfo[1]),1);
-	charCount = parseInt(levelInfo[2]);
-	myLevelChars[1] = new Array(charCount);
-	char = new Array(charCount);
-	selectedBg = parseInt(levelInfo[3]);
+	levelWidth = Math.max(parseInt(levelInfo[0],10),1);
+	levelHeight = Math.max(parseInt(levelInfo[1],10),1);
+	charCount = parseInt(levelInfo[2],10);
+	selectedBg = parseInt(levelInfo[3],10);
 	if (selectedBg > imgBgs.length || isNaN(selectedBg)) selectedBg = 0;
 	setLCBG();
 	longMode = levelInfo[4]=='H';
@@ -5361,10 +5364,13 @@ function readLevelString(str) {
 		levelWidth = myLevel[1][0].length;
 		levelHeight = myLevel[1].length;
 		charCount = 0;
-		myLevelChars[1] = [];
-		char = [];
+		myLevelChars[1].length = 0;
+		char.length = 0;
+		setLCMessage('Error while loading from string:\n' + (i>=lines.length?'no tile map was provided.':'one or more values in the level\'s metadata was invalid.'));
 		return;
 	}
+	myLevelChars[1] = new Array(charCount);
+	char = new Array(charCount);
 
 	// read block layout data
 	myLevel[1] = new Array(levelHeight);
@@ -5398,31 +5404,35 @@ function readLevelString(str) {
 	i += levelHeight;
 	if (i >= lines.length) {
 		charCount = 0;
-		myLevelChars[1] = [];
-		char = [];
+		myLevelChars[1].length = 0;
+		char.length = 0;
+		setLCMessage('Error while loading from string:\nno entity data was provided.');
 		return;
 	}
 
 	// read entity data
+	levelTimer = 0;
 	for (var e = 0; e < myLevelChars[1].length; e++) {
 		if (i+e >= lines.length) {
-			myLevelChars[1].slice(0, charCount - e);
-			char.slice(0, charCount - e);
+			myLevelChars[1].length = e;
+			char.length = e;
+			setLCMessage('Error while loading from string:\nnumber of entities did not match the provided count.');
 			return;
 		}
 		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
 		myLevelChars[1][e] = [0,-1.0,-1.0,10];
 		if (entityInfo.length > 3) {
-			if (isNaN(parseInt(entityInfo[0])) || isNaN(parseFloat(entityInfo[1])) || isNaN(parseFloat(entityInfo[2])) || isNaN(parseInt(entityInfo[3]))) {
-				myLevelChars[1].slice(0, charCount - e);
-				char.slice(0, charCount - e);
+			if (isNaN(parseInt(entityInfo[0],10)) || isNaN(parseFloat(entityInfo[1],10)) || isNaN(parseFloat(entityInfo[2],10)) || isNaN(parseInt(entityInfo[3],10))) {
+				myLevelChars[1].length = e;
+				char.length = e;
+				setLCMessage('Error while loading from string:\na data value in one entity\'s data parsed to NaN.');
 				// myLevelChars[1][e] = [0,0.0,0.0,10];
 				return;
 			}
-			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0]),charD.length),0);
-			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1]),100),0);
-			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2]),100),0);
-			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3]),10),3);
+			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0],10),charD.length),0);
+			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1],10),100),0);
+			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2],10),100),0);
+			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3],10),10),3);
 		}
 		let _loc2_ = myLevelChars[1][e][0];
 		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
@@ -5446,7 +5456,7 @@ function readLevelString(str) {
 		if (myLevelChars[1][e][1] < 0 || myLevelChars[1][e][2] < 0) char[e].placed = false;
 		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
 			if (entityInfo.length == 5) {
-				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2));
+				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2),10);
 				myLevelChars[1][e][5] = [];
 				let d = entityInfo[4].charCodeAt(2)-48;
 				let btm = 1;
@@ -5460,7 +5470,6 @@ function readLevelString(str) {
 					}
 				}
 				myLevelChars[1][e][5].push([d,btm]);
-				// console.log(myLevelChars[1][e][5]);
 				char[e].motionString = generateMS(myLevelChars[1][e]);
 				char[e].speed = myLevelChars[1][e][4];
 			} else {
@@ -5469,25 +5478,39 @@ function readLevelString(str) {
 		}
 	}
 	i += myLevelChars[1].length;
-	if (i >= lines.length) return;
+	if (i >= lines.length) {
+		setLCMessage('Error while loading from string:\nnumber of dialogue lines was not provided.');
+		return;
+	}
 
 	// read dialogue
-	myLevelDialogue[1] = new Array(parseInt(lines[i]));
+	myLevelDialogue[1] = new Array(parseInt(lines[i],10));
 	i++;
-	if (i >= lines.length) return;
 	for (var d = 0; d < myLevelDialogue[1].length; d++) {
-		if (i+d >= lines.length) return;
+		if (i+d >= lines.length) {
+			myLevelDialogue[1].length = d;
+			setLCMessage('Error while loading from string:\nnumber of dialogue lines did not match the provided count.');
+			return;
+		}
 		myLevelDialogue[1][d] = {char:0,face:2,text:''};
-		myLevelDialogue[1][d].char = parseInt(lines[i+d].slice(0,2));
+		myLevelDialogue[1][d].char = parseInt(lines[i+d].slice(0,2),10);
+		if (isNaN(myLevelDialogue[1][d].char)) myLevelDialogue[1][d].char = 99;
 		myLevelDialogue[1][d].face = lines[i+d].charAt(2)=='S'?3:2;
 		myLevelDialogue[1][d].text = lines[i+d].substring(4);
 	}
 	i += myLevelDialogue[1].length;
-	if (i >= lines.length) return;
+	if (i >= lines.length) {
+		setLCMessage('Error while loading from string:\nnecessary deaths was not provided.\n(but everything else loaded so it\'s probably fine)');
+		return;
+	}
 
-	myLevelNecessaryDeaths = parseInt(lines[i]);
+	myLevelNecessaryDeaths = parseInt(lines[i],10);
+}
 
-	levelTimer = 0;
+function setLCMessage(text) {
+	lcMessageTimer = 1;
+	lcMessageText = text;
+	console.log(text);
 }
 
 function tileCharFromID(id) {
@@ -7404,10 +7427,14 @@ function draw() {
 			ctx.textBaseline = 'middle';
 			ctx.textAlign = 'center';
 			ctx.fillStyle = '#ffffff';
-			var msgWidth = ctx.measureText(lcMessageText).width+10;
-			ctx.fillRect((cwidth-msgWidth)/2, (cheight-30)/2, msgWidth, 30);
+			var lcMessageLines = lcMessageText.split('\n');
+			lcMessageLines.forEach((v,i) => {lcMessageLines[i] = ctx.measureText(v).width + 10});
+			var msgWidth = Math.max(...lcMessageLines);
+			var msgHeight = (25*lcMessageLines.length)+5;
+			// var msgWidth = ctx.measureText(lcMessageText).width+10;
+			ctx.fillRect((cwidth-msgWidth)/2, (cheight-30)/2, msgWidth, msgHeight);
 			ctx.fillStyle = '#000000';
-			ctx.fillText(lcMessageText, cwidth/2, cheight/2);
+			linebreakText(lcMessageText, cwidth/2, cheight/2, 25);
 			lcMessageTimer++;
 			if (lcMessageTimer > 100 || (_pxmouse != _xmouse || _pymouse != _ymouse)) {
 				lcMessageTimer = 0;
