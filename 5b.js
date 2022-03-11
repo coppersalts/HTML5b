@@ -4,10 +4,10 @@
 // I'll look more into it once I get more into optimizing.
 // TODO: go through all the todo's I've put throughout this file.
 // TODO: rename some functions
-// TODO: precalculate some of the stuff in the draw functions when the level in reset.
+// TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.3'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.4'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1874,7 +1874,7 @@ var menu2_3Buttons = [
 var menu0ButtonSize = {w: 273.0, h: 36.9, cr: 6.65};
 var menu2_3ButtonSize = {w: 104.5, h: 37.3};
 var levelButtonSize = {w: 100, h: 40};
-var menu0ButtonClicked = -1;
+var menu0ButtonClicked = -1; // TODO: refactor this thing out of the code entirely if possible.
 var onButton = false;
 var onTextBox = false;
 var editingTextBox = -1;
@@ -4680,8 +4680,9 @@ function updateLCtiles() {
 	// }
 
 
-	var tintBlocks = [33,34,53,54,61,62];
-	var tintColors = ['#ffcc00','#d5aa00','#0066ff','#0051ca','#20df20','#1ab01a'];
+	var tintBlocks = [33,34,53,54,61,62,64,82,134];
+	var tintBlockOneWay = [false,false,false,false,false,false,true,true,true];
+	var tintColors = ['#ffcc00','#d5aa00','#0066ff','#0051ca','#20df20','#1ab01a','#20df20','#ffcc00','#0066ff'];
 
 	var tlx = 330 - scale * levelWidth / 2;
 	var tly = 240 - scale * levelHeight / 2;
@@ -4713,8 +4714,9 @@ function updateLCtiles() {
 			}
 			if (tintBlocks.indexOf(tile) != -1) {
 				osctx3.globalAlpha = 0.25;
-				osctx3.fillStyle = tintColors[tintBlocks.indexOf(tile)];
-				osctx3.fillRect(tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
+				var tintbBlockIndex = tintBlocks.indexOf(tile);
+				osctx3.fillStyle = tintColors[tintbBlockIndex];
+				osctx3.fillRect(tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, tintBlockOneWay[tintbBlockIndex]?scale/3:scale);
 				osctx3.globalAlpha = 1;
 			}
 		}
