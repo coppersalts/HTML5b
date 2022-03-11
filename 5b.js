@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.4'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.5'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -6691,7 +6691,7 @@ function draw() {
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica'; 
 			for (var i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
-				if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
+				if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
 					ctx.fillStyle = '#e8e8e8';
 					ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
 				}
@@ -6884,12 +6884,12 @@ function draw() {
 			if (charDropdown < -2) charDropdown = -charDropdown-3;
 			ctx.restore();
 
-			ctx.fillStyle = '#33ee33';
+			ctx.fillStyle = '#cccccc';
+			ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 85, 25);
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
 			drawDuplicateButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
 			drawUpButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
 			drawDownButton(660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
 		} else if (selectedTab == 2) {
 			// Tiles
 			var j = 0;
@@ -7083,7 +7083,7 @@ function draw() {
 			//myLevelDialogue[1][i].linecount
 			var diaInfoY = (selectedTab+1)*tabHeight + 5;
 			for (var i = 0; i < myLevelDialogue[1].length; i++) {
-				if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse, _ymouse, 665, diaInfoY, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+				if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, diaInfoY, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
 					ctx.fillStyle = '#e8e8e8';
 					ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight*myLevelDialogue[1][i].linecount + 10);
 				}
@@ -7166,8 +7166,8 @@ function draw() {
 			if (diaDropdown < -2) diaDropdown = -diaDropdown-3;
 			ctx.restore();
 
-			// ctx.fillStyle = '#33ee33';
-			// ctx.fillRect(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15);
+			ctx.fillStyle = '#cccccc';
+			ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 65, 25);
 			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
 			drawUpButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
 			drawDownButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);

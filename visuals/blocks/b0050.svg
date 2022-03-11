@@ -1,18 +1,18 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30">
-<path fill="#CCCCCC" stroke="none" d="
+<path fill="#CCCCCC" fill-opacity="0.37" stroke="none" d="
 M 5.35 13.65
 L 2.5 18.55 4.95 30 9.9 30 5.35 13.65
 M 19 13.35
 L 13.6 15.15 12.4 24.5 14.1 30 15.05 30 19.05 13.45 19.1 13.3 19 13.35 Z"/>
-<path fill="#999999" stroke="none" d="
+<path fill="#999999" fill-opacity="0.37" stroke="none" d="
 M 9.7 15.85
 L 5.35 13.65 9.9 30 14.1 30 12.4 24.5 9.7 15.85
 M 24.5 21.05
 L 23.05 21.05 18.85 26.15
 Q 20.05 21.75 21.1 15.85
 L 19.05 13.45 15.05 30 18.55 30 24.5 21.05 Z"/>
-<path fill="#666666" stroke="none" d="
+<path fill="#666666" fill-opacity="0.37" stroke="none" d="
 M 27.6 24
 L 25 21.05 24.5 21.05 18.55 30 22.3 30 27.6 24 Z"/>
 <path fill="#333333" stroke="none" d="
