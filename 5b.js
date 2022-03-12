@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.5'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.6'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -5986,7 +5986,8 @@ function setup() {
 	canvas.addEventListener('paste', handlePaste);
 
 	// setInterval(draw, 17);
-	requestAnimationFrame(draw);
+	// requestAnimationFrame(draw);
+	rAF60FPS();
 }
 
 function draw() {
@@ -5995,8 +5996,6 @@ function draw() {
 	onTextBox = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
-
-
 	if (menuScreen == -1) {
 		ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
 		ctx.font = 'bold 30px Helvetica';
@@ -7447,9 +7446,6 @@ function draw() {
 		levelTimer++;
 	}
 
-
-
-
 	if (levelTimer <= 30 || menuScreen != 3) {
 		if (wipeTimer >= 30 && wipeTimer <= 60) {
 			white_alpha = 220 - wipeTimer * 4;
@@ -7478,7 +7474,6 @@ function draw() {
 	}
 
 
-
 	if (onButton) {
 		setCursor('pointer');
 	} else if (onTextBox) {
@@ -7494,5 +7489,25 @@ function draw() {
 	pmenuScreen = menuScreen;
 
 
-	requestAnimationFrame(draw);
+	// requestAnimationFrame(draw);
+}
+
+// Limits our fps to 60.
+// https://gist.github.com/elundmark/38d3596a883521cb24f5
+var fps = 60;
+var now;
+var then = window.performance.now();
+var interval = 1000/fps;
+var delta;
+
+function rAF60FPS() {
+	requestAnimationFrame(rAF60FPS);
+	now = window.performance.now();
+	delta = now - then;
+	if (delta > interval) {
+		then = now - (delta % interval);
+		draw();
+	} else {
+		console.log(delta - interval);
+	}
 }
