@@ -5985,9 +5985,7 @@ function setup() {
 	window.addEventListener('keyup', keyup);
 	canvas.addEventListener('paste', handlePaste);
 
-	// setInterval(draw, 17);
-	// requestAnimationFrame(draw);
-	rAF60FPS();
+	rAF60fps();
 }
 
 function draw() {
@@ -7487,27 +7485,23 @@ function draw() {
 	_pxmouse = _xmouse;
 	_pymouse = _ymouse;
 	pmenuScreen = menuScreen;
-
-
-	// requestAnimationFrame(draw);
 }
 
 // Limits our fps to 60.
 // https://gist.github.com/elundmark/38d3596a883521cb24f5
+// https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
 var fps = 60;
 var now;
 var then = window.performance.now();
 var interval = 1000/fps;
 var delta;
 
-function rAF60FPS() {
-	requestAnimationFrame(rAF60FPS);
+function rAF60fps() {
+	requestAnimationFrame(rAF60fps);
 	now = window.performance.now();
 	delta = now - then;
 	if (delta > interval) {
 		then = now - (delta % interval);
 		draw();
-	} else {
-		console.log(delta - interval);
 	}
 }
