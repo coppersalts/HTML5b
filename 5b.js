@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.6'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.7'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1699,7 +1699,7 @@ var charInfoHeight = 40;
 var diaInfoHeight = 20;
 const charStateNames = ['', 'Dead', 'Being Recovered', 'Deadly & Moving', 'Moving', 'Deadly', 'Carryable', '', 'Non-Playable Character', 'Rescuable', 'Playable Character'];
 const charStateNamesShort = ['', 'D', 'BR', 'D&M', 'M', 'D', 'C', '', 'NPC', 'R', 'P'];
-const toolNames = ['Pencil Tool', 'Eraser Tool', 'Fill Rectangle Tool', 'Fill Tool', 'Eyedropper Tool', 'Selection Tool', 'Row Tool', 'Column Tool', '', 'Copy', 'Undo / Redo', 'Clear'];
+const toolNames = ['Draw Tool', 'Eraser Tool', 'Fill Rectangle Tool', 'Fill Tool', 'Eyedropper Tool', 'Selection Tool', 'Row Tool', 'Column Tool', '', 'Copy', 'Undo / Redo', 'Clear'];
 const tileNames = ['Air','Red Ground Block','Downward Facing Gray Spikes','Upward Facing Gray Spikes','Right Facing Gray Spikes','Left Facing Gray Spikes','End Gate','"E" Tree','Dialogue Starter','Red Background Block','Green Ground Block','Green Background Block','Win Token','Spring Block','Left Conveyer','Heater','Right Conveyer','Gray Spike Ball','Upward One-Way Platform','Downward Facing Black Spikes','Upward Facing Black Spikes','Right Facing Black Spikes','Left Facing Black Spikes','Downward Facing Black Spikes with Support Cable','Vertical Support Cable','Vertical Support Cable Connected Right','Horizontal Support Cable','Top Left Support Cable Connector','Horizontal Support Cable Connected Down','Horizontal Support Cable Connected Up','Vertical Support Cable Connected Left','Yellow Switch Block Solid','Dark Yellow Switch Block Solid','Yellow Switch Block Passable','Dark Yellow Switch Block Passable','Yellow Lever Facing Left','Yellow Lever Facing Right','Blue Lever Facing Left','Blue Lever Facing Right','Green Background Block with Upward One-Way Platform','Yellow Button','Blue Button','Gray Grass','Gray Dirt','Right Facing One-Way Platform','Two-Way Gray Spikes Top Left','Two-Way Gray Spikes Top Right','Crumbling Rock','Conglomerate-Like Background Block','Lamp','Gray Gems','Blue Switch Block Solid','Dark Blue Switch Block Solid','Blue Switch Block Passable','Dark Blue Switch Block Passable','Conglomerate-Like Background Block with Upward One-Way Platform','Gray Block','Green Lever Facing Left','Green Lever Facing Right','"V" Tree','Dark Green Switch Block Solid','Green Switch Block Passable','Dark Green Switch Block Passable','Green Switch Platform Up Solid','Green Switch Platform Up Passable','Green Switch Block Solid','Spotlight','Black Block','Left Facing One-Way Platform','Downward One-Way Platform','Green Background Block with Left Facing One-Way Platform','Green Button','Black Spike Ball','Purple Ground Block','"Wind Gust" Block','Vertical Electric Barrier','Horiontal Electric Barrier','Purple Background Block','Yellow Switch Spike Ball Passable','Yellow Switch Spike Ball Solid','"I" Tree','Yellow Switch Platform Up Solid','Yellow Switch Platform Up Passable','One-Way Conveyer Left','One-Way Conveyer Left (not moving)','One-Way Conveyer Right','One-Way Conveyer Right (not moving)','Purple Background Block Slanted Bottom Left','Purple Background Block Slanted Bottom Right','Light Gray Vertical Support Cable','Light Gray Horizontal Support Cable','Light Gray Horizontal Support Cable Connected Down','Light Gray Horizontal Support Cable Connected Up','Wood Block','Wood Background Block','Danger Zone Background Block','Purple Background Block Slanted Top Right','Purple Background Block Slanted Top Left','Gray Metal Ground Block','Wooden Background Block... again?','Acid','Acid Glow','Yellow Metal Ground Block','Lava','Lava Glow','Red Metal Ground Block','Yellow Metal Background Block','Dark Gray Metal Ground Block','Conveyer Lever Facing Left','Conveyer Lever Facing Right','Picture','','','','','','','','','','','','','','','','','','','','Water','Brick Ground Block','Wall of Text','Blue Switch Platform Up Solid','Blue Switch Platform Up Passable'];
 var charDropdown = -1;
 var charDropdownMS = -1;
@@ -3075,6 +3075,8 @@ function drawCharacters() {
 
 				// Hitboxes
 				// ctx.strokeStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
+				// ctx.strokeStyle = '#ff0000';
+				// ctx.lineWidth = 1;
 				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
 				ctx.restore();
 			}
@@ -3113,13 +3115,14 @@ function drawCharacters() {
 }
 
 function drawCutScene() {
+	var currdiachar = cLevelDialogueChar[Math.min(cutSceneLine, cLevelDialogueChar.length-1)];
+	if (currdiachar >= 50 && currdiachar < 99) return;
 	ctx.save();
 	ctx.transform(bubSc, 0, 0, bubSc, bubX, bubY);
 	var bubLoc = {x:-bubWidth/2,y:-bubHeight/2};
 	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y)
 	var textwidth = 386.55;
 	var textx = 106.7;
-	var currdiachar = cLevelDialogueChar[Math.min(cutSceneLine, cLevelDialogueChar.length-1)]
 	if (currdiachar == 99) {
 		textwidth = 488.25;
 		textx = 4.25;
@@ -3141,7 +3144,6 @@ function drawCutScene() {
 	ctx.restore();
 	if (cutScene == 2) {
 		if (bubSc > 0.1) bubSc -= bubSc/4;
-
 	} else {
 		if (bubSc < 0.99) bubSc += (1-bubSc)/4;
 		else bubSc = 1;
@@ -3570,7 +3572,8 @@ function checkButton2(i, bypass) {
 					}
 				}
 				if (_loc7_) {
-					leverSwitch(blockProperties[thisLevel[_loc6_][_loc4_]][11] - 13);
+					if (bypass) leverSwitch2(blockProperties[thisLevel[_loc6_][_loc4_]][11] - 13, i);
+					else leverSwitch(blockProperties[thisLevel[_loc6_][_loc4_]][11] - 13);
 					tileFrames[_loc6_][_loc4_].cf = 2;
 					tileFrames[_loc6_][_loc4_].playing = true;
 				}
@@ -3601,6 +3604,28 @@ function leverSwitch(j) {
 	for (var _loc6_ = 0; _loc6_ < charCount; _loc6_++) {
 		char[_loc6_].justChanged = 2;
 		checkDeath(_loc6_);
+	}
+}
+
+// the exact same as leverSwitch(), but with an aditional argument to avoid calling checkDeath() on the same character.
+function leverSwitch2(j, c) {
+	for (var _loc5_ = 0; _loc5_ < switchable[j].length; _loc5_++) {
+		var _loc4_ = switchable[Math.min(j,5)][_loc5_][0];
+		var _loc3_ = switchable[Math.min(j,5)][_loc5_][1];
+		for (var _loc1_ = 0; _loc1_ < switches[j].length; _loc1_++) {
+			if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2]) {
+				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2 + 1];
+			} else if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2 + 1]) {
+				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2];
+			}
+		}
+	}
+	for (var _loc6_ = 0; _loc6_ < charCount; _loc6_++) {
+		// Prevents an infinite loop from crashing the game.
+		if (_loc6_ != c) {
+			char[_loc6_].justChanged = 2;
+			checkDeath(_loc6_);
+		}
 	}
 }
 
@@ -3916,8 +3941,12 @@ function displayLine(level, line) {
 	if (_loc2_ >= 50 && _loc2_ < 60) {
 		leverSwitch(_loc2_ - 50);
 		cutSceneLine++;
-		line = line + 1;
+		line++;
 		_loc2_ = cLevelDialogueChar[line];
+		if (cutSceneLine >= cLevelDialogueChar.length) {
+			endCutScene();
+			return;
+		}
 	}
 	var _loc5_;
 	if (_loc2_ == 99) {
@@ -3965,6 +3994,11 @@ function endDeath(i) {
 	char[i].temp = 0;
 	char[i].heated = 0;
 	char[i].charState = 1;
+	// OG bug fix?
+	if (char[i].atEnd) {
+		doorLightFadeDire[charsAtEnd-1] = -1;
+		charsAtEnd--;
+	}
 	deathCount++;
 	saveGame();
 	if (i == control) {
@@ -4263,11 +4297,11 @@ function recoverCycle(i, dire) {
 	var _loc2_ = dire;
 	if (dire == 0) _loc2_ = 1;
 	recover2 = (recover2 + _loc2_ + charCount) % charCount;
-	while ((char[recover2].charState != 1 || char[recover2].pcharState <= 6) && _loc1_ < 10) {
+	while ((char[recover2].charState != 1 || char[recover2].pcharState <= 6) && _loc1_ < charCount) {
 		recover2 = (recover2 + _loc2_ + charCount) % charCount;
 		_loc1_++;
 	}
-	if (_loc1_ == 10) {
+	if (_loc1_ == charCount) {
 		HPRCBubbleFrame = 4;
 		hprcBubbleAnimationTimer = 0;
 		recover = false;
@@ -5873,7 +5907,7 @@ function mousedown(event){
 	}
 }
 
-function mouseup(event){
+function mouseup(event) {
 	mouseIsDown = false;
 	if (menuScreen == 5) {
 		if (!blockProperties[selectedTile][9]) {
@@ -5895,7 +5929,7 @@ function mouseup(event){
 	}
 }
 
-function keydown(event){
+function keydown(event) {
 	_keysDown[event.keyCode || event.charCode] = true;
 	if (editingTextBox >= 0 && event.keyCode) {
 		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
@@ -5914,14 +5948,14 @@ function keydown(event){
 	if (menuScreen == 5 && !lcPopUp && editingTextBox == -1) {
 		// tool shortcuts
 		if (_xmouse < 660 && selectedTab == 2) {
-			if (event.key == '1') setTool(0);
-			else if (event.key == '2') setTool(1);
-			else if (event.key == '3') setTool(2);
-			else if (event.key == '4') setTool(3);
-			else if (event.key == '5') setTool(4);
-			else if (event.key == '6') setTool(5);
-			else if (event.key == '7') setTool(6);
-			else if (event.key == '8') setTool(7);
+			if (event.key == '1' || event.key == 'p') setTool(0);
+			else if (event.key == '2' || event.key == 'e') setTool(1);
+			else if (event.key == '3' || event.key == 'r') setTool(2);
+			else if (event.key == '4' || event.key == 'f') setTool(3);
+			else if (event.key == '5' || event.key == 'i') setTool(4);
+			else if (event.key == '6' || event.key == 's') setTool(5);
+			else if (event.key == '7' || event.key == 'h') setTool(6);
+			else if (event.key == '8' || event.key == 'j') setTool(7);
 		}
 		// undo shortcut
 		if (event.key == 'z' && controlOrCommandPress) {
@@ -6010,7 +6044,7 @@ function draw() {
 			}
 		}
 	} else if (menuScreen == 3) {
-		// TODO: draw the bg to an offscreen canvas when the level is loaded
+
 		// var bgScale = Math.max(bgXScale, bgYScale);
 		// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
 		ctx.drawImage(osc4, -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), osc4.width/pixelRatio, osc4.height/pixelRatio);
@@ -6790,6 +6824,10 @@ function draw() {
 						}
 					}
 					myLevelChars[1][charDropdown][3] = charD[myLevelChars[1][charDropdown][0]][9];
+					if (myLevelChars[1][charDropdown][3] == 3 || myLevelChars[1][charDropdown][3] == 4) {
+						levelTimer = 0;
+						resetCharPositions();
+					}
 					resetLCChar(charDropdown);
 					charDropdown = -2;
 				} else if (charDropdownType == 1) {
@@ -7487,12 +7525,13 @@ function draw() {
 	pmenuScreen = menuScreen;
 }
 
-// Limits our fps to 60.
+// Limits the framerate to 60fps.
 // https://gist.github.com/elundmark/38d3596a883521cb24f5
 // https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
 var fps = 60;
 var now;
 var then = window.performance.now();
+var lastFrameReq = then;
 var interval = 1000/fps;
 var delta;
 
@@ -7504,4 +7543,8 @@ function rAF60fps() {
 		then = now - (delta % interval);
 		draw();
 	}
+
+	// Added thisline to fix unnecessary lag sometimes caused by the framerate limiter. 
+	if (lastFrameReq - then > interval) then = now;
+	lastFrameReq = now;
 }
