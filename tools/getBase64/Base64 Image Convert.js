@@ -9,6 +9,7 @@ const filePaths = [
 	'menu2.svg',
 	'menu2border.svg',
 	'menu2borderimg.png',
+	'menu6.svg',
 	'premenubg.png',
 	'wintoken.svg',
 	'bg/bg0000.png',

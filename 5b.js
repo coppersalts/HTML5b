@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.7'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.7*'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1723,6 +1723,8 @@ var reorderDiaDown = false;
 var levelLoadString = '';
 var lcMessageTimer = 0;
 var lcMessageText = '';
+const exploreTabNames = ['Featured', 'New', 'Top', '🔍'];
+const exploreTabWidths = [190, 115, 115, 45];
 var power = 1;
 var jumpPower = 11;
 var qPress = false;
@@ -1761,6 +1763,7 @@ var shakeX = 0;
 var shakeY = 0;
 var menuScreen = -1;
 var pmenuScreen = -1;
+var exploreTab = 0;
 var myLevel;
 var myLevelChars;
 var myLevelDialogue;
@@ -1859,6 +1862,7 @@ var svgTilesVB = new Array(blockProperties.length);
 
 var svgMenu0;
 var svgMenu2;
+var svgMenu6;
 var svgMenu2border;
 var svgMenu2borderimg;
 var preMenuBG;
@@ -2001,6 +2005,7 @@ async function loadingScreen() {
 	}
 	svgMenu0 = createImage(resourceData['menu0.svg']);
 	svgMenu2 = createImage(resourceData['menu2.svg']);
+	svgMenu6 = createImage(resourceData['menu6.svg']);
 	svgMenu2border = createImage(resourceData['menu2border.svg']);
 	svgMenu2borderimg = createImage(resourceData['menu2borderimg.png']);
 	preMenuBG = createImage(resourceData['premenubg.png']);
@@ -2112,7 +2117,8 @@ function menuExitLevelCreator() {
 }
 
 function menuExplore() {
-	//
+	menuScreen = 6;
+	exploreTab = 0;
 }
 
 function menu2Back() {
@@ -2216,8 +2222,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 
 	drawRoundedRect(fill, x, y, menu0ButtonSize.w, menu0ButtonSize.h, menu0ButtonSize.cr);
 
-	// TODO: when the lc is out of beta; uncomment this line and remove the lines like it from around when this function is called.
-	// ctx.font = 'bold 30px Helvetica';
+	ctx.font = 'bold 30px Helvetica';
 	ctx.fillStyle = '#666666';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
@@ -2431,7 +2436,6 @@ function drawMenu() {
 	ctx.font = '20px Helvetica';
 	ctx.fillText(version, 5, cheight);
 
-	ctx.font = 'bold 30px Helvetica';
 	if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 303.75, 0, false, menuWatchC);
 	else drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatchA);
 	if (showingNewGame2) {
@@ -2444,10 +2448,8 @@ function drawMenu() {
 		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
 		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
 	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
-	ctx.font = 'bold 30px Helvetica';
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
-	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, true,  menuExplore);
-	// ctx.font = 'bold 23px Helvetica';
+	drawMenu0Button('EXPLORE (pre-α)', 665.55, 482.5, 4, false,  menuExplore);
 	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false,  menuLevelCreator);
 
 	// var started = true;
@@ -6030,7 +6032,6 @@ function draw() {
 	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
 	if (menuScreen == -1) {
 		ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
-		ctx.font = 'bold 30px Helvetica';
 		drawMenu0Button('START GAME', (cwidth-menu0ButtonSize.w)/2, (cheight-menu0ButtonSize.h)/2, 0, false, playGame);
 	} else if (menuScreen == 0) {
 		drawMenu();
@@ -7208,7 +7209,6 @@ function draw() {
 			drawDownButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
 		} else if (selectedTab == 5) {
 			// Options
-			ctx.font = 'bold 30px Helvetica';
 			drawMenu0Button('COPY LEVEL',673, tabWindowY + 10, 11, false, copyLevelString);
 			drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
 			drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
@@ -7480,6 +7480,32 @@ function draw() {
 		}
 
 		levelTimer++;
+	} else if (menuScreen == 6) {
+		ctx.drawImage(svgMenu6, 0, 0, cwidth, cheight);
+		ctx.fillStyle = '#666666';
+
+		// Tabs
+		ctx.font = 'bold 35px Helvetica';
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		let tabx = 28;
+		for (var i = 0; i < exploreTabWidths.length; i++) {
+			if (i == exploreTab) ctx.fillStyle = '#666666';
+			else if (onRect(_xmouse, _ymouse, tabx, 20, exploreTabWidths[i], 45)) {
+				ctx.fillStyle = '#b3b3b3';
+				if (mouseIsDown && !pmouseIsDown) exploreTab = i;
+			}
+			else ctx.fillStyle = '#999999';
+			ctx.fillRect(tabx, 20, exploreTabWidths[i], 45);
+			ctx.fillStyle = '#ffffff';
+			ctx.fillText(exploreTabNames[i], tabx+exploreTabWidths[i]/2, 45);
+			// exploreTabNames[i];
+			tabx += exploreTabWidths[i] + 5;
+		}
+
+		// Levels
+
+		drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 	}
 
 	if (levelTimer <= 30 || menuScreen != 3) {
