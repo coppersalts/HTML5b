@@ -1691,7 +1691,7 @@ const charModels = [
 		charimgmat: {a:0.1,b:0,c:0,d:0.1,tx:0,ty:0},
 	},
 ];
-const names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune'];
+const names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune','','','','','','','','','','','','','','','','','','','','','','','','','','','HPRC 1','HPRC 2','Crate','Metal Box','Platform','Spike Ball','Package','Companian Cube','Rusty Apparatuses','Purple Face','Saw Blade','Spike Ball Jr.','Pillar','Large Platform','Blue Spike Ball','Not Gelatin','Acid Platform','Large Acid Platform','Green Block','Blue Block','Spike Wall'];
 var selectedTab = 0;
 var selectedBg = 0;
 const tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
