@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.7*'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.8*'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -3156,7 +3156,9 @@ function drawHPRCBubbleCharImg(dead, sc, xoff) {
 	var charimgmat = charModels[char[dead].id].charimgmat;
 	ctx.save();
 	ctx.transform(charimgmat.a*sc,charimgmat.b,charimgmat.c,charimgmat.d*sc,(charimgmat.tx*sc)/2+char[HPRC2].x+xoff,(charimgmat.ty*sc)/2+char[HPRC2].y-107);
-	ctx.drawImage(svgChars[char[dead].id], -svgChars[char[dead].id].width/2, -svgChars[char[dead].id].height/2);
+	var charimg = svgChars[char[dead].id];
+	if (Array.isArray(charimg)) charimg = charimg[0];
+	ctx.drawImage(charimg, -charimg.width/2, -charimg.height/2);
 	ctx.restore();
 }
 
