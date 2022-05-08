@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.8*'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 4.11.7*'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1764,6 +1764,8 @@ var shakeY = 0;
 var menuScreen = -1;
 var pmenuScreen = -1;
 var exploreTab = 0;
+var explorePage = 0;
+var explorePageLevels = [];
 var myLevel;
 var myLevelChars;
 var myLevelDialogue;
@@ -2119,6 +2121,7 @@ function menuExitLevelCreator() {
 function menuExplore() {
 	menuScreen = 6;
 	exploreTab = 0;
+	setExplorePage(0);
 }
 
 function menu2Back() {
@@ -2692,8 +2695,8 @@ function resetLevel() {
 		charsAtEnd = 0;
 		control = 0;
 		cutScene = 0;
-		bgXScale = ((levelWidth - 32) * 10 + 960) / 9.6;
-		bgYScale = ((levelHeight - 18) * 10 + 540) / 5.4;
+		bgXScale = Math.max(((levelWidth - 32) * 10 + 960) / 9.6, 100);
+		bgYScale = Math.max(((levelHeight - 18) * 10 + 540) / 5.4, 100);
 		drawLevelBG();
 		cameraX = Math.min(Math.max(char[0].x - 480,0),levelWidth * 30 - 960);
 		cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
@@ -2788,8 +2791,8 @@ function resetMyLevel() {
 	charsAtEnd = 0;
 	control = 0;
 	cutScene = 0;
-	bgXScale = ((levelWidth - 32) * 10 + 960) / 9.6;
-	bgYScale = ((levelHeight - 18) * 10 + 540) / 5.4;
+	bgXScale = Math.max(((levelWidth - 32) * 10 + 960) / 9.6, 100);
+	bgYScale = Math.max(((levelHeight - 18) * 10 + 540) / 5.4, 100);
 	drawLevelBG();
 	cameraX = Math.min(Math.max(char[0].x - 480,0),levelWidth * 30 - 960);
 	cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
@@ -5721,6 +5724,62 @@ function drawRemoveButton(x, y, s, p) {
 	ctx.stroke();
 }
 
+function drawExploreLevel(x, y, i) {
+	ctx.fillStyle = '#333333';
+	ctx.fillRect(x, y, 208, 155);
+	ctx.fillStyle = '#cccccc';
+	ctx.fillRect(x+8, y+8, 192, 108);
+
+	ctx.fillStyle = '#ffffff';
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '20px Helvetica';
+	ctx.fillText(explorePageLevels[i].name, x+6.35, y+119.4);
+
+	ctx.fillStyle = '#999999';
+	ctx.font = '10px Helvetica';
+	ctx.fillText('by ' + explorePageLevels[i].author, x+7, y+138.3);
+
+	// explorePageLevels[i]
+}
+
+function setExplorePage(page) {
+	explorePage = page;
+	explorePageLevels = getLevelPage(explorePage);
+}
+
+function drawArrow(x, y, w, h, dir) {
+	ctx.beginPath();
+	ctx.moveTo(x + w*(dir==1?1:(dir==3?0:0.5)), y + h*(dir==2?1:(dir==0?0:0.5)));
+	ctx.lineTo(x + w*(dir!=1), y + h*(dir!=2));
+	ctx.lineTo(x + w*(dir==3), y + h*(dir==0));
+	ctx.fill();
+	// // 0 - up
+	// ctx.beginPath();
+	// ctx.moveTo(x+w/2, y);
+	// ctx.moveTo(x+w, y+h);
+	// ctx.moveTo(x, y+h);
+	// ctx.fill();
+	// // 1 - right
+	// ctx.beginPath();
+	// ctx.moveTo(x+w, y+h/2);
+	// ctx.moveTo(x, y+h);
+	// ctx.moveTo(x, y);
+	// ctx.fill();
+	// // 2 - down
+	// ctx.beginPath();
+	// ctx.moveTo(x+w/2, y+h);
+	// ctx.moveTo(x+w, y);
+	// ctx.moveTo(x, y);
+	// ctx.fill();
+	// // 3 - left
+	// ctx.beginPath();
+	// ctx.moveTo(x, y+h/2);
+	// ctx.moveTo(x+w, y+h);
+	// ctx.moveTo(x+w, y);
+	// ctx.fill();
+}
+
 
 
 
@@ -5952,7 +6011,7 @@ function keydown(event) {
 	if (menuScreen == 5 && !lcPopUp && editingTextBox == -1) {
 		// tool shortcuts
 		if (_xmouse < 660 && selectedTab == 2) {
-			if (event.key == '1' || event.key == 'p') setTool(0);
+			if (event.key == '1' || event.key == 'p' || event.key == 'd') setTool(0);
 			else if (event.key == '2' || event.key == 'e') setTool(1);
 			else if (event.key == '3' || event.key == 'r') setTool(2);
 			else if (event.key == '4' || event.key == 'f') setTool(3);
@@ -6050,7 +6109,7 @@ function draw() {
 
 		// var bgScale = Math.max(bgXScale, bgYScale);
 		// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
-		ctx.drawImage(osc4, -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), osc4.width/pixelRatio, osc4.height/pixelRatio);
+		ctx.drawImage(osc4, -Math.floor((Math.max(cameraX,0)+shakeX)/1.5 + (cameraX<0?cameraX/3:0)), -Math.floor((Math.max(cameraY,0)+shakeY)/1.5 + (cameraY<0?cameraY/3:0)), osc4.width/pixelRatio, osc4.height/pixelRatio);
 		drawLevel();
 
 		if (cutScene == 1 || cutScene == 2) { 
@@ -7506,6 +7565,37 @@ function draw() {
 		}
 
 		// Levels
+		// explorePageLevels[0]
+		for (var i = 0; i < explorePageLevels.length; i++) {
+			drawExploreLevel(232 * (i%4) + 28, Math.floor(i/4)*182 + 100, i);
+		}
+
+
+		// page number
+		ctx.textBaseline = 'top';
+		ctx.textAlign = 'center';
+		ctx.fillStyle = '#ffffff';
+		ctx.font = '30px Helvetica';
+		ctx.fillText(explorePage+1, cwidth/2, 460);
+
+		// previous page
+		if (explorePage <= 0) ctx.fillStyle = '#505050';
+		else if (onRect(_xmouse,_ymouse,240,460,25,30)) {
+			ctx.fillStyle = '#cccccc';
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage-1);
+		}
+		else ctx.fillStyle = '#999999';
+		drawArrow(240,460,25,30,3);
+
+		// next page
+		if (onRect(_xmouse,_ymouse,720,460,25,30)){
+			ctx.fillStyle = '#cccccc';
+			onButton = true;
+			if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage+1);
+		}
+		else ctx.fillStyle = '#999999';
+		drawArrow(720,460,25,30,1);
 
 		drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 	}
@@ -7572,7 +7662,7 @@ function rAF60fps() {
 		draw();
 	}
 
-	// Added thisline to fix unnecessary lag sometimes caused by the framerate limiter. 
+	// Added this line to fix unnecessary lag sometimes caused by the framerate limiter. 
 	if (lastFrameReq - then > interval) then = now;
 	lastFrameReq = now;
 }
