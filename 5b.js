@@ -22,6 +22,9 @@ var osc1, osctx1;
 var osc2, osctx2;
 var osc3, osctx3;
 var osc4, osctx4;
+ // explore level thumbnails
+var thumbs = new Array(8);
+var thumbsctx = new Array(8);
 
 var _xmouse = 0;
 var _ymouse = 0;
@@ -5727,8 +5730,9 @@ function drawRemoveButton(x, y, s, p) {
 function drawExploreLevel(x, y, i) {
 	ctx.fillStyle = '#333333';
 	ctx.fillRect(x, y, 208, 155);
-	ctx.fillStyle = '#cccccc';
-	ctx.fillRect(x+8, y+8, 192, 108);
+	// ctx.fillStyle = '#cccccc';
+	// ctx.fillRect(x+8, y+8, 192, 108);
+	ctx.drawImage(thumbs[i], x+8, y+8, 192, 108)
 
 	ctx.fillStyle = '#ffffff';
 	ctx.textBaseline = 'top';
@@ -5746,6 +5750,65 @@ function drawExploreLevel(x, y, i) {
 function setExplorePage(page) {
 	explorePage = page;
 	explorePageLevels = getLevelPage(explorePage);
+	setExploreThumbs();
+}
+
+function setExploreThumbs() {
+	for (var i = 0; i < explorePageLevels.length; i++) {
+		thumbsctx[i].clearRect(0, 0, thumbs[i].width * pixelRatio / 0.2, thumbs[i].height * pixelRatio / 0.2);
+
+		var lines = explorePageLevels[i].levels[0].split('\n');
+		var thumbLevelHead = lines[1].split(',');
+		var thumbLevelW = parseInt(thumbLevelHead[0]);
+		var thumbLevelH = parseInt(thumbLevelHead[1]);
+		thumbsctx[i].drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
+
+		if (thumbLevelHead[4]=='H') {
+			for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
+				for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
+					exploreDrawThumbTile(thumbsctx[i], x, y, 111 * tileIDFromChar(lines[y+2].charCodeAt(x * 2)) + tileIDFromChar(lines[y+2].charCodeAt(x * 2 + 1)));
+				}
+			}
+		} else {
+			for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
+				for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
+					exploreDrawThumbTile(thumbsctx[i], x, y, tileIDFromChar(lines[y+2].charCodeAt(x)));
+				}
+			}
+		}
+	}
+}
+
+function exploreDrawThumbTile(context, x, y, tile) {
+	if (blockProperties[tile][16] > 0) {
+		if (blockProperties[tile][16] == 1) {
+			if (blockProperties[tile][11] > 0 && typeof svgLevers[(blockProperties[tile][11]-1)%6] !== 'undefined') {
+				context.save();
+				context.translate(x*30+15, y*30+28);
+				context.rotate((Math.ceil(blockProperties[tile][11]/6)==1?-60:60)*(Math.PI/180));
+				context.translate(-x*30-15, -y*30-28);
+				context.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], x*30, y*30);
+				context.restore();
+			}
+			context.drawImage(svgTiles[tile], (x*30+svgTilesVB[tile][0]), y*30+svgTilesVB[tile][1]);
+		} else if (blockProperties[tile][16] > 1) {
+			context.drawImage(svgTiles[tile][0], x*30+svgTilesVB[tile][0][0], y*30+svgTilesVB[tile][0][1]);
+		}
+	} else if (tile == 6) {
+		// Door
+		// var bgid = playMode==2?selectedBg:bgs[currentLevel];
+		// context.fillStyle = bgid==9||bgid==10?'#999999':'#505050';
+		context.fillStyle = '#505050';
+		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
+		// for (var i = 0; i < charCount2; i++) {
+		// 	context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
+		// 	context.fillRect((x-1)*30+doorLightX[Math.floor(i/6)==Math.floor((charCount2-1)/6)?(charCount2-1)%6:5][i%6], y*30-80 + Math.floor(i/6)*10, 5, 5);
+		// 	if (doorLightFadeDire[i] != 0) {
+		// 		doorLightFade[i] = Math.max(Math.min(doorLightFade[i]+doorLightFadeDire[i]*0.0625, 1), 0);
+		// 		if (doorLightFade[i] == 1 || doorLightFade[i] == 0) doorLightFadeDire[i] = 0;
+		// 	}
+		// }
+	}
 }
 
 function drawArrow(x, y, w, h, dir) {
@@ -6074,6 +6137,14 @@ function setup() {
 	osc4.width = cwidth;
 	osc4.height = cheight;
 	osctx4 = osc4.getContext('2d');
+
+	for (var i = 0; i < thumbs.length; i++) {
+		thumbs[i] = document.createElement('canvas');
+		thumbs[i].width = Math.floor(192 * pixelRatio);
+		thumbs[i].height = Math.floor(108 * pixelRatio);
+		thumbsctx[i] = thumbs[i].getContext('2d');
+		thumbsctx[i].scale(pixelRatio*0.2, pixelRatio*0.2);
+	}
 
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
@@ -7642,6 +7713,7 @@ function draw() {
 	_pymouse = _ymouse;
 	pmenuScreen = menuScreen;
 }
+
 
 // Limits the framerate to 60fps.
 // https://gist.github.com/elundmark/38d3596a883521cb24f5
