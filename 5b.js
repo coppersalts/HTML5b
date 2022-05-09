@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 4.11.7*'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 5.0.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -1769,6 +1769,7 @@ var pmenuScreen = -1;
 var exploreTab = 0;
 var explorePage = 0;
 var explorePageLevels = [];
+var exploreLevelPageLevel;
 var myLevel;
 var myLevelChars;
 var myLevelDialogue;
@@ -2127,6 +2128,22 @@ function menuExplore() {
 	setExplorePage(0);
 }
 
+function gotoExploreLevelPage(locOnPage) {
+	menuScreen = 7;
+	exploreLevelPageLevel = explorePageLevels[locOnPage];
+}
+
+function menuExploreBack() {
+	menuScreen = 6;
+	// setExplorePage(0);
+}
+
+function playExploreLevel() {
+	readExploreLevelString(exploreLevelPageLevel.levels[0]);
+	testLevelCreator();
+	playMode = 3;
+}
+
 function menu2Back() {
 	menuScreen = 0;
 	cameraX = 0;
@@ -2206,6 +2223,12 @@ function exitTestLevel() {
 	cameraY = 0;
 	resetLevel();
 	resetLCOSC();
+}
+
+function exitExploreLevel() {
+	menuScreen = 7;
+	cameraX = 0;
+	cameraY = 0;
 }
 
 function drawMenu0Button(text, x, y, id, grayed, action) {
@@ -2547,7 +2570,7 @@ function drawLevelButtons() {
 	ctx.textBaseline = 'top';
 	ctx.font = 'bold 32px Helvetica';
 	ctx.fillText(currentLevelDisplayName, 12.85, 489.45);
-	drawMenu2_3Button(0, 837.5, 486.95, playMode==2?exitTestLevel:menu3Menu);
+	drawMenu2_3Button(0, 837.5, 486.95, playMode==3?exitExploreLevel:(playMode==2?exitTestLevel:menu3Menu));
 }
 
 //https://thewebdev.info/2021/05/15/how-to-add-line-breaks-into-the-html5-canvas-with-filltext/
@@ -2626,22 +2649,124 @@ function playLevel(i) {
 }
 
 function resetLevel() {
+	HPRCBubbleFrame = 0;
+	tileDepths = [[],[],[],[]];
 	if (playMode == 2) {
-		resetMyLevel();
+		charCount = myLevelChars[1].length;
+		levelWidth = myLevel[1][0].length;
+		levelHeight = myLevel[1].length;
+
+		copyLevel(myLevel[1]);
+
+		char = new Array(charCount);
+		charCount2 = 0;
+		HPRC1 = HPRC2 = 1000000;
+		for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
+			var _loc2_ = myLevelChars[1][_loc1_][0];
+			char[_loc1_] = new Character(
+				_loc2_,
+				myLevelChars[1][_loc1_][1] * 30,
+				myLevelChars[1][_loc1_][2] * 30,
+				70 + _loc1_ * 40,
+				400 - _loc1_ * 30,
+				myLevelChars[1][_loc1_][3],
+				charD[_loc2_][0],
+				charD[_loc2_][1],
+				charD[_loc2_][2],
+				charD[_loc2_][2],
+				charD[_loc2_][3],
+				charD[_loc2_][4],
+				charD[_loc2_][6],
+				charD[_loc2_][8],
+				_loc2_<35?charModels[_loc2_].defaultExpr:0
+			);
+			if (char[_loc1_].charState == 9) {
+				char[_loc1_].expr = 1;
+				char[_loc1_].diaMouthFrame = 0;
+			} else if (char[_loc1_].charState >= 7) {
+				char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+			}
+			
+			if (char[_loc1_].charState >= 9) charCount2++;
+			if (_loc2_ == 36) HPRC1 = _loc1_;
+			if (_loc2_ == 35) HPRC2 = _loc1_;
+			if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
+				char[_loc1_].speed = myLevelChars[1][_loc1_][4];
+				char[_loc1_].motionString = generateMS(myLevelChars[1][_loc1_]);
+			}
+		}
+
+		cLevelDialogueChar = [];
+		cLevelDialogueFace = [];
+		cLevelDialogueText = [];
+		for (var i = 0; i < myLevelDialogue[1].length; i++) {
+			cLevelDialogueChar.push(myLevelDialogue[1][i].char);
+			cLevelDialogueFace.push(myLevelDialogue[1][i].face);
+			cLevelDialogueText.push(myLevelDialogue[1][i].text);
+		}
+
+		currentLevelDisplayName = myLevelInfo.name;
+	} else if (playMode == 3) {
+		charCount = myLevelChars[1].length;
+		levelWidth = myLevel[1][0].length;
+		levelHeight = myLevel[1].length;
+
+		copyLevel(myLevel[1]);
+
+		char = new Array(charCount);
+		charCount2 = 0;
+		HPRC1 = HPRC2 = 1000000;
+		for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
+			var _loc2_ = myLevelChars[1][_loc1_][0];
+			char[_loc1_] = new Character(
+				_loc2_,
+				myLevelChars[1][_loc1_][1] * 30,
+				myLevelChars[1][_loc1_][2] * 30,
+				70 + _loc1_ * 40,
+				400 - _loc1_ * 30,
+				myLevelChars[1][_loc1_][3],
+				charD[_loc2_][0],
+				charD[_loc2_][1],
+				charD[_loc2_][2],
+				charD[_loc2_][2],
+				charD[_loc2_][3],
+				charD[_loc2_][4],
+				charD[_loc2_][6],
+				charD[_loc2_][8],
+				_loc2_<35?charModels[_loc2_].defaultExpr:0
+			);
+			if (char[_loc1_].charState == 9) {
+				char[_loc1_].expr = 1;
+				char[_loc1_].diaMouthFrame = 0;
+			} else if (char[_loc1_].charState >= 7) {
+				char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+			}
+			
+			if (char[_loc1_].charState >= 9) charCount2++;
+			if (_loc2_ == 36) HPRC1 = _loc1_;
+			if (_loc2_ == 35) HPRC2 = _loc1_;
+			if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
+				char[_loc1_].speed = myLevelChars[1][_loc1_][4];
+				char[_loc1_].motionString = generateMS(myLevelChars[1][_loc1_]);
+			}
+		}
+
+		cLevelDialogueChar = [];
+		cLevelDialogueFace = [];
+		cLevelDialogueText = [];
+		for (var i = 0; i < myLevelDialogue[1].length; i++) {
+			cLevelDialogueChar.push(myLevelDialogue[1][i].char);
+			cLevelDialogueFace.push(myLevelDialogue[1][i].face);
+			cLevelDialogueText.push(myLevelDialogue[1][i].text);
+		}
+		
+		currentLevelDisplayName = myLevelInfo.name;
 	} else {
-		HPRCBubbleFrame = 0;
 		charCount = startLocations[currentLevel].length;
 		levelWidth = levels[currentLevel][0].length;
 		levelHeight = levels[currentLevel].length;
-		charDepths = new Array((charCount + 1) * 2).fill(-1);
-		for (var i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
 
-		// move the control to the front
-		charDepths[(charCount-1)*2] = -1;
-		charDepths[charCount*2] = 0;
 		copyLevel(levels[currentLevel]);
-		charDepth = levelWidth * levelHeight + charCount * 2;
-		tileDepths = [[],[],[],[]];
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
 		for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
@@ -2678,109 +2803,25 @@ function resetLevel() {
 				char[_loc1_].motionString = startLocations[currentLevel][_loc1_][6];
 			}
 		}
-		// charCount2 = Math.min(charCount2, 6);
-		getTileDepths();
-		calculateShadowsAndBorders();
 
 		cLevelDialogueChar = dialogueChar[currentLevel];
 		cLevelDialogueFace = dialogueFace[currentLevel];
 		cLevelDialogueText = dialogueText[currentLevel];
 
-		osc1.width = Math.floor(levelWidth*30 * pixelRatio);
-		osc1.height = Math.floor(levelHeight*30 * pixelRatio);
-		osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-		osc2.width = Math.floor(levelWidth*30 * pixelRatio);
-		osc2.height = Math.floor(levelHeight*30 * pixelRatio);
-		osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-		drawStaticTiles();
-		recover = false;
-		cornerHangTimer = 0;
-		charsAtEnd = 0;
-		control = 0;
-		cutScene = 0;
-		bgXScale = Math.max(((levelWidth - 32) * 10 + 960) / 9.6, 100);
-		bgYScale = Math.max(((levelHeight - 18) * 10 + 540) / 5.4, 100);
-		drawLevelBG();
-		cameraX = Math.min(Math.max(char[0].x - 480,0),levelWidth * 30 - 960);
-		cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
-		gotThisCoin = false;
-		levelTimer = 0;
-		recoverTimer = 0;
-		levelTimer2 = getTimer();
-		if (char[0].charState <= 9)  changeControl();
 		if (currentLevel > 99) {
 			currentLevelDisplayName = 'B' + (currentLevel - 99).toString(10).padStart(2, '0') + '. ' + levelName[currentLevel];
 		} else {
 			currentLevelDisplayName = (currentLevel + 1).toString(10).padStart(3, '0') + '. ' + levelName[currentLevel];
 		}
 	}
-	doorLightFade = new Array(charCount2).fill(0);
-	doorLightFadeDire = new Array(charCount2).fill(0);
-}
-
-function resetMyLevel() {
-	HPRCBubbleFrame = 0;
-	charCount = myLevelChars[1].length;
-	levelWidth = myLevel[1][0].length;
-	levelHeight = myLevel[1].length;
 	charDepths = new Array((charCount + 1) * 2).fill(-1);
 	for (var i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
-
 	// move the control to the front
 	charDepths[(charCount-1)*2] = -1;
 	charDepths[charCount*2] = 0;
-	copyLevel(myLevel[1]);
 	charDepth = levelWidth * levelHeight + charCount * 2;
-	tileDepths = [[],[],[],[]];
-	char = new Array(charCount);
-	charCount2 = 0;
-	HPRC1 = HPRC2 = 1000000;
-	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		var _loc2_ = myLevelChars[1][_loc1_][0];
-		char[_loc1_] = new Character(
-			_loc2_,
-			myLevelChars[1][_loc1_][1] * 30,
-			myLevelChars[1][_loc1_][2] * 30,
-			70 + _loc1_ * 40,
-			400 - _loc1_ * 30,
-			myLevelChars[1][_loc1_][3],
-			charD[_loc2_][0],
-			charD[_loc2_][1],
-			charD[_loc2_][2],
-			charD[_loc2_][2],
-			charD[_loc2_][3],
-			charD[_loc2_][4],
-			charD[_loc2_][6],
-			charD[_loc2_][8],
-			_loc2_<35?charModels[_loc2_].defaultExpr:0
-		);
-		if (char[_loc1_].charState == 9) {
-			char[_loc1_].expr = 1;
-			char[_loc1_].diaMouthFrame = 0;
-		} else if (char[_loc1_].charState >= 7) {
-			char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
-		}
-		
-		if (char[_loc1_].charState >= 9) charCount2++;
-		if (_loc2_ == 36) HPRC1 = _loc1_;
-		if (_loc2_ == 35) HPRC2 = _loc1_;
-		if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
-			char[_loc1_].speed = myLevelChars[1][_loc1_][4];
-			char[_loc1_].motionString = generateMS(myLevelChars[1][_loc1_]);
-		}
-	}
-	// charCount2 = Math.min(charCount2, 6)
 	getTileDepths();
 	calculateShadowsAndBorders();
-
-	cLevelDialogueChar = [];
-	cLevelDialogueFace = [];
-	cLevelDialogueText = [];
-	for (var i = 0; i < myLevelDialogue[1].length; i++) {
-		cLevelDialogueChar.push(myLevelDialogue[1][i].char);
-		cLevelDialogueFace.push(myLevelDialogue[1][i].face);
-		cLevelDialogueText.push(myLevelDialogue[1][i].text);
-	}
 
 	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
 	osc1.height = Math.floor(levelHeight*30 * pixelRatio);
@@ -2802,10 +2843,11 @@ function resetMyLevel() {
 	gotThisCoin = false;
 	levelTimer = 0;
 	recoverTimer = 0;
-	// timer += getTimer() - levelTimer2;
-	// levelTimer2 = getTimer();
+	levelTimer2 = getTimer();
 	if (char[0].charState <= 9)  changeControl();
-	currentLevelDisplayName = myLevelInfo.name;
+
+	doorLightFade = new Array(charCount2).fill(0);
+	doorLightFadeDire = new Array(charCount2).fill(0);
 }
 
 function copyLevel(thatLevel) {
@@ -2850,7 +2892,7 @@ function drawLevelBG() {
 	osc4.width = Math.floor((bgScale/100)*cwidth * pixelRatio);
 	osc4.height = Math.floor((bgScale/100)*cheight * pixelRatio);
 	osctx4.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-	osctx4.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], 0, 0, (bgScale/100)*cwidth, (bgScale/100)*cheight);
+	osctx4.drawImage(imgBgs[playMode>=2?selectedBg:bgs[currentLevel]], 0, 0, (bgScale/100)*cwidth, (bgScale/100)*cheight);
 }
 
 function drawLevel() {
@@ -5553,6 +5595,182 @@ function readLevelString(str) {
 	myLevelNecessaryDeaths = parseInt(lines[i],10);
 }
 
+function readExploreLevelString(str) {
+	myLevelChars = new Array(3);
+	myLevel = new Array(3);
+	myLevelDialogue = new Array(3);
+	myLevelInfo = {name: 'Untitled'}
+
+	let lines = str.split('\r\n');
+	if (lines.length == 1) lines = str.split('\n');
+	let i = 0;
+
+	// skip past any blank lines at the start
+	while (i < lines.length && lines[i] == '') i++;
+	if (i >= lines.length) return;
+	myLevelInfo.name = lines[i];
+	i++;
+	if (i >= lines.length) return;
+
+	// read level info
+	let levelInfo = lines[i].split(',');
+	if (levelInfo.length != 5) return;
+	levelWidth = Math.max(parseInt(levelInfo[0],10),1);
+	levelHeight = Math.max(parseInt(levelInfo[1],10),1);
+	charCount = parseInt(levelInfo[2],10);
+	selectedBg = parseInt(levelInfo[3],10);
+	if (selectedBg > imgBgs.length || isNaN(selectedBg)) selectedBg = 0;
+	// setLCBG();
+	longMode = levelInfo[4]=='H';
+	i++;
+	// If we're at the end of the lines, or any of these parseInts returned NaN; then stop here and reset some things.
+	if (i >= lines.length || isNaN(levelWidth) || isNaN(levelHeight) || isNaN(charCount) || charCount > 50) {
+		levelWidth = myLevel[1][0].length;
+		levelHeight = myLevel[1].length;
+		charCount = 0;
+		myLevelChars[1].length = 0;
+		char.length = 0;
+		// setLCMessage('Error while loading from string:\n' + (i>=lines.length?'no tile map was provided.':'one or more values in the level\'s metadata was invalid.'));
+		return;
+	}
+	myLevelChars[1] = new Array(charCount);
+	char = new Array(charCount);
+
+	// read block layout data
+	myLevel[1] = new Array(levelHeight);
+	if (longMode) {
+		for (var y = 0; y < levelHeight; y++) {
+			myLevel[1][y] = new Array(levelWidth);
+			for (var x = 0; x < levelWidth; x++) {
+				if (i+y >= lines.length || x * 2 + 1 >= lines[i+y].length) {
+					myLevel[1][y][x] = 0;
+				} else {
+					myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
+					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
+				}
+			}
+		}
+	} else {
+		for (var y = 0; y < levelHeight; y++) {
+			myLevel[1][y] = new Array(levelWidth);
+			for (var x = 0; x < levelWidth; x++) {
+				if (i+y >= lines.length || x >= lines[i+y].length) {
+					myLevel[1][y][x] = 0;
+				} else {
+					myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
+					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
+				}
+			}
+		}
+	}
+	// setCoinAndDoorPos();
+	// updateLCtiles();
+	i += levelHeight;
+	if (i >= lines.length) {
+		charCount = 0;
+		myLevelChars[1].length = 0;
+		char.length = 0;
+		// setLCMessage('Error while loading from string:\nno entity data was provided.');
+		return;
+	}
+
+	// read entity data
+	levelTimer = 0;
+	for (var e = 0; e < myLevelChars[1].length; e++) {
+		if (i+e >= lines.length) {
+			myLevelChars[1].length = e;
+			char.length = e;
+			// setLCMessage('Error while loading from string:\nnumber of entities did not match the provided count.');
+			return;
+		}
+		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
+		myLevelChars[1][e] = [0,-1.0,-1.0,10];
+		if (entityInfo.length > 3) {
+			if (isNaN(parseInt(entityInfo[0],10)) || isNaN(parseFloat(entityInfo[1],10)) || isNaN(parseFloat(entityInfo[2],10)) || isNaN(parseInt(entityInfo[3],10))) {
+				myLevelChars[1].length = e;
+				char.length = e;
+				// setLCMessage('Error while loading from string:\na data value in one entity\'s data parsed to NaN.');
+				// myLevelChars[1][e] = [0,0.0,0.0,10];
+				return;
+			}
+			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0],10),charD.length),0);
+			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1],10),100),0);
+			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2],10),100),0);
+			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3],10),10),3);
+		}
+		let _loc2_ = myLevelChars[1][e][0];
+		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
+		char[e] = new Character(
+			_loc2_,
+			+myLevelChars[1][e][1].toFixed(2) * 30,
+			+myLevelChars[1][e][2].toFixed(2) * 30,
+			70 + e * 40,
+			400 - e * 30,
+			myLevelChars[1][e][3],
+			charD[_loc2_][0],
+			charD[_loc2_][1],
+			charD[_loc2_][2],
+			charD[_loc2_][2],
+			charD[_loc2_][3],
+			charD[_loc2_][4],
+			charD[_loc2_][6],
+			charD[_loc2_][8],
+			_loc2_<35?charModels[_loc2_].defaultExpr:0
+		);
+		if (myLevelChars[1][e][1] < 0 || myLevelChars[1][e][2] < 0) char[e].placed = false;
+		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
+			if (entityInfo.length == 5) {
+				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2),10);
+				myLevelChars[1][e][5] = [];
+				let d = entityInfo[4].charCodeAt(2)-48;
+				let btm = 1;
+				for (var m = 2; m < entityInfo[4].length-1; m++) {
+					if (d != entityInfo[4].charCodeAt(m+1)-48) {
+						myLevelChars[1][e][5].push([Math.min(Math.max(d,0),3),btm]);
+						btm = 1;
+						d = entityInfo[4].charCodeAt(m+1)-48;
+					} else {
+						btm++;
+					}
+				}
+				myLevelChars[1][e][5].push([d,btm]);
+				char[e].motionString = generateMS(myLevelChars[1][e]);
+				char[e].speed = myLevelChars[1][e][4];
+			} else {
+				myLevelChars[1][e][3] = 6;
+			}
+		}
+	}
+	i += myLevelChars[1].length;
+	if (i >= lines.length) {
+		// setLCMessage('Error while loading from string:\nnumber of dialogue lines was not provided.');
+		return;
+	}
+
+	// read dialogue
+	myLevelDialogue[1] = new Array(parseInt(lines[i],10));
+	i++;
+	for (var d = 0; d < myLevelDialogue[1].length; d++) {
+		if (i+d >= lines.length) {
+			myLevelDialogue[1].length = d;
+			// setLCMessage('Error while loading from string:\nnumber of dialogue lines did not match the provided count.');
+			return;
+		}
+		myLevelDialogue[1][d] = {char:0,face:2,text:''};
+		myLevelDialogue[1][d].char = parseInt(lines[i+d].slice(0,2),10);
+		if (isNaN(myLevelDialogue[1][d].char)) myLevelDialogue[1][d].char = 99;
+		myLevelDialogue[1][d].face = lines[i+d].charAt(2)=='S'?3:2;
+		myLevelDialogue[1][d].text = lines[i+d].substring(4);
+	}
+	i += myLevelDialogue[1].length;
+	if (i >= lines.length) {
+		// setLCMessage('Error while loading from string:\nnecessary deaths was not provided.\n(but everything else loaded so it\'s probably fine)');
+		return;
+	}
+
+	myLevelNecessaryDeaths = parseInt(lines[i],10);
+}
+
 function setLCMessage(text) {
 	lcMessageTimer = 1;
 	lcMessageText = text;
@@ -5728,7 +5946,14 @@ function drawRemoveButton(x, y, s, p) {
 }
 
 function drawExploreLevel(x, y, i) {
-	ctx.fillStyle = '#333333';
+	if (onRect(_xmouse, _ymouse, x, y, 208, 155)) {
+		onButton = true;
+		ctx.fillStyle = '#404040';
+		if (mouseIsDown && !pmouseIsDown) gotoExploreLevelPage(i); 
+	} else {
+		ctx.fillStyle = '#333333';
+	}
+
 	ctx.fillRect(x, y, 208, 155);
 	// ctx.fillStyle = '#cccccc';
 	// ctx.fillRect(x+8, y+8, 192, 108);
@@ -6758,7 +6983,9 @@ function draw() {
 					levelProgress = currentLevel;
 					resetLevel();
 				} else {
-					if (playMode == 2) {
+					if (playMode == 3) {
+						exitExploreLevel();
+					} else if (playMode == 2) {
 						exitTestLevel();
 					} else {
 						exitLevel();
@@ -7669,6 +7896,30 @@ function draw() {
 		drawArrow(720,460,25,30,1);
 
 		drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
+	} else if (menuScreen == 7) {
+		ctx.fillStyle = '#505050';
+		ctx.fillRect(0, 0, cwidth, cheight);
+
+		ctx.textBaseline = 'top';
+		ctx.textAlign = 'left';
+		ctx.fillStyle = '#ffffff';
+		ctx.font = '38px Helvetica';
+		ctx.fillText(exploreLevelPageLevel.name, 29.15, 27.4);
+
+		ctx.fillStyle = '#999999';
+		ctx.font = '18px Helvetica';
+		ctx.fillText('by ' + exploreLevelPageLevel.author, 31.85, 66.1);
+
+		ctx.fillStyle = '#ffffff';
+		ctx.font = '20px Helvetica';
+		wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
+
+		ctx.fillStyle = '#cccccc';
+		ctx.fillRect(30, 98, 362.4, 204.55);
+
+		drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
+
+		drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
 	}
 
 	if (levelTimer <= 30 || menuScreen != 3) {
