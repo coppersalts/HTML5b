@@ -78,6 +78,7 @@ var deathCount;
 var timer;
 var coins;
 var longMode = false;
+var quirksMode = false;
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -6968,7 +6969,7 @@ function draw() {
 		// This was originally near the start of the level screen code, but I moved it to the end to fix a bug relating to the camera when exiting a level.
 		if (wipeTimer == 30) {
 			if (transitionType == 0) {
-				timer += getTimer() - levelTimer2;
+				if (!quirksMode) timer += getTimer() - levelTimer2;
 				resetLevel();	
 			} else if (charsAtEnd >= charCount2) {
 				if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
@@ -6979,7 +6980,7 @@ function draw() {
 				timer += getTimer() - levelTimer2;
 				if (playMode == 0 && currentLevel < 99) {
 					currentLevel++;
-					toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
+					if (!quirksMode) toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
 					levelProgress = currentLevel;
 					resetLevel();
 				} else {
