@@ -1896,7 +1896,7 @@ var menu2_3ButtonClicked = -1;
 var levelButtonClicked = -1;
 var showingNewGame2 = false;
 
-var musicSound = new Audio('data/music hq.wav');
+var musicSound = new Audio('data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
 
