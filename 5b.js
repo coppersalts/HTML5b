@@ -1,4 +1,3 @@
-// TODO: rename _locn_ variables.
 // TODO: look up the difference between var and let.
 // UPDATE: I now know the difference and I can't decide whether or not to use it in certain places. All I know is I probably shouldn't use it in for loops.
 // I'll look more into it once I get more into optimizing.
@@ -7,7 +6,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-var version = 'beta 5.1.2'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 5.1.2*'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -133,22 +132,22 @@ function charAt2(j) {
 }
 
 function tileAt(j, i, y) {
-	var _loc1_ = levelsString.charCodeAt(j + levelStart);
-	if (_loc1_ == 8364) return 93;
-	if (_loc1_ <= 126) return _loc1_ - 46;
-	if (_loc1_ <= 182) return _loc1_ - 80;
-	return _loc1_ - 81;
+	var num = levelsString.charCodeAt(j + levelStart);
+	if (num == 8364) return 93;
+	if (num <= 126) return num - 46;
+	if (num <= 182) return num - 80;
+	return num - 81;
 }
 
 // Load Level Data
 function loadLevels() {
-	for (var _loc3_ = 0; _loc3_ < levelCount; _loc3_++) {
+	for (var i = 0; i < levelCount; i++) {
 		levelStart += 2;
 
 		// Read Level Name
-		levelName[_loc3_] = '';
+		levelName[i] = '';
 		for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
-			levelName[_loc3_] += charAt2(lineLength);
+			levelName[i] += charAt2(lineLength);
 		}
 
 		// Read Level Metadata
@@ -156,44 +155,44 @@ function loadLevels() {
 		levelWidth = 10 * charAt(2) + charAt(3);
 		levelHeight = 10 * charAt(5) + charAt(6);
 		charCount = 10 * charAt(8) + charAt(9);
-		bgs[_loc3_] = 10 * charAt(11) + charAt(12);
+		bgs[i] = 10 * charAt(11) + charAt(12);
 		longMode = false;
 		if (charAt(14) == 24) longMode = true;
 
 		// Read Level Block Layout Data
-		levels[_loc3_] = new Array(levelHeight);
-		for (var _loc5_ = 0; _loc5_ < levelHeight; _loc5_++) {
-			levels[_loc3_][_loc5_] = new Array(levelWidth);
+		levels[i] = new Array(levelHeight);
+		for (var j = 0; j < levelHeight; j++) {
+			levels[i][j] = new Array(levelWidth);
 		}
 		if (longMode) {
-			for (var _loc7_ = 0; _loc7_ < levelHeight; _loc7_++) {
-				for (var _loc6_ = 0; _loc6_ < levelWidth; _loc6_++) {
-					levels[_loc3_][_loc7_][_loc6_] = 111 * tileAt(_loc7_ * (levelWidth * 2 + 2) + _loc6_ * 2 + 17,_loc3_,_loc7_) + tileAt(_loc7_ * (levelWidth * 2 + 2) + _loc6_ * 2 + 18,_loc3_,_loc7_);
+			for (var y = 0; y < levelHeight; y++) {
+				for (var x = 0; x < levelWidth; x++) {
+					levels[i][y][x] = 111 * tileAt(y * (levelWidth * 2 + 2) + x * 2 + 17,i,y) + tileAt(y * (levelWidth * 2 + 2) + x * 2 + 18,i,y);
 				}
 			}
 			levelStart += levelHeight * (levelWidth * 2 + 2) + 17;
 		} else {
-			for (var _loc7_ = 0; _loc7_ < levelHeight; _loc7_++) {
-				for (var _loc6_ = 0; _loc6_ < levelWidth; _loc6_++) {
-					levels[_loc3_][_loc7_][_loc6_] = tileAt(_loc7_ * (levelWidth + 2) + _loc6_ + 17,_loc3_,_loc7_);
+			for (var y = 0; y < levelHeight; y++) {
+				for (var x = 0; x < levelWidth; x++) {
+					levels[i][y][x] = tileAt(y * (levelWidth + 2) + x + 17,i,y);
 				}
 			}
 			levelStart += levelHeight * (levelWidth + 2) + 17;
 		}
 
 		// Read Entity Data
-		startLocations[_loc3_] = new Array(charCount);
-		for (var _loc5_ = 0; _loc5_ < charCount; _loc5_++) {
-			startLocations[_loc3_][_loc5_] = new Array(6);
-			for (var _loc4_ = 0; _loc4_ < (f - 1) / 3; _loc4_++) {
-				startLocations[_loc3_][_loc5_][_loc4_] = charAt(_loc4_ * 3) * 10 + charAt(_loc4_ * 3 + 1);
+		startLocations[i] = new Array(charCount);
+		for (var j = 0; j < charCount; j++) {
+			startLocations[i][j] = new Array(6);
+			for (var k = 0; k < (f - 1) / 3; k++) {
+				startLocations[i][j][k] = charAt(k * 3) * 10 + charAt(k * 3 + 1);
 			}
 			levelStart += f - 2;
-			if (startLocations[_loc3_][_loc5_][5] == 3 || startLocations[_loc3_][_loc5_][5] == 4) {
+			if (startLocations[i][j][5] == 3 || startLocations[i][j][5] == 4) {
 				levelStart++;
-				startLocations[_loc3_][_loc5_].push(new Array(0));
+				startLocations[i][j].push(new Array(0));
 				for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
-					startLocations[_loc3_][_loc5_][6].push(charAt(lineLength));
+					startLocations[i][j][6].push(charAt(lineLength));
 				}
 				levelStart += lineLength;
 			}
@@ -203,26 +202,26 @@ function loadLevels() {
 		// Read Dialogue
 		lineCount = 10 * charAt(0) + charAt(1);
 		levelStart += 4;
-		dialogueText[_loc3_] = new Array(lineCount);
-		dialogueChar[_loc3_] = new Array(lineCount);
-		dialogueFace[_loc3_] = new Array(lineCount);
-		for (var _loc5_ = 0; _loc5_ < lineCount; _loc5_++) {
-			dialogueChar[_loc3_][_loc5_] = 10 * charAt(0) + charAt(1);
-			if (charAt(2) == 24) dialogueFace[_loc3_][_loc5_] = 2;
-			else dialogueFace[_loc3_][_loc5_] = 3;
+		dialogueText[i] = new Array(lineCount);
+		dialogueChar[i] = new Array(lineCount);
+		dialogueFace[i] = new Array(lineCount);
+		for (var j = 0; j < lineCount; j++) {
+			dialogueChar[i][j] = 10 * charAt(0) + charAt(1);
+			if (charAt(2) == 24) dialogueFace[i][j] = 2;
+			else dialogueFace[i][j] = 3;
 			levelStart += 4;
 			lineLength = 0;
-			dialogueText[_loc3_][_loc5_] = '';
+			dialogueText[i][j] = '';
 			while (charAt(lineLength) != -35) {
 				lineLength++
-				dialogueText[_loc3_][_loc5_] += charAt2(lineLength - 1);
+				dialogueText[i][j] += charAt2(lineLength - 1);
 			}
 			levelStart += lineLength + 2;
 		}
 
 		// Read Necessary Deaths
 		mdao2 += 100000 * charAt(0) + 10000 * charAt(1) + 1000 * charAt(2) + 100 * charAt(3) + 10 * charAt(4) + charAt(5);
-		mdao[_loc3_] = mdao2;
+		mdao[i] = mdao2;
 		levelStart += 8;
 	}
 }
@@ -1821,22 +1820,22 @@ var doorLightFade = [];
 var doorLightFadeDire = [];
 
 function toHMS(i) {
-	var _loc5_ = Math.floor(i / 3600000);
-	var _loc3_ = Math.floor(i / 60000) % 60;
-	var _loc2_ = Math.floor(i / 1000) % 60;
-	var _loc4_ = Math.floor(i / 100) % 10;
-	return _loc5_.toString(10).padStart(2, '0') + ':' + _loc3_.toString(10).padStart(2, '0') + ':' + _loc2_.toString(10).padStart(2, '0') + '.' + _loc4_;
+	var h = Math.floor(i / 3600000);
+	var m = Math.floor(i / 60000) % 60;
+	var s = Math.floor(i / 1000) % 60;
+	var ds = Math.floor(i / 100) % 10;
+	return h.toString(10).padStart(2, '0') + ':' + m.toString(10).padStart(2, '0') + ':' + s.toString(10).padStart(2, '0') + '.' + ds;
 }
 
 function addCommas(i) {
-	var _loc4_ = String(i);
-	var _loc2_ = '';
-	var _loc3_ = _loc4_.length;
-	for (var _loc1_ = 0; _loc1_ < _loc3_; _loc1_++) {
-		if ((_loc3_ - _loc1_) % 3 == 0 && _loc1_ != 0) _loc2_ += ',';
-		_loc2_ += _loc4_.charAt(_loc1_);
+	var iStr = String(i);
+	var iStr2 = '';
+	var len = iStr.length;
+	for (var j = 0; j < len; j++) {
+		if ((len - j) % 3 == 0 && j != 0) iStr2 += ',';
+		iStr2 += iStr.charAt(j);
 	}
-	return _loc2_;
+	return iStr2;
 }
 
 // I missed processing's map() function so much I wrote my own that I think I stole parts of from stackoverflow, but didn't link to.
@@ -2553,21 +2552,21 @@ function drawLevelMap() {
 		ctx.fillText(mdao[levelProgress - 1], 767.3, 85.4);
 		ctx.fillText(addCommas(deathCount - mdao[levelProgress - 1]), 767.3, 116.8);
 	}
-	for (var _loc3_ = 0; _loc3_ < 133; _loc3_++) {
-		var _loc4_ = _loc3_;
-		if (_loc4_ >= 100) _loc4_ += 19;
+	for (var i = 0; i < 133; i++) {
+		var j = i;
+		if (j >= 100) j += 19;
 		var color = 1;
-		if (gotCoin[_loc3_]) color = 4;
-		else if (levelProgress == _loc3_) color = 2;
-		else if (levelProgress > _loc3_) color = 3;
-		else if (_loc3_ > 99 && _loc3_ < bonusProgress+100) {
-			if (!bonusesCleared[_loc3_-100]) color = 2;
+		if (gotCoin[i]) color = 4;
+		else if (levelProgress == i) color = 2;
+		else if (levelProgress > i) color = 3;
+		else if (i > 99 && i < bonusProgress+100) {
+			if (!bonusesCleared[i-100]) color = 2;
 			else color = 3;
 		}
 		var text = '';
-		if (_loc3_ >= 100) text = 'B' + (_loc3_- 99).toString(10).padStart(2, '0');
-		else text = (_loc3_ + 1).toString(10).padStart(3, '0');
-		drawLevelButton(text, _loc4_ % 8 * 110 + 45, Math.floor(_loc4_ / 8) * 50 + 160, _loc3_, color);
+		if (i >= 100) text = 'B' + (i- 99).toString(10).padStart(2, '0');
+		else text = (i + 1).toString(10).padStart(3, '0');
+		drawLevelButton(text, j % 8 * 110 + 45, Math.floor(j / 8) * 50 + 160, i, color);
 	}
 }
 
@@ -2701,38 +2700,38 @@ function resetLevel() {
 		char = new Array(charCount);
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
-		for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-			var _loc2_ = myLevelChars[1][_loc1_][0];
-			char[_loc1_] = new Character(
-				_loc2_,
-				myLevelChars[1][_loc1_][1] * 30,
-				myLevelChars[1][_loc1_][2] * 30,
-				70 + _loc1_ * 40,
-				400 - _loc1_ * 30,
-				myLevelChars[1][_loc1_][3],
-				charD[_loc2_][0],
-				charD[_loc2_][1],
-				charD[_loc2_][2],
-				charD[_loc2_][2],
-				charD[_loc2_][3],
-				charD[_loc2_][4],
-				charD[_loc2_][6],
-				charD[_loc2_][8],
-				_loc2_<35?charModels[_loc2_].defaultExpr:0
+		for (var i = 0; i < charCount; i++) {
+			var id = myLevelChars[1][i][0];
+			char[i] = new Character(
+				id,
+				myLevelChars[1][i][1] * 30,
+				myLevelChars[1][i][2] * 30,
+				70 + i * 40,
+				400 - i * 30,
+				myLevelChars[1][i][3],
+				charD[id][0],
+				charD[id][1],
+				charD[id][2],
+				charD[id][2],
+				charD[id][3],
+				charD[id][4],
+				charD[id][6],
+				charD[id][8],
+				id<35?charModels[id].defaultExpr:0
 			);
-			if (char[_loc1_].charState == 9) {
-				char[_loc1_].expr = 1;
-				char[_loc1_].diaMouthFrame = 0;
-			} else if (char[_loc1_].charState >= 7) {
-				char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+			if (char[i].charState == 9) {
+				char[i].expr = 1;
+				char[i].diaMouthFrame = 0;
+			} else if (char[i].charState >= 7) {
+				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 			
-			if (char[_loc1_].charState >= 9) charCount2++;
-			if (_loc2_ == 36) HPRC1 = _loc1_;
-			if (_loc2_ == 35) HPRC2 = _loc1_;
-			if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
-				char[_loc1_].speed = myLevelChars[1][_loc1_][4];
-				char[_loc1_].motionString = generateMS(myLevelChars[1][_loc1_]);
+			if (char[i].charState >= 9) charCount2++;
+			if (id == 36) HPRC1 = i;
+			if (id == 35) HPRC2 = i;
+			if (char[i].charState == 3 || char[i].charState == 4) {
+				char[i].speed = myLevelChars[1][i][4];
+				char[i].motionString = generateMS(myLevelChars[1][i]);
 			}
 		}
 
@@ -2756,38 +2755,38 @@ function resetLevel() {
 		char = new Array(charCount);
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
-		for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-			var _loc2_ = myLevelChars[1][_loc1_][0];
-			char[_loc1_] = new Character(
-				_loc2_,
-				myLevelChars[1][_loc1_][1] * 30,
-				myLevelChars[1][_loc1_][2] * 30,
-				70 + _loc1_ * 40,
-				400 - _loc1_ * 30,
-				myLevelChars[1][_loc1_][3],
-				charD[_loc2_][0],
-				charD[_loc2_][1],
-				charD[_loc2_][2],
-				charD[_loc2_][2],
-				charD[_loc2_][3],
-				charD[_loc2_][4],
-				charD[_loc2_][6],
-				charD[_loc2_][8],
-				_loc2_<35?charModels[_loc2_].defaultExpr:0
+		for (var i = 0; i < charCount; i++) {
+			var id = myLevelChars[1][i][0];
+			char[i] = new Character(
+				id,
+				myLevelChars[1][i][1] * 30,
+				myLevelChars[1][i][2] * 30,
+				70 + i * 40,
+				400 - i * 30,
+				myLevelChars[1][i][3],
+				charD[id][0],
+				charD[id][1],
+				charD[id][2],
+				charD[id][2],
+				charD[id][3],
+				charD[id][4],
+				charD[id][6],
+				charD[id][8],
+				id<35?charModels[id].defaultExpr:0
 			);
-			if (char[_loc1_].charState == 9) {
-				char[_loc1_].expr = 1;
-				char[_loc1_].diaMouthFrame = 0;
-			} else if (char[_loc1_].charState >= 7) {
-				char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+			if (char[i].charState == 9) {
+				char[i].expr = 1;
+				char[i].diaMouthFrame = 0;
+			} else if (char[i].charState >= 7) {
+				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 			
-			if (char[_loc1_].charState >= 9) charCount2++;
-			if (_loc2_ == 36) HPRC1 = _loc1_;
-			if (_loc2_ == 35) HPRC2 = _loc1_;
-			if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
-				char[_loc1_].speed = myLevelChars[1][_loc1_][4];
-				char[_loc1_].motionString = generateMS(myLevelChars[1][_loc1_]);
+			if (char[i].charState >= 9) charCount2++;
+			if (id == 36) HPRC1 = i;
+			if (id == 35) HPRC2 = i;
+			if (char[i].charState == 3 || char[i].charState == 4) {
+				char[i].speed = myLevelChars[1][i][4];
+				char[i].motionString = generateMS(myLevelChars[1][i]);
 			}
 		}
 
@@ -2809,38 +2808,38 @@ function resetLevel() {
 		copyLevel(levels[currentLevel]);
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
-		for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-			var _loc2_ = startLocations[currentLevel][_loc1_][0];
-			char[_loc1_] = new Character(
-				_loc2_,
-				startLocations[currentLevel][_loc1_][1] * 30 + startLocations[currentLevel][_loc1_][2] * 30 / 100,
-				startLocations[currentLevel][_loc1_][3] * 30 + startLocations[currentLevel][_loc1_][4] * 30 / 100,
-				70 + _loc1_ * 40,
-				400 - _loc1_ * 30,
-				startLocations[currentLevel][_loc1_][5],
-				charD[_loc2_][0],
-				charD[_loc2_][1],
-				charD[_loc2_][2],
-				charD[_loc2_][2],
-				charD[_loc2_][3],
-				charD[_loc2_][4],
-				charD[_loc2_][6],
-				charD[_loc2_][8],
-				_loc2_<35?charModels[_loc2_].defaultExpr:0
+		for (var i = 0; i < charCount; i++) {
+			var id = startLocations[currentLevel][i][0];
+			char[i] = new Character(
+				id,
+				startLocations[currentLevel][i][1] * 30 + startLocations[currentLevel][i][2] * 30 / 100,
+				startLocations[currentLevel][i][3] * 30 + startLocations[currentLevel][i][4] * 30 / 100,
+				70 + i * 40,
+				400 - i * 30,
+				startLocations[currentLevel][i][5],
+				charD[id][0],
+				charD[id][1],
+				charD[id][2],
+				charD[id][2],
+				charD[id][3],
+				charD[id][4],
+				charD[id][6],
+				charD[id][8],
+				id<35?charModels[id].defaultExpr:0
 			);
-			if (char[_loc1_].charState == 9) {
-				char[_loc1_].expr = 1;
-				char[_loc1_].diaMouthFrame = 0;
-			} else if (char[_loc1_].charState >= 7) {
-				char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+			if (char[i].charState == 9) {
+				char[i].expr = 1;
+				char[i].diaMouthFrame = 0;
+			} else if (char[i].charState >= 7) {
+				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 			
-			if (char[_loc1_].charState >= 9) charCount2++;
-			if (_loc2_ == 36) HPRC1 = _loc1_;
-			if (_loc2_ == 35) HPRC2 = _loc1_;
-			if (char[_loc1_].charState == 3 || char[_loc1_].charState == 4) {
-				char[_loc1_].speed = startLocations[currentLevel][_loc1_][6][0] * 10 + startLocations[currentLevel][_loc1_][6][1];
-				char[_loc1_].motionString = startLocations[currentLevel][_loc1_][6];
+			if (char[i].charState >= 9) charCount2++;
+			if (id == 36) HPRC1 = i;
+			if (id == 35) HPRC2 = i;
+			if (char[i].charState == 3 || char[i].charState == 4) {
+				char[i].speed = startLocations[currentLevel][i][6][0] * 10 + startLocations[currentLevel][i][6][1];
+				char[i].motionString = startLocations[currentLevel][i][6];
 			}
 		}
 
@@ -2895,17 +2894,17 @@ function copyLevel(thatLevel) {
 	tileFrames = new Array(thatLevel.length);
 	tileShadows = new Array(thatLevel.length);
 	tileBorders = new Array(thatLevel.length);
-	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-		thisLevel[_loc2_] = new Array(thatLevel[_loc2_].length);
-		tileFrames[_loc2_] = new Array(thatLevel[_loc2_].length);
-		tileShadows[_loc2_] = new Array(thatLevel[_loc2_].length);
-		tileBorders[_loc2_] = new Array(thatLevel[_loc2_].length);
-		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-			thisLevel[_loc2_][_loc1_] = thatLevel[_loc2_][_loc1_];
-			var sw = Math.ceil(blockProperties[thisLevel[_loc2_][_loc1_]][11]/6);
-			tileFrames[_loc2_][_loc1_] = {cf: 0, playing: false, rotation: (sw==1?-60:(sw==2?60:0))};
-			tileShadows[_loc2_][_loc1_] = [];
-			tileBorders[_loc2_][_loc1_] = [];
+	for (var y = 0; y < levelHeight; y++) {
+		thisLevel[y] = new Array(thatLevel[y].length);
+		tileFrames[y] = new Array(thatLevel[y].length);
+		tileShadows[y] = new Array(thatLevel[y].length);
+		tileBorders[y] = new Array(thatLevel[y].length);
+		for (var x = 0; x < levelWidth; x++) {
+			thisLevel[y][x] = thatLevel[y][x];
+			var sw = Math.ceil(blockProperties[thisLevel[y][x]][11]/6);
+			tileFrames[y][x] = {cf: 0, playing: false, rotation: (sw==1?-60:(sw==2?60:0))};
+			tileShadows[y][x] = [];
+			tileBorders[y][x] = [];
 		}
 	}
 }
@@ -2915,13 +2914,13 @@ function drawStaticTiles() {
 		addTileMovieClip(tileDepths[0][j].x,tileDepths[0][j].y, osctx1);
 	}
 
-	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-			for (var i = 0; i < tileShadows[_loc2_][_loc1_].length; i++) {
-				osctx2.drawImage(svgShadows[tileShadows[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
+	for (var y = 0; y < levelHeight; y++) {
+		for (var x = 0; x < levelWidth; x++) {
+			for (var i = 0; i < tileShadows[y][x].length; i++) {
+				osctx2.drawImage(svgShadows[tileShadows[y][x][i] - 1], x*30, y*30);
 			}
-			for (var i = 0; i < tileBorders[_loc2_][_loc1_].length; i++) {
-				osctx2.drawImage(svgTileBorders[tileBorders[_loc2_][_loc1_][i] - 1], _loc1_*30, _loc2_*30);
+			for (var i = 0; i < tileBorders[y][x].length; i++) {
+				osctx2.drawImage(svgTileBorders[tileBorders[y][x][i] - 1], x*30, y*30);
 			}
 		}
 	}
@@ -2957,116 +2956,116 @@ function drawLevel() {
 }
 
 function drawCharacters() {
-	for (var _loc2_ = 0; _loc2_ < (charCount+1)*2; _loc2_++) {
-		var _loc1_ = charDepths[_loc2_];
-		if (_loc1_ < 0) continue;
-		var currCharID = char[_loc1_].id;
-		if (char[_loc1_].charState > 1 && typeof svgChars[currCharID] !== 'undefined') {
+	for (var d = 0; d < (charCount+1)*2; d++) {
+		var i = charDepths[d];
+		if (i < 0) continue;
+		var currCharID = char[i].id;
+		if (char[i].charState > 1 && typeof svgChars[currCharID] !== 'undefined') {
 			// Draw Burst
-			if (char[_loc1_].burstFrame >= 0) {
+			if (char[i].burstFrame >= 0) {
 				ctx.save();
-				var burstImg = svgBurst[char[_loc1_].burstFrame];
-				var burstmat = charModels[char[_loc1_].id].burstmat;
-				ctx.transform(burstmat.a,burstmat.b,burstmat.c,burstmat.d,burstmat.tx+char[_loc1_].x,burstmat.ty+char[_loc1_].y);
+				var burstImg = svgBurst[char[i].burstFrame];
+				var burstmat = charModels[char[i].id].burstmat;
+				ctx.transform(burstmat.a,burstmat.b,burstmat.c,burstmat.d,burstmat.tx+char[i].x,burstmat.ty+char[i].y);
 				ctx.drawImage(burstImg, -burstImg.width/2, -burstImg.height/2);
 				ctx.restore();
 
-				char[_loc1_].burstFrame++;
-				if (char[_loc1_].burstFrame > svgBurst.length-1) char[_loc1_].burstFrame = -1;
+				char[i].burstFrame++;
+				if (char[i].burstFrame > svgBurst.length-1) char[i].burstFrame = -1;
 			}
 
 			ctx.save();
-			if (char[_loc1_].charState >= 3) {
-				if (qTimer > 0 || char[_loc1_].justChanged >= 1) {
-					var _loc6_ = 0;
-					if (_loc1_ == control && qTimer > 0) {
-						_loc6_ = 9 - Math.pow(qTimer - 4,2);
+			if (char[i].charState >= 3) {
+				if (qTimer > 0 || char[i].justChanged >= 1) {
+					var littleJump = 0;
+					if (i == control && qTimer > 0) {
+						littleJump = 9 - Math.pow(qTimer - 4,2);
 					}
-					ctx.translate(0, -_loc6_);
-					// levelChar["char" + _loc1_]._x = char[_loc1_].x;
-					// levelChar["char" + _loc1_]._y = char[_loc1_].y - _loc6_;
-					// if (_loc1_ == HPRC2) {
-						// HPRCBubble.charImage._x = char[_loc1_].x;
-						// HPRCBubble.charImage._y = char[_loc1_].y - 78;
+					ctx.translate(0, -littleJump);
+					// levelChar["char" + i]._x = char[i].x;
+					// levelChar["char" + i]._y = char[i].y - littleJump;
+					// if (i == HPRC2) {
+						// HPRCBubble.charImage._x = char[i].x;
+						// HPRCBubble.charImage._y = char[i].y - 78;
 					// }
-					// if (char[_loc1_].deathTimer >= 30) setTint(_loc1_);
+					// if (char[i].deathTimer >= 30) setTint(i);
 				}
-				char[_loc1_].justChanged--;
+				char[i].justChanged--;
 			}
 
-			if (char[_loc1_].charState == 2) {
+			if (char[i].charState == 2) {
 				var amt = (60 - recoverTimer) / 60;
-				ctx.transform(1, 0, 0, amt, 0, (1-amt)*char[_loc1_].y);
+				ctx.transform(1, 0, 0, amt, 0, (1-amt)*char[i].y);
 			}
 
-			if (char[_loc1_].deathTimer < 30 && char[_loc1_].deathTimer % 6 <= 2 && char[_loc1_].charState > 2) ctx.globalAlpha = 0.3;
+			if (char[i].deathTimer < 30 && char[i].deathTimer % 6 <= 2 && char[i].charState > 2) ctx.globalAlpha = 0.3;
 			if (currCharID > 34) {
 				if (charD[currCharID][7] == 1) {
-					drawPossiblyTintedImage(svgChars[currCharID], char[_loc1_].x+svgCharsVB[currCharID][0], char[_loc1_].y+svgCharsVB[currCharID][1], char[_loc1_].temp);
+					drawPossiblyTintedImage(svgChars[currCharID], char[i].x+svgCharsVB[currCharID][0], char[i].y+svgCharsVB[currCharID][1], char[i].temp);
 				} else {
 					var currCharFrame = _frameCount%charD[currCharID][7];
-					drawPossiblyTintedImage(svgChars[currCharID][currCharFrame], char[_loc1_].x+svgCharsVB[currCharID][currCharFrame][0], char[_loc1_].y+svgCharsVB[currCharID][currCharFrame][1], char[_loc1_].temp);
+					drawPossiblyTintedImage(svgChars[currCharID][currCharFrame], char[i].x+svgCharsVB[currCharID][currCharFrame][0], char[i].y+svgCharsVB[currCharID][currCharFrame][1], char[i].temp);
 				}
 
 				if (currCharID == 50) {
-					if (char[_loc1_].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[_loc1_].acidDropTimer[0]], char[_loc1_].x - 17.7, char[_loc1_].y - 1.5);
-					char[_loc1_].acidDropTimer[0]++;
-					if (char[_loc1_].acidDropTimer[0] > 28) {
+					if (char[i].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 17.7, char[i].y - 1.5);
+					char[i].acidDropTimer[0]++;
+					if (char[i].acidDropTimer[0] > 28) {
 						if (Math.random() < 0.8) {
-							char[_loc1_].acidDropTimer[0] = 9;
+							char[i].acidDropTimer[0] = 9;
 						} else {
-							char[_loc1_].acidDropTimer[0] = 0;
+							char[i].acidDropTimer[0] = 0;
 						}
 					}
 				} else if (currCharID == 51) {
-					if (char[_loc1_].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[_loc1_].acidDropTimer[0]], char[_loc1_].x - 25.75, char[_loc1_].y + 1.6, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
-					if (char[_loc1_].acidDropTimer[1] < 9) ctx.drawImage(svgAcidDrop[char[_loc1_].acidDropTimer[1]], char[_loc1_].x + 18.3, char[_loc1_].y + 6.7, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
-					char[_loc1_].acidDropTimer[0]++;
-					char[_loc1_].acidDropTimer[1]++;
-					if (char[_loc1_].acidDropTimer[0] > 28) {
+					if (char[i].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 25.75, char[i].y + 1.6, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
+					if (char[i].acidDropTimer[1] < 9) ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[1]], char[i].x + 18.3, char[i].y + 6.7, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
+					char[i].acidDropTimer[0]++;
+					char[i].acidDropTimer[1]++;
+					if (char[i].acidDropTimer[0] > 28) {
 						if (Math.random() < 0.8) {
-							char[_loc1_].acidDropTimer[0] = 9;
+							char[i].acidDropTimer[0] = 9;
 						} else {
-							char[_loc1_].acidDropTimer[0] = 0;
+							char[i].acidDropTimer[0] = 0;
 						}
 					}
-					if (char[_loc1_].acidDropTimer[1] > 28) {
+					if (char[i].acidDropTimer[1] > 28) {
 						if (Math.random() < 0.8) {
-							char[_loc1_].acidDropTimer[1] = 9;
+							char[i].acidDropTimer[1] = 9;
 						} else {
-							char[_loc1_].acidDropTimer[1] = 0;
+							char[i].acidDropTimer[1] = 0;
 						}
 					}
 				}
 			} else {
-				var model = charModels[char[_loc1_].id];
+				var model = charModels[char[i].id];
 
 				// If we're not bubble dying, draw the legs
-				if (!(char[_loc1_].id == 5 && Math.floor(char[_loc1_].frame/2) == 4)) {
+				if (!(char[i].id == 5 && Math.floor(char[i].frame/2) == 4)) {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
 					// ... or just make them one variable instead of two. whichever one I feel like doing at the time ig.
-					var legdire = char[_loc1_].legdire>0?1:-1;
+					var legdire = char[i].legdire>0?1:-1;
 					var legmat = [
-						{a:0.3648529052734375,b:0,c:char[_loc1_].leg1skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35},
-						{a:0.3648529052734375,b:0,c:char[_loc1_].leg2skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35}
+						{a:0.3648529052734375,b:0,c:char[i].leg1skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35},
+						{a:0.3648529052734375,b:0,c:char[i].leg2skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35}
 					];
 					var f = [];
-					var legf = legFrames[char[_loc1_].leg1frame];
+					var legf = legFrames[char[i].leg1frame];
 					if (legf.type == 'static') {
 						f = [ legf.bodypart, legf.bodypart ];
-							// f[i] = f[i][Math.max(char[_loc1_].legAnimationFrame[i], 0)%f[i].length];
+							// f[i] = f[i][Math.max(char[i].legAnimationFrame[i], 0)%f[i].length];
 					} else if (legf.type == 'anim') {
 						if (legf.usesMats) {
 							f = [ legf.bodypart, legf.bodypart ];
 							legmat = [
-								legf.frames[Math.max(char[_loc1_].legAnimationFrame[0], 0)%legf.frames.length],
-								legf.frames[Math.max(char[_loc1_].legAnimationFrame[1], 0)%legf.frames.length]
+								legf.frames[Math.max(char[i].legAnimationFrame[0], 0)%legf.frames.length],
+								legf.frames[Math.max(char[i].legAnimationFrame[1], 0)%legf.frames.length]
 							];
 						} else {
 							f = [
-								legf.frames[Math.max(char[_loc1_].legAnimationFrame[0], 0)%legf.frames.length],
-								legf.frames[Math.max(char[_loc1_].legAnimationFrame[1], 0)%legf.frames.length]
+								legf.frames[Math.max(char[i].legAnimationFrame[0], 0)%legf.frames.length],
+								legf.frames[Math.max(char[i].legAnimationFrame[1], 0)%legf.frames.length]
 							];
 						}
 					}
@@ -3076,11 +3075,11 @@ function drawCharacters() {
 						legmat[0].b,
 						legdire*legmat[0].c,
 						legmat[0].d,
-						char[_loc1_].x+model.legx[0]+legmat[0].tx,
-						char[_loc1_].y+model.legy[0]+legmat[0].ty
+						char[i].x+model.legx[0]+legmat[0].tx,
+						char[i].y+model.legy[0]+legmat[0].ty
 					);
 					var leg1img = svgBodyParts[f[0]];
-					drawPossiblyTintedImage(leg1img, -leg1img.width/2, -leg1img.height/2, char[_loc1_].temp);
+					drawPossiblyTintedImage(leg1img, -leg1img.width/2, -leg1img.height/2, char[i].temp);
 					ctx.restore();
 					ctx.save();
 					ctx.transform(
@@ -3088,30 +3087,30 @@ function drawCharacters() {
 						legmat[1].b,
 						legdire*legmat[1].c,
 						legmat[1].d,
-						char[_loc1_].x+model.legx[1]+legmat[1].tx,
-						char[_loc1_].y+model.legy[1]+legmat[1].ty
+						char[i].x+model.legx[1]+legmat[1].tx,
+						char[i].y+model.legy[1]+legmat[1].ty
 					);
 					var leg2img = svgBodyParts[f[1]];
-					drawPossiblyTintedImage(leg2img, -leg2img.width/2, -leg2img.height/2, char[_loc1_].temp);
+					drawPossiblyTintedImage(leg2img, -leg2img.width/2, -leg2img.height/2, char[i].temp);
 					ctx.restore();
 				}
 
-				var modelFrame = model.frames[char[_loc1_].frame];
+				var modelFrame = model.frames[char[i].frame];
 				ctx.save();
-				var runbob = (char[_loc1_].frame==0||char[_loc1_].frame==2)?bounceY(4/charModels[char[_loc1_].id].torsomat.a, 13, char[_loc1_].poseTimer):0;
+				var runbob = (char[i].frame==0||char[i].frame==2)?bounceY(4/charModels[char[i].id].torsomat.a, 13, char[i].poseTimer):0;
 				ctx.transform(
-					charModels[char[_loc1_].id].torsomat.a,
-					charModels[char[_loc1_].id].torsomat.b,
-					charModels[char[_loc1_].id].torsomat.c,
-					charModels[char[_loc1_].id].torsomat.d,
-					char[_loc1_].x+charModels[char[_loc1_].id].torsomat.tx,
-					char[_loc1_].y+charModels[char[_loc1_].id].torsomat.ty
+					charModels[char[i].id].torsomat.a,
+					charModels[char[i].id].torsomat.b,
+					charModels[char[i].id].torsomat.c,
+					charModels[char[i].id].torsomat.d,
+					char[i].x+charModels[char[i].id].torsomat.tx,
+					char[i].y+charModels[char[i].id].torsomat.ty
 					);
 				for (var i = 0; i < modelFrame.length; i++) {
-					if (char[_loc1_].frame > 9 && modelFrame[i].type == 'armroot') {
+					if (char[i].frame > 9 && modelFrame[i].type == 'armroot') {
 						var handOff = modelFrame[i].id==0?10:20;
-						var handX = -charModels[char[_loc1_].id].torsomat.tx + (char[HPRC2].x - char[_loc1_].x) + hprcCrankPos.x + handOff * Math.cos(Math.PI * recoverTimer / 15 - 0.2);
-						var handY = -charModels[char[_loc1_].id].torsomat.ty + (char[HPRC2].y - char[_loc1_].y) + hprcCrankPos.y + handOff * Math.sin(Math.PI * recoverTimer / 15 - 0.2);
+						var handX = -charModels[char[i].id].torsomat.tx + (char[HPRC2].x - char[i].x) + hprcCrankPos.x + handOff * Math.cos(Math.PI * recoverTimer / 15 - 0.2);
+						var handY = -charModels[char[i].id].torsomat.ty + (char[HPRC2].y - char[i].y) + hprcCrankPos.y + handOff * Math.sin(Math.PI * recoverTimer / 15 - 0.2);
 						ctx.strokeStyle = '#000000';
 						ctx.lineWidth = 1.5;
 						ctx.beginPath();
@@ -3126,7 +3125,7 @@ function drawCharacters() {
 						continue;
 					}
 					var img = svgBodyParts[modelFrame[i].bodypart];
-					if (modelFrame[i].type == 'body') img = svgChars[char[_loc1_].id];
+					if (modelFrame[i].type == 'body') img = svgChars[char[i].id];
 
 					ctx.save();
 					ctx.transform(
@@ -3139,65 +3138,65 @@ function drawCharacters() {
 					);
 					if (modelFrame[i].type == 'anim') {
 						img = svgBodyParts[bodyPartAnimations[modelFrame[i].anim].bodypart];
-						var bpanimframe = modelFrame[i].loop ? ((char[_loc1_].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[_loc1_].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
+						var bpanimframe = modelFrame[i].loop ? ((char[i].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[i].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
 						var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					} else if (modelFrame[i].type == 'dia') {
 						var dmf = 0;
 						if (cutScene == 1) {
-							var expr = char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2;
-							dmf = diaMouths[expr].frameorder[char[_loc1_].diaMouthFrame];
+							var expr = char[i].expr + charModels[char[i].id].mouthType*2;
+							dmf = diaMouths[expr].frameorder[char[i].diaMouthFrame];
 							img = svgBodyParts[diaMouths[expr].frames[dmf].bodypart];
 
 							// TODO: move this somehwere else
-							if (char[_loc1_].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[_loc1_].diaMouthFrame++;
+							if (char[i].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[i].diaMouthFrame++;
 						} else {
-							img = svgBodyParts[diaMouths[char[_loc1_].expr + charModels[char[_loc1_].id].mouthType*2].frames[dmf].bodypart];
+							img = svgBodyParts[diaMouths[char[i].expr + charModels[char[i].id].mouthType*2].frames[dmf].bodypart];
 						}
 						var mat = diaMouths[model.defaultExpr].frames[dmf].mat;
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					}
-					drawPossiblyTintedImage(img, -img.width/2, -img.height/2, char[_loc1_].temp);
+					drawPossiblyTintedImage(img, -img.width/2, -img.height/2, char[i].temp);
 					ctx.restore();
 				}
 				ctx.restore();
-				char[_loc1_].poseTimer++;
+				char[i].poseTimer++;
 
 				// Hitboxes
-				// ctx.strokeStyle = HSVtoRGB((char[_loc1_].id*1.618033988749894)%1, 0.7, 0.8);
+				// ctx.strokeStyle = HSVtoRGB((char[i].id*1.618033988749894)%1, 0.7, 0.8);
 				// ctx.strokeStyle = '#ff0000';
 				// ctx.lineWidth = 1;
-				// ctx.strokeRect(char[_loc1_].x-char[_loc1_].w, char[_loc1_].y-char[_loc1_].h, char[_loc1_].w*2, char[_loc1_].h);
+				// ctx.strokeRect(char[i].x-char[i].w, char[i].y-char[i].h, char[i].w*2, char[i].h);
 				ctx.restore();
 			}
 			ctx.restore();
 		}
 
 		// TODO: Move this to setBody()
-		if (char[_loc1_].charState == 9) {
-			char[_loc1_].dire = 2;
-			char[_loc1_].frame = 1;
+		if (char[i].charState == 9) {
+			char[i].dire = 2;
+			char[i].frame = 1;
 		}
-		if (_loc1_ == HPRC2) {
+		if (i == HPRC2) {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
-			ctx.fillText(HPRCText, char[_loc1_].x+12.65, char[_loc1_].y-39.6);
+			ctx.fillText(HPRCText, char[i].x+12.65, char[i].y-39.6);
 			var radius = svgHPRCCrank.height/2;
 			ctx.save();
-			ctx.translate(char[_loc1_].x+hprcCrankPos.x, char[_loc1_].y+hprcCrankPos.y);
+			ctx.translate(char[i].x+hprcCrankPos.x, char[i].y+hprcCrankPos.y);
 			ctx.rotate(HPRCCrankRot);
 			ctx.drawImage(svgHPRCCrank, -radius, -radius);
 			ctx.restore();
 		}
 
-		if (char[_loc1_].temp >= 50 && char[_loc1_].id != 5) {
+		if (char[i].temp >= 50 && char[i].id != 5) {
 			ctx.save();
 			var fireImg = svgFire[_frameCount%svgFire.length];
-			if (char[_loc1_].id == 2) fireImg = svgIceCubeMelt;
+			if (char[i].id == 2) fireImg = svgIceCubeMelt;
 			else ctx.globalAlpha = 0.57;
-			var firemat = charModels[char[_loc1_].id].firemat;
-			ctx.transform(firemat.a,firemat.b,firemat.c,firemat.d,firemat.tx+char[_loc1_].x,firemat.ty+char[_loc1_].y);
+			var firemat = charModels[char[i].id].firemat;
+			ctx.transform(firemat.a,firemat.b,firemat.c,firemat.d,firemat.tx+char[i].x,firemat.ty+char[i].y);
 			ctx.drawImage(fireImg, -fireImg.width/2, -fireImg.height/2);
 			ctx.restore();
 		}
@@ -3292,8 +3291,8 @@ function setBody(i) {
 	char[i].leg1skew = 0;
 	char[i].leg2skew = 0;
 
-	var _loc2_;
-	var _loc3_ = [0,0];
+	var legX;
+	var skew = [0,0];
 	char[i].legdire = char[i].dire / 2 - 1;
 	if (ifCarried(i) && cornerHangTimer == 0) {
 		offSetLegs(i, 60, 3);
@@ -3301,57 +3300,57 @@ function setBody(i) {
 		char[i].leg2frame = 3;
 	} else if (char[i].dire % 2 == 0 && char[i].onob) {
 		if (char[i].standingOn >= 0) {
-			var _loc4_ = char[i].standingOn;
-			for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++) {
-				_loc2_ = char[i].x + charModels[char[i].id].legx[_loc5_-1];
-				if (_loc2_ >= char[_loc4_].x + char[_loc4_].w) {
-					_loc3_[_loc5_ - 1] = char[_loc4_].x + char[_loc4_].w - _loc2_;
-				} else if (_loc2_ <= char[_loc4_].x - char[_loc4_].w) {
-					_loc3_[_loc5_ - 1] = char[_loc4_].x - char[_loc4_].w - _loc2_;
+			var j = char[i].standingOn;
+			for (var z = 1; z <= 2; z++) {
+				legX = char[i].x + charModels[char[i].id].legx[z-1];
+				if (legX >= char[j].x + char[j].w) {
+					skew[z - 1] = char[j].x + char[j].w - legX;
+				} else if (legX <= char[j].x - char[j].w) {
+					skew[z - 1] = char[j].x - char[j].w - legX;
 				}
 			}
 		}
 		else if (char[i].fricGoal == 0) {
-			for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++) {
-				_loc2_ = char[i].x + charModels[char[i].id].legx[_loc5_-1];
-				if (!safeToStandAt(_loc2_,char[i].y + 1)) {
-					var _loc7_ = safeToStandAt(_loc2_ - 30,char[i].y + 1);
-					var _loc6_ = safeToStandAt(_loc2_ + 30,char[i].y + 1);
-					if (_loc7_ && (!_loc6_ || _loc2_ % 30 - (_loc5_ - 1.5) * 10 < 30 - _loc2_ % 30) && !horizontalProp(i,-1,1,char[i].x - 15,char[i].y)) {
-						_loc3_[_loc5_ - 1] = (- _loc2_) % 30;
-					} else if (_loc6_ && !horizontalProp(i,1,1,char[i].x + 15,char[i].y)) {
-						_loc3_[_loc5_ - 1] = 30 - _loc2_ % 30;
+			for (var z = 1; z <= 2; z++) {
+				legX = char[i].x + charModels[char[i].id].legx[z-1];
+				if (!safeToStandAt(legX,char[i].y + 1)) {
+					var s1 = safeToStandAt(legX - 30,char[i].y + 1);
+					var s2 = safeToStandAt(legX + 30,char[i].y + 1);
+					if (s1 && (!s2 || legX % 30 - (z - 1.5) * 10 < 30 - legX % 30) && !horizontalProp(i,-1,1,char[i].x - 15,char[i].y)) {
+						skew[z - 1] = (- legX) % 30;
+					} else if (s2 && !horizontalProp(i,1,1,char[i].x + 15,char[i].y)) {
+						skew[z - 1] = 30 - legX % 30;
 					}
 				} else {
-					_loc3_[_loc5_ - 1] = 0;
+					skew[z - 1] = 0;
 				}
 			}
 		}
-		if (_loc3_[1] - _loc3_[0] >= 41) {
-			_loc3_[0] = _loc3_[1];
-			_loc3_[1] -= 3;
+		if (skew[1] - skew[0] >= 41) {
+			skew[0] = skew[1];
+			skew[1] -= 3;
 		}
-		if (_loc3_[0] > _loc3_[1] && _loc3_[1] >= 0) {
+		if (skew[0] > skew[1] && skew[1] >= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[0]/42;
-			char[i].leg2skew = _loc3_[0]/42;
-		} else if (_loc3_[0] > _loc3_[1] && _loc3_[0] <= 0) {
+			char[i].leg1skew = skew[0]/42;
+			char[i].leg2skew = skew[0]/42;
+		} else if (skew[0] > skew[1] && skew[0] <= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[1]/42;
-			char[i].leg2skew = _loc3_[1]/42;
-		} else if (_loc3_[0] < 0 && _loc3_[1] > 0) {
+			char[i].leg1skew = skew[1]/42;
+			char[i].leg2skew = skew[1]/42;
+		} else if (skew[0] < 0 && skew[1] > 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = _loc3_[0]/42;
-			char[i].leg2skew = _loc3_[1]/42;
-		} else if (_loc3_[1] > 0 && _loc3_[0] == 0) {
+			char[i].leg1skew = skew[0]/42;
+			char[i].leg2skew = skew[1]/42;
+		} else if (skew[1] > 0 && skew[0] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
 			char[i].leg1skew = 0.72;
 			char[i].leg2skew = 0.72;
-		} else if (_loc3_[0] < 0 && _loc3_[1] == 0) {
+		} else if (skew[0] < 0 && skew[1] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
 			char[i].leg1skew = -0.72;
@@ -3373,7 +3372,7 @@ function setBody(i) {
 			char[i].leg1frame = 4;
 			char[i].leg2frame = 4;
 		}
-		for (var _loc5_ = 1; _loc5_ <= 2; _loc5_++) {
+		for (var z = 1; z <= 2; z++) {
 			if (char[i].submerged >= 1 && !char[i].onob) {
 			} else {
 				if (char[i].onob) {
@@ -3397,45 +3396,45 @@ function setBody(i) {
 	} else if (char[i].carry) {
 		char[i].setFrame(Math.ceil(char[i].dire / 2) + 5);
 	} else if (!char[i].onob && !ifCarried(i)) {
-			char[i].setFrame(Math.ceil(char[i].dire / 2) + 3);
-		var _loc9_ = Math.round(Math.min(4 - char[i].vy,15));
+		char[i].setFrame(Math.ceil(char[i].dire / 2) + 3);
+		// var frame = Math.round(Math.min(4 - char[i].vy,15));
 	} else {
 		char[i].setFrame(char[i].dire - 1);
 	}
 }
 
 function getTileDepths() {
-	for (var _loc3_ = 0; _loc3_ < 6; _loc3_++) {
-		switchable[_loc3_] = new Array(0);
+	for (var i = 0; i < 6; i++) {
+		switchable[i] = new Array(0);
 	}
-	for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-		for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-			if (thisLevel[_loc2_][_loc1_] >= 1) {
+	for (var y = 0; y < levelHeight; y++) {
+		for (var x = 0; x < levelWidth; x++) {
+			if (thisLevel[y][x] >= 1) {
 				// switchable
-				if (blockProperties[thisLevel[_loc2_][_loc1_]][12] >= 1) {
-					switchable[blockProperties[thisLevel[_loc2_][_loc1_]][12] - 1].push([_loc1_,_loc2_]);
+				if (blockProperties[thisLevel[y][x]][12] >= 1) {
+					switchable[blockProperties[thisLevel[y][x]][12] - 1].push([x,y]);
 				}
 				// levelActive3 - liquids
-				if (blockProperties[thisLevel[_loc2_][_loc1_]][14]) {
-					tileDepths[3].push({x:_loc1_,y:_loc2_});
+				if (blockProperties[thisLevel[y][x]][14]) {
+					tileDepths[3].push({x:x,y:y});
 				// levelActive2 - switches & buttons
-				} else if (blockProperties[thisLevel[_loc2_][_loc1_]][11] >= 1) {
-					tileDepths[2].push({x:_loc1_,y:_loc2_});
+				} else if (blockProperties[thisLevel[y][x]][11] >= 1) {
+					tileDepths[2].push({x:x,y:y});
 				// levelActive - animated blocks
-				} else if (blockProperties[thisLevel[_loc2_][_loc1_]][8]) {
-					tileDepths[1].push({x:_loc1_,y:_loc2_});
+				} else if (blockProperties[thisLevel[y][x]][8]) {
+					tileDepths[1].push({x:x,y:y});
 				// levelStill - static blocks
 				} else {
-					tileDepths[0].push({x:_loc1_,y:_loc2_});
+					tileDepths[0].push({x:x,y:y});
 				}
 
-				if (thisLevel[_loc2_][_loc1_] == 6) {
-					locations[0] = _loc1_;
-					locations[1] = _loc2_;
+				if (thisLevel[y][x] == 6) {
+					locations[0] = x;
+					locations[1] = y;
 				}
-				if (thisLevel[_loc2_][_loc1_] == 12) {
-					locations[2] = _loc1_;
-					locations[3] = _loc2_;
+				if (thisLevel[y][x] == 12) {
+					locations[2] = x;
+					locations[3] = y;
 					locations[4] = 1000;
 					locations[5] = 0;
 				}
@@ -3446,41 +3445,41 @@ function getTileDepths() {
 // draws a tile
 // TODO: precalculate a this stuff and only do the drawing in here. Unless it's actually all necessary. Then you can just leave it.
 function addTileMovieClip(x, y, context) {
-	var _loc5_ = thisLevel[y][x];
-	if (blockProperties[_loc5_][16] > 0) {
-		if (blockProperties[_loc5_][16] == 1) {
-			if (blockProperties[_loc5_][11] > 0 && typeof svgLevers[(blockProperties[_loc5_][11]-1)%6] !== 'undefined') {
+	var t = thisLevel[y][x];
+	if (blockProperties[t][16] > 0) {
+		if (blockProperties[t][16] == 1) {
+			if (blockProperties[t][11] > 0 && typeof svgLevers[(blockProperties[t][11]-1)%6] !== 'undefined') {
 				context.save();
 				context.translate(x*30+15, y*30+28);
 				context.rotate(tileFrames[y][x].rotation*(Math.PI/180));
 				context.translate(-x*30-15, -y*30-28); // TODO: find out how to remove this line
-				context.drawImage(svgLevers[(blockProperties[_loc5_][11]-1)%6], x*30, y*30);
+				context.drawImage(svgLevers[(blockProperties[t][11]-1)%6], x*30, y*30);
 				context.restore();
-				// Math.floor(blockProperties[_loc5_][11]/6);
-				// Math.floor(blockProperties[_loc5_][11]/6)
+				// Math.floor(blockProperties[t][11]/6);
+				// Math.floor(blockProperties[t][11]/6)
 				// context.fillStyle = '#505050';
 				// context.fillRect(x*30, y*30, 30, 30);
 			}
 			// context.fillStyle = '#cc33ff';
 			// context.fillRect(x*30, y*30, 30, 30);
-			context.drawImage(svgTiles[_loc5_], x*30+svgTilesVB[_loc5_][0], y*30+svgTilesVB[_loc5_][1]);
-		} else if (blockProperties[_loc5_][16] > 1) {
+			context.drawImage(svgTiles[t], x*30+svgTilesVB[t][0], y*30+svgTilesVB[t][1]);
+		} else if (blockProperties[t][16] > 1) {
 			var frame = 0;
-			if (blockProperties[_loc5_][17]) frame = blockProperties[_loc5_][18][_frameCount%blockProperties[_loc5_][18].length];
+			if (blockProperties[t][17]) frame = blockProperties[t][18][_frameCount%blockProperties[t][18].length];
 			else {
 				frame = tileFrames[y][x].cf;
 				if (tileFrames[y][x].playing) tileFrames[y][x].cf++;
-				if (tileFrames[y][x].cf >= blockProperties[_loc5_][16]-1) {
+				if (tileFrames[y][x].cf >= blockProperties[t][16]-1) {
 					tileFrames[y][x].playing = false;
 					tileFrames[y][x].cf = 0;
 				}
 			}
 			// context.fillStyle = '#00ffcc';
 			// context.fillRect(x*30, y*30, 30, 30);
-			context.drawImage(svgTiles[_loc5_][frame], x*30+svgTilesVB[_loc5_][frame][0], y*30+svgTilesVB[_loc5_][frame][1]);
-			// context.drawImage(svgTiles[_loc5_][0], x*30, y*30);
+			context.drawImage(svgTiles[t][frame], x*30+svgTilesVB[t][frame][0], y*30+svgTilesVB[t][frame][1]);
+			// context.drawImage(svgTiles[t][0], x*30, y*30);
 		}
-	} else if (_loc5_ == 6) {
+	} else if (t == 6) {
 		// Door
 		var bgid = playMode==2?selectedBg:bgs[currentLevel];
 		context.fillStyle = bgid==9||bgid==10?'#999999':'#505050';
@@ -3493,7 +3492,7 @@ function addTileMovieClip(x, y, context) {
 				if (doorLightFade[i] == 1 || doorLightFade[i] == 0) doorLightFadeDire[i] = 0;
 			}
 		}
-	} else if (_loc5_ == 12) {
+	} else if (t == 12) {
 		// Coin
 		if (!gotThisCoin) {
 			if (locations[4] < 200) {
@@ -3516,24 +3515,24 @@ function calculateShadowsAndBorders() {
 	for (var y = 0; y < levelHeight; y++) {
 		for (var x = 0; x < levelWidth; x++) {
 			if (thisLevel[y][x] >= 1) {
-				var _loc5_ = thisLevel[y][x];
-				if (_loc5_ == 6) {
-					for (var _loc2_ = 0; _loc2_ < 2 && x - _loc2_ >= 0; _loc2_++) {
-						for (var _loc1_ = 0; _loc1_ < 4 && y - _loc1_ >= 0; _loc1_++) {
-							setAmbientShadow(x - _loc2_,y - _loc1_);
+				var t = thisLevel[y][x];
+				if (t == 6) {
+					for (var x2 = 0; x2 < 2 && x - x2 >= 0; x2++) {
+						for (var y2 = 0; y2 < 4 && y - y2 >= 0; y2++) {
+							setAmbientShadow(x - x2,y - y2);
 						}
 					}
-				} else if (_loc5_ >= 110 && _loc5_ <= 129) {
-					for (var _loc2_ = 0; _loc2_ < 3; _loc2_++) {
-						for (var _loc1_ = 0; _loc1_ < 2; _loc1_++) {
-							setAmbientShadow(x - _loc2_,y - _loc1_);
+				} else if (t >= 110 && t <= 129) {
+					for (var x2 = 0; x2 < 3; x2++) {
+						for (var y2 = 0; y2 < 2; y2++) {
+							setAmbientShadow(x - x2,y - y2);
 						}
 					}
 				} else if (blockProperties[thisLevel[y][x]][10]) {
 					setAmbientShadow(x,y);
 				}
 				if (blockProperties[thisLevel[y][x]][13]) {
-					setBorder(x,y,_loc5_);
+					setBorder(x,y,t);
 				}
 			}
 		}
@@ -3543,19 +3542,19 @@ function calculateShadowsAndBorders() {
 function setAmbientShadow(x, y) {
 	tileShadows[y][x] = [];
 	if (outOfRange(x, y)) return;
-	var _loc5_ = 0;
-	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
-		if ((!outOfRange(x + cardinal[_loc1_][0],y + cardinal[_loc1_][1]))) {
-			var _loc4_ = blockProperties[thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]]][12];
-			if (blockProperties[thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]]][_loc1_] && (_loc4_ == 0 || _loc4_ == 6)) {
-				_loc5_ += Math.pow(2,3 - _loc1_);
+	var count = 0;
+	for (var i = 0; i < 4; i++) {
+		if ((!outOfRange(x + cardinal[i][0],y + cardinal[i][1]))) {
+			var t = blockProperties[thisLevel[y + cardinal[i][1]][x + cardinal[i][0]]][12];
+			if (blockProperties[thisLevel[y + cardinal[i][1]][x + cardinal[i][0]]][i] && (t == 0 || t == 6)) {
+				count += Math.pow(2,3 - i);
 			}
 		}
 	}
-	if (_loc5_ > 0) tileShadows[y][x].push(_loc5_);
-	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
-		if ((!outOfRange(x + diagonal[_loc1_][0],y + diagonal[_loc1_][1])) && !blockProperties[thisLevel[y][x + diagonal[_loc1_][0]]][opposite(_loc1_,0)] && !blockProperties[thisLevel[y + diagonal[_loc1_][1]][x]][opposite(_loc1_,1)] && blockProperties[thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]]][opposite(_loc1_,0)] && blockProperties[thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]]][12] == 0 && blockProperties[thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]]][opposite(_loc1_,1)] && blockProperties[thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]]][12] == 0) {
-			tileShadows[y][x].push(16+_loc1_);
+	if (count > 0) tileShadows[y][x].push(count);
+	for (var i = 0; i < 4; i++) {
+		if ((!outOfRange(x + diagonal[i][0],y + diagonal[i][1])) && !blockProperties[thisLevel[y][x + diagonal[i][0]]][opposite(i,0)] && !blockProperties[thisLevel[y + diagonal[i][1]][x]][opposite(i,1)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i,0)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0 && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i,1)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0) {
+			tileShadows[y][x].push(16+i);
 		}
 	}
 }
@@ -3567,16 +3566,16 @@ function setBorder(x, y, s) {
 	if (metalBlocks.includes(thisLevel[y][x])) borderset = 19;
 	tileBorders[y][x] = [];
 	if (outOfRange(x, y)) return;
-	var _loc6_ = 0;
-	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
-		if ((!outOfRange(x + cardinal[_loc1_][0],y + cardinal[_loc1_][1])) && thisLevel[y + cardinal[_loc1_][1]][x + cardinal[_loc1_][0]] != s) {
-			_loc6_ += Math.pow(2,3 - _loc1_);
+	var count = 0;
+	for (var i = 0; i < 4; i++) {
+		if ((!outOfRange(x + cardinal[i][0],y + cardinal[i][1])) && thisLevel[y + cardinal[i][1]][x + cardinal[i][0]] != s) {
+			count += Math.pow(2,3 - i);
 		}
 	}
-	if (_loc6_ > 0) tileBorders[y][x].push(_loc6_+borderset);
-	for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
-		if ((!outOfRange(x + diagonal[_loc1_][0],y + diagonal[_loc1_][1])) &&  thisLevel[y][x + diagonal[_loc1_][0]] == s && thisLevel[y + diagonal[_loc1_][1]][x] == s && thisLevel[y + diagonal[_loc1_][1]][x + diagonal[_loc1_][0]] != s) {
-			tileBorders[y][x].push(16+_loc1_+borderset);
+	if (count > 0) tileBorders[y][x].push(count+borderset);
+	for (var i = 0; i < 4; i++) {
+		if ((!outOfRange(x + diagonal[i][0],y + diagonal[i][1])) &&  thisLevel[y][x + diagonal[i][0]] == s && thisLevel[y + diagonal[i][1]][x] == s && thisLevel[y + diagonal[i][1]][x + diagonal[i][0]] != s) {
+			tileBorders[y][x].push(16+i+borderset);
 		}
 	}
 }
@@ -3618,26 +3617,26 @@ function setCamera() {
 
 function checkButton(i) {
 	if (char[i].onob) {
-		var _loc4_ = Math.ceil(char[i].y / 30);
-		if (_loc4_ >= 0 && _loc4_ <= levelHeight - 1) {
-			var _loc6_;
-			for (var _loc3_ = Math.floor((char[i].x - char[i].w) / 30); _loc3_ <= Math.floor((char[i].x + char[i].w) / 30); _loc3_++) {
-				if (!outOfRange(_loc3_, _loc4_)) {
-					_loc6_ = blockProperties[thisLevel[_loc4_][_loc3_]][11];
-					if (_loc6_ >= 13) {
-						if (tileFrames[_loc4_][_loc3_].cf != 1) {
-							leverSwitch(_loc6_ - 13);
-							tileFrames[_loc4_][_loc3_].cf = 1;
-							tileFrames[_loc4_][_loc3_].playing = false;
+		var yTile = Math.ceil(char[i].y / 30);
+		if (yTile >= 0 && yTile <= levelHeight - 1) {
+			var num;
+			for (var j = Math.floor((char[i].x - char[i].w) / 30); j <= Math.floor((char[i].x + char[i].w) / 30); j++) {
+				if (!outOfRange(j, yTile)) {
+					num = blockProperties[thisLevel[yTile][j]][11];
+					if (num >= 13) {
+						if (tileFrames[yTile][j].cf != 1) {
+							leverSwitch(num - 13);
+							tileFrames[yTile][j].cf = 1;
+							tileFrames[yTile][j].playing = false;
 						}
-						var _loc5_ = true;
-						for (var _loc1_ = 0; _loc1_ < char[i].buttonsPressed.length; _loc1_++) {
-							if (char[i].buttonsPressed[_loc1_][0] == _loc3_ && char[i].buttonsPressed[_loc1_][1] == _loc4_) {
-								_loc5_ = false;
+						var okay = true;
+						for (var k = 0; k < char[i].buttonsPressed.length; k++) {
+							if (char[i].buttonsPressed[k][0] == j && char[i].buttonsPressed[k][1] == yTile) {
+								okay = false;
 							}
 						}
-						if (_loc5_) {
-							char[i].buttonsPressed.push([_loc3_,_loc4_]);
+						if (okay) {
+							char[i].buttonsPressed.push([j,yTile]);
 						}
 						// break;
 					}
@@ -3649,30 +3648,30 @@ function checkButton(i) {
 
 function checkButton2(i, bypass) {
 	if (char[i].y < levelHeight * 30 + 30) {
-		for (var _loc5_ = char[i].buttonsPressed.length-1; _loc5_ >= 0; _loc5_--) {
-			var _loc4_ = char[i].buttonsPressed[_loc5_][0];
-			var _loc6_ = char[i].buttonsPressed[_loc5_][1];
-			if (!char[i].onob || char[i].standingOn >= 0 || char[i].x < _loc4_ * 30 - char[i].w || char[i].x >= _loc4_ * 30 + 30 + char[i].w || bypass) {
-				var _loc7_ = true;
-				for (var _loc3_ = 0; _loc3_ < charCount; _loc3_++) {
-					if (_loc3_ != i) {
-						for (var _loc2_ = 0; _loc2_ < char[_loc3_].buttonsPressed.length; _loc2_++) {
-							if (char[_loc3_].buttonsPressed[_loc2_][0] == _loc4_ && char[_loc3_].buttonsPressed[_loc2_][1] == _loc6_) {
-								_loc7_ = false;
+		for (var j = char[i].buttonsPressed.length-1; j >= 0; j--) {
+			var x = char[i].buttonsPressed[j][0];
+			var y = char[i].buttonsPressed[j][1];
+			if (!char[i].onob || char[i].standingOn >= 0 || char[i].x < x * 30 - char[i].w || char[i].x >= x * 30 + 30 + char[i].w || bypass) {
+				var okay = true;
+				for (var k = 0; k < charCount; k++) {
+					if (k != i) {
+						for (var m = 0; m < char[k].buttonsPressed.length; m++) {
+							if (char[k].buttonsPressed[m][0] == x && char[k].buttonsPressed[m][1] == y) {
+								okay = false;
 							}
 						}
 					}
 				}
-				if (_loc7_) {
-					if (bypass) leverSwitch2(blockProperties[thisLevel[_loc6_][_loc4_]][11] - 13, i);
-					else leverSwitch(blockProperties[thisLevel[_loc6_][_loc4_]][11] - 13);
-					tileFrames[_loc6_][_loc4_].cf = 2;
-					tileFrames[_loc6_][_loc4_].playing = true;
+				if (okay) {
+					if (bypass) leverSwitch2(blockProperties[thisLevel[y][x]][11] - 13, i);
+					else leverSwitch(blockProperties[thisLevel[y][x]][11] - 13);
+					tileFrames[y][x].cf = 2;
+					tileFrames[y][x].playing = true;
 				}
-				for (var _loc3_ = 0; _loc3_ < char[i].buttonsPressed.length; _loc3_++) {
-					if (_loc3_ > _loc5_) {
-						char[i].buttonsPressed[_loc3_][0] = char[i].buttonsPressed[_loc3_ - 1][0];
-						char[i].buttonsPressed[_loc3_][1] = char[i].buttonsPressed[_loc3_ - 1][1];
+				for (var k = 0; k < char[i].buttonsPressed.length; k++) {
+					if (k > j) {
+						char[i].buttonsPressed[k][0] = char[i].buttonsPressed[k - 1][0];
+						char[i].buttonsPressed[k][1] = char[i].buttonsPressed[k - 1][1];
 					}
 				}
 				char[i].buttonsPressed.pop();
@@ -3682,50 +3681,50 @@ function checkButton2(i, bypass) {
 }
 
 function leverSwitch(j) {
-	for (var _loc5_ = 0; _loc5_ < switchable[j].length; _loc5_++) {
-		var _loc4_ = switchable[Math.min(j,5)][_loc5_][0];
-		var _loc3_ = switchable[Math.min(j,5)][_loc5_][1];
-		for (var _loc1_ = 0; _loc1_ < switches[j].length; _loc1_++) {
-			if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2]) {
-				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2 + 1];
-			} else if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2 + 1]) {
-				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2];
+	for (var z = 0; z < switchable[j].length; z++) {
+		var x = switchable[Math.min(j,5)][z][0];
+		var y = switchable[Math.min(j,5)][z][1];
+		for (var k = 0; k < switches[j].length; k++) {
+			if (thisLevel[y][x] == switches[j][k * 2]) {
+				thisLevel[y][x] = switches[j][k * 2 + 1];
+			} else if (thisLevel[y][x] == switches[j][k * 2 + 1]) {
+				thisLevel[y][x] = switches[j][k * 2];
 			}
 		}
 	}
-	for (var _loc6_ = 0; _loc6_ < charCount; _loc6_++) {
-		char[_loc6_].justChanged = 2;
-		checkDeath(_loc6_);
+	for (var i = 0; i < charCount; i++) {
+		char[i].justChanged = 2;
+		checkDeath(i);
 	}
 }
 
 // the exact same as leverSwitch(), but with an aditional argument to avoid calling checkDeath() on the same character.
 function leverSwitch2(j, c) {
-	for (var _loc5_ = 0; _loc5_ < switchable[j].length; _loc5_++) {
-		var _loc4_ = switchable[Math.min(j,5)][_loc5_][0];
-		var _loc3_ = switchable[Math.min(j,5)][_loc5_][1];
-		for (var _loc1_ = 0; _loc1_ < switches[j].length; _loc1_++) {
-			if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2]) {
-				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2 + 1];
-			} else if (thisLevel[_loc3_][_loc4_] == switches[j][_loc1_ * 2 + 1]) {
-				thisLevel[_loc3_][_loc4_] = switches[j][_loc1_ * 2];
+	for (var z = 0; z < switchable[j].length; z++) {
+		var x = switchable[Math.min(j,5)][z][0];
+		var y = switchable[Math.min(j,5)][z][1];
+		for (var k = 0; k < switches[j].length; k++) {
+			if (thisLevel[y][x] == switches[j][k * 2]) {
+				thisLevel[y][x] = switches[j][k * 2 + 1];
+			} else if (thisLevel[y][x] == switches[j][k * 2 + 1]) {
+				thisLevel[y][x] = switches[j][k * 2];
 			}
 		}
 	}
-	for (var _loc6_ = 0; _loc6_ < charCount; _loc6_++) {
+	for (var i = 0; i < charCount; i++) {
 		// Prevents an infinite loop from crashing the game.
-		if (_loc6_ != c) {
-			char[_loc6_].justChanged = 2;
-			checkDeath(_loc6_);
+		if (i != c) {
+			char[i].justChanged = 2;
+			checkDeath(i);
 		}
 	}
 }
 
 function checkDeath(i) {
-	for (var _loc3_ = Math.floor((char[i].y - char[i].h) / 30); _loc3_ <= Math.floor((char[i].y - 0.01) / 30); _loc3_++) {
-		for (var _loc1_ = Math.floor((char[i].x - char[i].w) / 30); _loc1_ <= Math.floor((char[i].x + char[i].w) / 30); _loc1_++) {
-			if (!outOfRange(_loc1_, _loc3_)) {
-				if (blockProperties[thisLevel[_loc3_][_loc1_]][4] || blockProperties[thisLevel[_loc3_][_loc1_]][5] || blockProperties[thisLevel[_loc3_][_loc1_]][6] || blockProperties[thisLevel[_loc3_][_loc1_]][7]) {
+	for (var y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor((char[i].y - 0.01) / 30); y++) {
+		for (var x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w) / 30); x++) {
+			if (!outOfRange(x, y)) {
+				if (blockProperties[thisLevel[y][x]][4] || blockProperties[thisLevel[y][x]][5] || blockProperties[thisLevel[y][x]][6] || blockProperties[thisLevel[y][x]][7]) {
 					startDeath(i);
 				}
 			}
@@ -3756,19 +3755,19 @@ function unheat(i) {
 }
 
 function somewhereHeated(i) {
-	for (var _loc3_ = Math.max(Math.floor((char[i].x - char[i].w) / 30),0); _loc3_ <= Math.min(Math.floor((char[i].x + char[i].w) / 30),levelWidth-1); _loc3_++) {
-		for (var _loc2_ = Math.max(Math.floor((char[i].y - char[i].h) / 30),0); _loc2_ <= Math.min(Math.floor(char[i].y / 30),levelHeight-1); _loc2_++) {
-			if (thisLevel[_loc2_][_loc3_] == 15) return true;
+	for (var x = Math.max(Math.floor((char[i].x - char[i].w) / 30),0); x <= Math.min(Math.floor((char[i].x + char[i].w) / 30),levelWidth-1); x++) {
+		for (var y = Math.max(Math.floor((char[i].y - char[i].h) / 30),0); y <= Math.min(Math.floor(char[i].y / 30),levelHeight-1); y++) {
+			if (thisLevel[y][x] == 15) return true;
 		}
 	}
 	return false;
 }
 
 function extinguish(i) {
-	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		if (char[_loc1_].charState >= 5 && _loc1_ != i && char[_loc1_].temp > 0) {
-			if (Math.abs(char[i].x - char[_loc1_].x) < char[i].w + char[_loc1_].w && char[_loc1_].y > char[i].y - char[i].h && char[_loc1_].y < char[i].y + char[_loc1_].h) {
-				char[_loc1_].temp = 0;
+	for (var j = 0; j < charCount; j++) {
+		if (char[j].charState >= 5 && j != i && char[j].temp > 0) {
+			if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+				char[j].temp = 0;
 			}
 		}
 	}
@@ -3776,50 +3775,50 @@ function extinguish(i) {
 
 function submerge(i) {
 	if (char[i].temp > 0) char[i].temp = 0;
-	var _loc2_ = somewhereSubmerged(i);
-	if (char[i].submerged <= 1 && _loc2_ >= 2) {
+	var goal = somewhereSubmerged(i);
+	if (char[i].submerged <= 1 && goal >= 2) {
 		char[i].weight2 -= 0.16;
 		rippleWeight(i,0.16,-1);
 		char[i].vx *= 0.1;
 		char[i].vy *= 0.1;
 	}
-	char[i].submerged = _loc2_;
+	char[i].submerged = goal;
 }
 
 function unsubmerge(i) {
 	if (exitTileHorizontal(i,-1) || exitTileHorizontal(i,1) || exitTileVertical(i,1) || exitTileVertical(i,-1)) {
-		var _loc2_ = somewhereSubmerged(i);
-		if (_loc2_ == 0 && char[i].submerged >= 1) {
+		var goal = somewhereSubmerged(i);
+		if (goal == 0 && char[i].submerged >= 1) {
 			if (char[i].submerged == 2 && exitTileVertical(i,-1) && char[i].weight2 < 0 && !ifCarried(i)) {
 				char[i].vy = 0;
 				char[i].y = Math.ceil(char[i].y / 30) * 30;
-				_loc2_ = 1;
+				goal = 1;
 			}
 			char[i].weight2 += 0.16;
 			rippleWeight(i,0.16,1);
 		}
-		char[i].submerged = _loc2_;
+		char[i].submerged = goal;
 	}
 }
 
 function somewhereSubmerged(i) {
-	var _loc3_ = 0;
-	for (var _loc5_ = Math.floor((char[i].x - char[i].w) / 30); _loc5_ <= Math.floor((char[i].x + char[i].w) / 30); _loc5_++) {
-		var _loc6_ = Math.floor((char[i].y - char[i].h) / 30);
-		var _loc4_ = Math.floor(char[i].y / 30);
-		for (var _loc1_ = _loc6_; _loc1_ <= _loc4_; _loc1_++) {
-			if (!outOfRange(_loc5_, _loc1_) && blockProperties[thisLevel[_loc1_][_loc5_]][14]) {
-				if (_loc1_ == _loc4_) {
-					if (_loc3_ == 0) {
-						_loc3_ = 2;
+	var record = 0;
+	for (var x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w) / 30); x++) {
+		var lowY = Math.floor((char[i].y - char[i].h) / 30);
+		var highY = Math.floor(char[i].y / 30);
+		for (var y = lowY; y <= highY; y++) {
+			if (!outOfRange(x, y) && blockProperties[thisLevel[y][x]][14]) {
+				if (y == highY) {
+					if (record == 0) {
+						record = 2;
 					}
 				} else {
-					_loc3_ = 3;
+					record = 3;
 				}
 			}
 		}
 	}
-	return _loc3_;
+	return record;
 }
 
 function newTileUp(i) {
@@ -3839,8 +3838,8 @@ function exitTileHorizontal(i, sign) {
 }
 
 function exitTileVertical(i, sign) {
-	var _loc1_ = 0.5 * sign + 0.5;
-	return Math.ceil(sign * (char[i].y - char[i].h * _loc1_) / 30) > Math.ceil(sign * (char[i].py - char[i].h * _loc1_) / 30);
+	var includeHeight = 0.5 * sign + 0.5;
+	return Math.ceil(sign * (char[i].y - char[i].h * includeHeight) / 30) > Math.ceil(sign * (char[i].py - char[i].h * includeHeight) / 30);
 }
 
 function allSolid(i) {
@@ -3848,8 +3847,8 @@ function allSolid(i) {
 }
 
 function solidAt(x, y) {
-	var _loc1_ = getBlockTypeAt(x,y);
-	return (typeof _loc1_ === 'number')?(blockProperties[_loc1_][0] && blockProperties[_loc1_][1] && blockProperties[_loc1_][2] && blockProperties[_loc1_][3]):true;
+	var t = getBlockTypeAt(x,y);
+	return (typeof t === 'number')?(blockProperties[t][0] && blockProperties[t][1] && blockProperties[t][2] && blockProperties[t][3]):true;
 }
 
 function solidCeiling(x, y) {
@@ -3857,8 +3856,8 @@ function solidCeiling(x, y) {
 }
 
 function safeToStandAt(x, y) {
-	var _loc1_ = getBlockTypeAt(x,y);
-	return (typeof _loc1_ === 'number')?(blockProperties[_loc1_][1] && !blockProperties[_loc1_][5] && _loc1_ != 14 && _loc1_ != 16 && _loc1_ != 83 && _loc1_ != 85):true;
+	var t = getBlockTypeAt(x,y);
+	return (typeof t === 'number')?(blockProperties[t][1] && !blockProperties[t][5] && t != 14 && t != 16 && t != 83 && t != 85):true;
 }
 
 function getBlockTypeAt(x, y) {
@@ -3866,24 +3865,24 @@ function getBlockTypeAt(x, y) {
 }
 
 function verticalProp(i, sign, prop, x, y) {
-	var _loc6_ = -0.5 * sign + 0.5;
-	var _loc4_ = Math.floor((y - char[i].h * _loc6_) / 30);
-	if (prop <= 3 && sign == -1 && _loc4_ == -1) {
+	var includeHeight = -0.5 * sign + 0.5;
+	var yTile = Math.floor((y - char[i].h * includeHeight) / 30);
+	if (prop <= 3 && sign == -1 && yTile == -1) {
 		return true;
 	}
 	if (prop >= 4 && prop <= 7) {
-		for (_loc1_ = Math.floor((x - char[i].w) / 30); _loc1_ <= Math.floor((x + char[i].w - 0.01) / 30); _loc1_++) {
-			if (!outOfRange(_loc1_, _loc4_)) {
-				if (blockProperties[thisLevel[_loc4_][_loc1_]][prop - 4] && !blockProperties[thisLevel[_loc4_][_loc1_]][prop]) {
+		for (j = Math.floor((x - char[i].w) / 30); j <= Math.floor((x + char[i].w - 0.01) / 30); j++) {
+			if (!outOfRange(j, yTile)) {
+				if (blockProperties[thisLevel[yTile][j]][prop - 4] && !blockProperties[thisLevel[yTile][j]][prop]) {
 					return false;
 				}
 			}
 		}
 	}
-	for (_loc1_ = Math.floor((x - char[i].w) / 30); _loc1_ <= Math.floor((x + char[i].w - 0.01) / 30); _loc1_++) {
-		if (!outOfRange(_loc1_, _loc4_)) {
-			if (blockProperties[thisLevel[_loc4_][_loc1_]][prop]) {
-				if (prop != 1 || !ifCarried(i) || allSolid(thisLevel[_loc4_][_loc1_])) {
+	for (j = Math.floor((x - char[i].w) / 30); j <= Math.floor((x + char[i].w - 0.01) / 30); j++) {
+		if (!outOfRange(j, yTile)) {
+			if (blockProperties[thisLevel[yTile][j]][prop]) {
+				if (prop != 1 || !ifCarried(i) || allSolid(thisLevel[yTile][j])) {
 					return true;
 				}
 			}
@@ -3893,22 +3892,22 @@ function verticalProp(i, sign, prop, x, y) {
 }
 
 function horizontalProp(i, sign, prop, x, y) {
-	var _loc2_ = Math.floor((x + char[i].w * sign) / 30);
-	if (prop <= 3 && (sign == -1 && _loc2_ <= -1 || sign == 1 && _loc2_ >= levelWidth)) {
+	var xTile = Math.floor((x + char[i].w * sign) / 30);
+	if (prop <= 3 && (sign == -1 && xTile <= -1 || sign == 1 && xTile >= levelWidth)) {
 		return true;
 	}
 	if (prop >= 4 && prop <= 7) {
-		for (var _loc1_ = Math.floor((y - char[i].h) / 30); _loc1_ <= Math.floor((y - 0.01) / 30); _loc1_++) {
-			if (!outOfRange(_loc2_, _loc1_)) {
-				if (blockProperties[thisLevel[_loc1_][_loc2_]][prop - 4] && !blockProperties[thisLevel[_loc1_][_loc2_ - sign]][prop - 4] && !blockProperties[thisLevel[_loc1_][_loc2_]][prop]) {
+		for (var j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
+			if (!outOfRange(xTile, j)) {
+				if (blockProperties[thisLevel[j][xTile]][prop - 4] && !blockProperties[thisLevel[j][xTile - sign]][prop - 4] && !blockProperties[thisLevel[j][xTile]][prop]) {
 					return false;
 				}
 			}
 		}
 	}
-	for (_loc1_ = Math.floor((y - char[i].h) / 30); _loc1_ <= Math.floor((y - 0.01) / 30); _loc1_++) {
-		if (!outOfRange(_loc2_, _loc1_)) {
-			if (blockProperties[thisLevel[_loc1_][_loc2_]][prop]) {
+	for (j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
+		if (!outOfRange(xTile, j)) {
+			if (blockProperties[thisLevel[j][xTile]][prop]) {
 				return true;
 			}
 		}
@@ -3917,28 +3916,28 @@ function horizontalProp(i, sign, prop, x, y) {
 }
 
 function verticalType(i, sign, prop, pist) {
-	var _loc7_ = -0.5 * sign + 0.5;
-	var _loc3_ = Math.floor((char[i].y - char[i].h * _loc7_) / 30);
-	var _loc4_ = false;
-	for (var _loc1_ = Math.floor((char[i].x - char[i].w) / 30); _loc1_ <= Math.floor((char[i].x + char[i].w - 0.01) / 30); _loc1_++) {
-		if (!outOfRange(_loc1_, _loc3_)) {
-			if (thisLevel[_loc3_][_loc1_] == prop) {
+	var includeHeight = -0.5 * sign + 0.5;
+	var yTile = Math.floor((char[i].y - char[i].h * includeHeight) / 30);
+	var toReturn = false;
+	for (var j = Math.floor((char[i].x - char[i].w) / 30); j <= Math.floor((char[i].x + char[i].w - 0.01) / 30); j++) {
+		if (!outOfRange(j, yTile)) {
+			if (thisLevel[yTile][j] == prop) {
 				if (pist) {
-					tileFrames[_loc3_][_loc1_].playing = true;
-					tileFrames[_loc3_][_loc1_].cf = 1;
+					tileFrames[yTile][j].playing = true;
+					tileFrames[yTile][j].cf = 1;
 				}
-				_loc4_ = true;
+				toReturn = true;
 			}
 		}
 	}
-	return _loc4_;
+	return toReturn;
 }
 
 function horizontalType(i, sign, prop) {
-	var _loc3_ = Math.floor((char[i].x + char[i].w * sign) / 30);
-	for (var _loc1_ = Math.floor((char[i].y - char[i].h) / 30); _loc1_ <= Math.floor((char[i].y - 0.01) / 30); _loc1_++) {
-		if (!outOfRange(_loc3_, _loc1_)) {
-			if (thisLevel[_loc1_][_loc3_] == prop) {
+	var xTile = Math.floor((char[i].x + char[i].w * sign) / 30);
+	for (var j = Math.floor((char[i].y - char[i].h) / 30); j <= Math.floor((char[i].y - 0.01) / 30); j++) {
+		if (!outOfRange(xTile, j)) {
+			if (thisLevel[j][xTile] == prop) {
 				return true;
 			}
 		}
@@ -3969,26 +3968,26 @@ function centered(i, len) {
 }
 
 function onlyConveyorsUnder(i) {
-	var _loc8_ = Math.floor(char[i].y / 30 + 0.5);
-	var _loc4_ = Math.floor((char[i].x - char[i].w) / 30);
-	var _loc6_ = Math.floor((char[i].x + char[i].w - 0.01) / 30);
-	var _loc3_ = 0;
-	for (var _loc2_ = 0; _loc2_ <= _loc6_ - _loc4_; _loc2_++) {
-		var _loc5_ = centered(_loc2_,1 + _loc6_ - _loc4_) + _loc4_;
-		if (!outOfRange(_loc5_, _loc8_)) {
-			var _loc1_ = thisLevel[_loc8_][_loc5_];
-			if (blockProperties[_loc1_][1]) {
-				if (_loc1_ == 14 || _loc1_ == 83) {
-					if (_loc3_ == 0) _loc3_ = -2.48;
-				} else if (_loc1_ == 16 || _loc1_ == 85) {
-					if (_loc3_ == 0) _loc3_ = 2.48;
-				} else if (_loc2_ == 0 || char[i].charState == 10) {
+	var yTile = Math.floor(char[i].y / 30 + 0.5);
+	var min = Math.floor((char[i].x - char[i].w) / 30);
+	var max = Math.floor((char[i].x + char[i].w - 0.01) / 30);
+	var todo = 0;
+	for (var j = 0; j <= max - min; j++) {
+		var j2 = centered(j,1 + max - min) + min;
+		if (!outOfRange(j2, yTile)) {
+			var t = thisLevel[yTile][j2];
+			if (blockProperties[t][1]) {
+				if (t == 14 || t == 83) {
+					if (todo == 0) todo = -2.48;
+				} else if (t == 16 || t == 85) {
+					if (todo == 0) todo = 2.48;
+				} else if (j == 0 || char[i].charState == 10) {
 					return 0;
 				}
 			}
 		}
 	}
-	return _loc3_;
+	return todo;
 }
 
 function startCutScene() {
@@ -4003,9 +4002,9 @@ function startCutScene() {
 			char[control].dire = Math.ceil(char[control].dire / 2) * 2;
 		} else {
 			rescue();
-			for (var _loc2_ = 0; _loc2_ < cLevelDialogueChar.length; _loc2_++) {
-				var _loc1_ = cLevelDialogueChar[_loc2_];
-				if (_loc1_ >= 50 && _loc1_ < 60) leverSwitch(_loc1_ - 50);
+			for (var i = 0; i < cLevelDialogueChar.length; i++) {
+				var p = cLevelDialogueChar[i];
+				if (p >= 50 && p < 60) leverSwitch(p - 50);
 			}
 			cutScene = 3;
 		}
@@ -4020,43 +4019,43 @@ function endCutScene() {
 }
 
 function rescue() {
-	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		if (char[_loc1_].charState == 9) {
-			char[_loc1_].charState = 10;
-			char[_loc1_].expr = charModels[char[_loc1_].id].defaultExpr;
+	for (var i = 0; i < charCount; i++) {
+		if (char[i].charState == 9) {
+			char[i].charState = 10;
+			char[i].expr = charModels[char[i].id].defaultExpr;
 		}
 	}
 }
 
 function displayLine(level, line) {
-	var _loc2_ = cLevelDialogueChar[line];
-	if (_loc2_ >= 50 && _loc2_ < 60) {
-		leverSwitch(_loc2_ - 50);
+	var p = cLevelDialogueChar[line];
+	if (p >= 50 && p < 60) {
+		leverSwitch(p - 50);
 		cutSceneLine++;
 		line++;
-		_loc2_ = cLevelDialogueChar[line];
+		p = cLevelDialogueChar[line];
 		if (cutSceneLine >= cLevelDialogueChar.length) {
 			endCutScene();
 			return;
 		}
 	}
-	var _loc5_;
-	if (_loc2_ == 99) {
-		_loc5_ = 480;
-	} else if (_loc2_ < char.length) {
-		_loc5_ = Math.min(Math.max(char[_loc2_].x,bubWidth / 2 + bubMargin),960 - bubWidth / 2 - bubMargin);
-		putDown(_loc2_);
+	var x;
+	if (p == 99) {
+		x = 480;
+	} else if (p < char.length) {
+		x = Math.min(Math.max(char[p].x,bubWidth / 2 + bubMargin),960 - bubWidth / 2 - bubMargin);
+		putDown(p);
 	}
 	bubSc = 0.1;
-	bubX = _loc5_;
+	bubX = x;
 	if (char[control].y - cameraY > 270) {
 		bubY = bubMargin + bubHeight / 2;
 	} else {
 		bubY = 520 - bubMargin - bubHeight / 2;
 	}
-	if (_loc2_ < char.length) {
-		char[_loc2_].expr = cLevelDialogueFace[line]-2;
-		char[_loc2_].diaMouthFrame = 0;
+	if (p < char.length) {
+		char[p].expr = cLevelDialogueFace[line]-2;
+		char[p].diaMouthFrame = 0;
 	}
 	csText = cLevelDialogueText[line];
 }
@@ -4139,15 +4138,15 @@ function stopCarrierY(i, y, canCornerHang) {
 			fallOff(char[i].carriedBy);
 		}
 		if (char[char[i].carriedBy].vy >= 0 && canCornerHang && !solidAt(char[char[i].carriedBy].x,char[i].y + 15)) {
-			var _loc3_ = solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 45,char[i].y + 15);
-			var _loc2_ = solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 45,char[i].y + 15);
+			var lSolid = solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 45,char[i].y + 15);
+			var rSolid = solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 45,char[i].y + 15);
 			char[i].justChanged = 2;
 			char[char[i].carriedBy].justChanged = 2;
-			if (_loc3_ && _loc2_) {
+			if (lSolid && rSolid) {
 				putDown(char[i].carriedBy);
-			} else if (_loc3_) {
+			} else if (lSolid) {
 				char[char[i].carriedBy].vx += power;
-			} else if (_loc2_) {
+			} else if (rSolid) {
 				char[char[i].carriedBy].vx -= power;
 			}
 			cornerHangTimer++;
@@ -4179,10 +4178,10 @@ function rippleWeight(i, w, sign) {
 }
 
 function onlyMovesOneBlock(i, j) {
-	var _loc1_ = Math.floor((char[j].dire - 1) / 2) * 2 - 1;
-	var _loc3_ = Math.ceil(_loc1_ * (char[i].x + char[i].w * _loc1_) / 30);
-	var _loc2_ = Math.ceil(_loc1_ * (char[control].x + xOff2(control) + char[i].w * _loc1_) / 30);
-	return Math.abs(_loc2_ - _loc3_) <= 1;
+	var sign = Math.floor((char[j].dire - 1) / 2) * 2 - 1;
+	var x1 = Math.ceil(sign * (char[i].x + char[i].w * sign) / 30);
+	var x2 = Math.ceil(sign * (char[control].x + xOff2(control) + char[i].w * sign) / 30);
+	return Math.abs(x2 - x1) <= 1;
 }
 
 function putDown(i) {
@@ -4211,87 +4210,53 @@ function charThrow(i) {
 	}
 }
 
-function fallOff(i) {
-	if (char[i].standingOn >= 0) {
-		var _loc4_ = false;
-		if (char[char[i].standingOn].submerged == 1) {
-			char[char[i].standingOn].submerged = 2;
-		} else {
-			rippleWeight(i,char[i].weight2,-1);
-		}
-		var _loc3_ = char[char[i].standingOn].stoodOnBy.length;
-		for (var _loc2_ = 0; _loc2_ < _loc3_; _loc2_++) {
-			if (char[char[i].standingOn].stoodOnBy[_loc2_] == i) {
-				_loc4_ = true;
-			}
-			if (_loc4_ && _loc2_ <= _loc3_ - 2) {
-				char[char[i].standingOn].stoodOnBy[_loc2_] = char[char[i].standingOn].stoodOnBy[_loc2_ + 1];
-			}
-		}
-		char[char[i].standingOn].stoodOnBy.pop();
-		char[i].standingOn = -1;
-		char[i].onob = false;
-		for (var _loc2_; _loc2_ < char[i].stoodOnBy.length; _loc2_++) {
-			fallOff(char[i].stoodOnBy[_loc2_]);
-		}
-	}
-}
-
-function aboveFallOff(i) {
-	if (char[i].stoodOnBy.length >= 1) {
-		for (var _loc1_ = 0; _loc1_ < char[i].stoodOnBy.length; _loc1_++) {
-			fallOff(char[i].stoodOnBy[_loc1_]);
-		}
-	}
-}
-
 function landOnObject(i) {
-	var _loc5_ = 10000;
-	var _loc4_ = 0;
-	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		if (!ifCarried(_loc1_) && (char[_loc1_].charState == 6 || char[_loc1_].charState == 4)) {
-			var _loc3_ = Math.abs(char[i].x - char[_loc1_].x);
-			if (_loc3_ < char[i].w + char[_loc1_].w && char[i].y >= char[_loc1_].y - char[_loc1_].h && (char[i].py < char[_loc1_].py - char[_loc1_].h || char[i].py == char[_loc1_].py - char[_loc1_].h && char[i].vy == 0)) {
-				if (_loc3_ - char[_loc1_].w < _loc5_) {
-					_loc5_ = _loc3_ - char[_loc1_].w;
-					_loc4_ = _loc1_;
+	var record = 10000;
+	var k = 0;
+	for (var j = 0; j < charCount; j++) {
+		if (!ifCarried(j) && (char[j].charState == 6 || char[j].charState == 4)) {
+			var dist = Math.abs(char[i].x - char[j].x);
+			if (dist < char[i].w + char[j].w && char[i].y >= char[j].y - char[j].h && (char[i].py < char[j].py - char[j].h || char[i].py == char[j].py - char[j].h && char[i].vy == 0)) {
+				if (dist - char[j].w < record) {
+					record = dist - char[j].w;
+					k = j;
 				}
 			}
 		}
 	}
-	if (_loc5_ < 10000 && char[i].standingOn != _loc4_) {
+	if (record < 10000 && char[i].standingOn != k) {
 		if (char[i].standingOn >= 0) fallOff(i);
-		if (char[_loc4_].charState == 6 && !char[_loc4_].onob) char[_loc4_].vy = inter(char[_loc4_].vy,char[i].vy,char[i].weight2 / (char[_loc4_].weight2 + char[i].weight2));
-		land(i,char[_loc4_].y - char[_loc4_].h,char[_loc4_].vy);
-		if (char[_loc4_].onob) land2(i,char[_loc4_].y - char[_loc4_].h);
-		char[i].standingOn = _loc4_;
-		char[_loc4_].stoodOnBy.push(i);
+		if (char[k].charState == 6 && !char[k].onob) char[k].vy = inter(char[k].vy,char[i].vy,char[i].weight2 / (char[k].weight2 + char[i].weight2));
+		land(i,char[k].y - char[k].h,char[k].vy);
+		if (char[k].onob) land2(i,char[k].y - char[k].h);
+		char[i].standingOn = k;
+		char[k].stoodOnBy.push(i);
 		rippleWeight(i,char[i].weight2,1);
-		char[i].fricGoal = char[_loc4_].fricGoal;
-		if (char[_loc4_].submerged == 1 && char[_loc4_].weight2 >= 0) {
-			char[_loc4_].submerged = 2;
-			char[_loc4_].weight2 -= 0.16;
+		char[i].fricGoal = char[k].fricGoal;
+		if (char[k].submerged == 1 && char[k].weight2 >= 0) {
+			char[k].submerged = 2;
+			char[k].weight2 -= 0.16;
 		}
 	}
 }
 
 function objectsLandOn(i) {
-	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		if (char[_loc1_].charState >= 5 && char[_loc1_].standingOn != i) {
-			var _loc3_ = Math.abs(char[i].x - char[_loc1_].x);
-			if (_loc3_ < char[i].w + char[_loc1_].w && char[i].y - char[i].h <= char[_loc1_].y && char[i].py - char[i].h > char[_loc1_].py && (char[i].submerged <= 1 || !char[_loc1_].onob || char[_loc1_].submerged == 2)) {
-				if (char[_loc1_].standingOn >= 0) {
-					fallOff(_loc1_);
+	for (var j = 0; j < charCount; j++) {
+		if (char[j].charState >= 5 && char[j].standingOn != i) {
+			var dist = Math.abs(char[i].x - char[j].x);
+			if (dist < char[i].w + char[j].w && char[i].y - char[i].h <= char[j].y && char[i].py - char[i].h > char[j].py && (char[i].submerged <= 1 || !char[j].onob || char[j].submerged == 2)) {
+				if (char[j].standingOn >= 0) {
+					fallOff(j);
 				}
-				char[_loc1_].standingOn = i;
-				char[i].stoodOnBy.push(_loc1_);
-				land(_loc1_,char[i].y - char[i].h,char[_loc1_].vy);
+				char[j].standingOn = i;
+				char[i].stoodOnBy.push(j);
+				land(j,char[i].y - char[i].h,char[j].vy);
 				if (char[i].charState == 6) {
-					char[i].vy = inter(char[i].vy,char[_loc1_].vy,char[_loc1_].weight2 / (char[i].weight2 + char[_loc1_].weight2));
+					char[i].vy = inter(char[i].vy,char[j].vy,char[j].weight2 / (char[i].weight2 + char[j].weight2));
 				}
-				char[_loc1_].vy = char[i].vy;
-				rippleWeight(_loc1_,char[_loc1_].weight2,1);
-				char[_loc1_].fricGoal = char[i].fricGoal;
+				char[j].vy = char[i].vy;
+				rippleWeight(j,char[j].weight2,1);
+				char[j].fricGoal = char[i].fricGoal;
 			}
 		}
 	}
@@ -4299,35 +4264,34 @@ function objectsLandOn(i) {
 
 function fallOff(i) {
 	if (char[i].standingOn >= 0) {
-		var _loc4_ = false;
+		var after = false;
 		if (char[char[i].standingOn].submerged == 1) {
 			char[char[i].standingOn].submerged = 2;
 		} else {
 			rippleWeight(i,char[i].weight2,-1);
 		}
-		var _loc3_ = char[char[i].standingOn].stoodOnBy.length;
-		for (var _loc2_ = 0; _loc2_ < _loc3_; _loc2_++) {
-			if (char[char[i].standingOn].stoodOnBy[_loc2_] == i) {
-				_loc4_ = true;
+		var len = char[char[i].standingOn].stoodOnBy.length;
+		for (var j = 0; j < len; j++) {
+			if (char[char[i].standingOn].stoodOnBy[j] == i) {
+				after = true;
 			}
-			if (_loc4_ && _loc2_ <= _loc3_ - 2) {
-				char[char[i].standingOn].stoodOnBy[_loc2_] = char[char[i].standingOn].stoodOnBy[_loc2_ + 1];
+			if (after && j <= len - 2) {
+				char[char[i].standingOn].stoodOnBy[j] = char[char[i].standingOn].stoodOnBy[j + 1];
 			}
 		}
 		char[char[i].standingOn].stoodOnBy.pop();
 		char[i].standingOn = -1;
 		char[i].onob = false;
-		for (var _loc2_ = 0; _loc2_ < char[i].stoodOnBy.length; _loc2_++) {
-			fallOff(char[i].stoodOnBy[_loc2_]);
+		for (var j; j < char[i].stoodOnBy.length; j++) {
+			fallOff(char[i].stoodOnBy[j]);
 		}
 	}
 }
 
 function aboveFallOff(i) {
 	if (char[i].stoodOnBy.length >= 1) {
-		for (var _loc1_ = 0; _loc1_ < char[i].stoodOnBy.length; _loc1_++) {
-			fallOff(char[i].stoodOnBy[_loc1_]);
-			_loc1_ = _loc1_ + 1;
+		for (var j = 0; j < char[i].stoodOnBy.length; j++) {
+			fallOff(char[i].stoodOnBy[j]);
 		}
 	}
 }
@@ -4341,10 +4305,12 @@ function changeControl() {
 		}
 	}
 	control = (control + 1) % charCount;
-	for (var _loc1_ = 0; char[control].charState != 10 && _loc1_ < charCount; _loc1_++) {
+	var attempts = 0;
+	while (char[control].charState != 10 && attempts < charCount) {
 		control = (control + 1) % charCount;
+		attempts++;
 	}
-	if (_loc1_ == charCount) {
+	if (attempts == charCount) {
 		control = 10000;
 	}
 
@@ -4375,25 +4341,25 @@ function nextDeadPerson(i, dire) {
 }
 
 function numberOfDead() {
-	var _loc2_ = 0;
-	for (var _loc1_ = 0; _loc1_ < charCount; _loc1_++) {
-		if (char[_loc1_].charState == 1) {
-			_loc2_++;
+	var count = 0;
+	for (var i = 0; i < charCount; i++) {
+		if (char[i].charState == 1) {
+			count++;
 		}
 	}
-	return _loc2_;
+	return count;
 }
 
 function recoverCycle(i, dire) {
-	var _loc1_ = 0;
-	var _loc2_ = dire;
-	if (dire == 0) _loc2_ = 1;
-	recover2 = (recover2 + _loc2_ + charCount) % charCount;
-	while ((char[recover2].charState != 1 || char[recover2].pcharState <= 6) && _loc1_ < charCount) {
-		recover2 = (recover2 + _loc2_ + charCount) % charCount;
-		_loc1_++;
+	var attempts = 0;
+	var dire2 = dire;
+	if (dire == 0) dire2 = 1;
+	recover2 = (recover2 + dire2 + charCount) % charCount;
+	while ((char[recover2].charState != 1 || char[recover2].pcharState <= 6) && attempts < charCount) {
+		recover2 = (recover2 + dire2 + charCount) % charCount;
+		attempts++;
 	}
-	if (_loc1_ == charCount) {
+	if (attempts == charCount) {
 		HPRCBubbleFrame = 4;
 		hprcBubbleAnimationTimer = 0;
 		recover = false;
@@ -4411,13 +4377,13 @@ function recoverCycle(i, dire) {
 }
 
 function near(c1, c2) {
-	var _loc3_ = char[c2].y - 23 - (char[c1].y - char[c1].h2 / 2);
-	return Math.abs(_loc3_) <= char[c2].h / 2 + char[c1].h2 / 2 && Math.abs(char[c1].x + xOff2(c1) - char[c2].x) < 50;
+	var yDist = char[c2].y - 23 - (char[c1].y - char[c1].h2 / 2);
+	return Math.abs(yDist) <= char[c2].h / 2 + char[c1].h2 / 2 && Math.abs(char[c1].x + xOff2(c1) - char[c2].x) < 50;
 }
 
 function near2(c1, c2) {
-	var _loc2_ = char[c2].y - 23 - (char[c1].y - char[c1].h2 / 2);
-	return Math.abs(_loc2_) <= 20 && Math.abs(char[c1].x + xOff2(c1) - char[c2].x) < 50;
+	var yDist = char[c2].y - 23 - (char[c1].y - char[c1].h2 / 2);
+	return Math.abs(yDist) <= 20 && Math.abs(char[c1].x + xOff2(c1) - char[c2].x) < 50;
 }
 
 function xOff(i) {
@@ -4500,11 +4466,11 @@ function resetLevelCreator() {
 	char = [];
 	levelTimer = 0;
 	// levelCreator.sideBar.tab1.gotoAndStop(1);
-	// var _loc2_ = 0;
-	// while(_loc2_ < 10)
+	// var i = 0;
+	// while(i < 10)
 	// {
-	// 	levelCreator.tools["tool" + _loc2_].gotoAndStop(2);
-	// 	_loc2_ = _loc2_ + 1;
+	// 	levelCreator.tools["tool" + i].gotoAndStop(2);
+	// 	i = i + 1;
 	// }
 	// levelCreator.tools.tool9.gotoAndStop(1);
 	resetLCOSC();
@@ -4545,13 +4511,13 @@ function drawLCGrid() {
 	ctx.strokeStyle = '#000000';
 	ctx.globalAlpha = 0.5;
 	ctx.beginPath();
-	for (var _loc1_ = 0; _loc1_ <= levelWidth; _loc1_++) {
-		ctx.moveTo(330 - scale * levelWidth / 2 + _loc1_ * scale,240 - scale * levelHeight / 2);
-		ctx.lineTo(330 - scale * levelWidth / 2 + _loc1_ * scale,240 + scale * levelHeight / 2);
+	for (var i = 0; i <= levelWidth; i++) {
+		ctx.moveTo(330 - scale * levelWidth / 2 + i * scale,240 - scale * levelHeight / 2);
+		ctx.lineTo(330 - scale * levelWidth / 2 + i * scale,240 + scale * levelHeight / 2);
 	}
-	for (var _loc1_ = 0; _loc1_ <= levelHeight; _loc1_++) {
-		ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + _loc1_ * scale);
-		ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + _loc1_ * scale);
+	for (var i = 0; i <= levelHeight; i++) {
+		ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + i * scale);
+		ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + i * scale);
 	}
 	ctx.stroke();
 	ctx.globalAlpha = 1;
@@ -4562,18 +4528,19 @@ function drawLCGrid() {
 function drawLCTiles() {
 	ctx.drawImage(osc3, 0, 0, cwidth, cheight);
 
+	// animated tiles are drawn here.
 	var tlx = 330 - scale * levelWidth / 2;
 	var tly = 240 - scale * levelHeight / 2;
-	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-			var tile = myLevel[1][_loc2_][_loc1_];
+	for (var x = 0; x < levelWidth; x++) {
+		for (var y = 0; y < levelHeight; y++) {
+			var tile = myLevel[1][y][x];
 			ctx.globalAlpha = 1;
 			var showTile = blockProperties[tile][16] > 1;
 			if (tool == 5 && copied && mouseOnGrid()) {
 				var mouseGridX = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
 				var mouseGridY = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-				if (_loc1_ >= mouseGridX && _loc1_ < mouseGridX + tileClipboard[0].length && _loc2_ >= mouseGridY && _loc2_ < mouseGridY + tileClipboard.length) {
-					clipboardTileCandidate = tileClipboard[_loc2_ - mouseGridY][_loc1_ - mouseGridX];
+				if (x >= mouseGridX && x < mouseGridX + tileClipboard[0].length && y >= mouseGridY && y < mouseGridY + tileClipboard.length) {
+					clipboardTileCandidate = tileClipboard[y - mouseGridY][x - mouseGridX];
 					if ( !(_keysDown[18] && tile != 0) && clipboardTileCandidate != 0) {
 						tile = clipboardTileCandidate;
 						ctx.globalAlpha = 0.5;
@@ -4583,24 +4550,24 @@ function drawLCTiles() {
 			}
 			// if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
 			// 	ctx.save();
-			// 	ctx.translate(tlx + (_loc1_+0.5) * scale, tly + (_loc2_+0.9333) * scale);
+			// 	ctx.translate(tlx + (x+0.5) * scale, tly + (y+0.9333) * scale);
 			// 	ctx.rotate(blockProperties[tile][11]<7?-1:1);
-			// 	ctx.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
-			// 	ctx.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
+			// 	ctx.translate(-tlx - (x+0.5) * scale, -tly - (y+0.9333) * scale);
+			// 	ctx.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + x * scale, tly + y * scale, scale, scale);
 			// 	ctx.restore();
 			// }
 			if (showTile) {
 				var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
 				var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
-				ctx.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+				ctx.drawImage(img, tlx + x * scale + scale * vb[0]/30, tly + y * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			}
 			// else if (tile == 6) {
 			// 	ctx.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
-			// 	ctx.fillRect(tlx + (_loc1_-1) * scale, tly + (_loc2_-3) * scale, scale*2, scale*4);
+			// 	ctx.fillRect(tlx + (x-1) * scale, tly + (y-3) * scale, scale*2, scale*4);
 			// } else if (blockProperties[tile][15] && tile > 0) {
 			// 	var img = svgTiles[tile];
 			// 	var vb = svgTilesVB[tile];
-			// 	ctx.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+			// 	ctx.drawImage(img, tlx + x * scale + scale * vb[0]/30, tly + y * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			// }
 		}
 	}
@@ -4624,25 +4591,19 @@ function drawLCRect(x1, y1, x2, y2) {
 
 function clearMyWholeLevel() {
 	myLevel = new Array(3);
-	for (var _loc1_ = 0; _loc1_ < 3; _loc1_++) {
-		clearMyLevel(_loc1_);
+	for (var i = 0; i < 3; i++) {
+		clearMyLevel(i);
 	}
 	myLevelChars = [[],[],[]];
 }
 
 function clearMyLevel(i) {
 	myLevel[i] = new Array(levelHeight);
-	var _loc2_ = 0;
-	while(_loc2_ < levelHeight)
-	{
-		myLevel[i][_loc2_] = new Array(levelWidth);
-		var _loc1_ = 0;
-		while(_loc1_ < levelWidth)
-		{
-			myLevel[i][_loc2_][_loc1_] = 0;
-			_loc1_ = _loc1_ + 1;
+	for (var j = 0; j < levelHeight; j++){
+		myLevel[i][j] = new Array(levelWidth);
+		for (var k = 0; k < levelWidth; k++){
+			myLevel[i][j][k] = 0;
 		}
-		_loc2_ = _loc2_ + 1;
 	}
 }
 
@@ -4652,20 +4613,20 @@ function clearRectSelect() {
 
 function fillTile(x, y, after, before) {
 	if (after == before) return;
-	var _loc4_ = [[x,y]];
-	while (_loc4_.length >= 1) {
-		for (var _loc1_ = 0; _loc1_ < 4; _loc1_++) {
-			if (!(_loc1_ == 3 && x == levelWidth - 1 || _loc1_ == 2 && x == 0 || _loc1_ == 1 && y == levelHeight - 1 || _loc1_ == 0 && y == 0)) {
-				var _loc3_ = _loc4_[0][0] + cardinal[_loc1_][0];
-				var _loc2_ = _loc4_[0][1] + cardinal[_loc1_][1];
-				if (!outOfRange(_loc3_,_loc2_) && myLevel[1][_loc2_][_loc3_] == before) {
-					_loc4_.push([_loc3_,_loc2_]);
-					myLevel[1][_loc2_][_loc3_] = after;
-					// levelCreator.tiles["tileX" + _loc3_ + "Y" + _loc2_].gotoAndStop(after + 1);
+	var rc = [[x,y]];
+	while (rc.length >= 1) {
+		for (var i = 0; i < 4; i++) {
+			if (!(i == 3 && x == levelWidth - 1 || i == 2 && x == 0 || i == 1 && y == levelHeight - 1 || i == 0 && y == 0)) {
+				var x2 = rc[0][0] + cardinal[i][0];
+				var y2 = rc[0][1] + cardinal[i][1];
+				if (!outOfRange(x2,y2) && myLevel[1][y2][x2] == before) {
+					rc.push([x2,y2]);
+					myLevel[1][y2][x2] = after;
+					// levelCreator.tiles["tileX" + x2 + "Y" + y2].gotoAndStop(after + 1);
 				}
 			}
 		}
-		_loc4_.shift();
+		rc.shift();
 	}
 	updateLCtiles();
 }
@@ -4719,13 +4680,13 @@ function copyRect() {
 
 function LCSwapLevelData(a, b) {
 	myLevel[b] = new Array(myLevel[a].length);
-	for (var _loc2_ = 0; _loc2_ < myLevel[a].length; _loc2_++) {
-		myLevel[b][_loc2_] = new Array(myLevel[a][0].length);
-		for (var _loc1_ = 0; _loc1_ < myLevel[a][0].length; _loc1_++) {
-			myLevel[b][_loc2_][_loc1_] = myLevel[a][_loc2_][_loc1_];
+	for (var y = 0; y < myLevel[a].length; y++) {
+		myLevel[b][y] = new Array(myLevel[a][0].length);
+		for (var x = 0; x < myLevel[a][0].length; x++) {
+			myLevel[b][y][x] = myLevel[a][y][x];
 			// if(b == 1)
 			// {
-			// 	levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].gotoAndStop(myLevel[b][_loc2_][_loc1_] + 1);
+			// 	levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(myLevel[b][y][x] + 1);
 			// }
 		}
 	}
@@ -4735,14 +4696,14 @@ function LCSwapLevelData(a, b) {
 	}
 
 	myLevelChars[b] = new Array(myLevelChars[a].length);
-	for (var _loc2_ = 0; _loc2_ < myLevelChars[a].length; _loc2_++) {
-		myLevelChars[b][_loc2_] = cloneCharInfo(myLevelChars[a][_loc2_], false);
+	for (var y = 0; y < myLevelChars[a].length; y++) {
+		myLevelChars[b][y] = cloneCharInfo(myLevelChars[a][y], false);
 	}
 
 	myLevelDialogue[b] = new Array(myLevelDialogue[a].length);
-	for (var _loc2_ = 0; _loc2_ < myLevelDialogue[a].length; _loc2_++) {
-		var obj = myLevelDialogue[a][_loc2_];
-		myLevelDialogue[b][_loc2_] = {char:obj.char,face:obj.face,text:obj.text,linecount:obj.linecount};
+	for (var y = 0; y < myLevelDialogue[a].length; y++) {
+		var obj = myLevelDialogue[a][y];
+		myLevelDialogue[b][y] = {char:obj.char,face:obj.face,text:obj.text,linecount:obj.linecount};
 	}
 }
 
@@ -4755,35 +4716,35 @@ function setSelectedTile(i) {
 	if (blockProperties[selectedTile][9] && (tool == 2 || tool == 3)) {
 		tool = 1;
 	}
-	// var _loc3_ = i % 5 * 60 + 30;
-	// var _loc2_ = Math.floor(i / 5) * 60 + 70;
-	// levelCreator.sideBar.tab4.selector._x = _loc3_;
-	// levelCreator.sideBar.tab4.selector._y = _loc2_;
+	// var x = i % 5 * 60 + 30;
+	// var y = Math.floor(i / 5) * 60 + 70;
+	// levelCreator.sideBar.tab4.selector._x = x;
+	// levelCreator.sideBar.tab4.selector._y = y;
 }
 
 function closeToEdgeY() {
-	var _loc1_ = (_ymouse - (240 - scale * levelHeight / 2)) / scale % 1;
-	return Math.abs(_loc1_ - 0.5) > 0.25;
+	var y2 = (_ymouse - (240 - scale * levelHeight / 2)) / scale % 1;
+	return Math.abs(y2 - 0.5) > 0.25;
 }
 
 function closeToEdgeX() {
-	var _loc1_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
-	return Math.abs(_loc1_ - 0.5) > 0.25;
+	var x2 = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
+	return Math.abs(x2 - 0.5) > 0.25;
 }
 
 function removeLCTiles() {
 	console.log('removeLCTiles');
 	// osctx3.clearRect(0, 0, osc3.width, osc3.height);
-	// var _loc2_ = 0;
-	// while(_loc2_ < levelHeight)
+	// var y = 0;
+	// while(y < levelHeight)
 	// {
-	// 	var _loc1_ = 0;
-	// 	while(_loc1_ < levelWidth)
+	// 	var x = 0;
+	// 	while(x < levelWidth)
 	// 	{
-	// 		levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].removeMovieClip();
-	// 		_loc1_ = _loc1_ + 1;
+	// 		levelCreator.tiles["tileX" + x + "Y" + y].removeMovieClip();
+	// 		x = x + 1;
 	// 	}
-	// 	_loc2_ = _loc2_ + 1;
+	// 	y = y + 1;
 	// }
 }
 
@@ -4791,18 +4752,18 @@ function updateLCtiles() {
 	// console.log('updateLCtiles');
 	scale = Math.min(640 / levelWidth, 460 / levelHeight);
 	osctx3.clearRect(0, 0, osc3.width, osc3.height);
-	// var _loc2_ = 0;
-	// while (_loc2_ < levelHeight) {
-	// 	var _loc1_ = 0;
-	// 	while (_loc1_ < levelWidth) {
-	// 		var tile = myLevel[1][_loc2_][_loc1_];
+	// var y = 0;
+	// while (y < levelHeight) {
+	// 	var x = 0;
+	// 	while (x < levelWidth) {
+	// 		var tile = myLevel[1][y][x];
 	// 		if (blockProperties[tile][16] == 1) {
 	// 			//
 	// 		}	
-	// 		// levelCreator.tiles["tileX" + _loc1_ + "Y" + _loc2_].gotoAndStop(myLevel[1][_loc2_][_loc1_] + 1);
-	// 		_loc1_ = _loc1_ + 1;
+	// 		// levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(myLevel[1][y][x] + 1);
+	// 		x = x + 1;
 	// 	}
-	// 	_loc2_ = _loc2_ + 1;
+	// 	y = y + 1;
 	// }
 
 
@@ -4812,15 +4773,15 @@ function updateLCtiles() {
 
 	var tlx = 330 - scale * levelWidth / 2;
 	var tly = 240 - scale * levelHeight / 2;
-	for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-		for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-			var tile = myLevel[1][_loc2_][_loc1_];
+	for (var x = 0; x < levelWidth; x++) {
+		for (var y = 0; y < levelHeight; y++) {
+			var tile = myLevel[1][y][x];
 			if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
 				osctx3.save();
-				osctx3.translate(tlx + (_loc1_+0.5) * scale, tly + (_loc2_+0.9333) * scale);
+				osctx3.translate(tlx + (x+0.5) * scale, tly + (y+0.9333) * scale);
 				osctx3.rotate(blockProperties[tile][11]<7?-1:1);
-				osctx3.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
-				osctx3.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, scale);
+				osctx3.translate(-tlx - (x+0.5) * scale, -tly - (y+0.9333) * scale);
+				osctx3.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + x * scale, tly + y * scale, scale, scale);
 				osctx3.restore();
 			}
 			
@@ -4828,21 +4789,21 @@ function updateLCtiles() {
 				if (blockProperties[tile][16] == 1) {
 					var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
 					var vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
-					osctx3.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+					osctx3.drawImage(img, tlx + x * scale + scale * vb[0]/30, tly + y * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 				}
 			} else if (tile == 6) {
 				osctx3.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
-				osctx3.fillRect(tlx + (_loc1_-1) * scale, tly + (_loc2_-3) * scale, scale*2, scale*4);
+				osctx3.fillRect(tlx + (x-1) * scale, tly + (y-3) * scale, scale*2, scale*4);
 			} else if (blockProperties[tile][15] && tile > 0) {
 				var img = svgTiles[tile];
 				var vb = svgTilesVB[tile];
-				osctx3.drawImage(img, tlx + _loc1_ * scale + scale * vb[0]/30, tly + _loc2_ * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+				osctx3.drawImage(img, tlx + x * scale + scale * vb[0]/30, tly + y * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
 			}
 			if (tintBlocks.indexOf(tile) != -1) {
 				osctx3.globalAlpha = 0.25;
 				var tintbBlockIndex = tintBlocks.indexOf(tile);
 				osctx3.fillStyle = tintColors[tintbBlockIndex];
-				osctx3.fillRect(tlx + _loc1_ * scale, tly + _loc2_ * scale, scale, tintBlockOneWay[tintbBlockIndex]?scale/3:scale);
+				osctx3.fillRect(tlx + x * scale, tly + y * scale, scale, tintBlockOneWay[tintbBlockIndex]?scale/3:scale);
 				osctx3.globalAlpha = 1;
 			}
 		}
@@ -5285,9 +5246,9 @@ function drawLCChars() {
 			ctx.globalAlpha = 1;
 		}
 		if (char[i].placed && (char[i].charState == 3 || char[i].charState == 4)) {
-			var _loc8_ = Math.floor(levelTimer / char[i].speed) % (char[i].motionString.length - 2);
-			char[i].vx = cardinal[char[i].motionString[_loc8_ + 2]][0] * (30 / char[i].speed);
-			char[i].vy = cardinal[char[i].motionString[_loc8_ + 2]][1] * (30 / char[i].speed);
+			var section = Math.floor(levelTimer / char[i].speed) % (char[i].motionString.length - 2);
+			char[i].vx = cardinal[char[i].motionString[section + 2]][0] * (30 / char[i].speed);
+			char[i].vy = cardinal[char[i].motionString[section + 2]][1] * (30 / char[i].speed);
 			char[i].px = char[i].x;
 			char[i].py = char[i].y;
 			char[i].charMove();
@@ -5315,22 +5276,22 @@ function resetLCChar(i) {
 			myLevelChars[1][i].pop();
 		}
 	}
-	var _loc2_ = myLevelChars[1][i][0];
-	char[i].id = _loc2_;
+	var id = myLevelChars[1][i][0];
+	char[i].id = id;
 	char[i].x = char[i].px = +myLevelChars[1][i][1].toFixed(2) * 30;
 	char[i].y = char[i].py = +myLevelChars[1][i][2].toFixed(2) * 30;
 	// char[i].px = 70 + i * 40;
 	// char[i].py = 400 - i * 30;
 	char[i].charState = myLevelChars[1][i][3];
-	char[i].w = charD[_loc2_][0];
-	char[i].h = charD[_loc2_][1];
-	char[i].weight = charD[_loc2_][2];
-	char[i].weight2 = charD[_loc2_][2];
-	char[i].h2 = charD[_loc2_][3];
-	char[i].friction = charD[_loc2_][4];
-	char[i].heatSpeed = charD[_loc2_][6];
-	char[i].hasArms = charD[_loc2_][8];
-	char[i].dExpr = _loc2_<35?charModels[_loc2_].defaultExpr:0;
+	char[i].w = charD[id][0];
+	char[i].h = charD[id][1];
+	char[i].weight = charD[id][2];
+	char[i].weight2 = charD[id][2];
+	char[i].h2 = charD[id][3];
+	char[i].friction = charD[id][4];
+	char[i].heatSpeed = charD[id][6];
+	char[i].hasArms = charD[id][8];
+	char[i].dExpr = id<35?charModels[id].defaultExpr:0;
 }
 
 function cloneChar(charObj) {
@@ -5371,23 +5332,23 @@ function cloneCharInfo(info, unplace) {
 }
 
 function generateCharFromInfo(info) {
-	var _loc2_ = info[0];
+	var id = info[0];
 	var newChar = new Character(
-		_loc2_,
+		id,
 		info[1]*30,
 		info[2]*30,
 		info[1]*30,
 		info[2]*30,
 		info[3],
-		charD[_loc2_][0],
-		charD[_loc2_][1],
-		charD[_loc2_][2],
-		charD[_loc2_][2],
-		charD[_loc2_][3],
-		charD[_loc2_][4],
-		charD[_loc2_][6],
-		charD[_loc2_][8],
-		_loc2_<35?charModels[_loc2_].defaultExpr:0
+		charD[id][0],
+		charD[id][1],
+		charD[id][2],
+		charD[id][2],
+		charD[id][3],
+		charD[id][4],
+		charD[id][6],
+		charD[id][8],
+		id<35?charModels[id].defaultExpr:0
 	);
 	if (info[1] == -1 || info[2] == -1) {
 		newChar.placed = false;
@@ -5562,24 +5523,24 @@ function readLevelString(str) {
 			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2],10),100),0);
 			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3],10),10),3);
 		}
-		let _loc2_ = myLevelChars[1][e][0];
-		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
+		let id = myLevelChars[1][e][0];
+		if (charD[id][7] < 1) id = id<35?8:37;
 		char[e] = new Character(
-			_loc2_,
+			id,
 			+myLevelChars[1][e][1].toFixed(2) * 30,
 			+myLevelChars[1][e][2].toFixed(2) * 30,
 			70 + e * 40,
 			400 - e * 30,
 			myLevelChars[1][e][3],
-			charD[_loc2_][0],
-			charD[_loc2_][1],
-			charD[_loc2_][2],
-			charD[_loc2_][2],
-			charD[_loc2_][3],
-			charD[_loc2_][4],
-			charD[_loc2_][6],
-			charD[_loc2_][8],
-			_loc2_<35?charModels[_loc2_].defaultExpr:0
+			charD[id][0],
+			charD[id][1],
+			charD[id][2],
+			charD[id][2],
+			charD[id][3],
+			charD[id][4],
+			charD[id][6],
+			charD[id][8],
+			id<35?charModels[id].defaultExpr:0
 		);
 		if (myLevelChars[1][e][1] < 0 || myLevelChars[1][e][2] < 0) char[e].placed = false;
 		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
@@ -5738,24 +5699,24 @@ function readExploreLevelString(str) {
 			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2],10),100),0);
 			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3],10),10),3);
 		}
-		let _loc2_ = myLevelChars[1][e][0];
-		if (charD[_loc2_][7] < 1) _loc2_ = _loc2_<35?8:37;
+		let id = myLevelChars[1][e][0];
+		if (charD[id][7] < 1) id = id<35?8:37;
 		char[e] = new Character(
-			_loc2_,
+			id,
 			+myLevelChars[1][e][1].toFixed(2) * 30,
 			+myLevelChars[1][e][2].toFixed(2) * 30,
 			70 + e * 40,
 			400 - e * 30,
 			myLevelChars[1][e][3],
-			charD[_loc2_][0],
-			charD[_loc2_][1],
-			charD[_loc2_][2],
-			charD[_loc2_][2],
-			charD[_loc2_][3],
-			charD[_loc2_][4],
-			charD[_loc2_][6],
-			charD[_loc2_][8],
-			_loc2_<35?charModels[_loc2_].defaultExpr:0
+			charD[id][0],
+			charD[id][1],
+			charD[id][2],
+			charD[id][2],
+			charD[id][3],
+			charD[id][4],
+			charD[id][6],
+			charD[id][8],
+			id<35?charModels[id].defaultExpr:0
 		);
 		if (myLevelChars[1][e][1] < 0 || myLevelChars[1][e][2] < 0) char[e].placed = false;
 		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
@@ -6130,14 +6091,14 @@ function mousedown(event){
 
 	if (menuScreen == 5) {
 		if (_xmouse > 660) {
-			// for (var _loc8_ = 0; _loc8_ < 6; _loc8_++) {
-			// 	var _loc9_ = _loc8_ * 40;
-			// 	if (_loc8_ > selectedTab) {
-			// 		_loc9_ += 300;
+			// for (var i = 0; i < 6; i++) {
+			// 	var y = i * 40;
+			// 	if (i > selectedTab) {
+			// 		y += 300;
 			// 	}
-			// 	if (_ymouse >= _loc9_ && _ymouse < _loc9_ + 40) {
-			// 		setSelectedTab(_loc8_);
-			// 		if (_loc8_ == 3 && (selectedTile < 0 || selectedTile > tileCount)) {
+			// 	if (_ymouse >= y && _ymouse < y + 40) {
+			// 		setSelectedTab(i);
+			// 		if (i == 3 && (selectedTile < 0 || selectedTile > tileCount)) {
 			// 			setTool(0);
 			// 			setSelectedTile(1);
 			// 		}
@@ -6147,12 +6108,12 @@ function mousedown(event){
 
 
 			// if (selectedTab == 2) {
-			// 	var _loc10_ = Math.floor((_xmouse - 660) / 60);
-			// 	_loc9_ = Math.floor((_ymouse - 160) / 60);
-			// 	_loc8_ = _loc10_ + _loc9_ * 5;
-			// 	if (_loc8_ >= 0 && _loc8_ < tileCount && (tool != 3 && tool != 2 || !blockProperties[_loc8_][9])) {
-			// 		setSelectedTile(_loc8_);
-			// 		if (_loc8_ >= 1 && tool == 1) {
+			// 	var x = Math.floor((_xmouse - 660) / 60);
+			// 	y = Math.floor((_ymouse - 160) / 60);
+			// 	i = x + y * 5;
+			// 	if (i >= 0 && i < tileCount && (tool != 3 && tool != 2 || !blockProperties[i][9])) {
+			// 		setSelectedTile(i);
+			// 		if (i >= 1 && tool == 1) {
 			// 			setTool(0);
 			// 		}
 			// 	}
@@ -6161,19 +6122,19 @@ function mousedown(event){
 			// }
 			clearRectSelect();
 		} else if (Math.abs(_ymouse - 510) <= 20 && Math.abs(_xmouse - 330) <= 300) {
-			// var _loc8_ = Math.floor((_xmouse - 30) / 50);
-			// if (_loc8_ != 8) {
-			// 	if (_loc8_ >= 9) {
-			// 		_loc8_ = _loc8_ - 1;
+			// var i = Math.floor((_xmouse - 30) / 50);
+			// if (i != 8) {
+			// 	if (i >= 9) {
+			// 		i = i - 1;
 			// 	}
-			// 	if (_loc8_ == 9) {
+			// 	if (i == 9) {
 			// 		undo();
-			// 	} else if (_loc8_ == 10) {
+			// 	} else if (i == 10) {
 			// 		setUndo();
 			// 		clearMyLevel(1);
 			// 		updateLCtiles();
 			// 	} else {
-			// 		setTool(_loc8_);
+			// 		setTool(i);
 			// 		if(tool <= 3) {
 			// 			setSelectedTab(3);
 			// 			if ((tool == 3 || tool == 2) && blockProperties[selectedTile][9]) {
@@ -6187,68 +6148,68 @@ function mousedown(event){
 				if (tool != 4) {
 					setUndo();
 				}
-				var _loc10_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-				var _loc9_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+				var x = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+				var y = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
 				if (mouseOnScreen()) {
 					if (tool == 2 || tool == 5 && !copied) {
-						LCRect[0] = LCRect[2] = Math.min(Math.max(_loc10_,0),levelWidth - 1);
-						LCRect[1] = LCRect[3] = Math.min(Math.max(_loc9_,0),levelHeight - 1);
+						LCRect[0] = LCRect[2] = Math.min(Math.max(x,0),levelWidth - 1);
+						LCRect[1] = LCRect[3] = Math.min(Math.max(y,0),levelHeight - 1);
 					}
 				}
 				if (mouseOnGrid()) {
 					if (tool == 3) {
 						if (!blockProperties[selectedTile][9]) {
-							var _loc11_ = myLevel[1][_loc9_][_loc10_];
-							fillTile(_loc10_,_loc9_,selectedTile,_loc11_);
+							var fillType = myLevel[1][y][x];
+							fillTile(x,y,selectedTile,fillType);
 						} else {
 							setTool(0);
 						}
 					} else if (tool == 4) {
 						selectedTab = 2;
 						setTool(0);
-						setSelectedTile(myLevel[1][_loc9_][_loc10_]);
+						setSelectedTile(myLevel[1][y][x]);
 					} else if (tool == 5) {
 						if (copied) {
-							for (var i = 0; i < tileClipboard.length && _loc9_+i < levelHeight; i++) {
-								for (var j = 0; j < tileClipboard[i].length && _loc10_+j < levelWidth; j++) {
+							for (var i = 0; i < tileClipboard.length && y+i < levelHeight; i++) {
+								for (var j = 0; j < tileClipboard[i].length && x+j < levelWidth; j++) {
 									var testTile = tileClipboard[i][j];
-									if (!(_keysDown[18] && myLevel[1][_loc9_+i][_loc10_+j] != 0) && testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][_loc9_+i][_loc10_+j] = testTile;
+									if (!(_keysDown[18] && myLevel[1][y+i][x+j] != 0) && testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][y+i][x+j] = testTile;
 								}
 							}
 						}
 						updateLCtiles();
 						// selectedTab = 2;
 						// setTool(0);
-						// setSelectedTile(myLevel[1][_loc9_][_loc10_]);
+						// setSelectedTile(myLevel[1][y][x]);
 					} else if (tool == 6) {
-						var _loc5_ = 0;
+						var sizeChange = 0;
 						if (closeToEdgeY() || levelHeight >= 2) {
 							if (closeToEdgeY()) {
-								_loc5_ = 1;
+								sizeChange = 1;
 							} else {
-								_loc5_ = -1;
+								sizeChange = -1;
 							}
 							removeLCTiles();
-							var _loc7_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-							levelHeight += _loc5_;
+							var y2 = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+							levelHeight += sizeChange;
 							myLevel[1] = new Array(levelHeight);
-							var _loc4_ = 0;
-							for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-								if (_loc2_ < _loc7_) {
-									_loc4_ = _loc2_;
+							var y4 = 0;
+							for (var y3 = 0; y3 < levelHeight; y3++) {
+								if (y3 < y2) {
+									y4 = y3;
 								} else {
-									_loc4_ = Math.max(_loc2_ - _loc5_,0);
+									y4 = Math.max(y3 - sizeChange,0);
 								}
-								myLevel[1][_loc2_] = new Array(levelWidth);
-								for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-									myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc4_][_loc1_];
+								myLevel[1][y3] = new Array(levelWidth);
+								for (var x3 = 0; x3 < levelWidth; x3++) {
+									myLevel[1][y3][x3] = myLevel[0][y4][x3];
 								}
 							}
 							for (var i = 0; i < myLevelChars[1].length; i++) {
-								if (myLevelChars[1][i][2] > _loc7_) {
-									myLevelChars[1][i][2] += _loc5_;
+								if (myLevelChars[1][i][2] > y2) {
+									myLevelChars[1][i][2] += sizeChange;
 									resetCharPositions();
-									// char[i].y += _loc5_ * 30;
+									// char[i].y += sizeChange * 30;
 								}
 							}
 							setCoinAndDoorPos();
@@ -6256,36 +6217,36 @@ function mousedown(event){
 							// drawLCGrid();
 						}
 					} else if (tool == 7) {
-						var _loc6_ = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
-						_loc5_ = 0;
+						var x2 = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
+						sizeChange = 0;
 						if (closeToEdgeX() || levelWidth >= 2) {
 							if (closeToEdgeX()) {
-								_loc5_ = 1;
+								sizeChange = 1;
 							} else {
-								_loc5_ = -1;
+								sizeChange = -1;
 							}
 							removeLCTiles();
-							_loc6_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-							levelWidth += _loc5_;
+							x2 = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+							levelWidth += sizeChange;
 							myLevel[1] = new Array(levelHeight);
-							var _loc3_ = 0;
-							for (var _loc2_ = 0; _loc2_ < levelHeight; _loc2_++) {
-								myLevel[1][_loc2_] = new Array(levelWidth);
-								_loc1_ = 0;
-								for (var _loc1_ = 0; _loc1_ < levelWidth; _loc1_++) {
-									if(_loc1_ < _loc6_) {
-										_loc3_ = _loc1_;
+							var x4 = 0;
+							for (var y3 = 0; y3 < levelHeight; y3++) {
+								myLevel[1][y3] = new Array(levelWidth);
+								x3 = 0;
+								for (var x3 = 0; x3 < levelWidth; x3++) {
+									if(x3 < x2) {
+										x4 = x3;
 									} else {
-										_loc3_ = Math.max(_loc1_ - _loc5_,0);
+										x4 = Math.max(x3 - sizeChange,0);
 									}
-									myLevel[1][_loc2_][_loc1_] = myLevel[0][_loc2_][_loc3_];
+									myLevel[1][y3][x3] = myLevel[0][y3][x4];
 								}
 							}
 							for (var i = 0; i < myLevelChars[1].length; i++) {
-								if (myLevelChars[1][i][1] > _loc6_) {
-									myLevelChars[1][i][1] += _loc5_;
+								if (myLevelChars[1][i][1] > x2) {
+									myLevelChars[1][i][1] += sizeChange;
 									resetCharPositions();
-									// char[i].x += _loc5_ * 30;
+									// char[i].x += sizeChange * 30;
 								}
 							}
 							setCoinAndDoorPos();
@@ -6509,26 +6470,26 @@ function draw() {
 								putDown(control);
 								charThrow(control);
 							} else {
-								for (var _loc2_ = 0; _loc2_ < charCount; _loc2_++) {
-									if (_loc2_ != control && near(control,_loc2_) && char[_loc2_].charState >= 6 && char[control].standingOn != _loc2_ && onlyMovesOneBlock(_loc2_,control)) {
-										if (char[_loc2_].carry) putDown(_loc2_);
-										if (ifCarried(_loc2_)) putDown(char[_loc2_].carriedBy);
+								for (var i = 0; i < charCount; i++) {
+									if (i != control && near(control,i) && char[i].charState >= 6 && char[control].standingOn != i && onlyMovesOneBlock(i,control)) {
+										if (char[i].carry) putDown(i);
+										if (ifCarried(i)) putDown(char[i].carriedBy);
 										char[control].carry = true;
-										char[control].carryObject = _loc2_;
-										swapDepths(_loc2_, charCount * 2 + 1);
-										char[_loc2_].carriedBy = control;
-										char[_loc2_].weight2 = char[_loc2_].weight;
-										char[control].weight2 = char[_loc2_].weight + char[control].weight;
-										rippleWeight(control,char[_loc2_].weight2,1);
-										fallOff(_loc2_);
-										aboveFallOff(_loc2_);
-										char[_loc2_].justChanged = 2;
+										char[control].carryObject = i;
+										swapDepths(i, charCount * 2 + 1);
+										char[i].carriedBy = control;
+										char[i].weight2 = char[i].weight;
+										char[control].weight2 = char[i].weight + char[control].weight;
+										rippleWeight(control,char[i].weight2,1);
+										fallOff(i);
+										aboveFallOff(i);
+										char[i].justChanged = 2;
 										char[control].justChanged = 2;
-										if (char[_loc2_].submerged == 1) char[_loc2_].submerged = 0;
-										if (char[_loc2_].onob && char[control].y - char[_loc2_].y > yOff(_loc2_)) {
-											char[control].y = char[_loc2_].y + yOff(_loc2_);
+										if (char[i].submerged == 1) char[i].submerged = 0;
+										if (char[i].onob && char[control].y - char[i].y > yOff(i)) {
+											char[control].y = char[i].y + yOff(i);
 											char[control].onob = false;
-											char[_loc2_].onob = true;
+											char[i].onob = true;
 										}
 										break;
 									}
@@ -6583,91 +6544,91 @@ function draw() {
 			// if (cutScene == 1) csBubble.gotoAndPlay(17);
 		}
 		locations[4] = 1000;
-		for (var _loc2_ = 0; _loc2_ < charCount; _loc2_++) {
-			if (char[_loc2_].charState >= 5) {
-				char[_loc2_].landTimer = char[_loc2_].landTimer + 1;
-				if (char[_loc2_].carry && char[char[_loc2_].carryObject].justChanged < char[_loc2_].justChanged) {
-					char[char[_loc2_].carryObject].justChanged = char[_loc2_].justChanged;
+		for (var i = 0; i < charCount; i++) {
+			if (char[i].charState >= 5) {
+				char[i].landTimer = char[i].landTimer + 1;
+				if (char[i].carry && char[char[i].carryObject].justChanged < char[i].justChanged) {
+					char[char[i].carryObject].justChanged = char[i].justChanged;
 				}
-				if (char[_loc2_].standingOn == -1) {
-					if (char[_loc2_].onob) {
-						if (char[_loc2_].charState >= 5) {
-							char[_loc2_].fricGoal = onlyConveyorsUnder(_loc2_);
+				if (char[i].standingOn == -1) {
+					if (char[i].onob) {
+						if (char[i].charState >= 5) {
+							char[i].fricGoal = onlyConveyorsUnder(i);
 						}
 					}
-				} else char[_loc2_].fricGoal = char[char[_loc2_].standingOn].vx;
+				} else char[i].fricGoal = char[char[i].standingOn].vx;
 
-				char[_loc2_].applyForces(char[_loc2_].weight2,control == _loc2_,jumpPower * 0.7);
-				if (char[_loc2_].deathTimer >= 30) char[_loc2_].charMove();
-				if (char[_loc2_].id == 3) {
-					if (char[_loc2_].temp > 50) {
-						for (var _loc4_ = 0; _loc4_ < charCount; _loc4_++) {
-							if (char[_loc4_].charState >= 5 && _loc4_ != _loc2_) {
-								if (Math.abs(char[_loc2_].x - char[_loc4_].x) < char[_loc2_].w + char[_loc4_].w && char[_loc4_].y > char[_loc2_].y - char[_loc2_].h && char[_loc4_].y < char[_loc2_].y + char[_loc4_].h) {
-									char[_loc4_].heated = 2;
-									heat(_loc4_);
+				char[i].applyForces(char[i].weight2,control == i,jumpPower * 0.7);
+				if (char[i].deathTimer >= 30) char[i].charMove();
+				if (char[i].id == 3) {
+					if (char[i].temp > 50) {
+						for (var j = 0; j < charCount; j++) {
+							if (char[j].charState >= 5 && j != i) {
+								if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+									char[j].heated = 2;
+									heat(j);
 								}
 							}
 						}
 					}
 				}
-			} else if (char[_loc2_].charState >= 3) {
-				var _loc8_ = Math.floor(levelTimer / char[_loc2_].speed) % (char[_loc2_].motionString.length - 2);
-				char[_loc2_].vx = cardinal[char[_loc2_].motionString[_loc8_ + 2]][0] * (30 / char[_loc2_].speed);
-				char[_loc2_].vy = cardinal[char[_loc2_].motionString[_loc8_ + 2]][1] * (30 / char[_loc2_].speed);
-				char[_loc2_].px = char[_loc2_].x;
-				char[_loc2_].py = char[_loc2_].y;
-				char[_loc2_].charMove();
-			} if (char[_loc2_].charState == 3 || char[_loc2_].charState == 5) {
-				for (var _loc4_ = 0; _loc4_ < charCount; _loc4_++) {
-					if (char[_loc4_].charState >= 7 && _loc4_ != _loc2_) {
-						if (Math.abs(char[_loc2_].x - char[_loc4_].x) < char[_loc2_].w + char[_loc4_].w && char[_loc4_].y > char[_loc2_].y - char[_loc2_].h && char[_loc4_].y < char[_loc2_].y + char[_loc4_].h) {
-							startDeath(_loc4_);
+			} else if (char[i].charState >= 3) {
+				var section = Math.floor(levelTimer / char[i].speed) % (char[i].motionString.length - 2);
+				char[i].vx = cardinal[char[i].motionString[section + 2]][0] * (30 / char[i].speed);
+				char[i].vy = cardinal[char[i].motionString[section + 2]][1] * (30 / char[i].speed);
+				char[i].px = char[i].x;
+				char[i].py = char[i].y;
+				char[i].charMove();
+			} if (char[i].charState == 3 || char[i].charState == 5) {
+				for (var j = 0; j < charCount; j++) {
+					if (char[j].charState >= 7 && j != i) {
+						if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+							startDeath(j);
 						}
 					}
 				}
 			}
-			if (char[_loc2_].justChanged >= 1) {
-				if (char[_loc2_].standingOn >= 1) {
-					if (char[char[_loc2_].standingOn].charState == 4) {
-						char[_loc2_].justChanged = 2;
+			if (char[i].justChanged >= 1) {
+				if (char[i].standingOn >= 1) {
+					if (char[char[i].standingOn].charState == 4) {
+						char[i].justChanged = 2;
 					}
 				}
-				if (char[_loc2_].stoodOnBy.length >= 1) {
-					for (var _loc4_ = 0; _loc4_ < char[_loc2_].stoodOnBy.length; _loc4_++) {
-						char[char[_loc2_].stoodOnBy[_loc4_]].y = char[_loc2_].y - char[_loc2_].h;
-						char[char[_loc2_].stoodOnBy[_loc4_]].vy = char[_loc2_].vy;
+				if (char[i].stoodOnBy.length >= 1) {
+					for (var j = 0; j < char[i].stoodOnBy.length; j++) {
+						char[char[i].stoodOnBy[j]].y = char[i].y - char[i].h;
+						char[char[i].stoodOnBy[j]].vy = char[i].vy;
 					}
-				} else if (!char[_loc2_].carry && char[_loc2_].submerged >= 2) {
-					char[_loc2_].weight2 = char[_loc2_].weight - 0.16;
+				} else if (!char[i].carry && char[i].submerged >= 2) {
+					char[i].weight2 = char[i].weight - 0.16;
 				}
-				if (char[_loc2_].charState >= 5 && !ifCarried(_loc2_)) {
-					if (char[_loc2_].vy > 0 || char[_loc2_].vy == 0 && char[_loc2_].vx != 0) {
-						landOnObject(_loc2_);
+				if (char[i].charState >= 5 && !ifCarried(i)) {
+					if (char[i].vy > 0 || char[i].vy == 0 && char[i].vx != 0) {
+						landOnObject(i);
 					}
-					if (char[_loc2_].vy < 0 && (char[_loc2_].charState == 4 || char[_loc2_].charState == 6) && !ifCarried(_loc2_)) {
-						objectsLandOn(_loc2_);
+					if (char[i].vy < 0 && (char[i].charState == 4 || char[i].charState == 6) && !ifCarried(i)) {
+						objectsLandOn(i);
 					}
 				}
 			}
 
-			if (char[_loc2_].charState >= 7 && char[_loc2_].charState != 9 && !gotThisCoin) {
-				var _loc7_ = calcDist(_loc2_);
-				if (_loc7_ < locations[4]) {
-					locations[4] = _loc7_;
-					locations[5] = _loc2_;
+			if (char[i].charState >= 7 && char[i].charState != 9 && !gotThisCoin) {
+				var dist = calcDist(i);
+				if (dist < locations[4]) {
+					locations[4] = dist;
+					locations[5] = i;
 				}
 			}
 		}
-		var _loc11_;
-		if (!gotThisCoin) _loc11_ = 140 - locations[4] * 0.7;
-		if (playMode != 2 && gotCoin[currentLevel]) _loc11_ = Math.max(_loc11_,30);
-		for (var _loc2_ = 0; _loc2_ < charCount; _loc2_++) {
-			if (char[_loc2_].vy != 0 || char[_loc2_].vx != 0 || char[_loc2_].x != char[_loc2_].px || char[_loc2_].py != char[_loc2_].y) char[_loc2_].justChanged = 2;
-			if (char[_loc2_].charState == 2) {
+		var alph;
+		if (!gotThisCoin) alph = 140 - locations[4] * 0.7;
+		if (playMode != 2 && gotCoin[currentLevel]) alph = Math.max(alph,30);
+		for (var i = 0; i < charCount; i++) {
+			if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y) char[i].justChanged = 2;
+			if (char[i].charState == 2) {
 				recoverTimer--;
-				var _loc5_ = (60 - recoverTimer) / 60;
-				char[_loc2_].x = inter(char[HPRC1].x,goal,_loc5_);
+				var trans = (60 - recoverTimer) / 60;
+				char[i].x = inter(char[HPRC1].x,goal,trans);
 				if (recoverTimer <= 0) {
 					recoverTimer = 0;
 					recover = false;
@@ -6678,256 +6639,256 @@ function draw() {
 					char[recover2].px = char[recover2].x;
 					char[recover2].py = char[recover2].y;
 					char[recover2].justChanged = 2;
-					checkDeath(_loc2_);
+					checkDeath(i);
 				}
-			} else if (char[_loc2_].justChanged >= 1 && char[_loc2_].charState >= 5) {
-				for (var _loc3_ = Math.floor((char[_loc2_].y - char[_loc2_].h) / 30); _loc3_ <= Math.floor(char[_loc2_].y / 30); _loc3_++) {
-					for (var _loc9_ = Math.floor((char[_loc2_].x - char[_loc2_].w) / 30); _loc9_ <= Math.floor((char[_loc2_].x + char[_loc2_].w - 0.01) / 30); _loc9_++) {
-						if (!outOfRange(_loc9_, _loc3_)) {
-							if (blockProperties[thisLevel[_loc3_][_loc9_]][11] >= 1 && blockProperties[thisLevel[_loc3_][_loc9_]][11] <= 12) {
-								if (Math.floor(char[_loc2_].x / 30) == _loc9_) {
-									var _loc1_ = (char[_loc2_].x - Math.floor(char[_loc2_].x / 30) * 30 - 15) * 5;
-									if (_loc1_ < tileFrames[_loc3_][_loc9_].rotation && char[_loc2_].vx < 0 || _loc1_ > tileFrames[_loc3_][_loc9_].rotation && char[_loc2_].vx > 0) {
-										if (_loc1_ < 0 && tileFrames[_loc3_][_loc9_].rotation > 0 || _loc1_ > 0 && tileFrames[_loc3_][_loc9_].rotation < 0) {
-											leverSwitch((blockProperties[thisLevel[_loc3_][_loc9_]][11] - 1) % 6);
+			} else if (char[i].justChanged >= 1 && char[i].charState >= 5) {
+				for (var y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor(char[i].y / 30); y++) {
+					for (var x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w - 0.01) / 30); x++) {
+						if (!outOfRange(x, y)) {
+							if (blockProperties[thisLevel[y][x]][11] >= 1 && blockProperties[thisLevel[y][x]][11] <= 12) {
+								if (Math.floor(char[i].x / 30) == x) {
+									var rot = (char[i].x - Math.floor(char[i].x / 30) * 30 - 15) * 5;
+									if (rot < tileFrames[y][x].rotation && char[i].vx < 0 || rot > tileFrames[y][x].rotation && char[i].vx > 0) {
+										if (rot < 0 && tileFrames[y][x].rotation > 0 || rot > 0 && tileFrames[y][x].rotation < 0) {
+											leverSwitch((blockProperties[thisLevel[y][x]][11] - 1) % 6);
 										}
-										tileFrames[_loc3_][_loc9_].rotation = _loc1_;
+										tileFrames[y][x].rotation = rot;
 									}
 								}
 							}
 						}
 					}
 				}
-				checkButton2(_loc2_,false);
-				if (ifCarried(_loc2_)) {
-					char[_loc2_].vx = char[char[_loc2_].carriedBy].vx;
-					char[_loc2_].vy = char[char[_loc2_].carriedBy].vy;
+				checkButton2(i,false);
+				if (ifCarried(i)) {
+					char[i].vx = char[char[i].carriedBy].vx;
+					char[i].vy = char[char[i].carriedBy].vy;
 
-					if (char[char[_loc2_].carriedBy].x + xOff(_loc2_) >= char[_loc2_].x + 20) {
-						char[_loc2_].x += 20;
-					} else if (char[char[_loc2_].carriedBy].x + xOff(_loc2_) <= char[_loc2_].x - 20) {
-						char[_loc2_].x -= 20;
+					if (char[char[i].carriedBy].x + xOff(i) >= char[i].x + 20) {
+						char[i].x += 20;
+					} else if (char[char[i].carriedBy].x + xOff(i) <= char[i].x - 20) {
+						char[i].x -= 20;
 					} else {
-						char[_loc2_].x = char[char[_loc2_].carriedBy].x + xOff(_loc2_);
+						char[i].x = char[char[i].carriedBy].x + xOff(i);
 					}
 
-					if (char[char[_loc2_].carriedBy].y - yOff(_loc2_) >= char[_loc2_].y + 20) {
-						char[_loc2_].y += 20;
-					} else if (char[char[_loc2_].carriedBy].y - yOff(_loc2_) <= char[_loc2_].y - 20) {
-						char[_loc2_].y -= 20;
+					if (char[char[i].carriedBy].y - yOff(i) >= char[i].y + 20) {
+						char[i].y += 20;
+					} else if (char[char[i].carriedBy].y - yOff(i) <= char[i].y - 20) {
+						char[i].y -= 20;
 					} else {
-						char[_loc2_].y = char[char[_loc2_].carriedBy].y - yOff(_loc2_);
+						char[i].y = char[char[i].carriedBy].y - yOff(i);
 					}
-					char[_loc2_].dire = Math.ceil(char[char[_loc2_].carriedBy].dire / 2) * 2;
+					char[i].dire = Math.ceil(char[char[i].carriedBy].dire / 2) * 2;
 				}
-				if (char[_loc2_].standingOn >= 0) {
-					char[_loc2_].y = char[char[_loc2_].standingOn].y - char[char[_loc2_].standingOn].h;
-					char[_loc2_].vy = char[char[_loc2_].standingOn].vy;
+				if (char[i].standingOn >= 0) {
+					char[i].y = char[char[i].standingOn].y - char[char[i].standingOn].h;
+					char[i].vy = char[char[i].standingOn].vy;
 				}
 				stopX = 0;
 				stopY = 0;
 				toBounce = false;
-				if (newTileHorizontal(_loc2_,1)) {
-					if (horizontalType(_loc2_,1,8) && char[_loc2_].charState == 10) {
+				if (newTileHorizontal(i,1)) {
+					if (horizontalType(i,1,8) && char[i].charState == 10) {
 						startCutScene();
 					}
-					if (horizontalProp(_loc2_,1,7,char[_loc2_].x,char[_loc2_].y) && char[_loc2_].charState >= 7) {
-						startDeath(_loc2_);
-					} else if (char[_loc2_].x > char[_loc2_].px && horizontalProp(_loc2_,1,3,char[_loc2_].x,char[_loc2_].y)) {
+					if (horizontalProp(i,1,7,char[i].x,char[i].y) && char[i].charState >= 7) {
+						startDeath(i);
+					} else if (char[i].x > char[i].px && horizontalProp(i,1,3,char[i].x,char[i].y)) {
 						stopX = 1;
 					}
 				}
-				if (newTileHorizontal(_loc2_,-1)) {
-					if (horizontalType(_loc2_,-1,8) && char[_loc2_].charState == 10) {
+				if (newTileHorizontal(i,-1)) {
+					if (horizontalType(i,-1,8) && char[i].charState == 10) {
 						startCutScene();
 					}
-					if (horizontalProp(_loc2_,-1,6,char[_loc2_].x,char[_loc2_].y) && char[_loc2_].charState >= 7) {
-						startDeath(_loc2_);
-					} else if (char[_loc2_].x < char[_loc2_].px && horizontalProp(_loc2_,-1,2,char[_loc2_].x,char[_loc2_].y)) {
+					if (horizontalProp(i,-1,6,char[i].x,char[i].y) && char[i].charState >= 7) {
+						startDeath(i);
+					} else if (char[i].x < char[i].px && horizontalProp(i,-1,2,char[i].x,char[i].y)) {
 						stopX = -1;
 					}
 				}
-				if (newTileDown(_loc2_)) {
-					if (verticalType(_loc2_,1,8,false) && char[_loc2_].charState == 10) {
+				if (newTileDown(i)) {
+					if (verticalType(i,1,8,false) && char[i].charState == 10) {
 						startCutScene();
 					}
-					if (verticalType(_loc2_,1,13,true)) {
+					if (verticalType(i,1,13,true)) {
 						toBounce = true;
-					} else if (verticalProp(_loc2_,1,5,char[_loc2_].px,char[_loc2_].y) && char[_loc2_].charState >= 7) {
-						startDeath(_loc2_);
-					} else if (char[_loc2_].y > char[_loc2_].py && verticalProp(_loc2_,1,1,char[_loc2_].px,char[_loc2_].y)) {
+					} else if (verticalProp(i,1,5,char[i].px,char[i].y) && char[i].charState >= 7) {
+						startDeath(i);
+					} else if (char[i].y > char[i].py && verticalProp(i,1,1,char[i].px,char[i].y)) {
 						stopY = 1;
 					}
 				}
-				if (newTileUp(_loc2_)) {
-					if (verticalType(_loc2_,-1,8,false) && char[_loc2_].charState == 10) {
+				if (newTileUp(i)) {
+					if (verticalType(i,-1,8,false) && char[i].charState == 10) {
 						startCutScene();
 					}
-					if (verticalProp(_loc2_,-1,4,char[_loc2_].x,char[_loc2_].y) && char[_loc2_].charState >= 7) {
-						startDeath(_loc2_);
-					} else if (char[_loc2_].y < char[_loc2_].py && verticalProp(_loc2_,-1,0,char[_loc2_].px,char[_loc2_].y)) {
+					if (verticalProp(i,-1,4,char[i].x,char[i].y) && char[i].charState >= 7) {
+						startDeath(i);
+					} else if (char[i].y < char[i].py && verticalProp(i,-1,0,char[i].px,char[i].y)) {
 						stopY = -1;
 					}
 				}
 				if (stopX != 0 && stopY != 0) {
 					if (stopY == 1) {
-						_loc3_ = Math.floor(char[_loc2_].y / 30) * 30;
+						y = Math.floor(char[i].y / 30) * 30;
 					}
 					if (stopY == -1) {
-						_loc3_ = Math.ceil((char[_loc2_].y - char[_loc2_].h) / 30) * 30 + char[_loc2_].h;
+						y = Math.ceil((char[i].y - char[i].h) / 30) * 30 + char[i].h;
 					}
-					if (!horizontalProp(_loc2_,stopX,stopX / 2 + 2.5,char[_loc2_].x,_loc3_)) {
+					if (!horizontalProp(i,stopX,stopX / 2 + 2.5,char[i].x,y)) {
 						stopX = 0;
 					} else {
 						if (stopX == 1) {
-							_loc9_ = Math.floor((char[_loc2_].x + char[_loc2_].w) / 30) * 30 - char[_loc2_].w;
+							x = Math.floor((char[i].x + char[i].w) / 30) * 30 - char[i].w;
 						}
 						if (stopX == -1) {
-							_loc9_ = Math.ceil((char[_loc2_].x - char[_loc2_].w) / 30) * 30 + char[_loc2_].w;
+							x = Math.ceil((char[i].x - char[i].w) / 30) * 30 + char[i].w;
 						}
-						if (!verticalProp(_loc2_,stopY,stopY / 2 + 0.5,_loc9_,char[_loc2_].y)) {
+						if (!verticalProp(i,stopY,stopY / 2 + 0.5,x,char[i].y)) {
 							stopY = 0;
 						}
 					}
 				}
 				if (stopX != 0) {
-					char[_loc2_].fricGoal = 0;
-					if (char[_loc2_].submerged >= 2) {
-						_loc4_ = _loc2_;
-						if (ifCarried(_loc2_)) {
-							_loc4_ = char[_loc2_].carriedBy;
+					char[i].fricGoal = 0;
+					if (char[i].submerged >= 2) {
+						j = i;
+						if (ifCarried(i)) {
+							j = char[i].carriedBy;
 						}
-						if (char[_loc4_].dire % 2 == 1) {
-							char[_loc4_].swimUp(0.14 / char[_loc4_].weight2);
-							if (char[_loc4_].standingOn >= 0) {
-								fallOff(_loc2_);
+						if (char[j].dire % 2 == 1) {
+							char[j].swimUp(0.14 / char[j].weight2);
+							if (char[j].standingOn >= 0) {
+								fallOff(i);
 							}
-							char[_loc4_].onob = false;
+							char[j].onob = false;
 						}
 					}
-					if (char[_loc2_].id == 5) {
-						startDeath(_loc2_);
+					if (char[i].id == 5) {
+						startDeath(i);
 					}
 					if (stopX == 1) {
-						_loc9_ = Math.floor((char[_loc2_].x + char[_loc2_].w) / 30) * 30 - char[_loc2_].w;
+						x = Math.floor((char[i].x + char[i].w) / 30) * 30 - char[i].w;
 					} else if (stopX == -1) {
-						_loc9_ = Math.ceil((char[_loc2_].x - char[_loc2_].w) / 30) * 30 + char[_loc2_].w;
+						x = Math.ceil((char[i].x - char[i].w) / 30) * 30 + char[i].w;
 					}
-					char[_loc2_].x = _loc9_;
-					char[_loc2_].vx = 0;
-					stopCarrierX(_loc2_,_loc9_);
+					char[i].x = x;
+					char[i].vx = 0;
+					stopCarrierX(i,x);
 				}
 				if (stopY != 0) {
 					if (stopY == 1) {
-						_loc3_ = Math.floor(char[_loc2_].y / 30) * 30;
-						if (!ifCarried(_loc2_)) cornerHangTimer = 0;
-						fallOff(_loc2_);
-						land(_loc2_,_loc3_,0);
-						land2(_loc2_,_loc3_);
-						checkButton(_loc2_);
+						y = Math.floor(char[i].y / 30) * 30;
+						if (!ifCarried(i)) cornerHangTimer = 0;
+						fallOff(i);
+						land(i,y,0);
+						land2(i,y);
+						checkButton(i);
 					} else if (stopY == -1) {
-						if (char[_loc2_].id == 5) {
-							startDeath(_loc2_);
+						if (char[i].id == 5) {
+							startDeath(i);
 						}
-						if (char[_loc2_].id == 3 && char[_loc2_].temp > 50) {
-							char[_loc2_].temp = 0;
+						if (char[i].id == 3 && char[i].temp > 50) {
+							char[i].temp = 0;
 						}
-						_loc3_ = Math.ceil((char[_loc2_].y - char[_loc2_].h) / 30) * 30 + char[_loc2_].h;
-						char[_loc2_].y = _loc3_;
-						char[_loc2_].vy = 0;
-						bumpHead(_loc2_);
-						if (ifCarried(_loc2_)) {
-							bumpHead(char[_loc2_].carriedBy);
+						y = Math.ceil((char[i].y - char[i].h) / 30) * 30 + char[i].h;
+						char[i].y = y;
+						char[i].vy = 0;
+						bumpHead(i);
+						if (ifCarried(i)) {
+							bumpHead(char[i].carriedBy);
 						}
 					}
-					stopCarrierY(_loc2_,_loc3_,stopY == 1);
+					stopCarrierY(i,y,stopY == 1);
 				}
-				if (newTileHorizontal(_loc2_,1) || newTileHorizontal(_loc2_,-1)) {
-					if (verticalType(_loc2_,1,13,true)) {
+				if (newTileHorizontal(i,1) || newTileHorizontal(i,-1)) {
+					if (verticalType(i,1,13,true)) {
 						toBounce = true;
 					}
-					if (horizontalProp(_loc2_,1,14,char[_loc2_].x,char[_loc2_].y) || horizontalProp(_loc2_,-1,14,char[_loc2_].x,char[_loc2_].y)) {
-						submerge(_loc2_);
+					if (horizontalProp(i,1,14,char[i].x,char[i].y) || horizontalProp(i,-1,14,char[i].x,char[i].y)) {
+						submerge(i);
 					}
-					if (horizontalType(_loc2_,1,15) || horizontalType(_loc2_,-1,15)) {
-						char[_loc2_].heated = 1;
+					if (horizontalType(i,1,15) || horizontalType(i,-1,15)) {
+						char[i].heated = 1;
 					}
-					checkButton(_loc2_);
+					checkButton(i);
 				}
-				if (newTileUp(_loc2_)) {
-					if (verticalProp(_loc2_,-1,14,char[_loc2_].x,char[_loc2_].y)) {
-						submerge(_loc2_);
+				if (newTileUp(i)) {
+					if (verticalProp(i,-1,14,char[i].x,char[i].y)) {
+						submerge(i);
 					}
-					if (verticalType(_loc2_,-1,15,false)) {
-						char[_loc2_].heated = 1;
-					}
-				}
-				if (newTileDown(_loc2_)) {
-					if (verticalProp(_loc2_,1,14,char[_loc2_].x,char[_loc2_].y)) {
-						submerge(_loc2_);
-					}
-					if (verticalType(_loc2_,1,15,false)) {
-						char[_loc2_].heated = 1;
+					if (verticalType(i,-1,15,false)) {
+						char[i].heated = 1;
 					}
 				}
-				if (char[_loc2_].submerged >= 2 && char[_loc2_].standingOn >= 0 && char[_loc2_].weight2 < 0) {
-					fallOff(_loc2_);
-				}
-				if (char[_loc2_].submerged >= 2) {
-					unsubmerge(_loc2_);
-				}
-				if (char[_loc2_].heated >= 1) {
-					heat(_loc2_);
-				} else if (char[_loc2_].id != 3 || char[_loc2_].temp <= 50) {
-					if (char[_loc2_].temp >= 0) {
-						char[_loc2_].temp -= char[_loc2_].heatSpeed;
-						char[_loc2_].justChanged = 2;
-					} else char[_loc2_].temp = 0;
-				}
-				if (char[_loc2_].heated == 2) {
-					char[_loc2_].heated = 0;
-				}
-				if (char[_loc2_].standingOn >= 0) {
-					_loc4_ = char[_loc2_].standingOn;
-					if (Math.abs(char[_loc2_].x - char[_loc4_].x) >= char[_loc2_].w + char[_loc4_].w || ifCarried(_loc4_)) {
-						fallOff(_loc2_);
+				if (newTileDown(i)) {
+					if (verticalProp(i,1,14,char[i].x,char[i].y)) {
+						submerge(i);
 					}
-				} else if (char[_loc2_].onob) {
-					if (!ifCarried(_loc2_) && char[_loc2_].standingOn == -1) {
-						char[_loc2_].y = Math.round(char[_loc2_].y / 30) * 30;
-					} if (!verticalProp(_loc2_,1,1,char[_loc2_].x,char[_loc2_].y)) {
-						char[_loc2_].onob = false;
-						aboveFallOff(_loc2_);
-						if (ifCarried(_loc2_)) {
+					if (verticalType(i,1,15,false)) {
+						char[i].heated = 1;
+					}
+				}
+				if (char[i].submerged >= 2 && char[i].standingOn >= 0 && char[i].weight2 < 0) {
+					fallOff(i);
+				}
+				if (char[i].submerged >= 2) {
+					unsubmerge(i);
+				}
+				if (char[i].heated >= 1) {
+					heat(i);
+				} else if (char[i].id != 3 || char[i].temp <= 50) {
+					if (char[i].temp >= 0) {
+						char[i].temp -= char[i].heatSpeed;
+						char[i].justChanged = 2;
+					} else char[i].temp = 0;
+				}
+				if (char[i].heated == 2) {
+					char[i].heated = 0;
+				}
+				if (char[i].standingOn >= 0) {
+					j = char[i].standingOn;
+					if (Math.abs(char[i].x - char[j].x) >= char[i].w + char[j].w || ifCarried(j)) {
+						fallOff(i);
+					}
+				} else if (char[i].onob) {
+					if (!ifCarried(i) && char[i].standingOn == -1) {
+						char[i].y = Math.round(char[i].y / 30) * 30;
+					} if (!verticalProp(i,1,1,char[i].x,char[i].y)) {
+						char[i].onob = false;
+						aboveFallOff(i);
+						if (ifCarried(i)) {
 							cornerHangTimer = 0;
 						}
 					}
-					if (char[_loc2_].charState >= 7 && verticalProp(_loc2_,1,5,char[_loc2_].x,char[_loc2_].y)) {
-						startDeath(_loc2_);
+					if (char[i].charState >= 7 && verticalProp(i,1,5,char[i].x,char[i].y)) {
+						startDeath(i);
 					}
 				}
 			}
-			if (char[_loc2_].charState >= 5) {
-				char[_loc2_].px = char[_loc2_].x;
-				char[_loc2_].py = char[_loc2_].y;
-				if (char[_loc2_].justChanged >= 1 && char[_loc2_].charState >= 5) {
+			if (char[i].charState >= 5) {
+				char[i].px = char[i].x;
+				char[i].py = char[i].y;
+				if (char[i].justChanged >= 1 && char[i].charState >= 5) {
 					if (toBounce) {
-						bounce(_loc2_);
+						bounce(i);
 					}
-					getCoin(_loc2_);
+					getCoin(i);
 				}
-				if (char[_loc2_].deathTimer < 30) {
-					if (char[_loc2_].id == 5 && char[_loc2_].deathTimer >= 7) {
-						char[_loc2_].deathTimer = 6;
+				if (char[i].deathTimer < 30) {
+					if (char[i].id == 5 && char[i].deathTimer >= 7) {
+						char[i].deathTimer = 6;
 					}
-					char[_loc2_].deathTimer--;
-					if (char[_loc2_].deathTimer <= 0) {
-						endDeath(_loc2_);
+					char[i].deathTimer--;
+					if (char[i].deathTimer <= 0) {
+						endDeath(i);
 					}
-				} else if (char[_loc2_].charState >= 7 && char[_loc2_].id < 35 && (char[_loc2_].justChanged >= 1 || levelTimer == 0)) {
-					setBody(_loc2_);
+				} else if (char[i].charState >= 7 && char[i].id < 35 && (char[i].justChanged >= 1 || levelTimer == 0)) {
+					setBody(i);
 				}
-				if (_loc2_ == HPRC2) {
+				if (i == HPRC2) {
 					if (!recover) {
 						HPRCText = '';
 					} else if (recoverTimer == 0) {
@@ -6941,7 +6902,7 @@ function draw() {
 					}
 					HPRCCrankRot = (recoverTimer * 12) * (Math.PI/180);
 					if (!recover && HPRCBubbleFrame <= 2) {
-						if (control < 10000 && near(control,_loc2_) && numberOfDead() >= 1 && char[control].hasArms) {
+						if (control < 10000 && near(control,i) && numberOfDead() >= 1 && char[control].hasArms) {
 							HPRCBubbleFrame = 1;
 						} else {
 							HPRCBubbleFrame = 0;
@@ -6949,12 +6910,12 @@ function draw() {
 					}
 					// TODO: make this not so hard coded.
 					if (HPRCBubbleFrame == 1) {
-						ctx.drawImage(svgHPRCBubble[0], char[_loc2_].x-svgHPRCBubble[0].width/2, char[_loc2_].y-128+bounceY(9, 30, _frameCount));
+						ctx.drawImage(svgHPRCBubble[0], char[i].x-svgHPRCBubble[0].width/2, char[i].y-128+bounceY(9, 30, _frameCount));
 					} else if (HPRCBubbleFrame == 2) {
-						ctx.drawImage(svgHPRCBubble[1], char[_loc2_].x-svgHPRCBubble[1].width/2, char[_loc2_].y-150);
+						ctx.drawImage(svgHPRCBubble[1], char[i].x-svgHPRCBubble[1].width/2, char[i].y-150);
 						drawHPRCBubbleCharImg(recover2, 1, 0);
 					} else if (HPRCBubbleFrame == 3) {
-						ctx.drawImage(svgHPRCBubble[2], char[_loc2_].x-svgHPRCBubble[2].width/2, char[_loc2_].y-150);
+						ctx.drawImage(svgHPRCBubble[2], char[i].x-svgHPRCBubble[2].width/2, char[i].y-150);
 						if (hprcBubbleAnimationTimer > 0) {
 							drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
 							drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
@@ -6974,18 +6935,18 @@ function draw() {
 						}
 					} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
 						if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
-						ctx.drawImage(svgHPRCBubble[3], char[_loc2_].x-svgHPRCBubble[3].width/2, char[_loc2_].y-120);
+						ctx.drawImage(svgHPRCBubble[3], char[i].x-svgHPRCBubble[3].width/2, char[i].y-120);
 						ctx.globalAlpha = 1;
-						ctx.drawImage(svgHPRCBubble[4], char[_loc2_].x-svgHPRCBubble[4].width/2, char[_loc2_].y-120);
+						ctx.drawImage(svgHPRCBubble[4], char[i].x-svgHPRCBubble[4].width/2, char[i].y-120);
 						hprcBubbleAnimationTimer++;
 					}
 				}
-				if (char[_loc2_].y > levelHeight * 30 + 160 && char[_loc2_].charState >= 7) {
-					startDeath(_loc2_);
+				if (char[i].y > levelHeight * 30 + 160 && char[i].charState >= 7) {
+					startDeath(i);
 				}
-				if (char[_loc2_].charState == 10 && char[_loc2_].justChanged >= 1) {
-					if (Math.abs(char[_loc2_].x - locations[0] * 30) <= 30 && Math.abs(char[_loc2_].y - (locations[1] * 30 + 10)) <= 50) {
-						if (!char[_loc2_].atEnd) {
+				if (char[i].charState == 10 && char[i].justChanged >= 1) {
+					if (Math.abs(char[i].x - locations[0] * 30) <= 30 && Math.abs(char[i].y - (locations[1] * 30 + 10)) <= 50) {
+						if (!char[i].atEnd) {
 							charsAtEnd++;
 							doorLightFadeDire[charsAtEnd-1] = 1;
 							if (charsAtEnd >= charCount2) {
@@ -6997,16 +6958,16 @@ function draw() {
 								}
 							}
 						}
-						char[_loc2_].atEnd = true;
+						char[i].atEnd = true;
 					} else {
-						if (char[_loc2_].atEnd) {
+						if (char[i].atEnd) {
 							doorLightFadeDire[charsAtEnd-1] = -1;
 							charsAtEnd--;
 						}
-						char[_loc2_].atEnd = false;
+						char[i].atEnd = false;
 					}
 				}
-				if (_loc2_ == control) setCamera();
+				if (i == control) setCamera();
 			}
 		}
 
@@ -7045,20 +7006,20 @@ function draw() {
 
 
 		qTimer--;
-		_loc9_ = - cameraX;
-		_loc3_ = - cameraY;
+		x = - cameraX;
+		y = - cameraY;
 		if (wipeTimer < 60) {
-			_loc9_ += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
-			_loc3_ += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
+			x += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
+			y += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
 		}
 		if (control < 10000) {
 			if (char[control].temp > 0 && char[control].temp <= 50) {
-				_loc9_ += (Math.random() - 0.5) * char[control].temp * 0.2;
-				_loc3_ += (Math.random() - 0.5) * char[control].temp * 0.2;
+				x += (Math.random() - 0.5) * char[control].temp * 0.2;
+				y += (Math.random() - 0.5) * char[control].temp * 0.2;
 			}
 		}
-		shakeX = _loc9_ - cameraX;
-		shakeY = _loc3_ - cameraY;
+		shakeX = x - cameraX;
+		shakeY = y - cameraY;
 		levelTimer++;
 	} else if (menuScreen == 5) {
 		// menuExitLevelCreator
@@ -7146,23 +7107,23 @@ function draw() {
 						setUndo();
 						myLevelChars[1].push([0,-1,-1,10]);
 						var newestCharIndex = myLevelChars[1].length-1;
-						var _loc2_ = myLevelChars[1][newestCharIndex][0];
+						var i = myLevelChars[1][newestCharIndex][0];
 						char.push(new Character(
-							_loc2_,
+							i,
 							0.00,
 							0.00,
 							70 + newestCharIndex * 40,
 							400 - newestCharIndex * 30,
 							myLevelChars[1][newestCharIndex][3],
-							charD[_loc2_][0],
-							charD[_loc2_][1],
-							charD[_loc2_][2],
-							charD[_loc2_][2],
-							charD[_loc2_][3],
-							charD[_loc2_][4],
-							charD[_loc2_][6],
-							charD[_loc2_][8],
-							_loc2_<35?charModels[_loc2_].defaultExpr:0
+							charD[i][0],
+							charD[i][1],
+							charD[i][2],
+							charD[i][2],
+							charD[i][3],
+							charD[i][4],
+							charD[i][6],
+							charD[i][8],
+							i<35?charModels[i].defaultExpr:0
 							));
 						char[char.length-1].placed = false;
 					}
@@ -7387,7 +7348,7 @@ function draw() {
 								ctx.translate(tlx + 15 * sc, tly + 28 * sc);
 								ctx.rotate(blockProperties[i][11]<7?-1:1);
 								ctx.translate(-tlx - 15 * sc, -tly - 28 * sc);
-								// ctx.translate(-tlx - (_loc1_+0.5) * scale, -tly - (_loc2_+0.9333) * scale);
+								// ctx.translate(-tlx - (rot+0.5) * scale, -tly - (i+0.9333) * scale);
 								ctx.drawImage(svgLevers[(blockProperties[i][11]-1)%6], tlx, tly, bs, bs);
 								ctx.restore();
 							}
@@ -7714,30 +7675,30 @@ function draw() {
 			if (Math.abs(_ymouse-lastClickY) > Math.abs(_xmouse-lastClickX)) shiftedXMouse = lastClickX;
 			else shiftedYMouse = lastClickY;
 		}
-		_loc9_ = Math.floor((shiftedXMouse - (330 - scale * levelWidth / 2)) / scale);
-		_loc3_ = Math.floor((shiftedYMouse - (240 - scale * levelHeight / 2)) / scale);
+		x = Math.floor((shiftedXMouse - (330 - scale * levelWidth / 2)) / scale);
+		y = Math.floor((shiftedYMouse - (240 - scale * levelHeight / 2)) / scale);
 		if (mouseIsDown) {
 			if (selectedTab == 2) {
 				if (tool <= 1 && mouseOnGrid()) {
-					if (tool == 1) _loc2_ = 0;
-					else _loc2_ = selectedTile;
-					if (_loc2_ >= 0 && _loc2_ < blockProperties.length) {
+					if (tool == 1) i = 0;
+					else i = selectedTile;
+					if (i >= 0 && i < blockProperties.length) {
 						var redraw = false;
-						if (myLevel[1][_loc3_][_loc9_] != _loc2_) {
-							myLevel[1][_loc3_][_loc9_] = _loc2_;
+						if (myLevel[1][y][x] != i) {
+							myLevel[1][y][x] = i;
 							redraw = true;
 						}
-						if (_loc2_ == 6 && (_loc9_ != LCEndGateX || _loc3_ != LCEndGateY)) {
+						if (i == 6 && (x != LCEndGateX || y != LCEndGateY)) {
 							if (LCEndGateY != -1) myLevel[1][LCEndGateY][LCEndGateX] = 0;
-							LCEndGateX = _loc9_;
-							LCEndGateY = _loc3_;
+							LCEndGateX = x;
+							LCEndGateY = y;
 							setEndGateLights();
 							redraw = true;
 						}
-						if (_loc2_ == 12 && (_loc9_ != LCCoinX || _loc3_ != LCCoinY)) {
+						if (i == 12 && (x != LCCoinX || y != LCCoinY)) {
 							if (LCCoinY != -1) myLevel[1][LCCoinY][LCCoinX] = 0;
-							LCCoinX = _loc9_;
-							LCCoinY = _loc3_;
+							LCCoinX = x;
+							LCCoinY = y;
 							redraw = true;
 						}
 						if (redraw) updateLCtiles();
@@ -7745,9 +7706,9 @@ function draw() {
 				}
 			}
 			if ((tool == 2 || tool == 5 && !copied) && LCRect[0] != -1 && mouseOnGrid()) {
-				if (_loc9_ != LCRect[2] || _loc3_ != LCRect[3]) {
-					LCRect[2] = Math.min(Math.max(_loc9_,0),levelWidth - 1);
-					LCRect[3] = Math.min(Math.max(_loc3_,0),levelHeight - 1);
+				if (x != LCRect[2] || y != LCRect[3]) {
+					LCRect[2] = Math.min(Math.max(x,0),levelWidth - 1);
+					LCRect[3] = Math.min(Math.max(y,0),levelHeight - 1);
 				}
 			}
 		}
@@ -7756,39 +7717,39 @@ function draw() {
 		if (selectedTab == 2 && mouseOnGrid()) {
 			if (tool == 6) {
 				// levelCreator.rectSelect.clear();
-				var _loc13_;
-				var _loc12_;
+				var y2;
+				var y3;
 				ctx.lineWidth = 2 * scale / 9;
 				if (closeToEdgeY()) {
 					ctx.strokeStyle = '#008000';
-					_loc13_ = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-					_loc12_ = 0;
+					y2 = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+					y3 = 0;
 				} else {
 					ctx.strokeStyle = '#800000';
-					_loc13_ = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-					_loc12_ = 0.5;
+					y2 = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+					y3 = 0.5;
 				}
 				ctx.beginPath();
-				ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
-				ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (_loc13_ + _loc12_));
+				ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
+				ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
 				ctx.stroke();
 			} else if (tool == 7) {
 				// levelCreator.rectSelect.clear();
-				var _loc14_;
-				var _loc10_;
+				var x2;
+				var x3;
 				ctx.lineWidth = 2 * scale / 9;
 				if (closeToEdgeX()) {
 					ctx.strokeStyle = '#008000';
-					_loc14_ = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-					_loc10_ = 0;
+					x2 = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+					x3 = 0;
 				} else {
 					ctx.strokeStyle = '#800000';
-					_loc14_ = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-					_loc10_ = 0.5;
+					x2 = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+					x3 = 0.5;
 				}
 				ctx.beginPath();
-				ctx.moveTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 - scale * levelHeight / 2);
-				ctx.lineTo(330 - scale * levelWidth / 2 + scale * (_loc14_ + _loc10_),240 + scale * levelHeight / 2);
+				ctx.moveTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 - scale * levelHeight / 2);
+				ctx.lineTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 + scale * levelHeight / 2);
 				ctx.stroke();
 			}
 		}
@@ -7796,15 +7757,15 @@ function draw() {
 		// 	levelCreator.rectSelect.clear();
 		// }
 
-		// for (var _loc2_ = 0; _loc2_ < 6; _loc2_++) {
-		// 	_loc3_ = _loc2_ * 40;
-		// 	if (_loc2_ > selectedTab) {
-		// 		_loc3_ += 300;
+		// for (var i = 0; i < 6; i++) {
+		// 	y = i * 40;
+		// 	if (i > selectedTab) {
+		// 		y += 300;
 		// 	}
-		// 	if (Math.abs(levelCreator.sideBar["tab" + (_loc2_ + 1)]._y - _loc3_) < 0.5) {
-		// 		levelCreator.sideBar["tab" + (_loc2_ + 1)]._y = _loc3_;
+		// 	if (Math.abs(levelCreator.sideBar["tab" + (i + 1)]._y - y) < 0.5) {
+		// 		levelCreator.sideBar["tab" + (i + 1)]._y = y;
 		// 	} else {
-		// 		levelCreator.sideBar["tab" + (_loc2_ + 1)]._y += (_loc3_ - levelCreator.sideBar["tab" + (_loc2_ + 1)]._y) * 0.2;
+		// 		levelCreator.sideBar["tab" + (i + 1)]._y += (y - levelCreator.sideBar["tab" + (i + 1)]._y) * 0.2;
 		// 	}
 		// }
 
