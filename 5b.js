@@ -1772,6 +1772,7 @@ var exploreTab = 0;
 var explorePage = 0;
 var explorePageLevels = [];
 var exploreLevelPageLevel;
+var exploreLoading = false;
 var myLevel;
 var myLevelChars;
 var myLevelDialogue;
@@ -6048,36 +6049,20 @@ function exploreDrawThumbTile(context, x, y, tile, scale) {
 	}
 }
 
+function drawExploreLoadingText() {
+	ctx.font = 'bold 35px Helvetica';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('loading...', cwidth/2, cheight/2);
+}
+
 function drawArrow(x, y, w, h, dir) {
 	ctx.beginPath();
 	ctx.moveTo(x + w*(dir==1?1:(dir==3?0:0.5)), y + h*(dir==2?1:(dir==0?0:0.5)));
 	ctx.lineTo(x + w*(dir!=1), y + h*(dir!=2));
 	ctx.lineTo(x + w*(dir==3), y + h*(dir==0));
 	ctx.fill();
-	// // 0 - up
-	// ctx.beginPath();
-	// ctx.moveTo(x+w/2, y);
-	// ctx.moveTo(x+w, y+h);
-	// ctx.moveTo(x, y+h);
-	// ctx.fill();
-	// // 1 - right
-	// ctx.beginPath();
-	// ctx.moveTo(x+w, y+h/2);
-	// ctx.moveTo(x, y+h);
-	// ctx.moveTo(x, y);
-	// ctx.fill();
-	// // 2 - down
-	// ctx.beginPath();
-	// ctx.moveTo(x+w/2, y+h);
-	// ctx.moveTo(x+w, y);
-	// ctx.moveTo(x, y);
-	// ctx.fill();
-	// // 3 - left
-	// ctx.beginPath();
-	// ctx.moveTo(x, y+h/2);
-	// ctx.moveTo(x+w, y+h);
-	// ctx.moveTo(x+w, y);
-	// ctx.fill();
 }
 
 
@@ -7879,9 +7864,12 @@ function draw() {
 		}
 
 		// Levels
-		// explorePageLevels[0]
-		for (var i = 0; i < explorePageLevels.length; i++) {
-			drawExploreLevel(232 * (i%4) + 28, Math.floor(i/4)*182 + 100, i);
+		if (exploreLoading) {
+			drawExploreLoadingText();
+		} else {
+			for (var i = 0; i < explorePageLevels.length; i++) {
+				drawExploreLevel(232 * (i%4) + 28, Math.floor(i/4)*182 + 100, i);
+			}
 		}
 
 
@@ -7916,25 +7904,29 @@ function draw() {
 		ctx.fillStyle = '#505050';
 		ctx.fillRect(0, 0, cwidth, cheight);
 
-		ctx.textBaseline = 'top';
-		ctx.textAlign = 'left';
-		ctx.fillStyle = '#ffffff';
-		ctx.font = '38px Helvetica';
-		ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
+		if (exploreLoading) {
+			drawExploreLoadingText();
+		} else {
+			ctx.textBaseline = 'top';
+			ctx.textAlign = 'left';
+			ctx.fillStyle = '#ffffff';
+			ctx.font = '38px Helvetica';
+			ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
 
-		ctx.fillStyle = '#999999';
-		ctx.font = '18px Helvetica';
-		ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 31.85, 66.1);
+			ctx.fillStyle = '#999999';
+			ctx.font = '18px Helvetica';
+			ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 31.85, 66.1);
 
-		ctx.fillStyle = '#ffffff';
-		ctx.font = '20px Helvetica';
-		wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
+			ctx.fillStyle = '#ffffff';
+			ctx.font = '20px Helvetica';
+			wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
 
-		ctx.fillStyle = '#cccccc';
-		// ctx.fillRect(30, 98, 368, 207);
-		ctx.drawImage(thumbBig, 30, 98, 384, 216)
+			ctx.fillStyle = '#cccccc';
+			// ctx.fillRect(30, 98, 368, 207);
+			ctx.drawImage(thumbBig, 30, 98, 384, 216)
 
-		drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
+			drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
+		}
 
 		drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
 	}
@@ -8015,13 +8007,15 @@ function rAF60fps() {
 // Explore API Stuff
 
 function getLevelPage(p) {
+	exploreLoading = true;
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=0', {method: 'GET'})
-	.then(response => { response.json().then(data => {explorePageLevels = data; setExploreThumbs()}) })
+	.then(response => { response.json().then(data => { explorePageLevels = data; setExploreThumbs(); exploreLoading = false }) })
 	.catch(err => { console.log(err) });
 }
 
 function getExploreLevel(id) {
+	exploreLoading = true;
 	return fetch('https://5beam.zelo.dev/api/level?id='+id, {method: 'GET'})
-	.then(response => { response.json().then(data => { exploreLevelPageLevel = data; drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4); }) })
+	.then(response => { response.json().then(data => { exploreLevelPageLevel = data; drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4); exploreLoading = false }) })
 	.catch(err => { console.log(err) });
 }
