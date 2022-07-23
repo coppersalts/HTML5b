@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 5.1.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 5.1.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -5984,11 +5984,16 @@ function setExploreThumbs() {
 	for (var i = 0; i < explorePageLevels.length; i++) {
 		thumbsctx[i].clearRect(0, 0, thumbs[i].width * pixelRatio / 0.2, thumbs[i].height * pixelRatio / 0.2);
 
-		var lines = explorePageLevels[i].data.split('\r\n').splice(1);
-		if (lines.length == 1) lines = explorePageLevels[i].data.split('\n').splice(1);
+		var lines = explorePageLevels[i].data.split('\r\n');
+		if (lines.length == 0) lines = explorePageLevels[i].data.split('\n');
+		// skip past any blank lines at the start
+		var j = 1;
+		while (j < lines.length && lines[j] == '') j++;
+		lines = lines.splice(j);
 		var thumbLevelHead = lines[1].split(','); 
 		var thumbLevelW = parseInt(thumbLevelHead[0]);
 		var thumbLevelH = parseInt(thumbLevelHead[1]);
+		console.log(thumbLevelHead);
 		thumbsctx[i].drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
 
 		if (thumbLevelHead[4]=='H') {
