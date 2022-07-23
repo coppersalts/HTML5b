@@ -5,9 +5,9 @@
 // TODO: go through all the todo's I've put throughout this file.
 // TODO: rename some functions
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
-// TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
+// TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-var version = 'beta 5.1.1'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 5.1.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -25,6 +25,7 @@ var osc4, osctx4;
  // explore level thumbnails
 var thumbs = new Array(8);
 var thumbsctx = new Array(8);
+var thumbBig, thumbBigctx;
 
 var _xmouse = 0;
 var _ymouse = 0;
@@ -5959,7 +5960,7 @@ function drawExploreLevel(x, y, i) {
 	ctx.fillRect(x, y, 208, 155);
 	// ctx.fillStyle = '#cccccc';
 	// ctx.fillRect(x+8, y+8, 192, 108);
-	ctx.drawImage(thumbs[i], x+8, y+8, 192, 108)
+	ctx.drawImage(thumbs[i], x+8, y+8, 192, 108);
 
 	ctx.fillStyle = '#ffffff';
 	ctx.textBaseline = 'top';
@@ -5982,37 +5983,40 @@ function setExplorePage(page) {
 
 function setExploreThumbs() {
 	for (var i = 0; i < explorePageLevels.length; i++) {
-		thumbsctx[i].clearRect(0, 0, thumbs[i].width * pixelRatio / 0.2, thumbs[i].height * pixelRatio / 0.2);
+		drawExploreThumb(thumbsctx[i], thumbs[i].width, explorePageLevels[i].data, 0.2);
+	}
+}
 
-		var lines = explorePageLevels[i].data.split('\r\n');
-		if (lines.length == 0) lines = explorePageLevels[i].data.split('\n');
-		// skip past any blank lines at the start
-		var j = 1;
-		while (j < lines.length && lines[j] == '') j++;
-		lines = lines.splice(j);
-		var thumbLevelHead = lines[1].split(','); 
-		var thumbLevelW = parseInt(thumbLevelHead[0]);
-		var thumbLevelH = parseInt(thumbLevelHead[1]);
-		console.log(thumbLevelHead);
-		thumbsctx[i].drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
+function drawExploreThumb(context, size, data, scale) {  // size is the width
+	context.clearRect(0, 0, size * pixelRatio / scale, size * 0.5625 * pixelRatio / scale);
 
-		if (thumbLevelHead[4]=='H') {
-			for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
-				for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
-					exploreDrawThumbTile(thumbsctx[i], x, y, 111 * tileIDFromChar(lines[y+2].charCodeAt(x * 2)) + tileIDFromChar(lines[y+2].charCodeAt(x * 2 + 1)));
-				}
+	var lines = data.split('\r\n');
+	if (lines.length == 1) lines = data.split('\n');
+	// skip past any blank lines at the start
+	var j = 1;
+	while (j < lines.length && lines[j] == '') j++;
+	lines = lines.splice(j);
+	var thumbLevelHead = lines[1].split(','); 
+	var thumbLevelW = parseInt(thumbLevelHead[0]);
+	var thumbLevelH = parseInt(thumbLevelHead[1]);
+	context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
+
+	if (thumbLevelHead[4]=='H') {
+		for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
+			for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
+				exploreDrawThumbTile(context, x, y, 111 * tileIDFromChar(lines[y+2].charCodeAt(x * 2)) + tileIDFromChar(lines[y+2].charCodeAt(x * 2 + 1)), scale);
 			}
-		} else {
-			for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
-				for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
-					exploreDrawThumbTile(thumbsctx[i], x, y, tileIDFromChar(lines[y+2].charCodeAt(x)));
-				}
+		}
+	} else {
+		for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
+			for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
+				exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y+2].charCodeAt(x)), scale);
 			}
 		}
 	}
 }
 
-function exploreDrawThumbTile(context, x, y, tile) {
+function exploreDrawThumbTile(context, x, y, tile, scale) {
 	if (blockProperties[tile][16] > 0) {
 		if (blockProperties[tile][16] == 1) {
 			if (blockProperties[tile][11] > 0 && typeof svgLevers[(blockProperties[tile][11]-1)%6] !== 'undefined') {
@@ -6329,7 +6333,6 @@ function keyup(event){
 }
 
 // https://stackoverflow.com/questions/2176861/javascript-get-clipboard-data-on-paste-event-cross-browser
-// ni li ike meso
 function handlePaste(e) {
 	if (canvas.getAttribute('contenteditable')) {
 		var clipboardData, pastedData;
@@ -6378,6 +6381,11 @@ function setup() {
 		thumbsctx[i] = thumbs[i].getContext('2d');
 		thumbsctx[i].scale(pixelRatio*0.2, pixelRatio*0.2);
 	}
+	thumbBig = document.createElement('canvas');
+	thumbBig.width = Math.floor(384 * pixelRatio);
+	thumbBig.height = Math.floor(216 * pixelRatio);
+	thumbBigctx = thumbBig.getContext('2d');
+	thumbBigctx.scale(pixelRatio*0.4, pixelRatio*0.4);
 
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
@@ -7923,7 +7931,8 @@ function draw() {
 		wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
 
 		ctx.fillStyle = '#cccccc';
-		ctx.fillRect(30, 98, 362.4, 204.55);
+		// ctx.fillRect(30, 98, 368, 207);
+		ctx.drawImage(thumbBig, 30, 98, 384, 216)
 
 		drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
 
@@ -8013,6 +8022,6 @@ function getLevelPage(p) {
 
 function getExploreLevel(id) {
 	return fetch('https://5beam.zelo.dev/api/level?id='+id, {method: 'GET'})
-	.then(response => { response.json().then(data => exploreLevelPageLevel = data) })
+	.then(response => { response.json().then(data => { exploreLevelPageLevel = data; drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4); }) })
 	.catch(err => { console.log(err) });
 }
