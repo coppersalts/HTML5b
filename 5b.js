@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: if possible, "cache some things as bitmaps" like in flash for better performance.
 
-var version = 'beta 5.0.0'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 5.1.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -2132,6 +2132,7 @@ function menuExplore() {
 function gotoExploreLevelPage(locOnPage) {
 	menuScreen = 7;
 	exploreLevelPageLevel = explorePageLevels[locOnPage];
+	getExploreLevel(explorePageLevels[locOnPage].id);
 }
 
 function menuExploreBack() {
@@ -2140,7 +2141,7 @@ function menuExploreBack() {
 }
 
 function playExploreLevel() {
-	readExploreLevelString(exploreLevelPageLevel.levels[0]);
+	readExploreLevelString(exploreLevelPageLevel.data);
 	testLevelCreator();
 	playMode = 3;
 }
@@ -5602,8 +5603,8 @@ function readExploreLevelString(str) {
 	myLevelDialogue = new Array(3);
 	myLevelInfo = {name: 'Untitled'}
 
-	let lines = str.split('\r\n');
-	if (lines.length == 1) lines = str.split('\n');
+	let lines = str.split('\r\n').splice(1);
+	if (lines.length == 1) lines = str.split('\n').splice(1);
 	let i = 0;
 
 	// skip past any blank lines at the start
@@ -5964,27 +5965,28 @@ function drawExploreLevel(x, y, i) {
 	ctx.textBaseline = 'top';
 	ctx.textAlign = 'left';
 	ctx.font = '20px Helvetica';
-	ctx.fillText(explorePageLevels[i].name, x+6.35, y+119.4);
+	ctx.fillText(explorePageLevels[i].title, x+6.35, y+119.4);
 
 	ctx.fillStyle = '#999999';
 	ctx.font = '10px Helvetica';
-	ctx.fillText('by ' + explorePageLevels[i].author, x+7, y+138.3);
+	ctx.fillText('by ' + explorePageLevels[i].creator.name, x+7, y+138.3);
 
 	// explorePageLevels[i]
 }
 
 function setExplorePage(page) {
 	explorePage = page;
-	explorePageLevels = getLevelPage(explorePage);
-	setExploreThumbs();
+	getLevelPage(explorePage);
+	// setExploreThumbs();
 }
 
 function setExploreThumbs() {
 	for (var i = 0; i < explorePageLevels.length; i++) {
 		thumbsctx[i].clearRect(0, 0, thumbs[i].width * pixelRatio / 0.2, thumbs[i].height * pixelRatio / 0.2);
 
-		var lines = explorePageLevels[i].levels[0].split('\n');
-		var thumbLevelHead = lines[1].split(',');
+		var lines = explorePageLevels[i].data.split('\r\n').splice(1);
+		if (lines.length == 1) lines = explorePageLevels[i].data.split('\n').splice(1);
+		var thumbLevelHead = lines[1].split(','); 
 		var thumbLevelW = parseInt(thumbLevelHead[0]);
 		var thumbLevelH = parseInt(thumbLevelHead[1]);
 		thumbsctx[i].drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
@@ -7905,11 +7907,11 @@ function draw() {
 		ctx.textAlign = 'left';
 		ctx.fillStyle = '#ffffff';
 		ctx.font = '38px Helvetica';
-		ctx.fillText(exploreLevelPageLevel.name, 29.15, 27.4);
+		ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
 
 		ctx.fillStyle = '#999999';
 		ctx.font = '18px Helvetica';
-		ctx.fillText('by ' + exploreLevelPageLevel.author, 31.85, 66.1);
+		ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 31.85, 66.1);
 
 		ctx.fillStyle = '#ffffff';
 		ctx.font = '20px Helvetica';
@@ -7989,4 +7991,23 @@ function rAF60fps() {
 	// Added this line to fix unnecessary lag sometimes caused by the framerate limiter. 
 	if (lastFrameReq - then > interval) then = now;
 	lastFrameReq = now;
+}
+
+
+
+
+
+
+// Explore API Stuff
+
+function getLevelPage(p) {
+	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=0', {method: 'GET'})
+	.then(response => { response.json().then(data => {explorePageLevels = data; setExploreThumbs()}) })
+	.catch(err => { console.log(err) });
+}
+
+function getExploreLevel(id) {
+	return fetch('https://5beam.zelo.dev/api/level?id='+id, {method: 'GET'})
+	.then(response => { response.json().then(data => exploreLevelPageLevel = data) })
+	.catch(err => { console.log(err) });
 }
