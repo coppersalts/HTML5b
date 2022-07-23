@@ -21,7 +21,7 @@ var osc1, osctx1;
 var osc2, osctx2;
 var osc3, osctx3;
 var osc4, osctx4;
- // explore level thumbnails
+// explore level thumbnails
 var thumbs = new Array(8);
 var thumbsctx = new Array(8);
 var thumbBig, thumbBigctx;
@@ -3106,15 +3106,15 @@ function drawCharacters() {
 					char[i].x+charModels[char[i].id].torsomat.tx,
 					char[i].y+charModels[char[i].id].torsomat.ty
 					);
-				for (var i = 0; i < modelFrame.length; i++) {
-					if (char[i].frame > 9 && modelFrame[i].type == 'armroot') {
-						var handOff = modelFrame[i].id==0?10:20;
+				for (var j = 0; j < modelFrame.length; j++) {
+					if (char[i].frame > 9 && modelFrame[j].type == 'armroot') {
+						var handOff = modelFrame[j].id==0?10:20;
 						var handX = -charModels[char[i].id].torsomat.tx + (char[HPRC2].x - char[i].x) + hprcCrankPos.x + handOff * Math.cos(Math.PI * recoverTimer / 15 - 0.2);
 						var handY = -charModels[char[i].id].torsomat.ty + (char[HPRC2].y - char[i].y) + hprcCrankPos.y + handOff * Math.sin(Math.PI * recoverTimer / 15 - 0.2);
 						ctx.strokeStyle = '#000000';
 						ctx.lineWidth = 1.5;
 						ctx.beginPath();
-						ctx.moveTo(modelFrame[i].pos.x, modelFrame[i].pos.y);
+						ctx.moveTo(modelFrame[j].pos.x, modelFrame[j].pos.y);
 						ctx.lineTo(handX, handY);
 						ctx.stroke();
 
@@ -3124,24 +3124,24 @@ function drawCharacters() {
 						ctx.fill();
 						continue;
 					}
-					var img = svgBodyParts[modelFrame[i].bodypart];
-					if (modelFrame[i].type == 'body') img = svgChars[char[i].id];
+					var img = svgBodyParts[modelFrame[j].bodypart];
+					if (modelFrame[j].type == 'body') img = svgChars[char[i].id];
 
 					ctx.save();
 					ctx.transform(
-						modelFrame[i].mat.a,
-						modelFrame[i].mat.b,
-						modelFrame[i].mat.c,
-						modelFrame[i].mat.d,
-						modelFrame[i].mat.tx,
-						modelFrame[i].mat.ty+(modelFrame[i].type != 'anim'?runbob:0)
+						modelFrame[j].mat.a,
+						modelFrame[j].mat.b,
+						modelFrame[j].mat.c,
+						modelFrame[j].mat.d,
+						modelFrame[j].mat.tx,
+						modelFrame[j].mat.ty+(modelFrame[j].type != 'anim'?runbob:0)
 					);
-					if (modelFrame[i].type == 'anim') {
-						img = svgBodyParts[bodyPartAnimations[modelFrame[i].anim].bodypart];
-						var bpanimframe = modelFrame[i].loop ? ((char[i].poseTimer+modelFrame[i].offset)%bodyPartAnimations[modelFrame[i].anim].frames.length) : Math.min((char[i].poseTimer+modelFrame[i].offset),bodyPartAnimations[modelFrame[i].anim].frames.length-1);
-						var mat = bodyPartAnimations[modelFrame[i].anim].frames[bpanimframe];
+					if (modelFrame[j].type == 'anim') {
+						img = svgBodyParts[bodyPartAnimations[modelFrame[j].anim].bodypart];
+						var bpanimframe = modelFrame[j].loop ? ((char[i].poseTimer+modelFrame[j].offset)%bodyPartAnimations[modelFrame[j].anim].frames.length) : Math.min((char[i].poseTimer+modelFrame[j].offset),bodyPartAnimations[modelFrame[j].anim].frames.length-1);
+						var mat = bodyPartAnimations[modelFrame[j].anim].frames[bpanimframe];
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
-					} else if (modelFrame[i].type == 'dia') {
+					} else if (modelFrame[j].type == 'dia') {
 						var dmf = 0;
 						if (cutScene == 1) {
 							var expr = char[i].expr + charModels[char[i].id].mouthType*2;
