@@ -7,7 +7,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-var version = 'beta 5.1.1*'; // putting this up here so I can edit the text on the title screen more easily.
+var version = 'beta 5.1.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 var canvas;
 var ctx;
@@ -2134,7 +2134,9 @@ function menuExplore() {
 function gotoExploreLevelPage(locOnPage) {
 	menuScreen = 7;
 	exploreLevelPageLevel = explorePageLevels[locOnPage];
-	getExploreLevel(explorePageLevels[locOnPage].id);
+	drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
+	// We already have this data, so we don't need to load it again.
+	// getExploreLevel(explorePageLevels[locOnPage].id);
 }
 
 function menuExploreBack() {
@@ -7881,7 +7883,7 @@ function draw() {
 		ctx.fillText(explorePage+1, cwidth/2, 460);
 
 		// previous page
-		if (explorePage <= 0) ctx.fillStyle = '#505050';
+		if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
 		else if (onRect(_xmouse,_ymouse,240,460,25,30)) {
 			ctx.fillStyle = '#cccccc';
 			onButton = true;
@@ -7891,7 +7893,8 @@ function draw() {
 		drawArrow(240,460,25,30,3);
 
 		// next page
-		if (onRect(_xmouse,_ymouse,720,460,25,30)){
+		if (exploreLoading) ctx.fillStyle = '#505050';
+		else if (onRect(_xmouse,_ymouse,720,460,25,30)){
 			ctx.fillStyle = '#cccccc';
 			onButton = true;
 			if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage+1);
