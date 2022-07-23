@@ -1772,6 +1772,7 @@ var exploreTab = 0;
 var explorePage = 0;
 var explorePageLevels = [];
 var exploreLevelPageLevel;
+var exploreLevelTitlesTruncated;
 var exploreLoading = false;
 var myLevel;
 var myLevelChars;
@@ -2631,6 +2632,39 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 		ctx.fillText(lines[i], x, y + lineHeight*i);
 	}
 	return lines;
+}
+
+// https://stackoverflow.com/questions/10508988/html-canvas-text-overflow-ellipsis
+function binarySearch({max, getValue, match}) {
+	let min = 0;
+
+	while (min <= max) {
+		let guess = Math.floor((min + max) / 2);
+		const compareVal = getValue(guess);
+
+		if (compareVal === match) return guess;
+		if (compareVal < match) min = guess + 1;
+		else max = guess - 1;
+	}
+
+	return max;
+}
+
+function fitString(context, str, maxWidth) {
+	let width = context.measureText(str).width;
+	const ellipsis = '…';
+	const ellipsisWidth = context.measureText(ellipsis).width;
+	if (width <= maxWidth || width <= ellipsisWidth) {
+		return str;
+	}
+
+	const index = binarySearch({
+		max: str.length,
+		getValue: guess => context.measureText(str.substring(0, guess)).width,
+		match: maxWidth - ellipsisWidth
+	});
+
+	return str.substring(0, index) + ellipsis;
 }
 
 
@@ -5951,6 +5985,12 @@ function drawRemoveButton(x, y, s, p) {
 	ctx.stroke();
 }
 
+function truncateLevelTitles() {
+	ctx.font = '20px Helvetica';
+	exploreLevelTitlesTruncated = new Array(explorePageLevels.length);
+	for (var i = 0; i < exploreLevelTitlesTruncated.length; i++) exploreLevelTitlesTruncated[i] = fitString(ctx, explorePageLevels[i].title, 195.3);
+}
+
 function drawExploreLevel(x, y, i) {
 	if (onRect(_xmouse, _ymouse, x, y, 208, 155)) {
 		onButton = true;
@@ -5969,7 +6009,9 @@ function drawExploreLevel(x, y, i) {
 	ctx.textBaseline = 'top';
 	ctx.textAlign = 'left';
 	ctx.font = '20px Helvetica';
-	ctx.fillText(explorePageLevels[i].title, x+6.35, y+119.4);
+	ctx.fillText(exploreLevelTitlesTruncated[i], x+6.35, y+119.4);
+	// ctx.fillText(fitString(ctx, explorePageLevels[i].title, 195.3), x+6.35, y+119.4);
+	// fitString(ctx, explorePageLevels[i].title, 142.3);
 
 	ctx.fillStyle = '#999999';
 	ctx.font = '10px Helvetica';
@@ -8012,7 +8054,7 @@ function rAF60fps() {
 function getLevelPage(p) {
 	exploreLoading = true;
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=0', {method: 'GET'})
-	.then(response => { response.json().then(data => { explorePageLevels = data; setExploreThumbs(); exploreLoading = false }) })
+	.then(response => { response.json().then(data => { explorePageLevels = data; setExploreThumbs(); truncateLevelTitles(); exploreLoading = false }) })
 	.catch(err => { console.log(err) });
 }
 
