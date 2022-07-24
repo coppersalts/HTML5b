@@ -5602,12 +5602,12 @@ function readExploreLevelString(str) {
 	myLevelDialogue = new Array(3);
 	myLevelInfo = {name: 'Untitled'}
 
-	let lines = str.split('\r\n').splice(1);
-	if (lines.length == 1) lines = str.split('\n').splice(1);
+	let lines = str.split('\r\n');
+	if (lines.length == 1) lines = str.split('\n');
 	let i = 0;
 
 	// skip past any blank lines at the start
-	while (i < lines.length && lines[i] == '') i++;
+	while (i < lines.length && (lines[i] == '' || lines[i] == 'loadedLevels=')) i++;
 	if (i >= lines.length) return;
 	myLevelInfo.name = lines[i];
 	i++;
@@ -5999,8 +5999,8 @@ function drawExploreThumb(context, size, data, scale) {  // size is the width
 	var lines = data.split('\r\n');
 	if (lines.length == 1) lines = data.split('\n');
 	// skip past any blank lines at the start
-	var j = 1;
-	while (j < lines.length && lines[j] == '') j++;
+	var j = 0;
+	while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
 	lines = lines.splice(j);
 	var thumbLevelHead = lines[1].split(','); 
 	var thumbLevelW = parseInt(thumbLevelHead[0]);
