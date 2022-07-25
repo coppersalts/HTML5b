@@ -1727,8 +1727,12 @@ var reorderDiaDown = false;
 var levelLoadString = '';
 var lcMessageTimer = 0;
 var lcMessageText = '';
-const exploreTabNames = ['Featured', 'New', 'Top', '🔍'];
-const exploreTabWidths = [190, 115, 115, 45];
+// const exploreTabNames = ['Featured', 'New', 'Top', '🔍'];
+// const exploreTabWidths = [190, 115, 115, 45];
+// const exploreTabNames = ['Levels', 'Levelpacks'];
+// const exploreTabWidths = [125, 200];
+const exploreTabNames = ['Levels'];
+const exploreTabWidths = [125];
 var power = 1;
 var jumpPower = 11;
 var qPress = false;
@@ -1771,6 +1775,8 @@ var exploreTab = 0;
 var explorePage = 0;
 var explorePageLevels = [];
 var exploreLevelPageLevel;
+var exploreUser;
+var loggedInExploreUser5beamID = -1;
 var exploreLevelTitlesTruncated;
 var exploreLoading = false;
 var myLevel;
@@ -2133,8 +2139,12 @@ function menuExplore() {
 
 function gotoExploreLevelPage(locOnPage) {
 	menuScreen = 7;
-	exploreLevelPageLevel = explorePageLevels[locOnPage];
-	drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
+	if (exploreTab == 0) {
+		exploreLevelPageLevel = explorePageLevels[locOnPage];
+		drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
+	} else {
+		getExploreLevelpack(explorePageLevels[locOnPage].id);
+	}
 	// We already have this data, so we don't need to load it again.
 	// getExploreLevel(explorePageLevels[locOnPage].id);
 }
@@ -2148,6 +2158,12 @@ function playExploreLevel() {
 	readExploreLevelString(exploreLevelPageLevel.data);
 	testLevelCreator();
 	playMode = 3;
+}
+
+function logInExplore() {
+	loggedInExploreUser5beamID = -1;
+	newWindow = window.open('https://discord.com/api/oauth2/authorize?client_id=747831622556057693&redirect_uri=https%3A%2F%2F5beam.zelo.dev%2Fapi%2Fauth%2Fcallback%2Fhtml5b&response_type=code&scope=identify','Window Name','height=750,width=450');
+	if (window.focus) newWindow.focus();
 }
 
 function menu2Back() {
@@ -5983,7 +5999,7 @@ function drawExploreLevel(x, y, i) {
 
 function setExplorePage(page) {
 	explorePage = page;
-	getLevelPage(explorePage);
+	getLevelPage(explorePage, exploreTab);
 	// setExploreThumbs();
 }
 
@@ -5994,6 +6010,7 @@ function setExploreThumbs() {
 }
 
 function drawExploreThumb(context, size, data, scale) {  // size is the width
+	if (exploreTab == 1 && menuScreen == 6) return;
 	context.clearRect(0, 0, size * pixelRatio / scale, size * 0.5625 * pixelRatio / scale);
 
 	var lines = data.split('\r\n');
@@ -6068,6 +6085,11 @@ function drawArrow(x, y, w, h, dir) {
 	ctx.lineTo(x + w*(dir!=1), y + h*(dir!=2));
 	ctx.lineTo(x + w*(dir==3), y + h*(dir==0));
 	ctx.fill();
+}
+
+function shareToExplore() {
+	// Currently there are no checks to see if the access token is still valid or if the user has even logged in, but this is just in the testing phase, so.
+	postExploreLevel();
 }
 
 
@@ -6413,6 +6435,38 @@ function draw() {
 		// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
 		ctx.drawImage(osc4, -Math.floor((Math.max(cameraX,0)+shakeX)/1.5 + (cameraX<0?cameraX/3:0)), -Math.floor((Math.max(cameraY,0)+shakeY)/1.5 + (cameraY<0?cameraY/3:0)), osc4.width/pixelRatio, osc4.height/pixelRatio);
 		drawLevel();
+
+		if (wipeTimer == 30) {
+			if (transitionType == 0) {
+				if (!quirksMode) timer += getTimer() - levelTimer2;
+				resetLevel();	
+			} else if (charsAtEnd >= charCount2) {
+				if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
+					gotCoin[currentLevel] = true;
+					coins++;
+					bonusProgress = Math.floor(coins*0.33);
+				}
+				timer += getTimer() - levelTimer2;
+				if (playMode == 0 && currentLevel < 99) {
+					currentLevel++;
+					if (!quirksMode) toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
+					levelProgress = currentLevel;
+					resetLevel();
+				} else {
+					if (playMode == 3) {
+						exitExploreLevel();
+					} else if (playMode == 2) {
+						exitTestLevel();
+					} else {
+						exitLevel();
+						if (currentLevel > 99) {
+							bonusesCleared[currentLevel-100] = true;
+						}
+					}
+				}
+				saveGame();
+			}
+		}
 
 		if (cutScene == 1 || cutScene == 2) { 
 			if (_keysDown[13] || _keysDown[16]) {
@@ -6968,39 +7022,6 @@ function draw() {
 					}
 				}
 				if (i == control) setCamera();
-			}
-		}
-
-		// This was originally near the start of the level screen code, but I moved it to the end to fix a bug relating to the camera when exiting a level.
-		if (wipeTimer == 30) {
-			if (transitionType == 0) {
-				if (!quirksMode) timer += getTimer() - levelTimer2;
-				resetLevel();	
-			} else if (charsAtEnd >= charCount2) {
-				if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
-					gotCoin[currentLevel] = true;
-					coins++;
-					bonusProgress = Math.floor(coins*0.33);
-				}
-				timer += getTimer() - levelTimer2;
-				if (playMode == 0 && currentLevel < 99) {
-					currentLevel++;
-					if (!quirksMode) toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
-					levelProgress = currentLevel;
-					resetLevel();
-				} else {
-					if (playMode == 3) {
-						exitExploreLevel();
-					} else if (playMode == 2) {
-						exitTestLevel();
-					} else {
-						exitLevel();
-						if (currentLevel > 99) {
-							bonusesCleared[currentLevel-100] = true;
-						}
-					}
-				}
-				saveGame();
 			}
 		}
 
@@ -7578,6 +7599,7 @@ function draw() {
 			drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
 			drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
 			drawMenu0Button('EXIT',673, tabWindowY + 160, 15, false, menuExitLevelCreator);
+			// drawMenu0Button('SHARE TO EXPLORE',673, tabWindowY + 190, 16, false, shareToExplore);
 			ctx.fillStyle = '#000000';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'top';
@@ -7858,7 +7880,10 @@ function draw() {
 			if (i == exploreTab) ctx.fillStyle = '#666666';
 			else if (onRect(_xmouse, _ymouse, tabx, 20, exploreTabWidths[i], 45)) {
 				ctx.fillStyle = '#b3b3b3';
-				if (mouseIsDown && !pmouseIsDown) exploreTab = i;
+				if (mouseIsDown && !pmouseIsDown) {
+					exploreTab = i;
+					setExplorePage(0);
+				}
 			}
 			else ctx.fillStyle = '#999999';
 			ctx.fillRect(tabx, 20, exploreTabWidths[i], 45);
@@ -7906,6 +7931,7 @@ function draw() {
 		drawArrow(720,460,25,30,1);
 
 		drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
+		drawMenu2_3Button(2, 100, 486.95, logInExplore);
 	} else if (menuScreen == 7) {
 		ctx.fillStyle = '#505050';
 		ctx.fillRect(0, 0, cwidth, cheight);
@@ -8012,9 +8038,9 @@ function rAF60fps() {
 
 // Explore API Stuff
 
-function getLevelPage(p) {
+function getLevelPage(p, t) {
 	exploreLoading = true;
-	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=0', {method: 'GET'})
+	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=' + t, {method: 'GET'})
 	.then(response => { response.json().then(data => { explorePageLevels = data; setExploreThumbs(); truncateLevelTitles(); exploreLoading = false }) })
 	.catch(err => { console.log(err) });
 }
@@ -8023,5 +8049,54 @@ function getExploreLevel(id) {
 	exploreLoading = true;
 	return fetch('https://5beam.zelo.dev/api/level?id='+id, {method: 'GET'})
 	.then(response => { response.json().then(data => { exploreLevelPageLevel = data; drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4); exploreLoading = false }) })
+	.catch(err => { console.log(err) });
+}
+
+function getExploreLevelpack(id) {
+	exploreLoading = true;
+	return fetch('https://5beam.zelo.dev/api/levelpack?id='+id, {method: 'GET'})
+	.then(response => { response.json().then(data => { exploreLevelPageLevel = data; drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.levels[0].data, 0.4); exploreLoading = false }) })
+	.catch(err => { console.log(err) });
+}
+
+function getExploreUser(id) {
+	exploreLoading = true;
+	return fetch('https://5beam.zelo.dev/api/user?discordId=' + id, {method: 'GET'})
+	.then(response => { response.json().then(data => { exploreUser = data; exploreLoading = false }) })
+	.catch(err => { console.log(err) });
+}
+
+function postExploreLevel(t, desc, dat) {
+	exploreLoading = true;
+	if (loggedInExploreUser5beamID == -1) {
+		// first get the user's discord id
+		return fetch('https://discord.com/api/users/@me', {method: 'GET'})
+		.then(response => {
+			response.json().then(data => {
+				// then get their user id on 5beam
+				fetch('https://5beam.zelo.dev/api/user?discordId=' + data.id, {method: 'GET'})
+				.then(response => {
+					response.json().then(data => {
+						// finally; make the actual post request.
+						loggedInExploreUser5beamID = data.id;
+						postExploreLevelReqInner(loggedInExploreUser5beamID, t, desc, dat);
+					})
+				})
+				.catch(err => { console.log(err) });
+			})
+		})
+		.catch(err => { console.log(err) });
+	} else {
+		return postExploreLevelReqInner(loggedInExploreUser5beamID, t, desc, dat);
+	}
+}
+
+function postExploreLevelReqInner(u, t, desc, dat) {
+	// exploreLoading = true;
+	return fetch('https://5beam.zelo.dev/api/create/level?creatorId=' + u + '&title=' + t + '&description=' + desc + '&data=' + dat, {method: 'POST'})
+	.then(response => {
+		exploreLoading = false;
+		// We don't really need to do anything with the response data.
+	})
 	.catch(err => { console.log(err) });
 }
