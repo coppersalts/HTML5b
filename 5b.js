@@ -981,7 +981,7 @@ const charModels = [
 		]
 	},
 	{
-		// Ice Cube	
+		// Ice Cube
 		torsomat: {a:1,b:0,c:0,d:1,tx:-0.05,ty:-4.6},
 		legx: [-5.55, 8.8],
 		legy: [-11.25, -11.25],
@@ -1824,7 +1824,7 @@ function toHMS(i) {
 	var m = Math.floor(i / 60000) % 60;
 	var s = Math.floor(i / 1000) % 60;
 	var ds = Math.floor(i / 100) % 10;
-	return h.toString(10).padStart(2, '0') + ':' + m.toString(10).padStart(2, '0') + ':' + s.toString(10).padStart(2, '0') + '.' + ds;
+	return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0') + '.' + ds;
 }
 
 function addCommas(i) {
@@ -1954,10 +1954,10 @@ async function loadingScreen() {
 	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
 	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
 	for (var i = 0; i < imgBgs.length; i++) {
-		imgBgs[i] = createImage(resourceData['bg/bg' + i.toString(10).padStart(4, '0') + '.png']);
+		imgBgs[i] = createImage(resourceData['bg/bg' + i.toString().padStart(4, '0') + '.png']);
 	}
 	for (var i = 0; i < blockProperties.length; i++) {
-		var id = i.toString(10).padStart(4, '0');
+		var id = i.toString().padStart(4, '0');
 		if (blockProperties[i][16] == 1 || (blockProperties[i][15] && blockProperties[i][16] == 0)) {
 			svgTiles[i] = createImage(resourceData['blocks/b' + id + '.svg']);
 			svgTilesVB[i] = getVB(svgTiles[i].src);
@@ -1965,22 +1965,22 @@ async function loadingScreen() {
 			svgTiles[i] = new Array(blockProperties[i][16]);
 			svgTilesVB[i] = new Array(blockProperties[i][16]);
 			for (var j = 0; j < svgTiles[i].length; j++) {
-				svgTiles[i][j] = createImage(resourceData['blocks/b' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg']);
+				svgTiles[i][j] = createImage(resourceData['blocks/b' + id + 'f' + j.toString().padStart(4, '0') + '.svg']);
 				svgTilesVB[i][j] = getVB(svgTiles[i][j].src);
 			}
 		}
 	}
 	for (var i = 0; i < svgLevers.length; i++) {
-		svgLevers[i] = createImage(resourceData['blocks/b' + i.toString(10).padStart(2, '0') + 'lever.svg']);
+		svgLevers[i] = createImage(resourceData['blocks/b' + i.toString().padStart(2, '0') + 'lever.svg']);
 	}
 	for (var i = 0; i < svgShadows.length; i++) {
-		svgShadows[i] = createImage(resourceData['shadows/s' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgShadows[i] = createImage(resourceData['shadows/s' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgTileBorders.length; i++) {
-		svgTileBorders[i] = createImage(resourceData['borders/tb' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgTileBorders[i] = createImage(resourceData['borders/tb' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < charD.length; i++) {
-		var id = i.toString(10).padStart(4, '0');
+		var id = i.toString().padStart(4, '0');
 		if (charD[i][7] < 1) continue;
 		else if (charD[i][7] == 1) {
 			svgChars[i] = createImage(resourceData['entities/e' + id + '.svg']);
@@ -1989,28 +1989,28 @@ async function loadingScreen() {
 			svgChars[i] = new Array(charD[i][7]);
 			svgCharsVB[i] = new Array(charD[i][7]);
 			for (let j = 0; j < svgChars[i].length; j++) {
-				svgChars[i][j] = createImage(resourceData['entities/e' + id + 'f' + j.toString(10).padStart(4, '0') + '.svg']);
+				svgChars[i][j] = createImage(resourceData['entities/e' + id + 'f' + j.toString().padStart(4, '0') + '.svg']);
 				svgCharsVB[i][j] = getVB(svgChars[i][j].src);
 			}
 		}
 	}
 	for (var i = 0; i < svgBodyParts.length; i++) {
-		svgBodyParts[i] = createImage(resourceData['bodyparts/bp' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgBodyParts[i] = createImage(resourceData['bodyparts/bp' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgHPRCBubble.length; i++) {
-		svgHPRCBubble[i] = createImage(resourceData['ui/hprcbubble/hprcbubble' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgHPRCBubble[i] = createImage(resourceData['ui/hprcbubble/hprcbubble' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgCoinGet.length; i++) {
-		svgCoinGet[i] = createImage(resourceData['effects/wtgetf' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgCoinGet[i] = createImage(resourceData['effects/wtgetf' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgFire.length; i++) {
-		svgFire[i] = createImage(resourceData['effects/fire' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgFire[i] = createImage(resourceData['effects/fire' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgBurst.length; i++) {
-		svgBurst[i] = createImage(resourceData['effects/burst' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgBurst[i] = createImage(resourceData['effects/burst' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (var i = 0; i < svgAcidDrop.length; i++) {
-		svgAcidDrop[i] = createImage(resourceData['effects/aciddrop' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgAcidDrop[i] = createImage(resourceData['effects/aciddrop' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	svgMenu0 = createImage(resourceData['menu0.svg']);
 	svgMenu2 = createImage(resourceData['menu2.svg']);
@@ -2019,7 +2019,7 @@ async function loadingScreen() {
 	svgMenu2borderimg = createImage(resourceData['menu2borderimg.png']);
 	preMenuBG = createImage(resourceData['premenubg.png']);
 	for (var i = 0; i < svgTools.length; i++) {
-		svgTools[i] = createImage(resourceData['lc/tool' + i.toString(10).padStart(4, '0') + '.svg']);
+		svgTools[i] = createImage(resourceData['lc/tool' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	setup();
 }
@@ -2564,8 +2564,8 @@ function drawLevelMap() {
 			else color = 3;
 		}
 		var text = '';
-		if (i >= 100) text = 'B' + (i- 99).toString(10).padStart(2, '0');
-		else text = (i + 1).toString(10).padStart(3, '0');
+		if (i >= 100) text = 'B' + (i- 99).toString().padStart(2, '0');
+		else text = (i + 1).toString().padStart(3, '0');
 		drawLevelButton(text, j % 8 * 110 + 45, Math.floor(j / 8) * 50 + 160, i, color);
 	}
 }
@@ -2725,7 +2725,7 @@ function resetLevel() {
 			} else if (char[i].charState >= 7) {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
-			
+
 			if (char[i].charState >= 9) charCount2++;
 			if (id == 36) HPRC1 = i;
 			if (id == 35) HPRC2 = i;
@@ -2780,7 +2780,7 @@ function resetLevel() {
 			} else if (char[i].charState >= 7) {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
-			
+
 			if (char[i].charState >= 9) charCount2++;
 			if (id == 36) HPRC1 = i;
 			if (id == 35) HPRC2 = i;
@@ -2798,7 +2798,7 @@ function resetLevel() {
 			cLevelDialogueFace.push(myLevelDialogue[1][i].face);
 			cLevelDialogueText.push(myLevelDialogue[1][i].text);
 		}
-		
+
 		currentLevelDisplayName = myLevelInfo.name;
 	} else {
 		charCount = startLocations[currentLevel].length;
@@ -2833,7 +2833,7 @@ function resetLevel() {
 			} else if (char[i].charState >= 7) {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
-			
+
 			if (char[i].charState >= 9) charCount2++;
 			if (id == 36) HPRC1 = i;
 			if (id == 35) HPRC2 = i;
@@ -2848,9 +2848,9 @@ function resetLevel() {
 		cLevelDialogueText = dialogueText[currentLevel];
 
 		if (currentLevel > 99) {
-			currentLevelDisplayName = 'B' + (currentLevel - 99).toString(10).padStart(2, '0') + '. ' + levelName[currentLevel];
+			currentLevelDisplayName = 'B' + (currentLevel - 99).toString().padStart(2, '0') + '. ' + levelName[currentLevel];
 		} else {
-			currentLevelDisplayName = (currentLevel + 1).toString(10).padStart(3, '0') + '. ' + levelName[currentLevel];
+			currentLevelDisplayName = (currentLevel + 1).toString().padStart(3, '0') + '. ' + levelName[currentLevel];
 		}
 	}
 	charDepths = new Array((charCount + 1) * 2).fill(-1);
@@ -4759,7 +4759,7 @@ function updateLCtiles() {
 	// 		var tile = myLevel[1][y][x];
 	// 		if (blockProperties[tile][16] == 1) {
 	// 			//
-	// 		}	
+	// 		}
 	// 		// levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(myLevel[1][y][x] + 1);
 	// 		x = x + 1;
 	// 	}
@@ -4784,7 +4784,7 @@ function updateLCtiles() {
 				osctx3.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + x * scale, tly + y * scale, scale, scale);
 				osctx3.restore();
 			}
-			
+
 			if (blockProperties[tile][16] > 0) {
 				if (blockProperties[tile][16] == 1) {
 					var img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
@@ -5099,7 +5099,7 @@ function drawLCDiaInfo(i, y) {
 	myLevelDialogue[1][i].text = diaTextBox[0];
 	myLevelDialogue[1][i].linecount = diaTextBox[1].length;
 	ctx.fillText(myLevelDialogue[1][i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y);
-	ctx.fillText(myLevelDialogue[1][i].char.toString(10).padStart(2, '0'), 665 + 5, y);
+	ctx.fillText(myLevelDialogue[1][i].char.toString().padStart(2, '0'), 665 + 5, y);
 	// ctx.fillText(charStateNamesShort[myLevelChars[1][i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 	//myLevelDialogue[1][diaDropdown].face
@@ -5371,7 +5371,7 @@ function copyLevelString() {
 
 	var lcLevelString = '\r\n';
 	lcLevelString += myLevelInfo.name==''?'Untitled level':myLevelInfo.name + '\r\n';
-	lcLevelString += levelWidth.toString(10).padStart(2, '0') + ',' + levelHeight.toString(10).padStart(2, '0') + ',' + char.length.toString(10).padStart(2, '0') + ',' + selectedBg.toString(10).padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
+	lcLevelString += levelWidth.toString().padStart(2, '0') + ',' + levelHeight.toString().padStart(2, '0') + ',' + char.length.toString().padStart(2, '0') + ',' + selectedBg.toString().padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
 	if (longMode) {
 		for (var y = 0; y < levelHeight; y++) {
 			for (var x = 0; x < levelWidth; x++) {
@@ -5393,17 +5393,17 @@ function copyLevelString() {
 		}
 	}
 	for (var i = 0; i < char.length; i++) {
-		lcLevelString += myLevelChars[1][i][0].toString(10).padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][2]) + ',' + myLevelChars[1][i][3].toString(10).padStart(2, '0');
+		lcLevelString += myLevelChars[1][i][0].toString().padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][2]) + ',' + myLevelChars[1][i][3].toString().padStart(2, '0');
 		if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) {
 			lcLevelString += ' ' + char[i].motionString.map(String).join('');
 		}
 		lcLevelString += '\r\n';
 	}
-	lcLevelString += myLevelDialogue[1].length.toString(10).padStart(2, '0') + '\r\n';
+	lcLevelString += myLevelDialogue[1].length.toString().padStart(2, '0') + '\r\n';
 	for (var i = 0; i < myLevelDialogue[1].length; i++) {
-		lcLevelString += myLevelDialogue[1][i].char.toString(10).padStart(2, '0') + (myLevelDialogue[1][i].face==2?'H':'S') + ' ' + myLevelDialogue[1][i].text + '\r\n';
+		lcLevelString += myLevelDialogue[1][i].char.toString().padStart(2, '0') + (myLevelDialogue[1][i].face==2?'H':'S') + ' ' + myLevelDialogue[1][i].text + '\r\n';
 	}
-	lcLevelString += myLevelNecessaryDeaths.toString(10).padStart(6, '0') + '\r\n';
+	lcLevelString += myLevelNecessaryDeaths.toString().padStart(6, '0') + '\r\n';
 
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
 	// console.log(lcLevelString);
@@ -5956,7 +5956,7 @@ function drawExploreLevel(x, y, i) {
 	if (onRect(_xmouse, _ymouse, x, y, 208, 155)) {
 		onButton = true;
 		ctx.fillStyle = '#404040';
-		if (mouseIsDown && !pmouseIsDown) gotoExploreLevelPage(i); 
+		if (mouseIsDown && !pmouseIsDown) gotoExploreLevelPage(i);
 	} else {
 		ctx.fillStyle = '#333333';
 	}
@@ -6002,7 +6002,7 @@ function drawExploreThumb(context, size, data, scale) {  // size is the width
 	var j = 0;
 	while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
 	lines = lines.splice(j);
-	var thumbLevelHead = lines[1].split(','); 
+	var thumbLevelHead = lines[1].split(',');
 	var thumbLevelW = parseInt(thumbLevelHead[0]);
 	var thumbLevelH = parseInt(thumbLevelHead[1]);
 	context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
@@ -6414,7 +6414,7 @@ function draw() {
 		ctx.drawImage(osc4, -Math.floor((Math.max(cameraX,0)+shakeX)/1.5 + (cameraX<0?cameraX/3:0)), -Math.floor((Math.max(cameraY,0)+shakeY)/1.5 + (cameraY<0?cameraY/3:0)), osc4.width/pixelRatio, osc4.height/pixelRatio);
 		drawLevel();
 
-		if (cutScene == 1 || cutScene == 2) { 
+		if (cutScene == 1 || cutScene == 2) {
 			if (_keysDown[13] || _keysDown[16]) {
 				if (!csPress && cutScene == 1) {
 					cutSceneLine++;
@@ -6975,7 +6975,7 @@ function draw() {
 		if (wipeTimer == 30) {
 			if (transitionType == 0) {
 				if (!quirksMode) timer += getTimer() - levelTimer2;
-				resetLevel();	
+				resetLevel();
 			} else if (charsAtEnd >= charCount2) {
 				if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
 					gotCoin[currentLevel] = true;
@@ -7086,7 +7086,7 @@ function draw() {
 			ctx.translate(0, -charsTabScrollBar);
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
-			ctx.font = '20px Helvetica'; 
+			ctx.font = '20px Helvetica';
 			for (var i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
 				if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
 					ctx.fillStyle = '#e8e8e8';
@@ -7600,7 +7600,7 @@ function draw() {
 			ctx.fillStyle = '#ffffff';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'top';
-			ctx.fillText(myLevelNecessaryDeaths.toString(10).padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
+			ctx.fillText(myLevelNecessaryDeaths.toString().padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
 		}
 
 
@@ -7634,7 +7634,7 @@ function draw() {
 
 		// Draw Tools
 		for (var i = 0; i < 12; i++) {
-			if (i != 8) { 
+			if (i != 8) {
 				if (i == tool || i == 9 && copied) ctx.fillStyle = '#999999';
 				else ctx.fillStyle = '#666666';
 				ctx.fillRect(35 + i*50, 490, 40, 40);
@@ -7969,7 +7969,7 @@ function draw() {
 		setCursor('pointer');
 	} else if (onTextBox) {
 		setCursor('text');
-	} else {	
+	} else {
 		setCursor('auto');
 	}
 	setHoverText();
@@ -8000,7 +8000,7 @@ function rAF60fps() {
 		draw();
 	}
 
-	// Added this line to fix unnecessary lag sometimes caused by the framerate limiter. 
+	// Added this line to fix unnecessary lag sometimes caused by the framerate limiter.
 	if (lastFrameReq - then > interval) then = now;
 	lastFrameReq = now;
 }
