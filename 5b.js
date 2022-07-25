@@ -105,13 +105,13 @@ if (bfdia5b.getItem('levelProgress') == undefined) {
 	gotCoin = new Array(levelCount);
 	let gotCoinRaw = bfdia5b.getItem('gotCoin').split(',');
 	coins = 0;
-	for (var i = 0; i < levelCount; i++) {
+	for (let i = 0; i < levelCount; i++) {
 		gotCoin[i] = gotCoinRaw[i] === 'true';
 		if (gotCoin[i]) coins++;
 	}
 	bonusesCleared = new Array(33);
 	let bonusesClearedRaw = bfdia5b.getItem('bonusesCleared').split(',');
-	for (var i = 0; i < 33; i++) {
+	for (let i = 0; i < 33; i++) {
 		bonusesCleared[i] = bonusesClearedRaw[i] === 'true';
 	}
 }
@@ -141,7 +141,7 @@ function tileAt(j, i, y) {
 
 // Load Level Data
 function loadLevels() {
-	for (var i = 0; i < levelCount; i++) {
+	for (let i = 0; i < levelCount; i++) {
 		levelStart += 2;
 
 		// Read Level Name
@@ -161,19 +161,19 @@ function loadLevels() {
 
 		// Read Level Block Layout Data
 		levels[i] = new Array(levelHeight);
-		for (var j = 0; j < levelHeight; j++) {
+		for (let j = 0; j < levelHeight; j++) {
 			levels[i][j] = new Array(levelWidth);
 		}
 		if (longMode) {
-			for (var y = 0; y < levelHeight; y++) {
-				for (var x = 0; x < levelWidth; x++) {
+			for (let y = 0; y < levelHeight; y++) {
+				for (let x = 0; x < levelWidth; x++) {
 					levels[i][y][x] = 111 * tileAt(y * (levelWidth * 2 + 2) + x * 2 + 17,i,y) + tileAt(y * (levelWidth * 2 + 2) + x * 2 + 18,i,y);
 				}
 			}
 			levelStart += levelHeight * (levelWidth * 2 + 2) + 17;
 		} else {
-			for (var y = 0; y < levelHeight; y++) {
-				for (var x = 0; x < levelWidth; x++) {
+			for (let y = 0; y < levelHeight; y++) {
+				for (let x = 0; x < levelWidth; x++) {
 					levels[i][y][x] = tileAt(y * (levelWidth + 2) + x + 17,i,y);
 				}
 			}
@@ -182,9 +182,9 @@ function loadLevels() {
 
 		// Read Entity Data
 		startLocations[i] = new Array(charCount);
-		for (var j = 0; j < charCount; j++) {
+		for (let j = 0; j < charCount; j++) {
 			startLocations[i][j] = new Array(6);
-			for (var k = 0; k < (f - 1) / 3; k++) {
+			for (let k = 0; k < (f - 1) / 3; k++) {
 				startLocations[i][j][k] = charAt(k * 3) * 10 + charAt(k * 3 + 1);
 			}
 			levelStart += f - 2;
@@ -205,7 +205,7 @@ function loadLevels() {
 		dialogueText[i] = new Array(lineCount);
 		dialogueChar[i] = new Array(lineCount);
 		dialogueFace[i] = new Array(lineCount);
-		for (var j = 0; j < lineCount; j++) {
+		for (let j = 0; j < lineCount; j++) {
 			dialogueChar[i][j] = 10 * charAt(0) + charAt(1);
 			if (charAt(2) == 24) dialogueFace[i][j] = 2;
 			else dialogueFace[i][j] = 3;
@@ -1831,7 +1831,7 @@ function addCommas(i) {
 	var iStr = String(i);
 	var iStr2 = '';
 	var len = iStr.length;
-	for (var j = 0; j < len; j++) {
+	for (let j = 0; j < len; j++) {
 		if ((len - j) % 3 == 0 && j != 0) iStr2 += ',';
 		iStr2 += iStr.charAt(j);
 	}
@@ -1953,10 +1953,10 @@ async function loadingScreen() {
 	svgCoin = createImage(resourceData['wintoken.svg']);
 	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
 	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
-	for (var i = 0; i < imgBgs.length; i++) {
+	for (let i = 0; i < imgBgs.length; i++) {
 		imgBgs[i] = createImage(resourceData['bg/bg' + i.toString().padStart(4, '0') + '.png']);
 	}
-	for (var i = 0; i < blockProperties.length; i++) {
+	for (let i = 0; i < blockProperties.length; i++) {
 		var id = i.toString().padStart(4, '0');
 		if (blockProperties[i][16] == 1 || (blockProperties[i][15] && blockProperties[i][16] == 0)) {
 			svgTiles[i] = createImage(resourceData['blocks/b' + id + '.svg']);
@@ -1964,19 +1964,19 @@ async function loadingScreen() {
 		} else if (blockProperties[i][16] > 1) {
 			svgTiles[i] = new Array(blockProperties[i][16]);
 			svgTilesVB[i] = new Array(blockProperties[i][16]);
-			for (var j = 0; j < svgTiles[i].length; j++) {
+			for (let j = 0; j < svgTiles[i].length; j++) {
 				svgTiles[i][j] = createImage(resourceData['blocks/b' + id + 'f' + j.toString().padStart(4, '0') + '.svg']);
 				svgTilesVB[i][j] = getVB(svgTiles[i][j].src);
 			}
 		}
 	}
-	for (var i = 0; i < svgLevers.length; i++) {
+	for (let i = 0; i < svgLevers.length; i++) {
 		svgLevers[i] = createImage(resourceData['blocks/b' + i.toString().padStart(2, '0') + 'lever.svg']);
 	}
-	for (var i = 0; i < svgShadows.length; i++) {
+	for (let i = 0; i < svgShadows.length; i++) {
 		svgShadows[i] = createImage(resourceData['shadows/s' + i.toString().padStart(4, '0') + '.svg']);
 	}
-	for (var i = 0; i < svgTileBorders.length; i++) {
+	for (let i = 0; i < svgTileBorders.length; i++) {
 		svgTileBorders[i] = createImage(resourceData['borders/tb' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < charD.length; i++) {
@@ -1994,22 +1994,22 @@ async function loadingScreen() {
 			}
 		}
 	}
-	for (var i = 0; i < svgBodyParts.length; i++) {
+	for (let i = 0; i < svgBodyParts.length; i++) {
 		svgBodyParts[i] = createImage(resourceData['bodyparts/bp' + i.toString().padStart(4, '0') + '.svg']);
 	}
-	for (var i = 0; i < svgHPRCBubble.length; i++) {
+	for (let i = 0; i < svgHPRCBubble.length; i++) {
 		svgHPRCBubble[i] = createImage(resourceData['ui/hprcbubble/hprcbubble' + i.toString().padStart(4, '0') + '.svg']);
 	}
-	for (var i = 0; i < svgCoinGet.length; i++) {
+	for (let i = 0; i < svgCoinGet.length; i++) {
 		svgCoinGet[i] = createImage(resourceData['effects/wtgetf' + i.toString().padStart(4, '0') + '.svg']);
 	}
-	for (var i = 0; i < svgFire.length; i++) {
+	for (let i = 0; i < svgFire.length; i++) {
 		svgFire[i] = createImage(resourceData['effects/fire' + i.toString().padStart(4, '0') + '.svg']);
 	}
-	for (var i = 0; i < svgBurst.length; i++) {
+	for (let i = 0; i < svgBurst.length; i++) {
 		svgBurst[i] = createImage(resourceData['effects/burst' + i.toString().padStart(4, '0') + '.svg']);
 	}
-	for (var i = 0; i < svgAcidDrop.length; i++) {
+	for (let i = 0; i < svgAcidDrop.length; i++) {
 		svgAcidDrop[i] = createImage(resourceData['effects/aciddrop' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	svgMenu0 = createImage(resourceData['menu0.svg']);
@@ -2018,7 +2018,7 @@ async function loadingScreen() {
 	svgMenu2border = createImage(resourceData['menu2border.svg']);
 	svgMenu2borderimg = createImage(resourceData['menu2borderimg.png']);
 	preMenuBG = createImage(resourceData['premenubg.png']);
-	for (var i = 0; i < svgTools.length; i++) {
+	for (let i = 0; i < svgTools.length; i++) {
 		svgTools[i] = createImage(resourceData['lc/tool' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	setup();
@@ -2205,8 +2205,8 @@ function playGame() {
 function testLevelCreator() {
 	if (myLevelChars[1].length > 0) {
 		if (myLevelDialogue[1].length == 0) {
-			for (var i = 0; i < myLevel[1].length; i++) {
-				for (var j = 0; j < myLevel[1][i].length; j++) {
+			for (let i = 0; i < myLevel[1].length; i++) {
+				for (let j = 0; j < myLevel[1][i].length; j++) {
 					if (myLevel[1][i][j] == 8) myLevel[1][i][j] = 0;
 				}
 			}
@@ -2374,10 +2374,10 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 				textBoxCursorLoc = text.length;
 			} else {
 				var textBoxCursorLoc = 0;
-				for (var i = 0; i < textBoxCursorLine; i++) {
+				for (let i = 0; i < textBoxCursorLine; i++) {
 					textBoxCursorLoc += lines[i].length;
 				}
-				for (var i = 0; i < lines[textBoxCursorLine].length; i++) {
+				for (let i = 0; i < lines[textBoxCursorLine].length; i++) {
 					if (ctx.measureText(lines[textBoxCursorLine].slice(0,i)).width >= _xmouse-x-pad[0]) break;
 				}
 				textBoxCursorLoc += i-1;
@@ -2552,7 +2552,7 @@ function drawLevelMap() {
 		ctx.fillText(mdao[levelProgress - 1], 767.3, 85.4);
 		ctx.fillText(addCommas(deathCount - mdao[levelProgress - 1]), 767.3, 116.8);
 	}
-	for (var i = 0; i < 133; i++) {
+	for (let i = 0; i < 133; i++) {
 		var j = i;
 		if (j >= 100) j += 19;
 		var color = 1;
@@ -2582,7 +2582,7 @@ function drawLevelButtons() {
 //https://thewebdev.info/2021/05/15/how-to-add-line-breaks-into-the-html5-canvas-with-filltext/
 function linebreakText(text, x, y, lineheight) {
 	var lines = text.split('\n');
-	for (var i = 0; i < lines.length; i++) {
+	for (let i = 0; i < lines.length; i++) {
 		ctx.fillText(lines[i], x, y + (i * lineheight));
 	}
 }
@@ -2590,17 +2590,17 @@ function linebreakText(text, x, y, lineheight) {
 function wrapText(text, x, y, maxWidth, lineHeight) {
 	let words = text.split(' ');
 	let lines = [''];
-	for (var i = 0; i < words.length; i++) {
+	for (let i = 0; i < words.length; i++) {
 		let lb = words[i].split('\n');
 		let back = false;
-		for (var l = 0; l < lb.length; l++) {
+		for (let l = 0; l < lb.length; l++) {
 			if (!back && l > 0) {
 				lines.push('');
 			}
 			back = false;
 			if (ctx.measureText(lines[lines.length-1] + lb[l]).width > maxWidth) {
 				if (lines[lines.length-1].length == 0) {
-					for (var j = 0; j < lb[l].length; j++) {
+					for (let j = 0; j < lb[l].length; j++) {
 						if (ctx.measureText(lines[lines.length-1]+lb[l].charAt(j)).width > maxWidth) break;
 						lines[lines.length-1] += lb[l].charAt(j);
 					}
@@ -2627,7 +2627,7 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 			}
 		}
 	}
-	for (var i = 0; i < lines.length; i++) {
+	for (let i = 0; i < lines.length; i++) {
 		ctx.fillText(lines[i], x, y + lineHeight*i);
 	}
 	return lines;
@@ -2700,7 +2700,7 @@ function resetLevel() {
 		char = new Array(charCount);
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
-		for (var i = 0; i < charCount; i++) {
+		for (let i = 0; i < charCount; i++) {
 			var id = myLevelChars[1][i][0];
 			char[i] = new Character(
 				id,
@@ -2738,7 +2738,7 @@ function resetLevel() {
 		cLevelDialogueChar = [];
 		cLevelDialogueFace = [];
 		cLevelDialogueText = [];
-		for (var i = 0; i < myLevelDialogue[1].length; i++) {
+		for (let i = 0; i < myLevelDialogue[1].length; i++) {
 			cLevelDialogueChar.push(myLevelDialogue[1][i].char);
 			cLevelDialogueFace.push(myLevelDialogue[1][i].face);
 			cLevelDialogueText.push(myLevelDialogue[1][i].text);
@@ -2755,7 +2755,7 @@ function resetLevel() {
 		char = new Array(charCount);
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
-		for (var i = 0; i < charCount; i++) {
+		for (let i = 0; i < charCount; i++) {
 			var id = myLevelChars[1][i][0];
 			char[i] = new Character(
 				id,
@@ -2793,7 +2793,7 @@ function resetLevel() {
 		cLevelDialogueChar = [];
 		cLevelDialogueFace = [];
 		cLevelDialogueText = [];
-		for (var i = 0; i < myLevelDialogue[1].length; i++) {
+		for (let i = 0; i < myLevelDialogue[1].length; i++) {
 			cLevelDialogueChar.push(myLevelDialogue[1][i].char);
 			cLevelDialogueFace.push(myLevelDialogue[1][i].face);
 			cLevelDialogueText.push(myLevelDialogue[1][i].text);
@@ -2808,7 +2808,7 @@ function resetLevel() {
 		copyLevel(levels[currentLevel]);
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
-		for (var i = 0; i < charCount; i++) {
+		for (let i = 0; i < charCount; i++) {
 			var id = startLocations[currentLevel][i][0];
 			char[i] = new Character(
 				id,
@@ -2854,7 +2854,7 @@ function resetLevel() {
 		}
 	}
 	charDepths = new Array((charCount + 1) * 2).fill(-1);
-	for (var i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
+	for (let i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
 	// move the control to the front
 	charDepths[(charCount-1)*2] = -1;
 	charDepths[charCount*2] = 0;
@@ -2894,12 +2894,12 @@ function copyLevel(thatLevel) {
 	tileFrames = new Array(thatLevel.length);
 	tileShadows = new Array(thatLevel.length);
 	tileBorders = new Array(thatLevel.length);
-	for (var y = 0; y < levelHeight; y++) {
+	for (let y = 0; y < levelHeight; y++) {
 		thisLevel[y] = new Array(thatLevel[y].length);
 		tileFrames[y] = new Array(thatLevel[y].length);
 		tileShadows[y] = new Array(thatLevel[y].length);
 		tileBorders[y] = new Array(thatLevel[y].length);
-		for (var x = 0; x < levelWidth; x++) {
+		for (let x = 0; x < levelWidth; x++) {
 			thisLevel[y][x] = thatLevel[y][x];
 			var sw = Math.ceil(blockProperties[thisLevel[y][x]][11]/6);
 			tileFrames[y][x] = {cf: 0, playing: false, rotation: (sw==1?-60:(sw==2?60:0))};
@@ -2910,16 +2910,16 @@ function copyLevel(thatLevel) {
 }
 
 function drawStaticTiles() {
-	for (var j = 0; j < tileDepths[0].length; j++) {
+	for (let j = 0; j < tileDepths[0].length; j++) {
 		addTileMovieClip(tileDepths[0][j].x,tileDepths[0][j].y, osctx1);
 	}
 
-	for (var y = 0; y < levelHeight; y++) {
-		for (var x = 0; x < levelWidth; x++) {
-			for (var i = 0; i < tileShadows[y][x].length; i++) {
+	for (let y = 0; y < levelHeight; y++) {
+		for (let x = 0; x < levelWidth; x++) {
+			for (let i = 0; i < tileShadows[y][x].length; i++) {
 				osctx2.drawImage(svgShadows[tileShadows[y][x][i] - 1], x*30, y*30);
 			}
-			for (var i = 0; i < tileBorders[y][x].length; i++) {
+			for (let i = 0; i < tileBorders[y][x].length; i++) {
 				osctx2.drawImage(svgTileBorders[tileBorders[y][x][i] - 1], x*30, y*30);
 			}
 		}
@@ -2938,25 +2938,25 @@ function drawLevel() {
 	// Draw Static tiles
 	ctx.drawImage(osc1, 0, 0, osc1.width/pixelRatio, osc1.height/pixelRatio);
 	// Draw Normal Animated Tiles
-	for (var j = 0; j < tileDepths[1].length; j++) {
+	for (let j = 0; j < tileDepths[1].length; j++) {
 		addTileMovieClip(tileDepths[1][j].x,tileDepths[1][j].y, ctx);
 	}
 	// Draw Borders and Shadows
 	ctx.drawImage(osc2, 0, 0, osc2.width/pixelRatio, osc2.height/pixelRatio);
 	// Draw Active2 Switches & Buttons
-	for (var j = 0; j < tileDepths[2].length; j++) {
+	for (let j = 0; j < tileDepths[2].length; j++) {
 		addTileMovieClip(tileDepths[2][j].x,tileDepths[2][j].y, ctx);
 	}
 	// We draw the characters in here so we can layer liquids above them.
 	drawCharacters();
 	// Draw Liquids
-	for (var j = 0; j < tileDepths[3].length; j++) {
+	for (let j = 0; j < tileDepths[3].length; j++) {
 		addTileMovieClip(tileDepths[3][j].x,tileDepths[3][j].y, ctx);
 	}
 }
 
 function drawCharacters() {
-	for (var d = 0; d < (charCount+1)*2; d++) {
+	for (let d = 0; d < (charCount+1)*2; d++) {
 		var i = charDepths[d];
 		if (i < 0) continue;
 		var currCharID = char[i].id;
@@ -3106,7 +3106,7 @@ function drawCharacters() {
 					char[i].x+charModels[char[i].id].torsomat.tx,
 					char[i].y+charModels[char[i].id].torsomat.ty
 					);
-				for (var j = 0; j < modelFrame.length; j++) {
+				for (let j = 0; j < modelFrame.length; j++) {
 					if (char[i].frame > 9 && modelFrame[j].type == 'armroot') {
 						var handOff = modelFrame[j].id==0?10:20;
 						var handX = -charModels[char[i].id].torsomat.tx + (char[HPRC2].x - char[i].x) + hprcCrankPos.x + handOff * Math.cos(Math.PI * recoverTimer / 15 - 0.2);
@@ -3301,7 +3301,7 @@ function setBody(i) {
 	} else if (char[i].dire % 2 == 0 && char[i].onob) {
 		if (char[i].standingOn >= 0) {
 			var j = char[i].standingOn;
-			for (var z = 1; z <= 2; z++) {
+			for (let z = 1; z <= 2; z++) {
 				legX = char[i].x + charModels[char[i].id].legx[z-1];
 				if (legX >= char[j].x + char[j].w) {
 					skew[z - 1] = char[j].x + char[j].w - legX;
@@ -3311,7 +3311,7 @@ function setBody(i) {
 			}
 		}
 		else if (char[i].fricGoal == 0) {
-			for (var z = 1; z <= 2; z++) {
+			for (let z = 1; z <= 2; z++) {
 				legX = char[i].x + charModels[char[i].id].legx[z-1];
 				if (!safeToStandAt(legX,char[i].y + 1)) {
 					var s1 = safeToStandAt(legX - 30,char[i].y + 1);
@@ -3372,7 +3372,7 @@ function setBody(i) {
 			char[i].leg1frame = 4;
 			char[i].leg2frame = 4;
 		}
-		for (var z = 1; z <= 2; z++) {
+		for (let z = 1; z <= 2; z++) {
 			if (char[i].submerged >= 1 && !char[i].onob) {
 			} else {
 				if (char[i].onob) {
@@ -3404,11 +3404,11 @@ function setBody(i) {
 }
 
 function getTileDepths() {
-	for (var i = 0; i < 6; i++) {
+	for (let i = 0; i < 6; i++) {
 		switchable[i] = new Array(0);
 	}
-	for (var y = 0; y < levelHeight; y++) {
-		for (var x = 0; x < levelWidth; x++) {
+	for (let y = 0; y < levelHeight; y++) {
+		for (let x = 0; x < levelWidth; x++) {
 			if (thisLevel[y][x] >= 1) {
 				// switchable
 				if (blockProperties[thisLevel[y][x]][12] >= 1) {
@@ -3484,7 +3484,7 @@ function addTileMovieClip(x, y, context) {
 		var bgid = playMode==2?selectedBg:bgs[currentLevel];
 		context.fillStyle = bgid==9||bgid==10?'#999999':'#505050';
 		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
-		for (var i = 0; i < charCount2; i++) {
+		for (let i = 0; i < charCount2; i++) {
 			context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
 			context.fillRect((x-1)*30+doorLightX[Math.floor(i/6)==Math.floor((charCount2-1)/6)?(charCount2-1)%6:5][i%6], y*30-80 + Math.floor(i/6)*10, 5, 5);
 			if (doorLightFadeDire[i] != 0) {
@@ -3512,19 +3512,19 @@ function addTileMovieClip(x, y, context) {
 }
 
 function calculateShadowsAndBorders() {
-	for (var y = 0; y < levelHeight; y++) {
-		for (var x = 0; x < levelWidth; x++) {
+	for (let y = 0; y < levelHeight; y++) {
+		for (let x = 0; x < levelWidth; x++) {
 			if (thisLevel[y][x] >= 1) {
 				var t = thisLevel[y][x];
 				if (t == 6) {
-					for (var x2 = 0; x2 < 2 && x - x2 >= 0; x2++) {
-						for (var y2 = 0; y2 < 4 && y - y2 >= 0; y2++) {
+					for (let x2 = 0; x2 < 2 && x - x2 >= 0; x2++) {
+						for (let y2 = 0; y2 < 4 && y - y2 >= 0; y2++) {
 							setAmbientShadow(x - x2,y - y2);
 						}
 					}
 				} else if (t >= 110 && t <= 129) {
-					for (var x2 = 0; x2 < 3; x2++) {
-						for (var y2 = 0; y2 < 2; y2++) {
+					for (let x2 = 0; x2 < 3; x2++) {
+						for (let y2 = 0; y2 < 2; y2++) {
 							setAmbientShadow(x - x2,y - y2);
 						}
 					}
@@ -3543,7 +3543,7 @@ function setAmbientShadow(x, y) {
 	tileShadows[y][x] = [];
 	if (outOfRange(x, y)) return;
 	var count = 0;
-	for (var i = 0; i < 4; i++) {
+	for (let i = 0; i < 4; i++) {
 		if ((!outOfRange(x + cardinal[i][0],y + cardinal[i][1]))) {
 			var t = blockProperties[thisLevel[y + cardinal[i][1]][x + cardinal[i][0]]][12];
 			if (blockProperties[thisLevel[y + cardinal[i][1]][x + cardinal[i][0]]][i] && (t == 0 || t == 6)) {
@@ -3552,7 +3552,7 @@ function setAmbientShadow(x, y) {
 		}
 	}
 	if (count > 0) tileShadows[y][x].push(count);
-	for (var i = 0; i < 4; i++) {
+	for (let i = 0; i < 4; i++) {
 		if ((!outOfRange(x + diagonal[i][0],y + diagonal[i][1])) && !blockProperties[thisLevel[y][x + diagonal[i][0]]][opposite(i,0)] && !blockProperties[thisLevel[y + diagonal[i][1]][x]][opposite(i,1)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i,0)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0 && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i,1)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0) {
 			tileShadows[y][x].push(16+i);
 		}
@@ -3567,13 +3567,13 @@ function setBorder(x, y, s) {
 	tileBorders[y][x] = [];
 	if (outOfRange(x, y)) return;
 	var count = 0;
-	for (var i = 0; i < 4; i++) {
+	for (let i = 0; i < 4; i++) {
 		if ((!outOfRange(x + cardinal[i][0],y + cardinal[i][1])) && thisLevel[y + cardinal[i][1]][x + cardinal[i][0]] != s) {
 			count += Math.pow(2,3 - i);
 		}
 	}
 	if (count > 0) tileBorders[y][x].push(count+borderset);
-	for (var i = 0; i < 4; i++) {
+	for (let i = 0; i < 4; i++) {
 		if ((!outOfRange(x + diagonal[i][0],y + diagonal[i][1])) &&  thisLevel[y][x + diagonal[i][0]] == s && thisLevel[y + diagonal[i][1]][x] == s && thisLevel[y + diagonal[i][1]][x + diagonal[i][0]] != s) {
 			tileBorders[y][x].push(16+i+borderset);
 		}
@@ -3620,7 +3620,7 @@ function checkButton(i) {
 		var yTile = Math.ceil(char[i].y / 30);
 		if (yTile >= 0 && yTile <= levelHeight - 1) {
 			var num;
-			for (var j = Math.floor((char[i].x - char[i].w) / 30); j <= Math.floor((char[i].x + char[i].w) / 30); j++) {
+			for (let j = Math.floor((char[i].x - char[i].w) / 30); j <= Math.floor((char[i].x + char[i].w) / 30); j++) {
 				if (!outOfRange(j, yTile)) {
 					num = blockProperties[thisLevel[yTile][j]][11];
 					if (num >= 13) {
@@ -3630,7 +3630,7 @@ function checkButton(i) {
 							tileFrames[yTile][j].playing = false;
 						}
 						var okay = true;
-						for (var k = 0; k < char[i].buttonsPressed.length; k++) {
+						for (let k = 0; k < char[i].buttonsPressed.length; k++) {
 							if (char[i].buttonsPressed[k][0] == j && char[i].buttonsPressed[k][1] == yTile) {
 								okay = false;
 							}
@@ -3648,14 +3648,14 @@ function checkButton(i) {
 
 function checkButton2(i, bypass) {
 	if (char[i].y < levelHeight * 30 + 30) {
-		for (var j = char[i].buttonsPressed.length-1; j >= 0; j--) {
+		for (let j = char[i].buttonsPressed.length-1; j >= 0; j--) {
 			var x = char[i].buttonsPressed[j][0];
 			var y = char[i].buttonsPressed[j][1];
 			if (!char[i].onob || char[i].standingOn >= 0 || char[i].x < x * 30 - char[i].w || char[i].x >= x * 30 + 30 + char[i].w || bypass) {
 				var okay = true;
-				for (var k = 0; k < charCount; k++) {
+				for (let k = 0; k < charCount; k++) {
 					if (k != i) {
-						for (var m = 0; m < char[k].buttonsPressed.length; m++) {
+						for (let m = 0; m < char[k].buttonsPressed.length; m++) {
 							if (char[k].buttonsPressed[m][0] == x && char[k].buttonsPressed[m][1] == y) {
 								okay = false;
 							}
@@ -3668,7 +3668,7 @@ function checkButton2(i, bypass) {
 					tileFrames[y][x].cf = 2;
 					tileFrames[y][x].playing = true;
 				}
-				for (var k = 0; k < char[i].buttonsPressed.length; k++) {
+				for (let k = 0; k < char[i].buttonsPressed.length; k++) {
 					if (k > j) {
 						char[i].buttonsPressed[k][0] = char[i].buttonsPressed[k - 1][0];
 						char[i].buttonsPressed[k][1] = char[i].buttonsPressed[k - 1][1];
@@ -3681,10 +3681,10 @@ function checkButton2(i, bypass) {
 }
 
 function leverSwitch(j) {
-	for (var z = 0; z < switchable[j].length; z++) {
+	for (let z = 0; z < switchable[j].length; z++) {
 		var x = switchable[Math.min(j,5)][z][0];
 		var y = switchable[Math.min(j,5)][z][1];
-		for (var k = 0; k < switches[j].length; k++) {
+		for (let k = 0; k < switches[j].length; k++) {
 			if (thisLevel[y][x] == switches[j][k * 2]) {
 				thisLevel[y][x] = switches[j][k * 2 + 1];
 			} else if (thisLevel[y][x] == switches[j][k * 2 + 1]) {
@@ -3692,7 +3692,7 @@ function leverSwitch(j) {
 			}
 		}
 	}
-	for (var i = 0; i < charCount; i++) {
+	for (let i = 0; i < charCount; i++) {
 		char[i].justChanged = 2;
 		checkDeath(i);
 	}
@@ -3700,10 +3700,10 @@ function leverSwitch(j) {
 
 // the exact same as leverSwitch(), but with an aditional argument to avoid calling checkDeath() on the same character.
 function leverSwitch2(j, c) {
-	for (var z = 0; z < switchable[j].length; z++) {
+	for (let z = 0; z < switchable[j].length; z++) {
 		var x = switchable[Math.min(j,5)][z][0];
 		var y = switchable[Math.min(j,5)][z][1];
-		for (var k = 0; k < switches[j].length; k++) {
+		for (let k = 0; k < switches[j].length; k++) {
 			if (thisLevel[y][x] == switches[j][k * 2]) {
 				thisLevel[y][x] = switches[j][k * 2 + 1];
 			} else if (thisLevel[y][x] == switches[j][k * 2 + 1]) {
@@ -3711,7 +3711,7 @@ function leverSwitch2(j, c) {
 			}
 		}
 	}
-	for (var i = 0; i < charCount; i++) {
+	for (let i = 0; i < charCount; i++) {
 		// Prevents an infinite loop from crashing the game.
 		if (i != c) {
 			char[i].justChanged = 2;
@@ -3721,8 +3721,8 @@ function leverSwitch2(j, c) {
 }
 
 function checkDeath(i) {
-	for (var y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor((char[i].y - 0.01) / 30); y++) {
-		for (var x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w) / 30); x++) {
+	for (let y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor((char[i].y - 0.01) / 30); y++) {
+		for (let x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w) / 30); x++) {
 			if (!outOfRange(x, y)) {
 				if (blockProperties[thisLevel[y][x]][4] || blockProperties[thisLevel[y][x]][5] || blockProperties[thisLevel[y][x]][6] || blockProperties[thisLevel[y][x]][7]) {
 					startDeath(i);
@@ -3755,8 +3755,8 @@ function unheat(i) {
 }
 
 function somewhereHeated(i) {
-	for (var x = Math.max(Math.floor((char[i].x - char[i].w) / 30),0); x <= Math.min(Math.floor((char[i].x + char[i].w) / 30),levelWidth-1); x++) {
-		for (var y = Math.max(Math.floor((char[i].y - char[i].h) / 30),0); y <= Math.min(Math.floor(char[i].y / 30),levelHeight-1); y++) {
+	for (let x = Math.max(Math.floor((char[i].x - char[i].w) / 30),0); x <= Math.min(Math.floor((char[i].x + char[i].w) / 30),levelWidth-1); x++) {
+		for (let y = Math.max(Math.floor((char[i].y - char[i].h) / 30),0); y <= Math.min(Math.floor(char[i].y / 30),levelHeight-1); y++) {
 			if (thisLevel[y][x] == 15) return true;
 		}
 	}
@@ -3764,7 +3764,7 @@ function somewhereHeated(i) {
 }
 
 function extinguish(i) {
-	for (var j = 0; j < charCount; j++) {
+	for (let j = 0; j < charCount; j++) {
 		if (char[j].charState >= 5 && j != i && char[j].temp > 0) {
 			if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
 				char[j].temp = 0;
@@ -3803,10 +3803,10 @@ function unsubmerge(i) {
 
 function somewhereSubmerged(i) {
 	var record = 0;
-	for (var x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w) / 30); x++) {
+	for (let x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w) / 30); x++) {
 		var lowY = Math.floor((char[i].y - char[i].h) / 30);
 		var highY = Math.floor(char[i].y / 30);
-		for (var y = lowY; y <= highY; y++) {
+		for (let y = lowY; y <= highY; y++) {
 			if (!outOfRange(x, y) && blockProperties[thisLevel[y][x]][14]) {
 				if (y == highY) {
 					if (record == 0) {
@@ -3897,7 +3897,7 @@ function horizontalProp(i, sign, prop, x, y) {
 		return true;
 	}
 	if (prop >= 4 && prop <= 7) {
-		for (var j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
+		for (let j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
 			if (!outOfRange(xTile, j)) {
 				if (blockProperties[thisLevel[j][xTile]][prop - 4] && !blockProperties[thisLevel[j][xTile - sign]][prop - 4] && !blockProperties[thisLevel[j][xTile]][prop]) {
 					return false;
@@ -3919,7 +3919,7 @@ function verticalType(i, sign, prop, pist) {
 	var includeHeight = -0.5 * sign + 0.5;
 	var yTile = Math.floor((char[i].y - char[i].h * includeHeight) / 30);
 	var toReturn = false;
-	for (var j = Math.floor((char[i].x - char[i].w) / 30); j <= Math.floor((char[i].x + char[i].w - 0.01) / 30); j++) {
+	for (let j = Math.floor((char[i].x - char[i].w) / 30); j <= Math.floor((char[i].x + char[i].w - 0.01) / 30); j++) {
 		if (!outOfRange(j, yTile)) {
 			if (thisLevel[yTile][j] == prop) {
 				if (pist) {
@@ -3935,7 +3935,7 @@ function verticalType(i, sign, prop, pist) {
 
 function horizontalType(i, sign, prop) {
 	var xTile = Math.floor((char[i].x + char[i].w * sign) / 30);
-	for (var j = Math.floor((char[i].y - char[i].h) / 30); j <= Math.floor((char[i].y - 0.01) / 30); j++) {
+	for (let j = Math.floor((char[i].y - char[i].h) / 30); j <= Math.floor((char[i].y - 0.01) / 30); j++) {
 		if (!outOfRange(xTile, j)) {
 			if (thisLevel[j][xTile] == prop) {
 				return true;
@@ -3972,7 +3972,7 @@ function onlyConveyorsUnder(i) {
 	var min = Math.floor((char[i].x - char[i].w) / 30);
 	var max = Math.floor((char[i].x + char[i].w - 0.01) / 30);
 	var todo = 0;
-	for (var j = 0; j <= max - min; j++) {
+	for (let j = 0; j <= max - min; j++) {
 		var j2 = centered(j,1 + max - min) + min;
 		if (!outOfRange(j2, yTile)) {
 			var t = thisLevel[yTile][j2];
@@ -3995,14 +3995,14 @@ function startCutScene() {
 		if (toSeeCS) {
 			cutScene = 1;
 			cutSceneLine = 0;
-			for (var i = 0; i < char.length; i++) {
+			for (let i = 0; i < char.length; i++) {
 				if (char[i].charState >= 7 && char[i].id < 35) char[i].diaMouthFrame = diaMouths[char[i].expr + charModels[char[i].id].mouthType*2].frameorder.length-1;
 			}
 			displayLine(currentLevel,cutSceneLine);
 			char[control].dire = Math.ceil(char[control].dire / 2) * 2;
 		} else {
 			rescue();
-			for (var i = 0; i < cLevelDialogueChar.length; i++) {
+			for (let i = 0; i < cLevelDialogueChar.length; i++) {
 				var p = cLevelDialogueChar[i];
 				if (p >= 50 && p < 60) leverSwitch(p - 50);
 			}
@@ -4019,7 +4019,7 @@ function endCutScene() {
 }
 
 function rescue() {
-	for (var i = 0; i < charCount; i++) {
+	for (let i = 0; i < charCount; i++) {
 		if (char[i].charState == 9) {
 			char[i].charState = 10;
 			char[i].expr = charModels[char[i].id].defaultExpr;
@@ -4213,7 +4213,7 @@ function charThrow(i) {
 function landOnObject(i) {
 	var record = 10000;
 	var k = 0;
-	for (var j = 0; j < charCount; j++) {
+	for (let j = 0; j < charCount; j++) {
 		if (!ifCarried(j) && (char[j].charState == 6 || char[j].charState == 4)) {
 			var dist = Math.abs(char[i].x - char[j].x);
 			if (dist < char[i].w + char[j].w && char[i].y >= char[j].y - char[j].h && (char[i].py < char[j].py - char[j].h || char[i].py == char[j].py - char[j].h && char[i].vy == 0)) {
@@ -4241,7 +4241,7 @@ function landOnObject(i) {
 }
 
 function objectsLandOn(i) {
-	for (var j = 0; j < charCount; j++) {
+	for (let j = 0; j < charCount; j++) {
 		if (char[j].charState >= 5 && char[j].standingOn != i) {
 			var dist = Math.abs(char[i].x - char[j].x);
 			if (dist < char[i].w + char[j].w && char[i].y - char[i].h <= char[j].y && char[i].py - char[i].h > char[j].py && (char[i].submerged <= 1 || !char[j].onob || char[j].submerged == 2)) {
@@ -4271,7 +4271,7 @@ function fallOff(i) {
 			rippleWeight(i,char[i].weight2,-1);
 		}
 		var len = char[char[i].standingOn].stoodOnBy.length;
-		for (var j = 0; j < len; j++) {
+		for (let j = 0; j < len; j++) {
 			if (char[char[i].standingOn].stoodOnBy[j] == i) {
 				after = true;
 			}
@@ -4282,7 +4282,7 @@ function fallOff(i) {
 		char[char[i].standingOn].stoodOnBy.pop();
 		char[i].standingOn = -1;
 		char[i].onob = false;
-		for (var j; j < char[i].stoodOnBy.length; j++) {
+		for (let j; j < char[i].stoodOnBy.length; j++) {
 			fallOff(char[i].stoodOnBy[j]);
 		}
 	}
@@ -4290,7 +4290,7 @@ function fallOff(i) {
 
 function aboveFallOff(i) {
 	if (char[i].stoodOnBy.length >= 1) {
-		for (var j = 0; j < char[i].stoodOnBy.length; j++) {
+		for (let j = 0; j < char[i].stoodOnBy.length; j++) {
 			fallOff(char[i].stoodOnBy[j]);
 		}
 	}
@@ -4342,7 +4342,7 @@ function nextDeadPerson(i, dire) {
 
 function numberOfDead() {
 	var count = 0;
-	for (var i = 0; i < charCount; i++) {
+	for (let i = 0; i < charCount; i++) {
 		if (char[i].charState == 1) {
 			count++;
 		}
@@ -4489,7 +4489,7 @@ function resetLCOSC() {
 	osc2.width = Math.floor(300 * pixelRatio);
 	osc2.height = Math.floor((Math.floor(imgBgs.length/bgpr + 1) * bgdist) * pixelRatio);
 	osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-	for (var i = 0; i < imgBgs.length; i++) {
+	for (let i = 0; i < imgBgs.length; i++) {
 		osctx2.drawImage(imgBgs[i], (bgdist-bgw) + (i%bgpr)*bgdist, (bgdist-bgh) + Math.floor(i/bgpr)*bgdist, bgw, bgh);
 	}
 
@@ -4511,11 +4511,11 @@ function drawLCGrid() {
 	ctx.strokeStyle = '#000000';
 	ctx.globalAlpha = 0.5;
 	ctx.beginPath();
-	for (var i = 0; i <= levelWidth; i++) {
+	for (let i = 0; i <= levelWidth; i++) {
 		ctx.moveTo(330 - scale * levelWidth / 2 + i * scale,240 - scale * levelHeight / 2);
 		ctx.lineTo(330 - scale * levelWidth / 2 + i * scale,240 + scale * levelHeight / 2);
 	}
-	for (var i = 0; i <= levelHeight; i++) {
+	for (let i = 0; i <= levelHeight; i++) {
 		ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + i * scale);
 		ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + i * scale);
 	}
@@ -4531,8 +4531,8 @@ function drawLCTiles() {
 	// animated tiles are drawn here.
 	var tlx = 330 - scale * levelWidth / 2;
 	var tly = 240 - scale * levelHeight / 2;
-	for (var x = 0; x < levelWidth; x++) {
-		for (var y = 0; y < levelHeight; y++) {
+	for (let x = 0; x < levelWidth; x++) {
+		for (let y = 0; y < levelHeight; y++) {
 			var tile = myLevel[1][y][x];
 			ctx.globalAlpha = 1;
 			var showTile = blockProperties[tile][16] > 1;
@@ -4591,7 +4591,7 @@ function drawLCRect(x1, y1, x2, y2) {
 
 function clearMyWholeLevel() {
 	myLevel = new Array(3);
-	for (var i = 0; i < 3; i++) {
+	for (let i = 0; i < 3; i++) {
 		clearMyLevel(i);
 	}
 	myLevelChars = [[],[],[]];
@@ -4599,9 +4599,9 @@ function clearMyWholeLevel() {
 
 function clearMyLevel(i) {
 	myLevel[i] = new Array(levelHeight);
-	for (var j = 0; j < levelHeight; j++){
+	for (let j = 0; j < levelHeight; j++){
 		myLevel[i][j] = new Array(levelWidth);
-		for (var k = 0; k < levelWidth; k++){
+		for (let k = 0; k < levelWidth; k++){
 			myLevel[i][j][k] = 0;
 		}
 	}
@@ -4615,7 +4615,7 @@ function fillTile(x, y, after, before) {
 	if (after == before) return;
 	var rc = [[x,y]];
 	while (rc.length >= 1) {
-		for (var i = 0; i < 4; i++) {
+		for (let i = 0; i < 4; i++) {
 			if (!(i == 3 && x == levelWidth - 1 || i == 2 && x == 0 || i == 1 && y == levelHeight - 1 || i == 0 && y == 0)) {
 				var x2 = rc[0][0] + cardinal[i][0];
 				var y2 = rc[0][1] + cardinal[i][1];
@@ -4653,7 +4653,7 @@ function undo() {
 	updateLCtiles();
 	levelTimer = 0;
 	char = new Array(myLevelChars[1].length);
-	for (var i = 0; i < myLevelChars[1].length; i++) {
+	for (let i = 0; i < myLevelChars[1].length; i++) {
 		char[i] = generateCharFromInfo(myLevelChars[1][i]);
 	}
 }
@@ -4667,9 +4667,9 @@ function copyRect() {
 		var x2 = Math.max(LCRect[0],LCRect[2]);
 		var y2 = Math.max(LCRect[1],LCRect[3]);
 		tileClipboard = new Array(y2-y1);
-		for (var i = y1; i <= y2; i++) {
+		for (let i = y1; i <= y2; i++) {
 			tileClipboard[i-y1] = new Array(x2-x1);
-			for (var j = x1; j <= x2; j++) {
+			for (let j = x1; j <= x2; j++) {
 				tileClipboard[i-y1][j-x1] = myLevel[1][i][j];
 			}
 		}
@@ -4680,9 +4680,9 @@ function copyRect() {
 
 function LCSwapLevelData(a, b) {
 	myLevel[b] = new Array(myLevel[a].length);
-	for (var y = 0; y < myLevel[a].length; y++) {
+	for (let y = 0; y < myLevel[a].length; y++) {
 		myLevel[b][y] = new Array(myLevel[a][0].length);
-		for (var x = 0; x < myLevel[a][0].length; x++) {
+		for (let x = 0; x < myLevel[a][0].length; x++) {
 			myLevel[b][y][x] = myLevel[a][y][x];
 			// if(b == 1)
 			// {
@@ -4696,12 +4696,12 @@ function LCSwapLevelData(a, b) {
 	}
 
 	myLevelChars[b] = new Array(myLevelChars[a].length);
-	for (var y = 0; y < myLevelChars[a].length; y++) {
+	for (let y = 0; y < myLevelChars[a].length; y++) {
 		myLevelChars[b][y] = cloneCharInfo(myLevelChars[a][y], false);
 	}
 
 	myLevelDialogue[b] = new Array(myLevelDialogue[a].length);
-	for (var y = 0; y < myLevelDialogue[a].length; y++) {
+	for (let y = 0; y < myLevelDialogue[a].length; y++) {
 		var obj = myLevelDialogue[a][y];
 		myLevelDialogue[b][y] = {char:obj.char,face:obj.face,text:obj.text,linecount:obj.linecount};
 	}
@@ -4773,8 +4773,8 @@ function updateLCtiles() {
 
 	var tlx = 330 - scale * levelWidth / 2;
 	var tly = 240 - scale * levelHeight / 2;
-	for (var x = 0; x < levelWidth; x++) {
-		for (var y = 0; y < levelHeight; y++) {
+	for (let x = 0; x < levelWidth; x++) {
+		for (let y = 0; y < levelHeight; y++) {
 			var tile = myLevel[1][y][x];
 			if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
 				osctx3.save();
@@ -4874,7 +4874,7 @@ function drawLCCharInfo(i, y) {
 
 		var drawingDeleteButtons = myLevelChars[1][i][5].length>1;
 
-		for (var j = 0; j < myLevelChars[1][i][5].length; j++) {
+		for (let j = 0; j < myLevelChars[1][i][5].length; j++) {
 			ctx.fillStyle = '#626262';
 			ctx.fillRect(665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 100-charInfoHeight, diaInfoHeight);
 			ctx.fillStyle = '#ffffff';
@@ -4957,7 +4957,7 @@ function drawLCCharInfo(i, y) {
 				char.splice(i+1,0,cloneChar(char[i]));
 				myLevelChars[1].splice(i+1,0,cloneCharInfo(myLevelChars[1][i], true));
 				// Update dialogue tab
-				for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+				for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
 					if (myLevelDialogue[1][j].char < 50) {
 						if (myLevelDialogue[1][j].char > i) {
 							myLevelDialogue[1][j].char++;
@@ -4973,7 +4973,7 @@ function drawLCCharInfo(i, y) {
 					[char[i], char[i+1]] = [char[i+1], char[i]];
 					[myLevelChars[1][i], myLevelChars[1][i+1]] = [myLevelChars[1][i+1], myLevelChars[1][i]];
 					// Update dialogue tab
-					for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+					for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
 						if (myLevelDialogue[1][j].char < 50) {
 							if (myLevelDialogue[1][j].char == i) {
 								myLevelDialogue[1][j].char++;
@@ -4992,7 +4992,7 @@ function drawLCCharInfo(i, y) {
 					[char[i], char[i-1]] = [char[i-1], char[i]];
 					[myLevelChars[1][i], myLevelChars[1][i-1]] = [myLevelChars[1][i-1], myLevelChars[1][i]];
 					// Update dialogue tab
-					for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+					for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
 						if (myLevelDialogue[1][j].char < 50) {
 							if (myLevelDialogue[1][j].char == i) {
 								myLevelDialogue[1][j].char--;
@@ -5038,7 +5038,7 @@ function drawLCCharInfo(i, y) {
 					char.splice(i,1);
 					myLevelChars[1].splice(i,1);
 					// Update dialogue tab
-					for (var j = myLevelDialogue[1].length-1; j >= 0; j--) {
+					for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
 						if (myLevelDialogue[1][j].char < 50) {
 							if (myLevelDialogue[1][j].char == i) {
 								myLevelDialogue[1].splice(j,1);
@@ -5163,7 +5163,7 @@ function drawLCChars() {
 	ctx.save();
 	var scale2 = scale / 30;
 	ctx.transform(scale2, 0, 0, scale2, 330 - scale * levelWidth / 2, 240 - scale * levelHeight / 2);
-	for (var i = char.length-1; i >= 0; i--) {
+	for (let i = char.length-1; i >= 0; i--) {
 		if (char[i].placed || charDropdown == i && charDropdownType == 2) {
 			if (!char[i].placed) ctx.globalAlpha = 0.5;
 			if (char[i].id < 35) {
@@ -5201,7 +5201,7 @@ function drawLCChars() {
 					char[i].x+charModels[char[i].id].torsomat.tx,
 					char[i].y+charModels[char[i].id].torsomat.ty
 					);
-				for (var j = 0; j < modelFrame.length; j++) {
+				for (let j = 0; j < modelFrame.length; j++) {
 					var img = svgBodyParts[modelFrame[j].bodypart];
 					if (modelFrame[j].type == 'body') img = svgChars[char[i].id];
 
@@ -5324,7 +5324,7 @@ function cloneCharInfo(info, unplace) {
 	if (info.length == 6) {
 		clone.push(info[4]);
 		clone.push([]);
-		for (var i = 0; i < info[5].length; i++) {
+		for (let i = 0; i < info[5].length; i++) {
 			clone[5].push([info[5][i][0], info[5][i][1]]);
 		}
 	}
@@ -5362,8 +5362,8 @@ function generateCharFromInfo(info) {
 
 function copyLevelString() {
 	longMode = false;
-	for (var y = 0; y < levelHeight; y++) {
-		for (var x = 0; x < levelWidth; x++) {
+	for (let y = 0; y < levelHeight; y++) {
+		for (let x = 0; x < levelWidth; x++) {
 			if (myLevel[1][y][x] > 120) longMode = true;
 		}
 		lcLevelString += '\r\n';
@@ -5373,8 +5373,8 @@ function copyLevelString() {
 	lcLevelString += myLevelInfo.name==''?'Untitled level':myLevelInfo.name + '\r\n';
 	lcLevelString += levelWidth.toString().padStart(2, '0') + ',' + levelHeight.toString().padStart(2, '0') + ',' + char.length.toString().padStart(2, '0') + ',' + selectedBg.toString().padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
 	if (longMode) {
-		for (var y = 0; y < levelHeight; y++) {
-			for (var x = 0; x < levelWidth; x++) {
+		for (let y = 0; y < levelHeight; y++) {
+			for (let x = 0; x < levelWidth; x++) {
 				if (myLevel[1][y][x] > 120) {
 					lcLevelString += '/';
 				} else {
@@ -5385,14 +5385,14 @@ function copyLevelString() {
 			lcLevelString += '\r\n';
 		}
 	} else {
-		for (var y = 0; y < levelHeight; y++) {
-			for (var x = 0; x < levelWidth; x++) {
+		for (let y = 0; y < levelHeight; y++) {
+			for (let x = 0; x < levelWidth; x++) {
 				lcLevelString += tileCharFromID(myLevel[1][y][x]);
 			}
 			lcLevelString += '\r\n';
 		}
 	}
-	for (var i = 0; i < char.length; i++) {
+	for (let i = 0; i < char.length; i++) {
 		lcLevelString += myLevelChars[1][i][0].toString().padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][2]) + ',' + myLevelChars[1][i][3].toString().padStart(2, '0');
 		if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) {
 			lcLevelString += ' ' + char[i].motionString.map(String).join('');
@@ -5400,7 +5400,7 @@ function copyLevelString() {
 		lcLevelString += '\r\n';
 	}
 	lcLevelString += myLevelDialogue[1].length.toString().padStart(2, '0') + '\r\n';
-	for (var i = 0; i < myLevelDialogue[1].length; i++) {
+	for (let i = 0; i < myLevelDialogue[1].length; i++) {
 		lcLevelString += myLevelDialogue[1][i].char.toString().padStart(2, '0') + (myLevelDialogue[1][i].face==2?'H':'S') + ' ' + myLevelDialogue[1][i].text + '\r\n';
 	}
 	lcLevelString += myLevelNecessaryDeaths.toString().padStart(6, '0') + '\r\n';
@@ -5464,9 +5464,9 @@ function readLevelString(str) {
 	// read block layout data
 	myLevel[1] = new Array(levelHeight);
 	if (longMode) {
-		for (var y = 0; y < levelHeight; y++) {
+		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
-			for (var x = 0; x < levelWidth; x++) {
+			for (let x = 0; x < levelWidth; x++) {
 				if (i+y >= lines.length || x * 2 + 1 >= lines[i+y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
@@ -5476,9 +5476,9 @@ function readLevelString(str) {
 			}
 		}
 	} else {
-		for (var y = 0; y < levelHeight; y++) {
+		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
-			for (var x = 0; x < levelWidth; x++) {
+			for (let x = 0; x < levelWidth; x++) {
 				if (i+y >= lines.length || x >= lines[i+y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
@@ -5501,7 +5501,7 @@ function readLevelString(str) {
 
 	// read entity data
 	levelTimer = 0;
-	for (var e = 0; e < myLevelChars[1].length; e++) {
+	for (let e = 0; e < myLevelChars[1].length; e++) {
 		if (i+e >= lines.length) {
 			myLevelChars[1].length = e;
 			char.length = e;
@@ -5549,7 +5549,7 @@ function readLevelString(str) {
 				myLevelChars[1][e][5] = [];
 				let d = entityInfo[4].charCodeAt(2)-48;
 				let btm = 1;
-				for (var m = 2; m < entityInfo[4].length-1; m++) {
+				for (let m = 2; m < entityInfo[4].length-1; m++) {
 					if (d != entityInfo[4].charCodeAt(m+1)-48) {
 						myLevelChars[1][e][5].push([Math.min(Math.max(d,0),3),btm]);
 						btm = 1;
@@ -5575,7 +5575,7 @@ function readLevelString(str) {
 	// read dialogue
 	myLevelDialogue[1] = new Array(parseInt(lines[i],10));
 	i++;
-	for (var d = 0; d < myLevelDialogue[1].length; d++) {
+	for (let d = 0; d < myLevelDialogue[1].length; d++) {
 		if (i+d >= lines.length) {
 			myLevelDialogue[1].length = d;
 			setLCMessage('Error while loading from string:\nnumber of dialogue lines did not match the provided count.');
@@ -5640,9 +5640,9 @@ function readExploreLevelString(str) {
 	// read block layout data
 	myLevel[1] = new Array(levelHeight);
 	if (longMode) {
-		for (var y = 0; y < levelHeight; y++) {
+		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
-			for (var x = 0; x < levelWidth; x++) {
+			for (let x = 0; x < levelWidth; x++) {
 				if (i+y >= lines.length || x * 2 + 1 >= lines[i+y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
@@ -5652,9 +5652,9 @@ function readExploreLevelString(str) {
 			}
 		}
 	} else {
-		for (var y = 0; y < levelHeight; y++) {
+		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
-			for (var x = 0; x < levelWidth; x++) {
+			for (let x = 0; x < levelWidth; x++) {
 				if (i+y >= lines.length || x >= lines[i+y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
@@ -5677,7 +5677,7 @@ function readExploreLevelString(str) {
 
 	// read entity data
 	levelTimer = 0;
-	for (var e = 0; e < myLevelChars[1].length; e++) {
+	for (let e = 0; e < myLevelChars[1].length; e++) {
 		if (i+e >= lines.length) {
 			myLevelChars[1].length = e;
 			char.length = e;
@@ -5725,7 +5725,7 @@ function readExploreLevelString(str) {
 				myLevelChars[1][e][5] = [];
 				let d = entityInfo[4].charCodeAt(2)-48;
 				let btm = 1;
-				for (var m = 2; m < entityInfo[4].length-1; m++) {
+				for (let m = 2; m < entityInfo[4].length-1; m++) {
 					if (d != entityInfo[4].charCodeAt(m+1)-48) {
 						myLevelChars[1][e][5].push([Math.min(Math.max(d,0),3),btm]);
 						btm = 1;
@@ -5751,7 +5751,7 @@ function readExploreLevelString(str) {
 	// read dialogue
 	myLevelDialogue[1] = new Array(parseInt(lines[i],10));
 	i++;
-	for (var d = 0; d < myLevelDialogue[1].length; d++) {
+	for (let d = 0; d < myLevelDialogue[1].length; d++) {
 		if (i+d >= lines.length) {
 			myLevelDialogue[1].length = d;
 			// setLCMessage('Error while loading from string:\nnumber of dialogue lines did not match the provided count.');
@@ -5804,8 +5804,8 @@ function generateMS(info) {
 	out.push(Math.floor(info[4]/10));
 	out.push(info[4]%10);
 	var a = info[5];
-	for (var i = 0; i < a.length; i++) {
-		for (var j = 0; j < a[i][1]; j++) {
+	for (let i = 0; i < a.length; i++) {
+		for (let j = 0; j < a[i][1]; j++) {
 			out.push(a[i][0]);
 		}
 	}
@@ -5816,7 +5816,7 @@ function generateMSOtherFormatted(c) {
 	var out = [];
 	var d = char[c].motionString[2];
 	var btm = 1;
-	for (var m = 2; m < char[c].motionString.length-1; m++) {
+	for (let m = 2; m < char[c].motionString.length-1; m++) {
 		if (d != char[c].motionString[m+1]) {
 			out.push([d,btm]);
 			btm = 1;
@@ -5830,7 +5830,7 @@ function generateMSOtherFormatted(c) {
 }
 
 function resetCharPositions() {
-	for (var i = 0; i < myLevelChars[1].length; i++) {
+	for (let i = 0; i < myLevelChars[1].length; i++) {
 		char[i].x = myLevelChars[1][i][1]*30;
 		char[i].y = myLevelChars[1][i][2]*30;
 	}
@@ -5838,8 +5838,8 @@ function resetCharPositions() {
 
 function setCoinAndDoorPos() {
 	LCEndGateX = LCEndGateY = LCCoinX = LCCoinY = -1;
-	for (var i = 0; i < myLevel[1].length; i++) {
-		for (var j = 0; j < myLevel[1][i].length; j++) {
+	for (let i = 0; i < myLevel[1].length; i++) {
+		for (let j = 0; j < myLevel[1][i].length; j++) {
 			if (myLevel[1][i][j] == 6) {
 				if (LCEndGateX == -1 && LCEndGateY == -1) {
 					LCEndGateX = j;
@@ -5949,7 +5949,7 @@ function drawRemoveButton(x, y, s, p) {
 function truncateLevelTitles() {
 	ctx.font = '20px Helvetica';
 	exploreLevelTitlesTruncated = new Array(explorePageLevels.length);
-	for (var i = 0; i < exploreLevelTitlesTruncated.length; i++) exploreLevelTitlesTruncated[i] = fitString(ctx, explorePageLevels[i].title, 195.3);
+	for (let i = 0; i < exploreLevelTitlesTruncated.length; i++) exploreLevelTitlesTruncated[i] = fitString(ctx, explorePageLevels[i].title, 195.3);
 }
 
 function drawExploreLevel(x, y, i) {
@@ -5988,7 +5988,7 @@ function setExplorePage(page) {
 }
 
 function setExploreThumbs() {
-	for (var i = 0; i < explorePageLevels.length; i++) {
+	for (let i = 0; i < explorePageLevels.length; i++) {
 		drawExploreThumb(thumbsctx[i], thumbs[i].width, explorePageLevels[i].data, 0.2);
 	}
 }
@@ -6008,14 +6008,14 @@ function drawExploreThumb(context, size, data, scale) {  // size is the width
 	context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
 
 	if (thumbLevelHead[4]=='H') {
-		for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
-			for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
+		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
 				exploreDrawThumbTile(context, x, y, 111 * tileIDFromChar(lines[y+2].charCodeAt(x * 2)) + tileIDFromChar(lines[y+2].charCodeAt(x * 2 + 1)), scale);
 			}
 		}
 	} else {
-		for (var y = 0; y < Math.min(thumbLevelH, 18); y++) {
-			for (var x = 0; x < Math.min(thumbLevelW, 32); x++) {
+		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
 				exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y+2].charCodeAt(x)), scale);
 			}
 		}
@@ -6043,7 +6043,7 @@ function exploreDrawThumbTile(context, x, y, tile, scale) {
 		// context.fillStyle = bgid==9||bgid==10?'#999999':'#505050';
 		context.fillStyle = '#505050';
 		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
-		// for (var i = 0; i < charCount2; i++) {
+		// for (let i = 0; i < charCount2; i++) {
 		// 	context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
 		// 	context.fillRect((x-1)*30+doorLightX[Math.floor(i/6)==Math.floor((charCount2-1)/6)?(charCount2-1)%6:5][i%6], y*30-80 + Math.floor(i/6)*10, 5, 5);
 		// 	if (doorLightFadeDire[i] != 0) {
@@ -6091,7 +6091,7 @@ function mousedown(event){
 
 	if (menuScreen == 5) {
 		if (_xmouse > 660) {
-			// for (var i = 0; i < 6; i++) {
+			// for (let i = 0; i < 6; i++) {
 			// 	var y = i * 40;
 			// 	if (i > selectedTab) {
 			// 		y += 300;
@@ -6170,8 +6170,8 @@ function mousedown(event){
 						setSelectedTile(myLevel[1][y][x]);
 					} else if (tool == 5) {
 						if (copied) {
-							for (var i = 0; i < tileClipboard.length && y+i < levelHeight; i++) {
-								for (var j = 0; j < tileClipboard[i].length && x+j < levelWidth; j++) {
+							for (let i = 0; i < tileClipboard.length && y+i < levelHeight; i++) {
+								for (let j = 0; j < tileClipboard[i].length && x+j < levelWidth; j++) {
 									var testTile = tileClipboard[i][j];
 									if (!(_keysDown[18] && myLevel[1][y+i][x+j] != 0) && testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][y+i][x+j] = testTile;
 								}
@@ -6194,18 +6194,18 @@ function mousedown(event){
 							levelHeight += sizeChange;
 							myLevel[1] = new Array(levelHeight);
 							var y4 = 0;
-							for (var y3 = 0; y3 < levelHeight; y3++) {
+							for (let y3 = 0; y3 < levelHeight; y3++) {
 								if (y3 < y2) {
 									y4 = y3;
 								} else {
 									y4 = Math.max(y3 - sizeChange,0);
 								}
 								myLevel[1][y3] = new Array(levelWidth);
-								for (var x3 = 0; x3 < levelWidth; x3++) {
+								for (let x3 = 0; x3 < levelWidth; x3++) {
 									myLevel[1][y3][x3] = myLevel[0][y4][x3];
 								}
 							}
-							for (var i = 0; i < myLevelChars[1].length; i++) {
+							for (let i = 0; i < myLevelChars[1].length; i++) {
 								if (myLevelChars[1][i][2] > y2) {
 									myLevelChars[1][i][2] += sizeChange;
 									resetCharPositions();
@@ -6230,10 +6230,10 @@ function mousedown(event){
 							levelWidth += sizeChange;
 							myLevel[1] = new Array(levelHeight);
 							var x4 = 0;
-							for (var y3 = 0; y3 < levelHeight; y3++) {
+							for (let y3 = 0; y3 < levelHeight; y3++) {
 								myLevel[1][y3] = new Array(levelWidth);
 								x3 = 0;
-								for (var x3 = 0; x3 < levelWidth; x3++) {
+								for (let x3 = 0; x3 < levelWidth; x3++) {
 									if(x3 < x2) {
 										x4 = x3;
 									} else {
@@ -6242,7 +6242,7 @@ function mousedown(event){
 									myLevel[1][y3][x3] = myLevel[0][y3][x4];
 								}
 							}
-							for (var i = 0; i < myLevelChars[1].length; i++) {
+							for (let i = 0; i < myLevelChars[1].length; i++) {
 								if (myLevelChars[1][i][1] > x2) {
 									myLevelChars[1][i][1] += sizeChange;
 									resetCharPositions();
@@ -6364,7 +6364,7 @@ function setup() {
 	osc4.height = cheight;
 	osctx4 = osc4.getContext('2d');
 
-	for (var i = 0; i < thumbs.length; i++) {
+	for (let i = 0; i < thumbs.length; i++) {
 		thumbs[i] = document.createElement('canvas');
 		thumbs[i].width = Math.floor(192 * pixelRatio);
 		thumbs[i].height = Math.floor(108 * pixelRatio);
@@ -6470,7 +6470,7 @@ function draw() {
 								putDown(control);
 								charThrow(control);
 							} else {
-								for (var i = 0; i < charCount; i++) {
+								for (let i = 0; i < charCount; i++) {
 									if (i != control && near(control,i) && char[i].charState >= 6 && char[control].standingOn != i && onlyMovesOneBlock(i,control)) {
 										if (char[i].carry) putDown(i);
 										if (ifCarried(i)) putDown(char[i].carriedBy);
@@ -6544,7 +6544,7 @@ function draw() {
 			// if (cutScene == 1) csBubble.gotoAndPlay(17);
 		}
 		locations[4] = 1000;
-		for (var i = 0; i < charCount; i++) {
+		for (let i = 0; i < charCount; i++) {
 			if (char[i].charState >= 5) {
 				char[i].landTimer = char[i].landTimer + 1;
 				if (char[i].carry && char[char[i].carryObject].justChanged < char[i].justChanged) {
@@ -6562,7 +6562,7 @@ function draw() {
 				if (char[i].deathTimer >= 30) char[i].charMove();
 				if (char[i].id == 3) {
 					if (char[i].temp > 50) {
-						for (var j = 0; j < charCount; j++) {
+						for (let j = 0; j < charCount; j++) {
 							if (char[j].charState >= 5 && j != i) {
 								if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
 									char[j].heated = 2;
@@ -6580,7 +6580,7 @@ function draw() {
 				char[i].py = char[i].y;
 				char[i].charMove();
 			} if (char[i].charState == 3 || char[i].charState == 5) {
-				for (var j = 0; j < charCount; j++) {
+				for (let j = 0; j < charCount; j++) {
 					if (char[j].charState >= 7 && j != i) {
 						if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
 							startDeath(j);
@@ -6595,7 +6595,7 @@ function draw() {
 					}
 				}
 				if (char[i].stoodOnBy.length >= 1) {
-					for (var j = 0; j < char[i].stoodOnBy.length; j++) {
+					for (let j = 0; j < char[i].stoodOnBy.length; j++) {
 						char[char[i].stoodOnBy[j]].y = char[i].y - char[i].h;
 						char[char[i].stoodOnBy[j]].vy = char[i].vy;
 					}
@@ -6623,7 +6623,7 @@ function draw() {
 		var alph;
 		if (!gotThisCoin) alph = 140 - locations[4] * 0.7;
 		if (playMode != 2 && gotCoin[currentLevel]) alph = Math.max(alph,30);
-		for (var i = 0; i < charCount; i++) {
+		for (let i = 0; i < charCount; i++) {
 			if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y) char[i].justChanged = 2;
 			if (char[i].charState == 2) {
 				recoverTimer--;
@@ -6642,8 +6642,8 @@ function draw() {
 					checkDeath(i);
 				}
 			} else if (char[i].justChanged >= 1 && char[i].charState >= 5) {
-				for (var y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor(char[i].y / 30); y++) {
-					for (var x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w - 0.01) / 30); x++) {
+				for (let y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor(char[i].y / 30); y++) {
+					for (let x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w - 0.01) / 30); x++) {
 						if (!outOfRange(x, y)) {
 							if (blockProperties[thisLevel[y][x]][11] >= 1 && blockProperties[thisLevel[y][x]][11] <= 12) {
 								if (Math.floor(char[i].x / 30) == x) {
@@ -7057,7 +7057,7 @@ function draw() {
 			var charInfoY = (selectedTab+1)*tabHeight + 5;
 			// TODO: only compute the look up table when it changes
 			var charInfoYLookUp = [];
-			for (var i = 0; i < myLevelChars[1].length; i++) {
+			for (let i = 0; i < myLevelChars[1].length; i++) {
 				charInfoYLookUp.push(charInfoY);
 				charInfoY += charInfoHeight + 5;
 				if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[1][i][5].length;
@@ -7087,7 +7087,7 @@ function draw() {
 			ctx.textAlign = 'left';
 			ctx.textBaseline = 'middle';
 			ctx.font = '20px Helvetica';
-			for (var i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
+			for (let i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
 				if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
 					ctx.fillStyle = '#e8e8e8';
 					ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
@@ -7205,7 +7205,7 @@ function draw() {
 					ctx.font = textSize + 'px Helvetica';
 					ctx.fillStyle = '#000000';
 					var j = 0;
-					for (var i = 3; i < charStateNames.length; i++) {
+					for (let i = 3; i < charStateNames.length; i++) {
 						if (charStateNames[i] != '') {
 							if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize)) {
 								ctx.fillStyle = '#dddddd';
@@ -7313,7 +7313,7 @@ function draw() {
 				var mouseTileRow = -1;
 				var mouseTileColumn = -1;
 			}
-			for (var i = 0; i < blockProperties.length; i++) {
+			for (let i = 0; i < blockProperties.length; i++) {
 				if (blockProperties[i][15]) {
 					if (i == selectedTile) {
 						ctx.fillStyle = '#a0a0a0';
@@ -7393,7 +7393,7 @@ function draw() {
 			// var h = _frameCount;
 			ctx.save();
 			ctx.translate(0, -bgsTabScrollBar);
-			for (var i = 0; i < imgBgs.length; i++) {
+			for (let i = 0; i < imgBgs.length; i++) {
 				if (i == selectedBg) {
 					ctx.fillStyle = '#a0a0a0';
 					ctx.fillRect(
@@ -7454,7 +7454,7 @@ function draw() {
 		} else if (selectedTab == 4) {
 			// Dialogue
 			var tabContentsHeight = 5;
-			for (var i = 0; i < myLevelDialogue[1].length; i++) {
+			for (let i = 0; i < myLevelDialogue[1].length; i++) {
 				tabContentsHeight += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
 			}
 			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
@@ -7483,7 +7483,7 @@ function draw() {
 			// ctx.font = '20px Helvetica';
 			//myLevelDialogue[1][i].linecount
 			var diaInfoY = (selectedTab+1)*tabHeight + 5;
-			for (var i = 0; i < myLevelDialogue[1].length; i++) {
+			for (let i = 0; i < myLevelDialogue[1].length; i++) {
 				if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, diaInfoY, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
 					ctx.fillStyle = '#e8e8e8';
 					ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight*myLevelDialogue[1][i].linecount + 10);
@@ -7543,7 +7543,7 @@ function draw() {
 				} else if (diaDropdownType == 1) {
 					setUndo();
 					var allowedDiaCharIndices = [99, 55, 52, 51, 50];
-					for (var i = myLevelChars[1].length - 1; i >= 0; i--) if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
+					for (let i = myLevelChars[1].length - 1; i >= 0; i--) if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
 					var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[1][diaDropdown].char);
 					if (_keysDown[16]) {
 						ourCurrentIndex++;
@@ -7608,7 +7608,7 @@ function draw() {
 		ctx.textAlign = 'left';
 		ctx.font = '25px Helvetica';
 		ctx.textBaseline = 'middle';
-		for (var i = 0; i < tabNames.length; i++) {
+		for (let i = 0; i < tabNames.length; i++) {
 			if (i%2 == 0) ctx.fillStyle = '#808080';
 			else ctx.fillStyle = '#626262';
 			var tabY = i>selectedTab?cheight-((tabNames.length-i)*tabHeight):i*tabHeight;
@@ -7633,7 +7633,7 @@ function draw() {
 
 
 		// Draw Tools
-		for (var i = 0; i < 12; i++) {
+		for (let i = 0; i < 12; i++) {
 			if (i != 8) {
 				if (i == tool || i == 9 && copied) ctx.fillStyle = '#999999';
 				else ctx.fillStyle = '#666666';
@@ -7757,7 +7757,7 @@ function draw() {
 		// 	levelCreator.rectSelect.clear();
 		// }
 
-		// for (var i = 0; i < 6; i++) {
+		// for (let i = 0; i < 6; i++) {
 		// 	y = i * 40;
 		// 	if (i > selectedTab) {
 		// 		y += 300;
@@ -7854,7 +7854,7 @@ function draw() {
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		let tabx = 28;
-		for (var i = 0; i < exploreTabWidths.length; i++) {
+		for (let i = 0; i < exploreTabWidths.length; i++) {
 			if (i == exploreTab) ctx.fillStyle = '#666666';
 			else if (onRect(_xmouse, _ymouse, tabx, 20, exploreTabWidths[i], 45)) {
 				ctx.fillStyle = '#b3b3b3';
@@ -7872,7 +7872,7 @@ function draw() {
 		if (exploreLoading) {
 			drawExploreLoadingText();
 		} else {
-			for (var i = 0; i < explorePageLevels.length; i++) {
+			for (let i = 0; i < explorePageLevels.length; i++) {
 				drawExploreLevel(232 * (i%4) + 28, Math.floor(i/4)*182 + 100, i);
 			}
 		}
