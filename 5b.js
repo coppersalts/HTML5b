@@ -4368,11 +4368,7 @@ function recoverCycle(i, dire) {
 		HPRCBubbleFrame = 2;
 	} else {
 		HPRCBubbleFrame = 3;
-		if (dire == 0) {
-			hprcBubbleAnimationTimer = 0;
-		} else {
-			hprcBubbleAnimationTimer = dire;
-		}
+		hprcBubbleAnimationTimer = dire;
 	}
 }
 
@@ -6393,1548 +6389,1573 @@ function draw() {
 	onTextBox = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
-	if (menuScreen == -1) {
-		ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
-		drawMenu0Button('START GAME', (cwidth-menu0ButtonSize.w)/2, (cheight-menu0ButtonSize.h)/2, 0, false, playGame);
-	} else if (menuScreen == 0) {
-		drawMenu();
-	} else if (menuScreen == 2) {
-		drawLevelMap();
-		if (_xmouse < 587 || _ymouse < 469) {
-			if (_ymouse <= 180) {
-				cameraY = Math.min(Math.max(cameraY + (180 - _ymouse) * 0.1,-1080),0);
-			} else if (_ymouse >= 360) {
-				cameraY = Math.min(Math.max(cameraY - (_ymouse - 360) * 0.1,-1080),0);
-			}
-		}
-	} else if (menuScreen == 3) {
+	switch (menuScreen) {
+		case -1:
+			ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
+			drawMenu0Button('START GAME', (cwidth-menu0ButtonSize.w)/2, (cheight-menu0ButtonSize.h)/2, 0, false, playGame);
+			break;
 
-		// var bgScale = Math.max(bgXScale, bgYScale);
-		// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
-		ctx.drawImage(osc4, -Math.floor((Math.max(cameraX,0)+shakeX)/1.5 + (cameraX<0?cameraX/3:0)), -Math.floor((Math.max(cameraY,0)+shakeY)/1.5 + (cameraY<0?cameraY/3:0)), osc4.width/pixelRatio, osc4.height/pixelRatio);
-		drawLevel();
+		case 0:
+			drawMenu();
+			break;
 
-		if (cutScene == 1 || cutScene == 2) {
-			if (_keysDown[13] || _keysDown[16]) {
-				if (!csPress && cutScene == 1) {
-					cutSceneLine++;
-					if (cutSceneLine >= cLevelDialogueChar.length) endCutScene();
-					else displayLine(currentLevel,cutSceneLine);
+		case 2:
+			drawLevelMap();
+			if (_xmouse < 587 || _ymouse < 469) {
+				if (_ymouse <= 180) {
+					cameraY = Math.min(Math.max(cameraY + (180 - _ymouse) * 0.1,-1080),0);
+				} else if (_ymouse >= 360) {
+					cameraY = Math.min(Math.max(cameraY - (_ymouse - 360) * 0.1,-1080),0);
 				}
-				csPress = true;
-			} else {
-				csPress = false;
-				if (cutScene == 2) cutScene = 3;
 			}
-		} else {
-			if (control < 1000) {
-				if (recover) {
-					char[control].justChanged = 2;
-					if (recoverTimer == 0) {
-						if (_keysDown[37]) {
-							if (!leftPress) recoverCycle(HPRC2,-1);
-							leftPress = true;
-						} else leftPress = false;
-						if (_keysDown[39]) {
-							if (!rightPress) recoverCycle(HPRC2,1);
-							rightPress = true;
-						} else rightPress = false;
+			break;
+
+		case 3:
+
+			// var bgScale = Math.max(bgXScale, bgYScale);
+			// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
+			ctx.drawImage(osc4, -Math.floor((Math.max(cameraX,0)+shakeX)/1.5 + (cameraX<0?cameraX/3:0)), -Math.floor((Math.max(cameraY,0)+shakeY)/1.5 + (cameraY<0?cameraY/3:0)), osc4.width/pixelRatio, osc4.height/pixelRatio);
+			drawLevel();
+
+			if (cutScene == 1 || cutScene == 2) {
+				if (_keysDown[13] || _keysDown[16]) {
+					if (!csPress && cutScene == 1) {
+						cutSceneLine++;
+						if (cutSceneLine >= cLevelDialogueChar.length) endCutScene();
+						else displayLine(currentLevel,cutSceneLine);
 					}
+					csPress = true;
 				} else {
-					if (cornerHangTimer == 0) {
-						if (_keysDown[37]) {
-							char[control].moveHorizontal(- power);
-						} else if (_keysDown[39]) {
-							char[control].moveHorizontal(power);
-						}
-					}
-					if (!_keysDown[37] && !_keysDown[39]) char[control].stopMoving();
+					csPress = false;
+					if (cutScene == 2) cutScene = 3;
 				}
-				if (_keysDown[38]) {
-					if (!upPress) {
-						if (recover && recoverTimer == 0) {
-							recoverTimer = 60;
-							char[recover2].charState = 2;
-							char[recover2].x = char[HPRC1].x;
-							char[recover2].y = char[HPRC1].y - 20;
-							char[recover2].vx = 0;
-							char[recover2].vy = -1;
-							char[recover2].frame = 3;
-							char[recover2].leg1frame = 1;
-							char[recover2].leg2frame = 1;
-							char[recover2].legdire = 1;
-							HPRCBubbleFrame = 0;
-							goal = Math.round(char[HPRC1].x / 30) * 30;
-						} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
-							if (char[control].carry) {
-								putDown(control);
-								charThrow(control);
-							} else {
-								for (let i = 0; i < charCount; i++) {
-									if (i != control && near(control,i) && char[i].charState >= 6 && char[control].standingOn != i && onlyMovesOneBlock(i,control)) {
-										if (char[i].carry) putDown(i);
-										if (ifCarried(i)) putDown(char[i].carriedBy);
-										char[control].carry = true;
-										char[control].carryObject = i;
-										swapDepths(i, charCount * 2 + 1);
-										char[i].carriedBy = control;
-										char[i].weight2 = char[i].weight;
-										char[control].weight2 = char[i].weight + char[control].weight;
-										rippleWeight(control,char[i].weight2,1);
-										fallOff(i);
-										aboveFallOff(i);
-										char[i].justChanged = 2;
-										char[control].justChanged = 2;
-										if (char[i].submerged == 1) char[i].submerged = 0;
-										if (char[i].onob && char[control].y - char[i].y > yOff(i)) {
-											char[control].y = char[i].y + yOff(i);
-											char[control].onob = false;
-											char[i].onob = true;
-										}
-										break;
-									}
-								}
+			} else {
+				if (control < 1000) {
+					if (recover) {
+						char[control].justChanged = 2;
+						if (recoverTimer == 0) {
+							if (_keysDown[37]) {
+								if (!leftPress) recoverCycle(HPRC2,-1);
+								leftPress = true;
+							} else leftPress = false;
+							if (_keysDown[39]) {
+								if (!rightPress) recoverCycle(HPRC2,1);
+								rightPress = true;
+							} else rightPress = false;
+						}
+					} else {
+						if (cornerHangTimer == 0) {
+							if (_keysDown[37]) {
+								char[control].moveHorizontal(- power);
+							} else if (_keysDown[39]) {
+								char[control].moveHorizontal(power);
 							}
 						}
+						if (!_keysDown[37] && !_keysDown[39]) char[control].stopMoving();
 					}
-					upPress = true;
-				} else upPress = false;
-				if (_keysDown[40]) {
-					if (!downPress) {
-						if (char[control].carry) putDown(control);
-						else if (recover) {
-							if (recoverTimer == 0) {
-								recover = false;
+					if (_keysDown[38]) {
+						if (!upPress) {
+							if (recover && recoverTimer == 0) {
+								recoverTimer = 60;
+								char[recover2].charState = 2;
+								char[recover2].x = char[HPRC1].x;
+								char[recover2].y = char[HPRC1].y - 20;
+								char[recover2].vx = 0;
+								char[recover2].vy = -1;
+								char[recover2].frame = 3;
+								char[recover2].leg1frame = 1;
+								char[recover2].leg2frame = 1;
+								char[recover2].legdire = 1;
 								HPRCBubbleFrame = 0;
-							}
-						} else if (HPRC2 < 10000 && near2(control,HPRC2) && char[control].hasArms && char[control].onob) {
-							char[control].stopMoving();
-							if (char[control].x >= char[HPRC2].x - 33) char[control].dire = 2;
-							else char[control].dire = 4;
-							recover = true;
-							recover2 = charCount - 1;
-							recoverCycle(HPRC2,0);
-						}
-					}
-					downPress = true;
-				} else downPress = false;
-				if (_keysDown[90]) {
-					if (!qPress && !recover) {
-						changeControl();
-						qTimer = 6;
-					}
-					qPress = true;
-				} else qPress = false;
-				if (_keysDown[32]) {
-					if ((char[control].onob || char[control].submerged == 3) && char[control].landTimer > 2 && !recover) {
-						if (char[control].submerged == 3) char[control].swimUp(0.14 / char[control].weight2);
-						else char[control].jump(- jumpPower);
-						char[control].onob = false;
-						fallOff(control);
-					}
-				} else char[control].landTimer = 80;
-			}
-		}
-
-
-
-		if (_keysDown[82] && wipeTimer == 0) {
-			wipeTimer = 1;
-			transitionType = 0;
-			// if (cutScene == 1) csBubble.gotoAndPlay(17);
-		}
-		locations[4] = 1000;
-		for (let i = 0; i < charCount; i++) {
-			if (char[i].charState >= 5) {
-				char[i].landTimer = char[i].landTimer + 1;
-				if (char[i].carry && char[char[i].carryObject].justChanged < char[i].justChanged) {
-					char[char[i].carryObject].justChanged = char[i].justChanged;
-				}
-				if (char[i].standingOn == -1) {
-					if (char[i].onob) {
-						if (char[i].charState >= 5) {
-							char[i].fricGoal = onlyConveyorsUnder(i);
-						}
-					}
-				} else char[i].fricGoal = char[char[i].standingOn].vx;
-
-				char[i].applyForces(char[i].weight2,control == i,jumpPower * 0.7);
-				if (char[i].deathTimer >= 30) char[i].charMove();
-				if (char[i].id == 3) {
-					if (char[i].temp > 50) {
-						for (let j = 0; j < charCount; j++) {
-							if (char[j].charState >= 5 && j != i) {
-								if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
-									char[j].heated = 2;
-									heat(j);
+								goal = Math.round(char[HPRC1].x / 30) * 30;
+							} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
+								if (char[control].carry) {
+									putDown(control);
+									charThrow(control);
+								} else {
+									for (let i = 0; i < charCount; i++) {
+										if (i != control && near(control,i) && char[i].charState >= 6 && char[control].standingOn != i && onlyMovesOneBlock(i,control)) {
+											if (char[i].carry) putDown(i);
+											if (ifCarried(i)) putDown(char[i].carriedBy);
+											char[control].carry = true;
+											char[control].carryObject = i;
+											swapDepths(i, charCount * 2 + 1);
+											char[i].carriedBy = control;
+											char[i].weight2 = char[i].weight;
+											char[control].weight2 = char[i].weight + char[control].weight;
+											rippleWeight(control,char[i].weight2,1);
+											fallOff(i);
+											aboveFallOff(i);
+											char[i].justChanged = 2;
+											char[control].justChanged = 2;
+											if (char[i].submerged == 1) char[i].submerged = 0;
+											if (char[i].onob && char[control].y - char[i].y > yOff(i)) {
+												char[control].y = char[i].y + yOff(i);
+												char[control].onob = false;
+												char[i].onob = true;
+											}
+											break;
+										}
+									}
 								}
 							}
 						}
-					}
-				}
-			} else if (char[i].charState >= 3) {
-				var section = Math.floor(levelTimer / char[i].speed) % (char[i].motionString.length - 2);
-				char[i].vx = cardinal[char[i].motionString[section + 2]][0] * (30 / char[i].speed);
-				char[i].vy = cardinal[char[i].motionString[section + 2]][1] * (30 / char[i].speed);
-				char[i].px = char[i].x;
-				char[i].py = char[i].y;
-				char[i].charMove();
-			} if (char[i].charState == 3 || char[i].charState == 5) {
-				for (let j = 0; j < charCount; j++) {
-					if (char[j].charState >= 7 && j != i) {
-						if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
-							startDeath(j);
+						upPress = true;
+					} else upPress = false;
+					if (_keysDown[40]) {
+						if (!downPress) {
+							if (char[control].carry) putDown(control);
+							else if (recover) {
+								if (recoverTimer == 0) {
+									recover = false;
+									HPRCBubbleFrame = 0;
+								}
+							} else if (HPRC2 < 10000 && near2(control,HPRC2) && char[control].hasArms && char[control].onob) {
+								char[control].stopMoving();
+								if (char[control].x >= char[HPRC2].x - 33) char[control].dire = 2;
+								else char[control].dire = 4;
+								recover = true;
+								recover2 = charCount - 1;
+								recoverCycle(HPRC2,0);
+							}
 						}
-					}
-				}
-			}
-			if (char[i].justChanged >= 1) {
-				if (char[i].standingOn >= 1) {
-					if (char[char[i].standingOn].charState == 4) {
-						char[i].justChanged = 2;
-					}
-				}
-				if (char[i].stoodOnBy.length >= 1) {
-					for (let j = 0; j < char[i].stoodOnBy.length; j++) {
-						char[char[i].stoodOnBy[j]].y = char[i].y - char[i].h;
-						char[char[i].stoodOnBy[j]].vy = char[i].vy;
-					}
-				} else if (!char[i].carry && char[i].submerged >= 2) {
-					char[i].weight2 = char[i].weight - 0.16;
-				}
-				if (char[i].charState >= 5 && !ifCarried(i)) {
-					if (char[i].vy > 0 || char[i].vy == 0 && char[i].vx != 0) {
-						landOnObject(i);
-					}
-					if (char[i].vy < 0 && (char[i].charState == 4 || char[i].charState == 6) && !ifCarried(i)) {
-						objectsLandOn(i);
-					}
+						downPress = true;
+					} else downPress = false;
+					if (_keysDown[90]) {
+						if (!qPress && !recover) {
+							changeControl();
+							qTimer = 6;
+						}
+						qPress = true;
+					} else qPress = false;
+					if (_keysDown[32]) {
+						if ((char[control].onob || char[control].submerged == 3) && char[control].landTimer > 2 && !recover) {
+							if (char[control].submerged == 3) char[control].swimUp(0.14 / char[control].weight2);
+							else char[control].jump(- jumpPower);
+							char[control].onob = false;
+							fallOff(control);
+						}
+					} else char[control].landTimer = 80;
 				}
 			}
 
-			if (char[i].charState >= 7 && char[i].charState != 9 && !gotThisCoin) {
-				var dist = calcDist(i);
-				if (dist < locations[4]) {
-					locations[4] = dist;
-					locations[5] = i;
-				}
+
+
+			if (_keysDown[82] && wipeTimer == 0) {
+				wipeTimer = 1;
+				transitionType = 0;
+				// if (cutScene == 1) csBubble.gotoAndPlay(17);
 			}
-		}
-		var alph;
-		if (!gotThisCoin) alph = 140 - locations[4] * 0.7;
-		if (playMode != 2 && gotCoin[currentLevel]) alph = Math.max(alph,30);
-		for (let i = 0; i < charCount; i++) {
-			if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y) char[i].justChanged = 2;
-			if (char[i].charState == 2) {
-				recoverTimer--;
-				var trans = (60 - recoverTimer) / 60;
-				char[i].x = inter(char[HPRC1].x,goal,trans);
-				if (recoverTimer <= 0) {
-					recoverTimer = 0;
-					recover = false;
-					char[recover2].dire = 4;
-					char[recover2].charState = char[recover2].pcharState;
-					char[recover2].deathTimer = 30;
-					char[recover2].x = goal;
-					char[recover2].px = char[recover2].x;
-					char[recover2].py = char[recover2].y;
-					char[recover2].justChanged = 2;
-					checkDeath(i);
-				}
-			} else if (char[i].justChanged >= 1 && char[i].charState >= 5) {
-				for (let y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor(char[i].y / 30); y++) {
-					for (let x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w - 0.01) / 30); x++) {
-						if (!outOfRange(x, y)) {
-							if (blockProperties[thisLevel[y][x]][11] >= 1 && blockProperties[thisLevel[y][x]][11] <= 12) {
-								if (Math.floor(char[i].x / 30) == x) {
-									var rot = (char[i].x - Math.floor(char[i].x / 30) * 30 - 15) * 5;
-									if (rot < tileFrames[y][x].rotation && char[i].vx < 0 || rot > tileFrames[y][x].rotation && char[i].vx > 0) {
-										if (rot < 0 && tileFrames[y][x].rotation > 0 || rot > 0 && tileFrames[y][x].rotation < 0) {
-											leverSwitch((blockProperties[thisLevel[y][x]][11] - 1) % 6);
-										}
-										tileFrames[y][x].rotation = rot;
+			locations[4] = 1000;
+			for (let i = 0; i < charCount; i++) {
+				if (char[i].charState >= 5) {
+					char[i].landTimer = char[i].landTimer + 1;
+					if (char[i].carry && char[char[i].carryObject].justChanged < char[i].justChanged) {
+						char[char[i].carryObject].justChanged = char[i].justChanged;
+					}
+					if (char[i].standingOn == -1) {
+						if (char[i].onob) {
+							if (char[i].charState >= 5) {
+								char[i].fricGoal = onlyConveyorsUnder(i);
+							}
+						}
+					} else char[i].fricGoal = char[char[i].standingOn].vx;
+
+					char[i].applyForces(char[i].weight2,control == i,jumpPower * 0.7);
+					if (char[i].deathTimer >= 30) char[i].charMove();
+					if (char[i].id == 3) {
+						if (char[i].temp > 50) {
+							for (let j = 0; j < charCount; j++) {
+								if (char[j].charState >= 5 && j != i) {
+									if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+										char[j].heated = 2;
+										heat(j);
 									}
 								}
 							}
 						}
 					}
-				}
-				checkButton2(i,false);
-				if (ifCarried(i)) {
-					char[i].vx = char[char[i].carriedBy].vx;
-					char[i].vy = char[char[i].carriedBy].vy;
-
-					if (char[char[i].carriedBy].x + xOff(i) >= char[i].x + 20) {
-						char[i].x += 20;
-					} else if (char[char[i].carriedBy].x + xOff(i) <= char[i].x - 20) {
-						char[i].x -= 20;
-					} else {
-						char[i].x = char[char[i].carriedBy].x + xOff(i);
-					}
-
-					if (char[char[i].carriedBy].y - yOff(i) >= char[i].y + 20) {
-						char[i].y += 20;
-					} else if (char[char[i].carriedBy].y - yOff(i) <= char[i].y - 20) {
-						char[i].y -= 20;
-					} else {
-						char[i].y = char[char[i].carriedBy].y - yOff(i);
-					}
-					char[i].dire = Math.ceil(char[char[i].carriedBy].dire / 2) * 2;
-				}
-				if (char[i].standingOn >= 0) {
-					char[i].y = char[char[i].standingOn].y - char[char[i].standingOn].h;
-					char[i].vy = char[char[i].standingOn].vy;
-				}
-				stopX = 0;
-				stopY = 0;
-				toBounce = false;
-				if (newTileHorizontal(i,1)) {
-					if (horizontalType(i,1,8) && char[i].charState == 10) {
-						startCutScene();
-					}
-					if (horizontalProp(i,1,7,char[i].x,char[i].y) && char[i].charState >= 7) {
-						startDeath(i);
-					} else if (char[i].x > char[i].px && horizontalProp(i,1,3,char[i].x,char[i].y)) {
-						stopX = 1;
-					}
-				}
-				if (newTileHorizontal(i,-1)) {
-					if (horizontalType(i,-1,8) && char[i].charState == 10) {
-						startCutScene();
-					}
-					if (horizontalProp(i,-1,6,char[i].x,char[i].y) && char[i].charState >= 7) {
-						startDeath(i);
-					} else if (char[i].x < char[i].px && horizontalProp(i,-1,2,char[i].x,char[i].y)) {
-						stopX = -1;
-					}
-				}
-				if (newTileDown(i)) {
-					if (verticalType(i,1,8,false) && char[i].charState == 10) {
-						startCutScene();
-					}
-					if (verticalType(i,1,13,true)) {
-						toBounce = true;
-					} else if (verticalProp(i,1,5,char[i].px,char[i].y) && char[i].charState >= 7) {
-						startDeath(i);
-					} else if (char[i].y > char[i].py && verticalProp(i,1,1,char[i].px,char[i].y)) {
-						stopY = 1;
-					}
-				}
-				if (newTileUp(i)) {
-					if (verticalType(i,-1,8,false) && char[i].charState == 10) {
-						startCutScene();
-					}
-					if (verticalProp(i,-1,4,char[i].x,char[i].y) && char[i].charState >= 7) {
-						startDeath(i);
-					} else if (char[i].y < char[i].py && verticalProp(i,-1,0,char[i].px,char[i].y)) {
-						stopY = -1;
-					}
-				}
-				if (stopX != 0 && stopY != 0) {
-					if (stopY == 1) {
-						y = Math.floor(char[i].y / 30) * 30;
-					}
-					if (stopY == -1) {
-						y = Math.ceil((char[i].y - char[i].h) / 30) * 30 + char[i].h;
-					}
-					if (!horizontalProp(i,stopX,stopX / 2 + 2.5,char[i].x,y)) {
-						stopX = 0;
-					} else {
-						if (stopX == 1) {
-							x = Math.floor((char[i].x + char[i].w) / 30) * 30 - char[i].w;
-						}
-						if (stopX == -1) {
-							x = Math.ceil((char[i].x - char[i].w) / 30) * 30 + char[i].w;
-						}
-						if (!verticalProp(i,stopY,stopY / 2 + 0.5,x,char[i].y)) {
-							stopY = 0;
-						}
-					}
-				}
-				if (stopX != 0) {
-					char[i].fricGoal = 0;
-					if (char[i].submerged >= 2) {
-						j = i;
-						if (ifCarried(i)) {
-							j = char[i].carriedBy;
-						}
-						if (char[j].dire % 2 == 1) {
-							char[j].swimUp(0.14 / char[j].weight2);
-							if (char[j].standingOn >= 0) {
-								fallOff(i);
+				} else if (char[i].charState >= 3) {
+					var section = Math.floor(levelTimer / char[i].speed) % (char[i].motionString.length - 2);
+					char[i].vx = cardinal[char[i].motionString[section + 2]][0] * (30 / char[i].speed);
+					char[i].vy = cardinal[char[i].motionString[section + 2]][1] * (30 / char[i].speed);
+					char[i].px = char[i].x;
+					char[i].py = char[i].y;
+					char[i].charMove();
+				} if (char[i].charState == 3 || char[i].charState == 5) {
+					for (let j = 0; j < charCount; j++) {
+						if (char[j].charState >= 7 && j != i) {
+							if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+								startDeath(j);
 							}
-							char[j].onob = false;
 						}
 					}
-					if (char[i].id == 5) {
-						startDeath(i);
-					}
-					if (stopX == 1) {
-						x = Math.floor((char[i].x + char[i].w) / 30) * 30 - char[i].w;
-					} else if (stopX == -1) {
-						x = Math.ceil((char[i].x - char[i].w) / 30) * 30 + char[i].w;
-					}
-					char[i].x = x;
-					char[i].vx = 0;
-					stopCarrierX(i,x);
 				}
-				if (stopY != 0) {
-					if (stopY == 1) {
-						y = Math.floor(char[i].y / 30) * 30;
-						if (!ifCarried(i)) cornerHangTimer = 0;
-						fallOff(i);
-						land(i,y,0);
-						land2(i,y);
-						checkButton(i);
-					} else if (stopY == -1) {
+				if (char[i].justChanged >= 1) {
+					if (char[i].standingOn >= 1) {
+						if (char[char[i].standingOn].charState == 4) {
+							char[i].justChanged = 2;
+						}
+					}
+					if (char[i].stoodOnBy.length >= 1) {
+						for (let j = 0; j < char[i].stoodOnBy.length; j++) {
+							char[char[i].stoodOnBy[j]].y = char[i].y - char[i].h;
+							char[char[i].stoodOnBy[j]].vy = char[i].vy;
+						}
+					} else if (!char[i].carry && char[i].submerged >= 2) {
+						char[i].weight2 = char[i].weight - 0.16;
+					}
+					if (char[i].charState >= 5 && !ifCarried(i)) {
+						if (char[i].vy > 0 || char[i].vy == 0 && char[i].vx != 0) {
+							landOnObject(i);
+						}
+						if (char[i].vy < 0 && (char[i].charState == 4 || char[i].charState == 6) && !ifCarried(i)) {
+							objectsLandOn(i);
+						}
+					}
+				}
+
+				if (char[i].charState >= 7 && char[i].charState != 9 && !gotThisCoin) {
+					var dist = calcDist(i);
+					if (dist < locations[4]) {
+						locations[4] = dist;
+						locations[5] = i;
+					}
+				}
+			}
+			var alph;
+			if (!gotThisCoin) alph = 140 - locations[4] * 0.7;
+			if (playMode != 2 && gotCoin[currentLevel]) alph = Math.max(alph,30);
+			for (let i = 0; i < charCount; i++) {
+				if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y) char[i].justChanged = 2;
+				if (char[i].charState == 2) {
+					recoverTimer--;
+					var trans = (60 - recoverTimer) / 60;
+					char[i].x = inter(char[HPRC1].x,goal,trans);
+					if (recoverTimer <= 0) {
+						recoverTimer = 0;
+						recover = false;
+						char[recover2].dire = 4;
+						char[recover2].charState = char[recover2].pcharState;
+						char[recover2].deathTimer = 30;
+						char[recover2].x = goal;
+						char[recover2].px = char[recover2].x;
+						char[recover2].py = char[recover2].y;
+						char[recover2].justChanged = 2;
+						checkDeath(i);
+					}
+				} else if (char[i].justChanged >= 1 && char[i].charState >= 5) {
+					for (let y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor(char[i].y / 30); y++) {
+						for (let x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w - 0.01) / 30); x++) {
+							if (!outOfRange(x, y)) {
+								if (blockProperties[thisLevel[y][x]][11] >= 1 && blockProperties[thisLevel[y][x]][11] <= 12) {
+									if (Math.floor(char[i].x / 30) == x) {
+										var rot = (char[i].x - Math.floor(char[i].x / 30) * 30 - 15) * 5;
+										if (rot < tileFrames[y][x].rotation && char[i].vx < 0 || rot > tileFrames[y][x].rotation && char[i].vx > 0) {
+											if (rot < 0 && tileFrames[y][x].rotation > 0 || rot > 0 && tileFrames[y][x].rotation < 0) {
+												leverSwitch((blockProperties[thisLevel[y][x]][11] - 1) % 6);
+											}
+											tileFrames[y][x].rotation = rot;
+										}
+									}
+								}
+							}
+						}
+					}
+					checkButton2(i,false);
+					if (ifCarried(i)) {
+						char[i].vx = char[char[i].carriedBy].vx;
+						char[i].vy = char[char[i].carriedBy].vy;
+
+						if (char[char[i].carriedBy].x + xOff(i) >= char[i].x + 20) {
+							char[i].x += 20;
+						} else if (char[char[i].carriedBy].x + xOff(i) <= char[i].x - 20) {
+							char[i].x -= 20;
+						} else {
+							char[i].x = char[char[i].carriedBy].x + xOff(i);
+						}
+
+						if (char[char[i].carriedBy].y - yOff(i) >= char[i].y + 20) {
+							char[i].y += 20;
+						} else if (char[char[i].carriedBy].y - yOff(i) <= char[i].y - 20) {
+							char[i].y -= 20;
+						} else {
+							char[i].y = char[char[i].carriedBy].y - yOff(i);
+						}
+						char[i].dire = Math.ceil(char[char[i].carriedBy].dire / 2) * 2;
+					}
+					if (char[i].standingOn >= 0) {
+						char[i].y = char[char[i].standingOn].y - char[char[i].standingOn].h;
+						char[i].vy = char[char[i].standingOn].vy;
+					}
+					stopX = 0;
+					stopY = 0;
+					toBounce = false;
+					if (newTileHorizontal(i,1)) {
+						if (horizontalType(i,1,8) && char[i].charState == 10) {
+							startCutScene();
+						}
+						if (horizontalProp(i,1,7,char[i].x,char[i].y) && char[i].charState >= 7) {
+							startDeath(i);
+						} else if (char[i].x > char[i].px && horizontalProp(i,1,3,char[i].x,char[i].y)) {
+							stopX = 1;
+						}
+					}
+					if (newTileHorizontal(i,-1)) {
+						if (horizontalType(i,-1,8) && char[i].charState == 10) {
+							startCutScene();
+						}
+						if (horizontalProp(i,-1,6,char[i].x,char[i].y) && char[i].charState >= 7) {
+							startDeath(i);
+						} else if (char[i].x < char[i].px && horizontalProp(i,-1,2,char[i].x,char[i].y)) {
+							stopX = -1;
+						}
+					}
+					if (newTileDown(i)) {
+						if (verticalType(i,1,8,false) && char[i].charState == 10) {
+							startCutScene();
+						}
+						if (verticalType(i,1,13,true)) {
+							toBounce = true;
+						} else if (verticalProp(i,1,5,char[i].px,char[i].y) && char[i].charState >= 7) {
+							startDeath(i);
+						} else if (char[i].y > char[i].py && verticalProp(i,1,1,char[i].px,char[i].y)) {
+							stopY = 1;
+						}
+					}
+					if (newTileUp(i)) {
+						if (verticalType(i,-1,8,false) && char[i].charState == 10) {
+							startCutScene();
+						}
+						if (verticalProp(i,-1,4,char[i].x,char[i].y) && char[i].charState >= 7) {
+							startDeath(i);
+						} else if (char[i].y < char[i].py && verticalProp(i,-1,0,char[i].px,char[i].y)) {
+							stopY = -1;
+						}
+					}
+					if (stopX != 0 && stopY != 0) {
+						if (stopY == 1) {
+							y = Math.floor(char[i].y / 30) * 30;
+						}
+						if (stopY == -1) {
+							y = Math.ceil((char[i].y - char[i].h) / 30) * 30 + char[i].h;
+						}
+						if (!horizontalProp(i,stopX,stopX / 2 + 2.5,char[i].x,y)) {
+							stopX = 0;
+						} else {
+							if (stopX == 1) {
+								x = Math.floor((char[i].x + char[i].w) / 30) * 30 - char[i].w;
+							}
+							if (stopX == -1) {
+								x = Math.ceil((char[i].x - char[i].w) / 30) * 30 + char[i].w;
+							}
+							if (!verticalProp(i,stopY,stopY / 2 + 0.5,x,char[i].y)) {
+								stopY = 0;
+							}
+						}
+					}
+					if (stopX != 0) {
+						char[i].fricGoal = 0;
+						if (char[i].submerged >= 2) {
+							j = i;
+							if (ifCarried(i)) {
+								j = char[i].carriedBy;
+							}
+							if (char[j].dire % 2 == 1) {
+								char[j].swimUp(0.14 / char[j].weight2);
+								if (char[j].standingOn >= 0) {
+									fallOff(i);
+								}
+								char[j].onob = false;
+							}
+						}
 						if (char[i].id == 5) {
 							startDeath(i);
 						}
-						if (char[i].id == 3 && char[i].temp > 50) {
-							char[i].temp = 0;
+						if (stopX == 1) {
+							x = Math.floor((char[i].x + char[i].w) / 30) * 30 - char[i].w;
+						} else if (stopX == -1) {
+							x = Math.ceil((char[i].x - char[i].w) / 30) * 30 + char[i].w;
 						}
-						y = Math.ceil((char[i].y - char[i].h) / 30) * 30 + char[i].h;
-						char[i].y = y;
-						char[i].vy = 0;
-						bumpHead(i);
-						if (ifCarried(i)) {
-							bumpHead(char[i].carriedBy);
+						char[i].x = x;
+						char[i].vx = 0;
+						stopCarrierX(i,x);
+					}
+					if (stopY != 0) {
+						if (stopY == 1) {
+							y = Math.floor(char[i].y / 30) * 30;
+							if (!ifCarried(i)) cornerHangTimer = 0;
+							fallOff(i);
+							land(i,y,0);
+							land2(i,y);
+							checkButton(i);
+						} else if (stopY == -1) {
+							if (char[i].id == 5) {
+								startDeath(i);
+							}
+							if (char[i].id == 3 && char[i].temp > 50) {
+								char[i].temp = 0;
+							}
+							y = Math.ceil((char[i].y - char[i].h) / 30) * 30 + char[i].h;
+							char[i].y = y;
+							char[i].vy = 0;
+							bumpHead(i);
+							if (ifCarried(i)) {
+								bumpHead(char[i].carriedBy);
+							}
+						}
+						stopCarrierY(i,y,stopY == 1);
+					}
+					if (newTileHorizontal(i,1) || newTileHorizontal(i,-1)) {
+						if (verticalType(i,1,13,true)) {
+							toBounce = true;
+						}
+						if (horizontalProp(i,1,14,char[i].x,char[i].y) || horizontalProp(i,-1,14,char[i].x,char[i].y)) {
+							submerge(i);
+						}
+						if (horizontalType(i,1,15) || horizontalType(i,-1,15)) {
+							char[i].heated = 1;
+						}
+						checkButton(i);
+					}
+					if (newTileUp(i)) {
+						if (verticalProp(i,-1,14,char[i].x,char[i].y)) {
+							submerge(i);
+						}
+						if (verticalType(i,-1,15,false)) {
+							char[i].heated = 1;
 						}
 					}
-					stopCarrierY(i,y,stopY == 1);
-				}
-				if (newTileHorizontal(i,1) || newTileHorizontal(i,-1)) {
-					if (verticalType(i,1,13,true)) {
-						toBounce = true;
+					if (newTileDown(i)) {
+						if (verticalProp(i,1,14,char[i].x,char[i].y)) {
+							submerge(i);
+						}
+						if (verticalType(i,1,15,false)) {
+							char[i].heated = 1;
+						}
 					}
-					if (horizontalProp(i,1,14,char[i].x,char[i].y) || horizontalProp(i,-1,14,char[i].x,char[i].y)) {
-						submerge(i);
-					}
-					if (horizontalType(i,1,15) || horizontalType(i,-1,15)) {
-						char[i].heated = 1;
-					}
-					checkButton(i);
-				}
-				if (newTileUp(i)) {
-					if (verticalProp(i,-1,14,char[i].x,char[i].y)) {
-						submerge(i);
-					}
-					if (verticalType(i,-1,15,false)) {
-						char[i].heated = 1;
-					}
-				}
-				if (newTileDown(i)) {
-					if (verticalProp(i,1,14,char[i].x,char[i].y)) {
-						submerge(i);
-					}
-					if (verticalType(i,1,15,false)) {
-						char[i].heated = 1;
-					}
-				}
-				if (char[i].submerged >= 2 && char[i].standingOn >= 0 && char[i].weight2 < 0) {
-					fallOff(i);
-				}
-				if (char[i].submerged >= 2) {
-					unsubmerge(i);
-				}
-				if (char[i].heated >= 1) {
-					heat(i);
-				} else if (char[i].id != 3 || char[i].temp <= 50) {
-					if (char[i].temp >= 0) {
-						char[i].temp -= char[i].heatSpeed;
-						char[i].justChanged = 2;
-					} else char[i].temp = 0;
-				}
-				if (char[i].heated == 2) {
-					char[i].heated = 0;
-				}
-				if (char[i].standingOn >= 0) {
-					j = char[i].standingOn;
-					if (Math.abs(char[i].x - char[j].x) >= char[i].w + char[j].w || ifCarried(j)) {
+					if (char[i].submerged >= 2 && char[i].standingOn >= 0 && char[i].weight2 < 0) {
 						fallOff(i);
 					}
-				} else if (char[i].onob) {
-					if (!ifCarried(i) && char[i].standingOn == -1) {
-						char[i].y = Math.round(char[i].y / 30) * 30;
-					} if (!verticalProp(i,1,1,char[i].x,char[i].y)) {
-						char[i].onob = false;
-						aboveFallOff(i);
-						if (ifCarried(i)) {
-							cornerHangTimer = 0;
+					if (char[i].submerged >= 2) {
+						unsubmerge(i);
+					}
+					if (char[i].heated >= 1) {
+						heat(i);
+					} else if (char[i].id != 3 || char[i].temp <= 50) {
+						if (char[i].temp >= 0) {
+							char[i].temp -= char[i].heatSpeed;
+							char[i].justChanged = 2;
+						} else char[i].temp = 0;
+					}
+					if (char[i].heated == 2) {
+						char[i].heated = 0;
+					}
+					if (char[i].standingOn >= 0) {
+						j = char[i].standingOn;
+						if (Math.abs(char[i].x - char[j].x) >= char[i].w + char[j].w || ifCarried(j)) {
+							fallOff(i);
+						}
+					} else if (char[i].onob) {
+						if (!ifCarried(i) && char[i].standingOn == -1) {
+							char[i].y = Math.round(char[i].y / 30) * 30;
+						} if (!verticalProp(i,1,1,char[i].x,char[i].y)) {
+							char[i].onob = false;
+							aboveFallOff(i);
+							if (ifCarried(i)) {
+								cornerHangTimer = 0;
+							}
+						}
+						if (char[i].charState >= 7 && verticalProp(i,1,5,char[i].x,char[i].y)) {
+							startDeath(i);
 						}
 					}
-					if (char[i].charState >= 7 && verticalProp(i,1,5,char[i].x,char[i].y)) {
+				}
+				if (char[i].charState >= 5) {
+					char[i].px = char[i].x;
+					char[i].py = char[i].y;
+					if (char[i].justChanged >= 1 && char[i].charState >= 5) {
+						if (toBounce) {
+							bounce(i);
+						}
+						getCoin(i);
+					}
+					if (char[i].deathTimer < 30) {
+						if (char[i].id == 5 && char[i].deathTimer >= 7) {
+							char[i].deathTimer = 6;
+						}
+						char[i].deathTimer--;
+						if (char[i].deathTimer <= 0) {
+							endDeath(i);
+						}
+					} else if (char[i].charState >= 7 && char[i].id < 35 && (char[i].justChanged >= 1 || levelTimer == 0)) {
+						setBody(i);
+					}
+					if (i == HPRC2) {
+						if (!recover) {
+							HPRCText = '';
+						} else if (recoverTimer == 0) {
+							HPRCText = 'enter name';
+						} else if (recoverTimer > 40) {
+							HPRCText = names[char[recover2].id];
+						} else if (recoverTimer > 10) {
+							HPRCText = 'Keep going';
+						} else {
+							HPRCText = 'Done';
+						}
+						HPRCCrankRot = (recoverTimer * 12) * (Math.PI/180);
+						if (!recover && HPRCBubbleFrame <= 2) {
+							if (control < 10000 && near(control,i) && numberOfDead() >= 1 && char[control].hasArms) {
+								HPRCBubbleFrame = 1;
+							} else {
+								HPRCBubbleFrame = 0;
+							}
+						}
+						// TODO: make this not so hard coded.
+						if (HPRCBubbleFrame == 1) {
+							ctx.drawImage(svgHPRCBubble[0], char[i].x-svgHPRCBubble[0].width/2, char[i].y-128+bounceY(9, 30, _frameCount));
+						} else if (HPRCBubbleFrame == 2) {
+							ctx.drawImage(svgHPRCBubble[1], char[i].x-svgHPRCBubble[1].width/2, char[i].y-150);
+							drawHPRCBubbleCharImg(recover2, 1, 0);
+						} else if (HPRCBubbleFrame == 3) {
+							ctx.drawImage(svgHPRCBubble[2], char[i].x-svgHPRCBubble[2].width/2, char[i].y-150);
+							if (hprcBubbleAnimationTimer > 0) {
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
+								drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer/16), inter(44.75, 31.45, hprcBubbleAnimationTimer/16));
+								hprcBubbleAnimationTimer++;
+								if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
+							}else if (hprcBubbleAnimationTimer < 0) {
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer/16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer/16));
+								drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer/16), inter(-31.45, 0, -hprcBubbleAnimationTimer/16));
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer/16), inter(0, 31.45, -hprcBubbleAnimationTimer/16));
+								hprcBubbleAnimationTimer--;
+								if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
+							} else {
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), 0.6, -31.45);
+								drawHPRCBubbleCharImg(recover2, 1, 0);
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
+							}
+						} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
+							if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
+							ctx.drawImage(svgHPRCBubble[3], char[i].x-svgHPRCBubble[3].width/2, char[i].y-120);
+							ctx.globalAlpha = 1;
+							ctx.drawImage(svgHPRCBubble[4], char[i].x-svgHPRCBubble[4].width/2, char[i].y-120);
+							hprcBubbleAnimationTimer++;
+						}
+					}
+					if (char[i].y > levelHeight * 30 + 160 && char[i].charState >= 7) {
 						startDeath(i);
 					}
-				}
-			}
-			if (char[i].charState >= 5) {
-				char[i].px = char[i].x;
-				char[i].py = char[i].y;
-				if (char[i].justChanged >= 1 && char[i].charState >= 5) {
-					if (toBounce) {
-						bounce(i);
-					}
-					getCoin(i);
-				}
-				if (char[i].deathTimer < 30) {
-					if (char[i].id == 5 && char[i].deathTimer >= 7) {
-						char[i].deathTimer = 6;
-					}
-					char[i].deathTimer--;
-					if (char[i].deathTimer <= 0) {
-						endDeath(i);
-					}
-				} else if (char[i].charState >= 7 && char[i].id < 35 && (char[i].justChanged >= 1 || levelTimer == 0)) {
-					setBody(i);
-				}
-				if (i == HPRC2) {
-					if (!recover) {
-						HPRCText = '';
-					} else if (recoverTimer == 0) {
-						HPRCText = 'enter name';
-					} else if (recoverTimer > 40) {
-						HPRCText = names[char[recover2].id];
-					} else if (recoverTimer > 10) {
-						HPRCText = 'Keep going';
-					} else {
-						HPRCText = 'Done';
-					}
-					HPRCCrankRot = (recoverTimer * 12) * (Math.PI/180);
-					if (!recover && HPRCBubbleFrame <= 2) {
-						if (control < 10000 && near(control,i) && numberOfDead() >= 1 && char[control].hasArms) {
-							HPRCBubbleFrame = 1;
-						} else {
-							HPRCBubbleFrame = 0;
-						}
-					}
-					// TODO: make this not so hard coded.
-					if (HPRCBubbleFrame == 1) {
-						ctx.drawImage(svgHPRCBubble[0], char[i].x-svgHPRCBubble[0].width/2, char[i].y-128+bounceY(9, 30, _frameCount));
-					} else if (HPRCBubbleFrame == 2) {
-						ctx.drawImage(svgHPRCBubble[1], char[i].x-svgHPRCBubble[1].width/2, char[i].y-150);
-						drawHPRCBubbleCharImg(recover2, 1, 0);
-					} else if (HPRCBubbleFrame == 3) {
-						ctx.drawImage(svgHPRCBubble[2], char[i].x-svgHPRCBubble[2].width/2, char[i].y-150);
-						if (hprcBubbleAnimationTimer > 0) {
-							drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
-							drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
-							drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer/16), inter(44.75, 31.45, hprcBubbleAnimationTimer/16));
-							hprcBubbleAnimationTimer++;
-							if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
-						}else if (hprcBubbleAnimationTimer < 0) {
-							drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer/16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer/16));
-							drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer/16), inter(-31.45, 0, -hprcBubbleAnimationTimer/16));
-							drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer/16), inter(0, 31.45, -hprcBubbleAnimationTimer/16));
-							hprcBubbleAnimationTimer--;
-							if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
-						} else {
-							drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), 0.6, -31.45);
-							drawHPRCBubbleCharImg(recover2, 1, 0);
-							drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
-						}
-					} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
-						if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
-						ctx.drawImage(svgHPRCBubble[3], char[i].x-svgHPRCBubble[3].width/2, char[i].y-120);
-						ctx.globalAlpha = 1;
-						ctx.drawImage(svgHPRCBubble[4], char[i].x-svgHPRCBubble[4].width/2, char[i].y-120);
-						hprcBubbleAnimationTimer++;
-					}
-				}
-				if (char[i].y > levelHeight * 30 + 160 && char[i].charState >= 7) {
-					startDeath(i);
-				}
-				if (char[i].charState == 10 && char[i].justChanged >= 1) {
-					if (Math.abs(char[i].x - locations[0] * 30) <= 30 && Math.abs(char[i].y - (locations[1] * 30 + 10)) <= 50) {
-						if (!char[i].atEnd) {
-							charsAtEnd++;
-							doorLightFadeDire[charsAtEnd-1] = 1;
-							if (charsAtEnd >= charCount2) {
-								wipeTimer = 1;
-								if (playMode == 0) {
-									transitionType = 1;
-								} else {
-									transitionType = 2;
+					if (char[i].charState == 10 && char[i].justChanged >= 1) {
+						if (Math.abs(char[i].x - locations[0] * 30) <= 30 && Math.abs(char[i].y - (locations[1] * 30 + 10)) <= 50) {
+							if (!char[i].atEnd) {
+								charsAtEnd++;
+								doorLightFadeDire[charsAtEnd-1] = 1;
+								if (charsAtEnd >= charCount2) {
+									wipeTimer = 1;
+									if (playMode == 0) {
+										transitionType = 1;
+									} else {
+										transitionType = 2;
+									}
 								}
 							}
+							char[i].atEnd = true;
+						} else {
+							if (char[i].atEnd) {
+								doorLightFadeDire[charsAtEnd-1] = -1;
+								charsAtEnd--;
+							}
+							char[i].atEnd = false;
 						}
-						char[i].atEnd = true;
-					} else {
-						if (char[i].atEnd) {
-							doorLightFadeDire[charsAtEnd-1] = -1;
-							charsAtEnd--;
-						}
-						char[i].atEnd = false;
 					}
+					if (i == control) setCamera();
 				}
-				if (i == control) setCamera();
 			}
-		}
 
-		// This was originally near the start of the level screen code, but I moved it to the end to fix a bug relating to the camera when exiting a level.
-		if (wipeTimer == 30) {
-			if (transitionType == 0) {
-				if (!quirksMode) timer += getTimer() - levelTimer2;
-				resetLevel();
-			} else if (charsAtEnd >= charCount2) {
-				if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
-					gotCoin[currentLevel] = true;
-					coins++;
-					bonusProgress = Math.floor(coins*0.33);
-				}
-				timer += getTimer() - levelTimer2;
-				if (playMode == 0 && currentLevel < 99) {
-					currentLevel++;
-					if (!quirksMode) toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
-					levelProgress = currentLevel;
+			// This was originally near the start of the level screen code, but I moved it to the end to fix a bug relating to the camera when exiting a level.
+			if (wipeTimer == 30) {
+				if (transitionType == 0) {
+					if (!quirksMode) timer += getTimer() - levelTimer2;
 					resetLevel();
-				} else {
-					if (playMode == 3) {
-						exitExploreLevel();
-					} else if (playMode == 2) {
-						exitTestLevel();
+				} else if (charsAtEnd >= charCount2) {
+					if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
+						gotCoin[currentLevel] = true;
+						coins++;
+						bonusProgress = Math.floor(coins*0.33);
+					}
+					timer += getTimer() - levelTimer2;
+					if (playMode == 0 && currentLevel < 99) {
+						currentLevel++;
+						if (!quirksMode) toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
+						levelProgress = currentLevel;
+						resetLevel();
 					} else {
-						exitLevel();
-						if (currentLevel > 99) {
-							bonusesCleared[currentLevel-100] = true;
+						if (playMode == 3) {
+							exitExploreLevel();
+						} else if (playMode == 2) {
+							exitTestLevel();
+						} else {
+							exitLevel();
+							if (currentLevel > 99) {
+								bonusesCleared[currentLevel-100] = true;
+							}
 						}
 					}
+					saveGame();
 				}
-				saveGame();
 			}
-		}
 
 
-		qTimer--;
-		x = - cameraX;
-		y = - cameraY;
-		if (wipeTimer < 60) {
-			x += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
-			y += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
-		}
-		if (control < 10000) {
-			if (char[control].temp > 0 && char[control].temp <= 50) {
-				x += (Math.random() - 0.5) * char[control].temp * 0.2;
-				y += (Math.random() - 0.5) * char[control].temp * 0.2;
+			qTimer--;
+			x = - cameraX;
+			y = - cameraY;
+			if (wipeTimer < 60) {
+				x += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
+				y += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
 			}
-		}
-		shakeX = x - cameraX;
-		shakeY = y - cameraY;
-		levelTimer++;
-	} else if (menuScreen == 5) {
-		// menuExitLevelCreator
+			if (control < 10000) {
+				if (char[control].temp > 0 && char[control].temp <= 50) {
+					x += (Math.random() - 0.5) * char[control].temp * 0.2;
+					y += (Math.random() - 0.5) * char[control].temp * 0.2;
+				}
+			}
+			shakeX = x - cameraX;
+			shakeY = y - cameraY;
+			levelTimer++;
+			break;
 
-		ctx.fillStyle = '#ffffff';
-		ctx.fillRect(0,0,960,540);
-		ctx.drawImage(osc1,0,0,cwidth,cheight);
-		ctx.fillStyle = '#aeaeae';
-		ctx.fillRect(0,480,660,60);
-		ctx.fillStyle = '#cccccc';
-		ctx.fillRect(660,0,300,540);
+		case 5:
+			// menuExitLevelCreator
+
+			ctx.fillStyle = '#ffffff';
+			ctx.fillRect(0,0,960,540);
+			ctx.drawImage(osc1,0,0,cwidth,cheight);
+			ctx.fillStyle = '#aeaeae';
+			ctx.fillRect(0,480,660,60);
+			ctx.fillStyle = '#cccccc';
+			ctx.fillRect(660,0,300,540);
 
 
-		var tabWindowH = cheight - tabHeight * tabNames.length;
-		var tabWindowY = (selectedTab + 1) * tabHeight;
-		mouseOnTabWindow = onRect(_xmouse, _ymouse, 660, (selectedTab+1)*tabHeight, 300, tabWindowH);
-		// Draw Tab Contents
-		if (selectedTab == 0) {
-			// Level Info
-			ctx.textAlign = 'right';
-			ctx.textBaseline = 'top';
-			ctx.font = '18px Helvetica';
-			ctx.fillStyle = '#000000';
-			ctx.fillText('Name:',770,tabWindowY + 10);
-			ctx.fillText('Creator:',770,tabWindowY + 60);
-			ctx.fillText('Description:',770,tabWindowY + 110);
-			myLevelInfo.name = drawTextBox(myLevelInfo.name, 785, tabWindowY + 10, 160, 40, 18, [5,2,2,2], 0, false, '#e0e0e0', '#000000', 'Helvetica')[0];
-			myLevelInfo.creator = drawTextBox(myLevelInfo.creator, 785, tabWindowY + 60, 160, 40, 18, [5,2,2,2], 1, false, '#e0e0e0', '#000000', 'Helvetica')[0];
-			myLevelInfo.desc = drawTextBox(myLevelInfo.desc, 785, tabWindowY + 110, 160, 220, 14, [5,2,2,2], 2, true, '#e0e0e0', '#000000', 'Helvetica')[0];
-			if (mouseIsDown && !pmouseIsDown && !onTextBox) {
-				editingTextBox = -1;
-			}
-		} else if (selectedTab == 1) {
-			// Entities
-			var charInfoY = (selectedTab+1)*tabHeight + 5;
-			// TODO: only compute the look up table when it changes
-			var charInfoYLookUp = [];
-			for (let i = 0; i < myLevelChars[1].length; i++) {
-				charInfoYLookUp.push(charInfoY);
-				charInfoY += charInfoHeight + 5;
-				if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[1][i][5].length;
-			}
-			var tabContentsHeight = Math.max(charInfoY, charInfoYLookUp[myLevelChars[1].length-1] + (charInfoHeight*2));
-			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-			var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
-				onButton = true;
-				ctx.fillStyle = '#e8e8e8';
-				if (mouseIsDown && !pmouseIsDown) {
-					draggingScrollBar = true;
-					valueAtClick = _ymouse - scrollBarY;
-				}
-			} else ctx.fillStyle = '#dddddd';
-			if (draggingScrollBar) {
-				onButton = false;
-				ctx.fillStyle = '#a0a0a0';
-				charsTabScrollBar = Math.floor(Math.max(Math.min(
-					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-					tabContentsHeight-tabWindowH), 0));
-				if (!mouseIsDown) draggingScrollBar = false;
-			}
-			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
-			ctx.save();
-			ctx.translate(0, -charsTabScrollBar);
-			ctx.textAlign = 'left';
-			ctx.textBaseline = 'middle';
-			ctx.font = '20px Helvetica';
-			for (let i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
-				if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
-					ctx.fillStyle = '#e8e8e8';
-					ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
-				}
-				drawLCCharInfo(i, charInfoYLookUp[i]);
-				if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
-			}
-			addButtonPressed = false;
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars[1].length < 50) {
-					onButton = true;
-					hoverText = 'Add New Character or Object';
-					if (mouseIsDown && !pmouseIsDown) {
-						duplicateChar = false;
-						reorderCharUp = false;
-						reorderCharDown = false;
-						setUndo();
-						myLevelChars[1].push([0,-1,-1,10]);
-						var newestCharIndex = myLevelChars[1].length-1;
-						var i = myLevelChars[1][newestCharIndex][0];
-						char.push(new Character(
-							i,
-							0.00,
-							0.00,
-							70 + newestCharIndex * 40,
-							400 - newestCharIndex * 30,
-							myLevelChars[1][newestCharIndex][3],
-							charD[i][0],
-							charD[i][1],
-							charD[i][2],
-							charD[i][2],
-							charD[i][3],
-							charD[i][4],
-							charD[i][6],
-							charD[i][8],
-							i<35?charModels[i].defaultExpr:0
-							));
-						char[char.length-1].placed = false;
-					}
-				}
-				addButtonPressed = true;
-			}
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars[1].length < 50) {
-					onButton = true;
-					hoverText = 'Duplicate Character or Object';
-					if (mouseIsDown && !pmouseIsDown) {
-						// console.log('mi lon ni');
-						reorderCharUp = false;
-						reorderCharDown = false;
-						duplicateChar = true;
-					}
-				}
-				addButtonPressed = true;
-			}
-			if (duplicateChar && !addButtonPressed && mouseIsDown && !pmouseIsDown) duplicateChar = false;
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars[1].length < 50) {
-					onButton = true;
-					hoverText = 'Move Character or Object Up';
-					if (mouseIsDown && !pmouseIsDown) {
-						duplicateChar = false;
-						reorderCharDown = false;
-						reorderCharUp = true;
-					}
-				}
-				addButtonPressed = true;
-			}
-			if (reorderCharUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderCharUp = false;
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars[1].length < 50) {
-					onButton = true;
-					hoverText = 'Move Character or Object Down';
-					if (mouseIsDown && !pmouseIsDown) {
-						duplicateChar = false;
-						reorderCharUp = false;
-						reorderCharDown = true;
-					}
-				}
-				addButtonPressed = true;
-			}
-			if (reorderCharDown && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderCharDown = false;
-
-			if (charDropdown == -2) charDropdown = -1;
-			if (charDropdown >= 0) {
-				if (charDropdownType == 0) {
-					if (_keysDown[16]) {
-						myLevelChars[1][charDropdown][0]--;
-						if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
-						while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
-							myLevelChars[1][charDropdown][0]--;
-							if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
-						}
-					} else {
-						myLevelChars[1][charDropdown][0]++;
-						if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
-						while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
-							myLevelChars[1][charDropdown][0]++;
-							if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
-						}
-					}
-					myLevelChars[1][charDropdown][3] = charD[myLevelChars[1][charDropdown][0]][9];
-					if (myLevelChars[1][charDropdown][3] == 3 || myLevelChars[1][charDropdown][3] == 4) {
-						levelTimer = 0;
-						resetCharPositions();
-					}
-					resetLCChar(charDropdown);
-					charDropdown = -2;
-				} else if (charDropdownType == 1) {
-					ctx.fillStyle = '#ffffff';
-					var textSize = 12.5;
-					ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight, charInfoHeight*3.5, textSize*7);
-					ctx.textBaseline = 'top';
+			var tabWindowH = cheight - tabHeight * tabNames.length;
+			var tabWindowY = (selectedTab + 1) * tabHeight;
+			mouseOnTabWindow = onRect(_xmouse, _ymouse, 660, (selectedTab+1)*tabHeight, 300, tabWindowH);
+			// Draw Tab Contents
+			switch (selectedTab) {
+				case 0:
+					// Level Info
 					ctx.textAlign = 'right';
-					ctx.font = textSize + 'px Helvetica';
+					ctx.textBaseline = 'top';
+					ctx.font = '18px Helvetica';
 					ctx.fillStyle = '#000000';
-					var j = 0;
-					for (let i = 3; i < charStateNames.length; i++) {
-						if (charStateNames[i] != '') {
-							if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize)) {
-								ctx.fillStyle = '#dddddd';
-								ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize);
-								ctx.fillStyle = '#000000';
-								if (mouseIsDown && !addButtonPressed) {
-									setUndo();
-									myLevelChars[1][charDropdown][3] = i;
+					ctx.fillText('Name:',770,tabWindowY + 10);
+					ctx.fillText('Creator:',770,tabWindowY + 60);
+					ctx.fillText('Description:',770,tabWindowY + 110);
+					myLevelInfo.name = drawTextBox(myLevelInfo.name, 785, tabWindowY + 10, 160, 40, 18, [5,2,2,2], 0, false, '#e0e0e0', '#000000', 'Helvetica')[0];
+					myLevelInfo.creator = drawTextBox(myLevelInfo.creator, 785, tabWindowY + 60, 160, 40, 18, [5,2,2,2], 1, false, '#e0e0e0', '#000000', 'Helvetica')[0];
+					myLevelInfo.desc = drawTextBox(myLevelInfo.desc, 785, tabWindowY + 110, 160, 220, 14, [5,2,2,2], 2, true, '#e0e0e0', '#000000', 'Helvetica')[0];
+					if (mouseIsDown && !pmouseIsDown && !onTextBox) {
+						editingTextBox = -1;
+					}
+					break;
+
+				case 1:
+					// Entities
+					var charInfoY = (selectedTab+1)*tabHeight + 5;
+					// TODO: only compute the look up table when it changes
+					var charInfoYLookUp = [];
+					for (let i = 0; i < myLevelChars[1].length; i++) {
+						charInfoYLookUp.push(charInfoY);
+						charInfoY += charInfoHeight + 5;
+						if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[1][i][5].length;
+					}
+					var tabContentsHeight = Math.max(charInfoY, charInfoYLookUp[myLevelChars[1].length-1] + (charInfoHeight*2));
+					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+					var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
+					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+						onButton = true;
+						ctx.fillStyle = '#e8e8e8';
+						if (mouseIsDown && !pmouseIsDown) {
+							draggingScrollBar = true;
+							valueAtClick = _ymouse - scrollBarY;
+						}
+					} else ctx.fillStyle = '#dddddd';
+					if (draggingScrollBar) {
+						onButton = false;
+						ctx.fillStyle = '#a0a0a0';
+						charsTabScrollBar = Math.floor(Math.max(Math.min(
+							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+							tabContentsHeight-tabWindowH), 0));
+						if (!mouseIsDown) draggingScrollBar = false;
+					}
+					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					ctx.save();
+					ctx.translate(0, -charsTabScrollBar);
+					ctx.textAlign = 'left';
+					ctx.textBaseline = 'middle';
+					ctx.font = '20px Helvetica';
+					for (let i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
+						if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
+							ctx.fillStyle = '#e8e8e8';
+							ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
+						}
+						drawLCCharInfo(i, charInfoYLookUp[i]);
+						if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
+					}
+					addButtonPressed = false;
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+						if (myLevelChars[1].length < 50) {
+							onButton = true;
+							hoverText = 'Add New Character or Object';
+							if (mouseIsDown && !pmouseIsDown) {
+								duplicateChar = false;
+								reorderCharUp = false;
+								reorderCharDown = false;
+								setUndo();
+								myLevelChars[1].push([0,-1,-1,10]);
+								var newestCharIndex = myLevelChars[1].length-1;
+								var i = myLevelChars[1][newestCharIndex][0];
+								char.push(new Character(
+									i,
+									0.00,
+									0.00,
+									70 + newestCharIndex * 40,
+									400 - newestCharIndex * 30,
+									myLevelChars[1][newestCharIndex][3],
+									charD[i][0],
+									charD[i][1],
+									charD[i][2],
+									charD[i][2],
+									charD[i][3],
+									charD[i][4],
+									charD[i][6],
+									charD[i][8],
+									i<35?charModels[i].defaultExpr:0
+								));
+								char[char.length-1].placed = false;
+							}
+						}
+						addButtonPressed = true;
+					}
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+						if (myLevelChars[1].length < 50) {
+							onButton = true;
+							hoverText = 'Duplicate Character or Object';
+							if (mouseIsDown && !pmouseIsDown) {
+								// console.log('mi lon ni');
+								reorderCharUp = false;
+								reorderCharDown = false;
+								duplicateChar = true;
+							}
+						}
+						addButtonPressed = true;
+					}
+					if (duplicateChar && !addButtonPressed && mouseIsDown && !pmouseIsDown) duplicateChar = false;
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+						if (myLevelChars[1].length < 50) {
+							onButton = true;
+							hoverText = 'Move Character or Object Up';
+							if (mouseIsDown && !pmouseIsDown) {
+								duplicateChar = false;
+								reorderCharDown = false;
+								reorderCharUp = true;
+							}
+						}
+						addButtonPressed = true;
+					}
+					if (reorderCharUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderCharUp = false;
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+						if (myLevelChars[1].length < 50) {
+							onButton = true;
+							hoverText = 'Move Character or Object Down';
+							if (mouseIsDown && !pmouseIsDown) {
+								duplicateChar = false;
+								reorderCharUp = false;
+								reorderCharDown = true;
+							}
+						}
+						addButtonPressed = true;
+					}
+					if (reorderCharDown && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderCharDown = false;
+
+					if (charDropdown == -2) charDropdown = -1;
+					if (charDropdown >= 0) {
+						if (charDropdownType == 0) {
+							if (_keysDown[16]) {
+								myLevelChars[1][charDropdown][0]--;
+								if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
+								while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
+									myLevelChars[1][charDropdown][0]--;
+									if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
+								}
+							} else {
+								myLevelChars[1][charDropdown][0]++;
+								if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
+								while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
+									myLevelChars[1][charDropdown][0]++;
+									if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
 								}
 							}
-							ctx.fillText(charStateNames[i], 665+240-1, charDropdownY + charInfoHeight + j*textSize);
+							myLevelChars[1][charDropdown][3] = charD[myLevelChars[1][charDropdown][0]][9];
+							if (myLevelChars[1][charDropdown][3] == 3 || myLevelChars[1][charDropdown][3] == 4) {
+								levelTimer = 0;
+								resetCharPositions();
+							}
+							resetLCChar(charDropdown);
+							charDropdown = -2;
+						} else if (charDropdownType == 1) {
+							ctx.fillStyle = '#ffffff';
+							var textSize = 12.5;
+							ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight, charInfoHeight*3.5, textSize*7);
+							ctx.textBaseline = 'top';
+							ctx.textAlign = 'right';
+							ctx.font = textSize + 'px Helvetica';
+							ctx.fillStyle = '#000000';
+							var j = 0;
+							for (let i = 3; i < charStateNames.length; i++) {
+								if (charStateNames[i] != '') {
+									if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize)) {
+										ctx.fillStyle = '#dddddd';
+										ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize);
+										ctx.fillStyle = '#000000';
+										if (mouseIsDown && !addButtonPressed) {
+											setUndo();
+											myLevelChars[1][charDropdown][3] = i;
+										}
+									}
+									ctx.fillText(charStateNames[i], 665+240-1, charDropdownY + charInfoHeight + j*textSize);
+									j++;
+								}
+							}
+						} else if (charDropdownType == 2) {
+							var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
+							var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
+							myLevelChars[1][charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
+							myLevelChars[1][charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+							if (_keysDown[16]) {
+								myLevelChars[1][charDropdown][1] = Math.round(myLevelChars[1][charDropdown][1]*2) / 2;
+								myLevelChars[1][charDropdown][2] = Math.round(myLevelChars[1][charDropdown][2]*2) / 2;
+							}
+							char[charDropdown].x = char[charDropdown].px = +myLevelChars[1][charDropdown][1].toFixed(2) * 30;
+							char[charDropdown].y = char[charDropdown].py = +myLevelChars[1][charDropdown][2].toFixed(2) * 30;
+						} else if (charDropdownType == 3) {
+							var flat = (valueAtClick + (lastClickY-_ymouse)) * 0.5;
+							char[charDropdown].speed = flat>100?100:-Math.log(1 - flat / 100) * 100;
+							char[charDropdown].speed = Math.floor(Math.max(Math.min(char[charDropdown].speed, 99), 1));
+							myLevelChars[1][charDropdown][4] = char[charDropdown].speed;
+							levelTimer = 0;
+							resetCharPositions();
+							if (!mouseIsDown && pmouseIsDown) {
+								char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
+								charDropdown = -2;
+							}
+						} else if (charDropdownType == 4) {
+							var newDire = myLevelChars[1][charDropdown][5][charDropdownMS][0]+1;
+							if (newDire > 3) newDire = 0;
+							myLevelChars[1][charDropdown][5][charDropdownMS][0] = newDire;
+							char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
+							levelTimer = 0;
+							resetCharPositions();
+							charDropdown = -2;
+						} else if (charDropdownType == 5) {
+							// var flat = (valueAtClick + (lastClickY-_ymouse));
+							myLevelChars[1][charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 32), 1));
+							if (!mouseIsDown && pmouseIsDown) {
+								char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
+								levelTimer = 0;
+								resetCharPositions();
+								charDropdown = -2;
+							}
+						}
+
+						if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
+							var pCharState = char[charDropdown].charState;
+							resetLCChar(charDropdown);
+							if (charDropdownType == 2) {
+								char[charDropdown].placed = true;
+								levelTimer = 0;
+								resetCharPositions();
+							} else if (charDropdownType == 1) {
+								if (char[charDropdown].charState == 3 || char[charDropdown].charState == 4) {
+									if (pCharState != 3 && pCharState != 4) {
+										char[charDropdown].speed = myLevelChars[1][charDropdown][4];
+										char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
+									}
+								} else {
+									char[charDropdown].speed = 0;
+									char[charDropdown].motionString = [];
+								}
+							}
+							charDropdown = -2;
+						}
+					}
+					if (charDropdown < -2) charDropdown = -charDropdown-3;
+					ctx.restore();
+
+					ctx.fillStyle = '#cccccc';
+					ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 85, 25);
+					drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
+					drawDuplicateButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+					drawUpButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+					drawDownButton(660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+					break;
+
+				case 2:
+					// Tiles
+					var j = 0;
+					var bpr = 5;
+					var bs = 40;
+					var bdist = 53;
+					ctx.save();
+					ctx.translate(0, -tileTabScrollBar);
+					if (mouseOnTabWindow && !lcPopUp) {
+						var mouseTileRow = _ymouse+tileTabScrollBar-tabWindowY;
+						var mouseTileColumn = _xmouse-660;
+						if (mouseTileRow%bdist < (bdist-bs) || mouseTileColumn%bdist < (bdist-bs)) {
+							mouseTileRow = -1;
+							mouseTileColumn = -1;
+						} else {
+							mouseTileRow = Math.floor((mouseTileRow-(bdist-bs)) / bdist);
+							mouseTileColumn = Math.floor((mouseTileColumn-(bdist-bs)) / bdist);
+						}
+					} else {
+						var mouseTileRow = -1;
+						var mouseTileColumn = -1;
+					}
+					for (let i = 0; i < blockProperties.length; i++) {
+						if (blockProperties[i][15]) {
+							if (i == selectedTile) {
+								ctx.fillStyle = '#a0a0a0';
+								ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+							}
+							if ((j%bpr) == mouseTileColumn && Math.floor(j/bpr) == mouseTileRow) {
+								hoverText = tileNames[i];
+								if (i != selectedTile) {
+									onButton = true;
+									ctx.fillStyle = '#dddddd';
+									// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
+									ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+									if (mouseIsDown && !pmouseIsDown) {
+										// selectedTile = i;
+										setSelectedTile(i);
+										if (tool != 2 && tool != 3) setTool(0);
+									}
+								}
+							}
+							if (i == 6) {
+								ctx.fillStyle = '#505050';
+								ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist + bs/4, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs/2, bs);
+							} else {
+								var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
+								var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
+								if (vb[2] <= 60) {
+									var sc = bs/30;
+									var tlx = 660 + (bdist-bs) + (j%bpr)*bdist;
+									var tly = (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist;
+									if (blockProperties[i][11] > 0 && blockProperties[i][11] < 13) {
+										ctx.save();
+										ctx.translate(tlx + 15 * sc, tly + 28 * sc);
+										ctx.rotate(blockProperties[i][11]<7?-1:1);
+										ctx.translate(-tlx - 15 * sc, -tly - 28 * sc);
+										// ctx.translate(-tlx - (rot+0.5) * scale, -tly - (i+0.9333) * scale);
+										ctx.drawImage(svgLevers[(blockProperties[i][11]-1)%6], tlx, tly, bs, bs);
+										ctx.restore();
+									}
+									ctx.drawImage(img, tlx + vb[0]*sc, tly + vb[1]*sc, vb[2]*sc, vb[3]*sc);
+								} else {
+									var sc = bs/vb[2];
+									ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist - vb[2]*sc/2 + bs/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - vb[3]*sc/2 + bs/2, vb[2]*sc, vb[3]*sc);
+								}
+							}
 							j++;
 						}
 					}
-				} else if (charDropdownType == 2) {
-					var xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
-					var ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
-					myLevelChars[1][charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
-					myLevelChars[1][charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
-					if (_keysDown[16]) {
-						myLevelChars[1][charDropdown][1] = Math.round(myLevelChars[1][charDropdown][1]*2) / 2;
-						myLevelChars[1][charDropdown][2] = Math.round(myLevelChars[1][charDropdown][2]*2) / 2;
-					}
-					char[charDropdown].x = char[charDropdown].px = +myLevelChars[1][charDropdown][1].toFixed(2) * 30;
-					char[charDropdown].y = char[charDropdown].py = +myLevelChars[1][charDropdown][2].toFixed(2) * 30;
-				} else if (charDropdownType == 3) {
-					var flat = (valueAtClick + (lastClickY-_ymouse)) * 0.5;
-					char[charDropdown].speed = flat>100?100:-Math.log(1 - flat / 100) * 100;
-					char[charDropdown].speed = Math.floor(Math.max(Math.min(char[charDropdown].speed, 99), 1));
-					myLevelChars[1][charDropdown][4] = char[charDropdown].speed;
-					levelTimer = 0;
-					resetCharPositions();
-					if (!mouseIsDown && pmouseIsDown) {
-						char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
-						charDropdown = -2;
-					}
-				} else if (charDropdownType == 4) {
-					var newDire = myLevelChars[1][charDropdown][5][charDropdownMS][0]+1;
-					if (newDire > 3) newDire = 0;
-					myLevelChars[1][charDropdown][5][charDropdownMS][0] = newDire;
-					char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
-					levelTimer = 0;
-					resetCharPositions();
-					charDropdown = -2;
-				} else if (charDropdownType == 5) {
-					// var flat = (valueAtClick + (lastClickY-_ymouse));
-					myLevelChars[1][charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 32), 1));
-					if (!mouseIsDown && pmouseIsDown) {
-						char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
-						levelTimer = 0;
-						resetCharPositions();
-						charDropdown = -2;
-					}
-				}
+					ctx.restore();
 
-				if (charDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
-					var pCharState = char[charDropdown].charState;
-					resetLCChar(charDropdown);
-					if (charDropdownType == 2) {
-						char[charDropdown].placed = true;
-						levelTimer = 0;
-						resetCharPositions();
-					} else if (charDropdownType == 1) {
-						if (char[charDropdown].charState == 3 || char[charDropdown].charState == 4) {
-							if (pCharState != 3 && pCharState != 4) {
-								char[charDropdown].speed = myLevelChars[1][charDropdown][4];
-								char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
-							}
-						} else {
-							char[charDropdown].speed = 0;
-							char[charDropdown].motionString = [];
+					var tabContentsHeight = (bdist-bs) + Math.floor((j-1)/bpr + 1) * bdist;
+					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+					var scrollBarY = tabWindowY + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
+					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+						onButton = true;
+						ctx.fillStyle = '#e8e8e8';
+						if (mouseIsDown && !pmouseIsDown) {
+							draggingScrollBar = true;
+							valueAtClick = _ymouse - scrollBarY;
 						}
-					}
-					charDropdown = -2;
-				}
-			}
-			if (charDropdown < -2) charDropdown = -charDropdown-3;
-			ctx.restore();
-
-			ctx.fillStyle = '#cccccc';
-			ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 85, 25);
-			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
-			drawDuplicateButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-			drawUpButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-			drawDownButton(660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-		} else if (selectedTab == 2) {
-			// Tiles
-			var j = 0;
-			var bpr = 5;
-			var bs = 40;
-			var bdist = 53;
-			ctx.save();
-			ctx.translate(0, -tileTabScrollBar);
-			if (mouseOnTabWindow && !lcPopUp) {
-				var mouseTileRow = _ymouse+tileTabScrollBar-tabWindowY;
-				var mouseTileColumn = _xmouse-660;
-				if (mouseTileRow%bdist < (bdist-bs) || mouseTileColumn%bdist < (bdist-bs)) {
-					mouseTileRow = -1;
-					mouseTileColumn = -1;
-				} else {
-					mouseTileRow = Math.floor((mouseTileRow-(bdist-bs)) / bdist);
-					mouseTileColumn = Math.floor((mouseTileColumn-(bdist-bs)) / bdist);
-				}
-			} else {
-				var mouseTileRow = -1;
-				var mouseTileColumn = -1;
-			}
-			for (let i = 0; i < blockProperties.length; i++) {
-				if (blockProperties[i][15]) {
-					if (i == selectedTile) {
+					} else ctx.fillStyle = '#dddddd';
+					if (draggingScrollBar) {
+						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
-						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+						tileTabScrollBar = Math.floor(Math.max(Math.min(
+							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+							tabContentsHeight-tabWindowH), 0));
+						if (!mouseIsDown) draggingScrollBar = false;
 					}
-					if ((j%bpr) == mouseTileColumn && Math.floor(j/bpr) == mouseTileRow) {
-						hoverText = tileNames[i];
-						if (i != selectedTile) {
+					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					break;
+
+				case 3:
+					// Background
+					// var j = 0;
+					var bgpr = 2;
+					var bgw = 96;
+					var bgh = 54;
+					var bgdist = 110;
+					// var h = _frameCount;
+					ctx.save();
+					ctx.translate(0, -bgsTabScrollBar);
+					for (let i = 0; i < imgBgs.length; i++) {
+						if (i == selectedBg) {
+							ctx.fillStyle = '#a0a0a0';
+							ctx.fillRect(
+								660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
+								tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
+								bgw + bgdist-bgw,
+								bgh + bgdist-bgh
+							);
+						} else if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+bgsTabScrollBar,
+							660 + (bgdist-bgw) + (i%bgpr)*bgdist,
+							tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
+							bgw,
+							bgh)) {
 							onButton = true;
 							ctx.fillStyle = '#dddddd';
-							// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
-							ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+							ctx.fillRect(
+								660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
+								tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
+								bgw + bgdist-bgw,
+								bgh + bgdist-bgh
+							);
 							if (mouseIsDown && !pmouseIsDown) {
-								// selectedTile = i;
-								setSelectedTile(i);
-								if (tool != 2 && tool != 3) setTool(0);
+								selectedBg = i;
+								setLCBG();
+								updateLCtiles();
 							}
 						}
+						// ctx.drawImage(imgBgs[i],
+						// 	660 + (bgdist-bgw) + (i%bgpr)*bgdist,
+						// 	(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
+						// 	bgw,
+						// 	bgh
+						// );
 					}
-					if (i == 6) {
-						ctx.fillStyle = '#505050';
-						ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist + bs/4, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs/2, bs);
-					} else {
-						var img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
-						var vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
-						if (vb[2] <= 60) {
-							var sc = bs/30;
-							var tlx = 660 + (bdist-bs) + (j%bpr)*bdist;
-							var tly = (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist;
-							if (blockProperties[i][11] > 0 && blockProperties[i][11] < 13) {
-								ctx.save();
-								ctx.translate(tlx + 15 * sc, tly + 28 * sc);
-								ctx.rotate(blockProperties[i][11]<7?-1:1);
-								ctx.translate(-tlx - 15 * sc, -tly - 28 * sc);
-								// ctx.translate(-tlx - (rot+0.5) * scale, -tly - (i+0.9333) * scale);
-								ctx.drawImage(svgLevers[(blockProperties[i][11]-1)%6], tlx, tly, bs, bs);
-								ctx.restore();
-							}
-							ctx.drawImage(img, tlx + vb[0]*sc, tly + vb[1]*sc, vb[2]*sc, vb[3]*sc);
-						} else {
-							var sc = bs/vb[2];
-							ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist - vb[2]*sc/2 + bs/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - vb[3]*sc/2 + bs/2, vb[2]*sc, vb[3]*sc);
+					ctx.drawImage(osc2, 660, tabWindowY, osc2.width / pixelRatio, osc2.height / pixelRatio);
+					ctx.restore();
+
+					var tabContentsHeight = (bgdist-bgh) + Math.floor((i-1)/bgpr + 1) * bgdist;
+					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+					var scrollBarY = (selectedTab+1)*tabHeight + (bgsTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
+					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+						onButton = true;
+						ctx.fillStyle = '#e8e8e8';
+						if (mouseIsDown && !pmouseIsDown) {
+							draggingScrollBar = true;
+							valueAtClick = _ymouse - scrollBarY;
 						}
+					} else ctx.fillStyle = '#dddddd';
+					if (draggingScrollBar) {
+						onButton = false;
+						ctx.fillStyle = '#a0a0a0';
+						bgsTabScrollBar = Math.floor(Math.max(Math.min(
+							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+							tabContentsHeight-tabWindowH), 0));
+						if (!mouseIsDown) draggingScrollBar = false;
 					}
-					j++;
-				}
-			}
-			ctx.restore();
+					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					break;
 
-			var tabContentsHeight = (bdist-bs) + Math.floor((j-1)/bpr + 1) * bdist;
-			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-			var scrollBarY = tabWindowY + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
-				onButton = true;
-				ctx.fillStyle = '#e8e8e8';
-				if (mouseIsDown && !pmouseIsDown) {
-					draggingScrollBar = true;
-					valueAtClick = _ymouse - scrollBarY;
-				}
-			} else ctx.fillStyle = '#dddddd';
-			if (draggingScrollBar) {
-				onButton = false;
-				ctx.fillStyle = '#a0a0a0';
-				tileTabScrollBar = Math.floor(Math.max(Math.min(
-					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-					tabContentsHeight-tabWindowH), 0));
-				if (!mouseIsDown) draggingScrollBar = false;
-			}
-			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
-		} else if (selectedTab == 3) {
-			// Background
-			// var j = 0;
-			var bgpr = 2;
-			var bgw = 96;
-			var bgh = 54;
-			var bgdist = 110;
-			// var h = _frameCount;
-			ctx.save();
-			ctx.translate(0, -bgsTabScrollBar);
-			for (let i = 0; i < imgBgs.length; i++) {
-				if (i == selectedBg) {
-					ctx.fillStyle = '#a0a0a0';
-					ctx.fillRect(
-						660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
-						tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
-						bgw + bgdist-bgw,
-						bgh + bgdist-bgh
-					);
-				} else if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+bgsTabScrollBar,
-					660 + (bgdist-bgw) + (i%bgpr)*bgdist,
-					tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
-					bgw,
-					bgh)) {
-					onButton = true;
-					ctx.fillStyle = '#dddddd';
-					ctx.fillRect(
-						660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
-						tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
-						bgw + bgdist-bgw,
-						bgh + bgdist-bgh
-					);
-					if (mouseIsDown && !pmouseIsDown) {
-						selectedBg = i;
-						setLCBG();
-						updateLCtiles();
+				case 4:
+					// Dialogue
+					var tabContentsHeight = 5;
+					for (let i = 0; i < myLevelDialogue[1].length; i++) {
+						tabContentsHeight += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
 					}
-				}
-				// ctx.drawImage(imgBgs[i],
-				// 	660 + (bgdist-bgw) + (i%bgpr)*bgdist,
-				// 	(selectedTab+1)*tabHeight + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
-				// 	bgw,
-				// 	bgh
-				// );
-			}
-			ctx.drawImage(osc2, 660, tabWindowY, osc2.width / pixelRatio, osc2.height / pixelRatio);
-			ctx.restore();
-
-			var tabContentsHeight = (bgdist-bgh) + Math.floor((i-1)/bgpr + 1) * bgdist;
-			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-			var scrollBarY = (selectedTab+1)*tabHeight + (bgsTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
-				onButton = true;
-				ctx.fillStyle = '#e8e8e8';
-				if (mouseIsDown && !pmouseIsDown) {
-					draggingScrollBar = true;
-					valueAtClick = _ymouse - scrollBarY;
-				}
-			} else ctx.fillStyle = '#dddddd';
-			if (draggingScrollBar) {
-				onButton = false;
-				ctx.fillStyle = '#a0a0a0';
-				bgsTabScrollBar = Math.floor(Math.max(Math.min(
-					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-					tabContentsHeight-tabWindowH), 0));
-				if (!mouseIsDown) draggingScrollBar = false;
-			}
-			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
-		} else if (selectedTab == 4) {
-			// Dialogue
-			var tabContentsHeight = 5;
-			for (let i = 0; i < myLevelDialogue[1].length; i++) {
-				tabContentsHeight += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
-			}
-			var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-			var scrollBarY = (selectedTab+1)*tabHeight + (diaTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-			if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
-				onButton = true;
-				ctx.fillStyle = '#e8e8e8';
-				if (mouseIsDown && !pmouseIsDown) {
-					draggingScrollBar = true;
-					valueAtClick = _ymouse - scrollBarY;
-				}
-			} else ctx.fillStyle = '#dddddd';
-			if (draggingScrollBar) {
-				onButton = false;
-				ctx.fillStyle = '#a0a0a0';
-				diaTabScrollBar = Math.floor(Math.max(Math.min(
-					(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-					tabContentsHeight-tabWindowH), 0));
-				if (!mouseIsDown) draggingScrollBar = false;
-			}
-			ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
-			ctx.save();
-			ctx.translate(0, -diaTabScrollBar);
-			// ctx.textAlign = 'left';
-			// ctx.textBaseline = 'middle';
-			// ctx.font = '20px Helvetica';
-			//myLevelDialogue[1][i].linecount
-			var diaInfoY = (selectedTab+1)*tabHeight + 5;
-			for (let i = 0; i < myLevelDialogue[1].length; i++) {
-				if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, diaInfoY, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
-					ctx.fillStyle = '#e8e8e8';
-					ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight*myLevelDialogue[1][i].linecount + 10);
-				}
-				drawLCDiaInfo(i, diaInfoY);
-				if (i >= myLevelDialogue[1].length) break;
-				diaInfoY += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
-				// ctx.fillStyle = '#000000';
-				// ctx.fillText(myLevelChars[1][i], 660, 60+i*20);
-			}
-			addButtonPressed = false;
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				onButton = true;
-				hoverText = 'Add New Dialogue Line';
-				if (mouseIsDown && !pmouseIsDown) {
-					reorderDiaDown = false;
-					reorderDiaUp = false;
-					editingTextBox = -1;
-					setUndo();
-					myLevelDialogue[1].push({char:99,face:2,text:'Enter text',linecount:1});
-				}
-				addButtonPressed = true;
-			}
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars[1].length < 50) {
-					onButton = true;
-					hoverText = 'Move Dialogue Line Up';
-					if (mouseIsDown && !pmouseIsDown) {
-						reorderDiaDown = false;
-						reorderDiaUp = true;
-						editingTextBox = -1;
-					}
-				}
-				addButtonPressed = true;
-			}
-			if (reorderDiaUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaUp = false;
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
-				if (myLevelChars[1].length < 50) {
-					onButton = true;
-					hoverText = 'Move Dialogue Line Down';
-					if (mouseIsDown && !pmouseIsDown) {
-						reorderDiaUp = false;
-						reorderDiaDown = true;
-						editingTextBox = -1;
-					}
-				}
-				addButtonPressed = true;
-			}
-			if (reorderDiaDown && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaDown = false;
-			if (diaDropdown == -2) diaDropdown = -1;
-			if (diaDropdown >= 0) {
-				if (diaDropdownType == 0) {
-					setUndo();
-					if (myLevelDialogue[1][diaDropdown].face == 2) myLevelDialogue[1][diaDropdown].face = 3;
-					else if (myLevelDialogue[1][diaDropdown].face == 3) myLevelDialogue[1][diaDropdown].face = 2;
-					diaDropdown = -2;
-				} else if (diaDropdownType == 1) {
-					setUndo();
-					var allowedDiaCharIndices = [99, 55, 52, 51, 50];
-					for (let i = myLevelChars[1].length - 1; i >= 0; i--) if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
-					var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[1][diaDropdown].char);
-					if (_keysDown[16]) {
-						ourCurrentIndex++;
-						if (ourCurrentIndex >= allowedDiaCharIndices.length) ourCurrentIndex = 0;
-					} else {
-						ourCurrentIndex--;
-						if (ourCurrentIndex < 0) ourCurrentIndex = allowedDiaCharIndices.length - 1;
-					}
-					myLevelDialogue[1][diaDropdown].char = allowedDiaCharIndices[ourCurrentIndex];
-					diaDropdown = -2;
-				} else if (diaDropdownType == 2) {
-					if (_keysDown[13]) diaDropdown = -2;
-				}
-
-
-
-				if (diaDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
-					diaDropdown = -2;
-				}
-			}
-			if (diaDropdown < -2) diaDropdown = -diaDropdown-3;
-			ctx.restore();
-
-			ctx.fillStyle = '#cccccc';
-			ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 65, 25);
-			drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
-			drawUpButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-			drawDownButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-		} else if (selectedTab == 5) {
-			// Options
-			drawMenu0Button('COPY LEVEL',673, tabWindowY + 10, 11, false, copyLevelString);
-			drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
-			drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
-			drawMenu0Button('EXIT',673, tabWindowY + 160, 15, false, menuExitLevelCreator);
-			ctx.fillStyle = '#000000';
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'top';
-			ctx.font = '25px Helvetica';
-			ctx.fillText('Necessary Deaths:', 660 + (cwidth-660)/2, tabWindowY + 220);
-			var necessaryDeathsW = 100;
-			ctx.fillStyle = '#808080';
-			ctx.fillRect(660 + ((cwidth-660)-necessaryDeathsW)/2, tabWindowY + 250, necessaryDeathsW, 25);
-			// ctx.fillStyle = '#ee3333';
-			drawMinusButton(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 3);
-			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths < 999999) {
-				if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
-			}
-			// ctx.fillStyle = '#33ee33';
-			drawAddButton(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 3);
-			if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths > 0) {
-				if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
-			}
-
-			ctx.fillStyle = '#ffffff';
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'top';
-			ctx.fillText(myLevelNecessaryDeaths.toString().padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
-		}
-
-
-		// Draw Tabs
-		ctx.textAlign = 'left';
-		ctx.font = '25px Helvetica';
-		ctx.textBaseline = 'middle';
-		for (let i = 0; i < tabNames.length; i++) {
-			if (i%2 == 0) ctx.fillStyle = '#808080';
-			else ctx.fillStyle = '#626262';
-			var tabY = i>selectedTab?cheight-((tabNames.length-i)*tabHeight):i*tabHeight;
-			ctx.fillRect(660, tabY, 300, tabHeight);
-			ctx.fillStyle = '#ffffff';
-			ctx.fillText(tabNames[i], 664, tabY+tabHeight*0.6);
-
-			if (!lcPopUp && onRect(_xmouse, _ymouse, 660, tabY, 300, tabHeight)) {
-				onButton = true;
-				if (mouseIsDown && !pmouseIsDown) {
-					selectedTab = i;
-					draggingScrollBar = false;
-					duplicateChar = false;
-					reorderCharUp = false;
-					reorderCharDown = false;
-					reorderDiaUp = false;
-					reorderDiaDown = false;
-					editingTextBox = -1;
-				}
-			}
-		}
-
-
-		// Draw Tools
-		for (let i = 0; i < 12; i++) {
-			if (i != 8) {
-				if (i == tool || i == 9 && copied) ctx.fillStyle = '#999999';
-				else ctx.fillStyle = '#666666';
-				ctx.fillRect(35 + i*50, 490, 40, 40);
-				ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490);
-
-				if (!lcPopUp && _ymouse > 480 && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
-					onButton = true;
-					hoverText = toolNames[i];
-					if (mouseIsDown && !pmouseIsDown) {
-						if (i < 8) {
-							setTool(i);
-							selectedTab = 2;
-							if ((tool == 2 || tool == 3) && blockProperties[selectedTile][9]) {
-								setSelectedTile(0);
-							}
+					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
+					var scrollBarY = (selectedTab+1)*tabHeight + (diaTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
+					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+						onButton = true;
+						ctx.fillStyle = '#e8e8e8';
+						if (mouseIsDown && !pmouseIsDown) {
+							draggingScrollBar = true;
+							valueAtClick = _ymouse - scrollBarY;
 						}
-						else if (i == 9) copyRect();
-						else if (i == 10) undo();
-						else if (i == 11) {
+					} else ctx.fillStyle = '#dddddd';
+					if (draggingScrollBar) {
+						onButton = false;
+						ctx.fillStyle = '#a0a0a0';
+						diaTabScrollBar = Math.floor(Math.max(Math.min(
+							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
+							tabContentsHeight-tabWindowH), 0));
+						if (!mouseIsDown) draggingScrollBar = false;
+					}
+					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					ctx.save();
+					ctx.translate(0, -diaTabScrollBar);
+					// ctx.textAlign = 'left';
+					// ctx.textBaseline = 'middle';
+					// ctx.font = '20px Helvetica';
+					//myLevelDialogue[1][i].linecount
+					var diaInfoY = (selectedTab+1)*tabHeight + 5;
+					for (let i = 0; i < myLevelDialogue[1].length; i++) {
+						if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, diaInfoY, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+							ctx.fillStyle = '#e8e8e8';
+							ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight*myLevelDialogue[1][i].linecount + 10);
+						}
+						drawLCDiaInfo(i, diaInfoY);
+						if (i >= myLevelDialogue[1].length) break;
+						diaInfoY += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
+						// ctx.fillStyle = '#000000';
+						// ctx.fillText(myLevelChars[1][i], 660, 60+i*20);
+					}
+					addButtonPressed = false;
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+						onButton = true;
+						hoverText = 'Add New Dialogue Line';
+						if (mouseIsDown && !pmouseIsDown) {
+							reorderDiaDown = false;
+							reorderDiaUp = false;
+							editingTextBox = -1;
 							setUndo();
-							clearMyLevel(1);
-							updateLCtiles();
+							myLevelDialogue[1].push({char:99,face:2,text:'Enter text',linecount:1});
+						}
+						addButtonPressed = true;
+					}
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+						if (myLevelChars[1].length < 50) {
+							onButton = true;
+							hoverText = 'Move Dialogue Line Up';
+							if (mouseIsDown && !pmouseIsDown) {
+								reorderDiaDown = false;
+								reorderDiaUp = true;
+								editingTextBox = -1;
+							}
+						}
+						addButtonPressed = true;
+					}
+					if (reorderDiaUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaUp = false;
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+						if (myLevelChars[1].length < 50) {
+							onButton = true;
+							hoverText = 'Move Dialogue Line Down';
+							if (mouseIsDown && !pmouseIsDown) {
+								reorderDiaUp = false;
+								reorderDiaDown = true;
+								editingTextBox = -1;
+							}
+						}
+						addButtonPressed = true;
+					}
+					if (reorderDiaDown && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaDown = false;
+					if (diaDropdown == -2) diaDropdown = -1;
+					if (diaDropdown >= 0) {
+						if (diaDropdownType == 0) {
+							setUndo();
+							if (myLevelDialogue[1][diaDropdown].face == 2) myLevelDialogue[1][diaDropdown].face = 3;
+							else if (myLevelDialogue[1][diaDropdown].face == 3) myLevelDialogue[1][diaDropdown].face = 2;
+							diaDropdown = -2;
+						} else if (diaDropdownType == 1) {
+							setUndo();
+							var allowedDiaCharIndices = [99, 55, 52, 51, 50];
+							for (let i = myLevelChars[1].length - 1; i >= 0; i--) if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
+							var ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[1][diaDropdown].char);
+							if (_keysDown[16]) {
+								ourCurrentIndex++;
+								if (ourCurrentIndex >= allowedDiaCharIndices.length) ourCurrentIndex = 0;
+							} else {
+								ourCurrentIndex--;
+								if (ourCurrentIndex < 0) ourCurrentIndex = allowedDiaCharIndices.length - 1;
+							}
+							myLevelDialogue[1][diaDropdown].char = allowedDiaCharIndices[ourCurrentIndex];
+							diaDropdown = -2;
+						} else if (diaDropdownType == 2) {
+							if (_keysDown[13]) diaDropdown = -2;
+						}
+
+
+
+						if (diaDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
+							diaDropdown = -2;
 						}
 					}
-				}
-			}
-		}
+					if (diaDropdown < -2) diaDropdown = -diaDropdown-3;
+					ctx.restore();
 
+					ctx.fillStyle = '#cccccc';
+					ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 65, 25);
+					drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
+					drawUpButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+					drawDownButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+					break;
 
-		drawLCTiles();
-		drawLCGrid();
-		drawLCChars();
-
-
-		var shiftedXMouse = _xmouse;
-		var shiftedYMouse = _ymouse;
-		if (_keysDown[16]) {
-			if (Math.abs(_ymouse-lastClickY) > Math.abs(_xmouse-lastClickX)) shiftedXMouse = lastClickX;
-			else shiftedYMouse = lastClickY;
-		}
-		x = Math.floor((shiftedXMouse - (330 - scale * levelWidth / 2)) / scale);
-		y = Math.floor((shiftedYMouse - (240 - scale * levelHeight / 2)) / scale);
-		if (mouseIsDown) {
-			if (selectedTab == 2) {
-				if (tool <= 1 && mouseOnGrid()) {
-					if (tool == 1) i = 0;
-					else i = selectedTile;
-					if (i >= 0 && i < blockProperties.length) {
-						var redraw = false;
-						if (myLevel[1][y][x] != i) {
-							myLevel[1][y][x] = i;
-							redraw = true;
-						}
-						if (i == 6 && (x != LCEndGateX || y != LCEndGateY)) {
-							if (LCEndGateY != -1) myLevel[1][LCEndGateY][LCEndGateX] = 0;
-							LCEndGateX = x;
-							LCEndGateY = y;
-							setEndGateLights();
-							redraw = true;
-						}
-						if (i == 12 && (x != LCCoinX || y != LCCoinY)) {
-							if (LCCoinY != -1) myLevel[1][LCCoinY][LCCoinX] = 0;
-							LCCoinX = x;
-							LCCoinY = y;
-							redraw = true;
-						}
-						if (redraw) updateLCtiles();
+				case 5:
+					// Options
+					drawMenu0Button('COPY LEVEL',673, tabWindowY + 10, 11, false, copyLevelString);
+					drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
+					drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
+					drawMenu0Button('EXIT',673, tabWindowY + 160, 15, false, menuExitLevelCreator);
+					ctx.fillStyle = '#000000';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'top';
+					ctx.font = '25px Helvetica';
+					ctx.fillText('Necessary Deaths:', 660 + (cwidth-660)/2, tabWindowY + 220);
+					var necessaryDeathsW = 100;
+					ctx.fillStyle = '#808080';
+					ctx.fillRect(660 + ((cwidth-660)-necessaryDeathsW)/2, tabWindowY + 250, necessaryDeathsW, 25);
+					// ctx.fillStyle = '#ee3333';
+					drawMinusButton(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 3);
+					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths < 999999) {
+						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
 					}
-				}
-			}
-			if ((tool == 2 || tool == 5 && !copied) && LCRect[0] != -1 && mouseOnGrid()) {
-				if (x != LCRect[2] || y != LCRect[3]) {
-					LCRect[2] = Math.min(Math.max(x,0),levelWidth - 1);
-					LCRect[3] = Math.min(Math.max(y,0),levelHeight - 1);
-				}
-			}
-		}
-		if (LCRect[0] != -1) drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
-
-		if (selectedTab == 2 && mouseOnGrid()) {
-			if (tool == 6) {
-				// levelCreator.rectSelect.clear();
-				var y2;
-				var y3;
-				ctx.lineWidth = 2 * scale / 9;
-				if (closeToEdgeY()) {
-					ctx.strokeStyle = '#008000';
-					y2 = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-					y3 = 0;
-				} else {
-					ctx.strokeStyle = '#800000';
-					y2 = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-					y3 = 0.5;
-				}
-				ctx.beginPath();
-				ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
-				ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
-				ctx.stroke();
-			} else if (tool == 7) {
-				// levelCreator.rectSelect.clear();
-				var x2;
-				var x3;
-				ctx.lineWidth = 2 * scale / 9;
-				if (closeToEdgeX()) {
-					ctx.strokeStyle = '#008000';
-					x2 = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-					x3 = 0;
-				} else {
-					ctx.strokeStyle = '#800000';
-					x2 = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-					x3 = 0.5;
-				}
-				ctx.beginPath();
-				ctx.moveTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 - scale * levelHeight / 2);
-				ctx.lineTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 + scale * levelHeight / 2);
-				ctx.stroke();
-			}
-		}
-		// else if (tool == 6 || tool == 7) {
-		// 	levelCreator.rectSelect.clear();
-		// }
-
-		// for (let i = 0; i < 6; i++) {
-		// 	y = i * 40;
-		// 	if (i > selectedTab) {
-		// 		y += 300;
-		// 	}
-		// 	if (Math.abs(levelCreator.sideBar["tab" + (i + 1)]._y - y) < 0.5) {
-		// 		levelCreator.sideBar["tab" + (i + 1)]._y = y;
-		// 	} else {
-		// 		levelCreator.sideBar["tab" + (i + 1)]._y += (y - levelCreator.sideBar["tab" + (i + 1)]._y) * 0.2;
-		// 	}
-		// }
-
-		if (lcPopUp) {
-			if (lcPopUpType == 0) {
-				ctx.globalAlpha = 0.2;
-				ctx.fillStyle = '#000000';
-				ctx.fillRect(0, 0, cwidth, cheight);
-				ctx.globalAlpha = 1;
-				var lcPopUpW = 750;
-				var lcPopUpH = 540;
-				ctx.fillStyle = '#eaeaea';
-				ctx.fillRect((cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH);
-				if (mouseIsDown && !pmouseIsDown && !onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH)) {
-					lcPopUp = false;
-					editingTextBox = -1;
-					levelLoadString = '';
-					canvas.setAttribute('contenteditable', false)
-				}
-				ctx.fillStyle = '#000000';
-				ctx.font = '20px Helvetica';
-				ctx.textBaseline = 'top';
-				ctx.textAlign = 'left';
-				ctx.fillText('Paste your level\'s string here:', (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 5);
-				levelLoadString = drawTextBox(levelLoadString, (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 30, lcPopUpW-20, lcPopUpH-80, 8, [5,5,5,5], 2, true, '#ffffff', '#000000', 'monospace')[0];
-
-				ctx.font = '18px Helvetica';
-				ctx.textAlign = 'center';
-				ctx.fillStyle = '#a0a0a0';
-				ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
-				ctx.fillStyle = '#ffffff';
-				ctx.fillText('Cancel', (cwidth-lcPopUpW)/2 + lcPopUpW-110, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
-				ctx.fillStyle = '#00a0ff';
-				ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
-				ctx.fillStyle = '#ffffff';
-				ctx.fillText('Load', (cwidth-lcPopUpW)/2 + lcPopUpW-40, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
-				if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
-					onButton = true;
-					if (mouseIsDown && !pmouseIsDown) {
-						lcPopUp = false;
-						editingTextBox = -1;
-						levelLoadString = '';
-						canvas.setAttribute('contenteditable', false)
+					// ctx.fillStyle = '#33ee33';
+					drawAddButton(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 3);
+					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths > 0) {
+						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
 					}
-				} else if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
-					onButton = true;
-					if (mouseIsDown && !pmouseIsDown) {
-						readLevelString(levelLoadString);
-						lcPopUp = false;
-						editingTextBox = -1;
-						levelLoadString = '';
-						canvas.setAttribute('contenteditable', false)
-					}
-				}
-			}
-		}
 
-		if (lcMessageTimer > 0) {
-			if (lcMessageTimer > 50) ctx.globalAlpha = (100-lcMessageTimer)/50;
+					ctx.fillStyle = '#ffffff';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'top';
+					ctx.fillText(myLevelNecessaryDeaths.toString().padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
+					break;
+			}
+
+			// Draw Tabs
+			ctx.textAlign = 'left';
 			ctx.font = '25px Helvetica';
 			ctx.textBaseline = 'middle';
+			for (let i = 0; i < tabNames.length; i++) {
+				if (i%2 == 0) ctx.fillStyle = '#808080';
+				else ctx.fillStyle = '#626262';
+				var tabY = i>selectedTab?cheight-((tabNames.length-i)*tabHeight):i*tabHeight;
+				ctx.fillRect(660, tabY, 300, tabHeight);
+				ctx.fillStyle = '#ffffff';
+				ctx.fillText(tabNames[i], 664, tabY+tabHeight*0.6);
+
+				if (!lcPopUp && onRect(_xmouse, _ymouse, 660, tabY, 300, tabHeight)) {
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) {
+						selectedTab = i;
+						draggingScrollBar = false;
+						duplicateChar = false;
+						reorderCharUp = false;
+						reorderCharDown = false;
+						reorderDiaUp = false;
+						reorderDiaDown = false;
+						editingTextBox = -1;
+					}
+				}
+			}
+
+
+			// Draw Tools
+			for (let i = 0; i < 12; i++) {
+				if (i != 8) {
+					if (i == tool || i == 9 && copied) ctx.fillStyle = '#999999';
+					else ctx.fillStyle = '#666666';
+					ctx.fillRect(35 + i*50, 490, 40, 40);
+					ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490);
+
+					if (!lcPopUp && _ymouse > 480 && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
+						onButton = true;
+						hoverText = toolNames[i];
+						if (mouseIsDown && !pmouseIsDown) {
+							if (i < 8) {
+								setTool(i);
+								selectedTab = 2;
+								if ((tool == 2 || tool == 3) && blockProperties[selectedTile][9]) {
+									setSelectedTile(0);
+								}
+							}
+							else if (i == 9) copyRect();
+							else if (i == 10) undo();
+							else if (i == 11) {
+								setUndo();
+								clearMyLevel(1);
+								updateLCtiles();
+							}
+						}
+					}
+				}
+			}
+
+
+			drawLCTiles();
+			drawLCGrid();
+			drawLCChars();
+
+
+			var shiftedXMouse = _xmouse;
+			var shiftedYMouse = _ymouse;
+			if (_keysDown[16]) {
+				if (Math.abs(_ymouse-lastClickY) > Math.abs(_xmouse-lastClickX)) shiftedXMouse = lastClickX;
+				else shiftedYMouse = lastClickY;
+			}
+			x = Math.floor((shiftedXMouse - (330 - scale * levelWidth / 2)) / scale);
+			y = Math.floor((shiftedYMouse - (240 - scale * levelHeight / 2)) / scale);
+			if (mouseIsDown) {
+				if (selectedTab == 2) {
+					if (tool <= 1 && mouseOnGrid()) {
+						if (tool == 1) i = 0;
+						else i = selectedTile;
+						if (i >= 0 && i < blockProperties.length) {
+							var redraw = false;
+							if (myLevel[1][y][x] != i) {
+								myLevel[1][y][x] = i;
+								redraw = true;
+							}
+							if (i == 6 && (x != LCEndGateX || y != LCEndGateY)) {
+								if (LCEndGateY != -1) myLevel[1][LCEndGateY][LCEndGateX] = 0;
+								LCEndGateX = x;
+								LCEndGateY = y;
+								setEndGateLights();
+								redraw = true;
+							}
+							if (i == 12 && (x != LCCoinX || y != LCCoinY)) {
+								if (LCCoinY != -1) myLevel[1][LCCoinY][LCCoinX] = 0;
+								LCCoinX = x;
+								LCCoinY = y;
+								redraw = true;
+							}
+							if (redraw) updateLCtiles();
+						}
+					}
+				}
+				if ((tool == 2 || tool == 5 && !copied) && LCRect[0] != -1 && mouseOnGrid()) {
+					if (x != LCRect[2] || y != LCRect[3]) {
+						LCRect[2] = Math.min(Math.max(x,0),levelWidth - 1);
+						LCRect[3] = Math.min(Math.max(y,0),levelHeight - 1);
+					}
+				}
+			}
+			if (LCRect[0] != -1) drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
+
+			if (selectedTab == 2 && mouseOnGrid()) {
+				if (tool == 6) {
+					// levelCreator.rectSelect.clear();
+					var y2;
+					var y3;
+					ctx.lineWidth = 2 * scale / 9;
+					if (closeToEdgeY()) {
+						ctx.strokeStyle = '#008000';
+						y2 = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+						y3 = 0;
+					} else {
+						ctx.strokeStyle = '#800000';
+						y2 = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+						y3 = 0.5;
+					}
+					ctx.beginPath();
+					ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
+					ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
+					ctx.stroke();
+				} else if (tool == 7) {
+					// levelCreator.rectSelect.clear();
+					var x2;
+					var x3;
+					ctx.lineWidth = 2 * scale / 9;
+					if (closeToEdgeX()) {
+						ctx.strokeStyle = '#008000';
+						x2 = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+						x3 = 0;
+					} else {
+						ctx.strokeStyle = '#800000';
+						x2 = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+						x3 = 0.5;
+					}
+					ctx.beginPath();
+					ctx.moveTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 - scale * levelHeight / 2);
+					ctx.lineTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 + scale * levelHeight / 2);
+					ctx.stroke();
+				}
+			}
+			// else if (tool == 6 || tool == 7) {
+			// 	levelCreator.rectSelect.clear();
+			// }
+
+			// for (let i = 0; i < 6; i++) {
+			// 	y = i * 40;
+			// 	if (i > selectedTab) {
+			// 		y += 300;
+			// 	}
+			// 	if (Math.abs(levelCreator.sideBar["tab" + (i + 1)]._y - y) < 0.5) {
+			// 		levelCreator.sideBar["tab" + (i + 1)]._y = y;
+			// 	} else {
+			// 		levelCreator.sideBar["tab" + (i + 1)]._y += (y - levelCreator.sideBar["tab" + (i + 1)]._y) * 0.2;
+			// 	}
+			// }
+
+			if (lcPopUp) {
+				if (lcPopUpType == 0) {
+					ctx.globalAlpha = 0.2;
+					ctx.fillStyle = '#000000';
+					ctx.fillRect(0, 0, cwidth, cheight);
+					ctx.globalAlpha = 1;
+					var lcPopUpW = 750;
+					var lcPopUpH = 540;
+					ctx.fillStyle = '#eaeaea';
+					ctx.fillRect((cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH);
+					if (mouseIsDown && !pmouseIsDown && !onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH)) {
+						lcPopUp = false;
+						editingTextBox = -1;
+						levelLoadString = '';
+						canvas.setAttribute('contenteditable', false)
+					}
+					ctx.fillStyle = '#000000';
+					ctx.font = '20px Helvetica';
+					ctx.textBaseline = 'top';
+					ctx.textAlign = 'left';
+					ctx.fillText('Paste your level\'s string here:', (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 5);
+					levelLoadString = drawTextBox(levelLoadString, (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 30, lcPopUpW-20, lcPopUpH-80, 8, [5,5,5,5], 2, true, '#ffffff', '#000000', 'monospace')[0];
+
+					ctx.font = '18px Helvetica';
+					ctx.textAlign = 'center';
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
+					ctx.fillStyle = '#ffffff';
+					ctx.fillText('Cancel', (cwidth-lcPopUpW)/2 + lcPopUpW-110, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
+					ctx.fillStyle = '#00a0ff';
+					ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
+					ctx.fillStyle = '#ffffff';
+					ctx.fillText('Load', (cwidth-lcPopUpW)/2 + lcPopUpW-40, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
+					if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							lcPopUp = false;
+							editingTextBox = -1;
+							levelLoadString = '';
+							canvas.setAttribute('contenteditable', false)
+						}
+					} else if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							readLevelString(levelLoadString);
+							lcPopUp = false;
+							editingTextBox = -1;
+							levelLoadString = '';
+							canvas.setAttribute('contenteditable', false)
+						}
+					}
+				}
+			}
+
+			if (lcMessageTimer > 0) {
+				if (lcMessageTimer > 50) ctx.globalAlpha = (100-lcMessageTimer)/50;
+				ctx.font = '25px Helvetica';
+				ctx.textBaseline = 'middle';
+				ctx.textAlign = 'center';
+				ctx.fillStyle = '#ffffff';
+				var lcMessageLines = lcMessageText.split('\n');
+				lcMessageLines.forEach((v,i) => {lcMessageLines[i] = ctx.measureText(v).width + 10});
+				var msgWidth = Math.max(...lcMessageLines);
+				var msgHeight = (25*lcMessageLines.length)+5;
+				// var msgWidth = ctx.measureText(lcMessageText).width+10;
+				ctx.fillRect((cwidth-msgWidth)/2, (cheight-30)/2, msgWidth, msgHeight);
+				ctx.fillStyle = '#000000';
+				linebreakText(lcMessageText, cwidth/2, cheight/2, 25);
+				lcMessageTimer++;
+				if (lcMessageTimer > 100 || (_pxmouse != _xmouse || _pymouse != _ymouse)) {
+					lcMessageTimer = 0;
+				}
+				ctx.globalAlpha = 1;
+			}
+
+			levelTimer++;
+			break;
+
+		case 6:
+			ctx.drawImage(svgMenu6, 0, 0, cwidth, cheight);
+			ctx.fillStyle = '#666666';
+
+			// Tabs
+			ctx.font = 'bold 35px Helvetica';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			let tabx = 28;
+			for (let i = 0; i < exploreTabWidths.length; i++) {
+				if (i == exploreTab) ctx.fillStyle = '#666666';
+				else if (onRect(_xmouse, _ymouse, tabx, 20, exploreTabWidths[i], 45)) {
+					ctx.fillStyle = '#b3b3b3';
+					if (mouseIsDown && !pmouseIsDown) exploreTab = i;
+				}
+				else ctx.fillStyle = '#999999';
+				ctx.fillRect(tabx, 20, exploreTabWidths[i], 45);
+				ctx.fillStyle = '#ffffff';
+				ctx.fillText(exploreTabNames[i], tabx+exploreTabWidths[i]/2, 45);
+				// exploreTabNames[i];
+				tabx += exploreTabWidths[i] + 5;
+			}
+
+			// Levels
+			if (exploreLoading) {
+				drawExploreLoadingText();
+			} else {
+				for (let i = 0; i < explorePageLevels.length; i++) {
+					drawExploreLevel(232 * (i%4) + 28, Math.floor(i/4)*182 + 100, i);
+				}
+			}
+
+
+			// page number
+			ctx.textBaseline = 'top';
 			ctx.textAlign = 'center';
 			ctx.fillStyle = '#ffffff';
-			var lcMessageLines = lcMessageText.split('\n');
-			lcMessageLines.forEach((v,i) => {lcMessageLines[i] = ctx.measureText(v).width + 10});
-			var msgWidth = Math.max(...lcMessageLines);
-			var msgHeight = (25*lcMessageLines.length)+5;
-			// var msgWidth = ctx.measureText(lcMessageText).width+10;
-			ctx.fillRect((cwidth-msgWidth)/2, (cheight-30)/2, msgWidth, msgHeight);
-			ctx.fillStyle = '#000000';
-			linebreakText(lcMessageText, cwidth/2, cheight/2, 25);
-			lcMessageTimer++;
-			if (lcMessageTimer > 100 || (_pxmouse != _xmouse || _pymouse != _ymouse)) {
-				lcMessageTimer = 0;
-			}
-			ctx.globalAlpha = 1;
-		}
+			ctx.font = '30px Helvetica';
+			ctx.fillText(explorePage+1, cwidth/2, 460);
 
-		levelTimer++;
-	} else if (menuScreen == 6) {
-		ctx.drawImage(svgMenu6, 0, 0, cwidth, cheight);
-		ctx.fillStyle = '#666666';
-
-		// Tabs
-		ctx.font = 'bold 35px Helvetica';
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'middle';
-		let tabx = 28;
-		for (let i = 0; i < exploreTabWidths.length; i++) {
-			if (i == exploreTab) ctx.fillStyle = '#666666';
-			else if (onRect(_xmouse, _ymouse, tabx, 20, exploreTabWidths[i], 45)) {
-				ctx.fillStyle = '#b3b3b3';
-				if (mouseIsDown && !pmouseIsDown) exploreTab = i;
+			// previous page
+			if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse,_ymouse,240,460,25,30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage-1);
 			}
 			else ctx.fillStyle = '#999999';
-			ctx.fillRect(tabx, 20, exploreTabWidths[i], 45);
-			ctx.fillStyle = '#ffffff';
-			ctx.fillText(exploreTabNames[i], tabx+exploreTabWidths[i]/2, 45);
-			// exploreTabNames[i];
-			tabx += exploreTabWidths[i] + 5;
-		}
+			drawArrow(240,460,25,30,3);
 
-		// Levels
-		if (exploreLoading) {
-			drawExploreLoadingText();
-		} else {
-			for (let i = 0; i < explorePageLevels.length; i++) {
-				drawExploreLevel(232 * (i%4) + 28, Math.floor(i/4)*182 + 100, i);
+			// next page
+			if (exploreLoading) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse,_ymouse,720,460,25,30)){
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage+1);
 			}
-		}
+			else ctx.fillStyle = '#999999';
+			drawArrow(720,460,25,30,1);
 
+			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
+			break;
 
-		// page number
-		ctx.textBaseline = 'top';
-		ctx.textAlign = 'center';
-		ctx.fillStyle = '#ffffff';
-		ctx.font = '30px Helvetica';
-		ctx.fillText(explorePage+1, cwidth/2, 460);
+		case 7:
+			ctx.fillStyle = '#505050';
+			ctx.fillRect(0, 0, cwidth, cheight);
 
-		// previous page
-		if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
-		else if (onRect(_xmouse,_ymouse,240,460,25,30)) {
-			ctx.fillStyle = '#cccccc';
-			onButton = true;
-			if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage-1);
-		}
-		else ctx.fillStyle = '#999999';
-		drawArrow(240,460,25,30,3);
+			if (exploreLoading) {
+				drawExploreLoadingText();
+			} else {
+				ctx.textBaseline = 'top';
+				ctx.textAlign = 'left';
+				ctx.fillStyle = '#ffffff';
+				ctx.font = '38px Helvetica';
+				ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
 
-		// next page
-		if (exploreLoading) ctx.fillStyle = '#505050';
-		else if (onRect(_xmouse,_ymouse,720,460,25,30)){
-			ctx.fillStyle = '#cccccc';
-			onButton = true;
-			if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage+1);
-		}
-		else ctx.fillStyle = '#999999';
-		drawArrow(720,460,25,30,1);
+				ctx.fillStyle = '#999999';
+				ctx.font = '18px Helvetica';
+				ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 31.85, 66.1);
 
-		drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
-	} else if (menuScreen == 7) {
-		ctx.fillStyle = '#505050';
-		ctx.fillRect(0, 0, cwidth, cheight);
+				ctx.fillStyle = '#ffffff';
+				ctx.font = '20px Helvetica';
+				wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
 
-		if (exploreLoading) {
-			drawExploreLoadingText();
-		} else {
-			ctx.textBaseline = 'top';
-			ctx.textAlign = 'left';
-			ctx.fillStyle = '#ffffff';
-			ctx.font = '38px Helvetica';
-			ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
+				ctx.fillStyle = '#cccccc';
+				// ctx.fillRect(30, 98, 368, 207);
+				ctx.drawImage(thumbBig, 30, 98, 384, 216)
 
-			ctx.fillStyle = '#999999';
-			ctx.font = '18px Helvetica';
-			ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 31.85, 66.1);
+				drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
+			}
 
-			ctx.fillStyle = '#ffffff';
-			ctx.font = '20px Helvetica';
-			wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
-
-			ctx.fillStyle = '#cccccc';
-			// ctx.fillRect(30, 98, 368, 207);
-			ctx.drawImage(thumbBig, 30, 98, 384, 216)
-
-			drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
-		}
-
-		drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
+			drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
+			break;
 	}
 
 	if (levelTimer <= 30 || menuScreen != 3) {
