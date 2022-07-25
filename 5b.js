@@ -51,8 +51,8 @@ const bgs = new Array(levelCount);
 let levelStart = 0;
 let levelWidth = 0;
 let levelHeight = 0;
-let thisLevel = new Array(0);
-let tileFrames = new Array(0);
+let thisLevel = [];
+let tileFrames = [];
 const switchable = new Array(6);
 let charCount = 0;
 let charCount2 = 0;
@@ -190,7 +190,7 @@ function loadLevels() {
 			levelStart += f - 2;
 			if (startLocations[i][j][5] == 3 || startLocations[i][j][5] == 4) {
 				levelStart++;
-				startLocations[i][j].push(new Array(0));
+				startLocations[i][j].push([]);
 				for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
 					startLocations[i][j][6].push(charAt(lineLength));
 				}
@@ -3403,7 +3403,7 @@ function setBody(i) {
 
 function getTileDepths() {
 	for (let i = 0; i < 6; i++) {
-		switchable[i] = new Array(0);
+		switchable[i] = [];
 	}
 	for (let y = 0; y < levelHeight; y++) {
 		for (let x = 0; x < levelWidth; x++) {
