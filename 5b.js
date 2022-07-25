@@ -1,4 +1,4 @@
-// TODO: look up the difference between let and let.
+// TODO: look up the difference between var and let.
 // UPDATE: I now know the difference and I can't decide whether or not to use it in certain places. All I know is I probably shouldn't use it in for loops.
 // I'll look more into it once I get more into optimizing.
 // TODO: go through all the todo's I've put throughout this file.
@@ -80,7 +80,7 @@ let coins;
 let longMode = false;
 let quirksMode = false;
 
-function clearlets() {
+function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
 	bonusesCleared = new Array(33).fill(false);
 	gotCoin = new Array(levelCount).fill(false);
@@ -96,7 +96,7 @@ function saveGame() {
 }
 
 if (bfdia5b.getItem('levelProgress') == undefined) {
-	clearlets();
+	clearVars();
 } else {
 	levelProgress = parseInt(bfdia5b.getItem('levelProgress'));
 	bonusProgress = parseInt(bfdia5b.getItem('bonusProgress'));
@@ -2161,7 +2161,7 @@ function menu3Menu() {
 }
 
 function beginNewGame() {
-	clearlets();
+	clearVars();
 	saveGame();
 	menuScreen = 2;
 	cameraY = 0;
@@ -2375,7 +2375,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 				for (let i = 0; i < textBoxCursorLine; i++) {
 					textBoxCursorLoc += lines[i].length;
 				}
-				for (let i = 0; i < lines[textBoxCursorLine].length; i++) {
+				for (var i = 0; i < lines[textBoxCursorLine].length; i++) {
 					if (ctx.measureText(lines[textBoxCursorLine].slice(0,i)).width >= _xmouse-x-pad[0]) break;
 				}
 				textBoxCursorLoc += i-1;
@@ -5059,7 +5059,7 @@ function drawLCDiaInfo(i, y) {
 	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight*myLevelDialogue[1][i].linecount);
 	ctx.fillStyle = '#ffffff';
 	if (myLevelDialogue[1][i].char>=50&&myLevelDialogue[1][i].char<99) {
-		let diaTextBox = [myLevelDialogue[1][i].text,['lever switch']];
+		var diaTextBox = [myLevelDialogue[1][i].text,['lever switch']];
 		switch (myLevelDialogue[1][i].char) {
 			case 50:
 				ctx.fillStyle = '#ffcc00';
@@ -5088,7 +5088,7 @@ function drawLCDiaInfo(i, y) {
 		ctx.textBaseline = 'top';
 		ctx.fillText('lever switch', 665 + diaInfoHeight*3 + 5, y);
 	} else {
-		let diaTextBox = drawTextBox(myLevelDialogue[1][i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[1][i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff', 'Helvetica');
+		var diaTextBox = drawTextBox(myLevelDialogue[1][i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[1][i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff', 'Helvetica');
 	}
 	myLevelDialogue[1][i].text = diaTextBox[0];
 	myLevelDialogue[1][i].linecount = diaTextBox[1].length;
@@ -5224,12 +5224,12 @@ function drawLCChars() {
 				ctx.restore();
 			} else {
 				if (charD[char[i].id][7] == 1) {
-					let vb = svgCharsVB[char[i].id];
-					let img = svgChars[char[i].id];
+					var vb = svgCharsVB[char[i].id];
+					var img = svgChars[char[i].id];
 				} else {
 					let f = _frameCount%charD[char[i].id][7];
-					let vb = svgCharsVB[char[i].id][f];
-					let img = svgChars[char[i].id][f];
+					var vb = svgCharsVB[char[i].id][f];
+					var img = svgChars[char[i].id][f];
 				}
 				ctx.drawImage(img,
 					char[i].x + vb[0],
@@ -5363,7 +5363,7 @@ function copyLevelString() {
 		lcLevelString += '\r\n';
 	}
 
-	let lcLevelString = '\r\n';
+	var lcLevelString = '\r\n';
 	lcLevelString += myLevelInfo.name==''?'Untitled level':myLevelInfo.name + '\r\n';
 	lcLevelString += levelWidth.toString().padStart(2, '0') + ',' + levelHeight.toString().padStart(2, '0') + ',' + char.length.toString().padStart(2, '0') + ',' + selectedBg.toString().padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
 	if (longMode) {
@@ -7308,8 +7308,8 @@ function draw() {
 					ctx.save();
 					ctx.translate(0, -tileTabScrollBar);
 					if (mouseOnTabWindow && !lcPopUp) {
-						let mouseTileRow = _ymouse+tileTabScrollBar-tabWindowY;
-						let mouseTileColumn = _xmouse-660;
+						var mouseTileRow = _ymouse+tileTabScrollBar-tabWindowY;
+						var mouseTileColumn = _xmouse-660;
 						if (mouseTileRow%bdist < (bdist-bs) || mouseTileColumn%bdist < (bdist-bs)) {
 							mouseTileRow = -1;
 							mouseTileColumn = -1;
@@ -7318,8 +7318,8 @@ function draw() {
 							mouseTileColumn = Math.floor((mouseTileColumn-(bdist-bs)) / bdist);
 						}
 					} else {
-						let mouseTileRow = -1;
-						let mouseTileColumn = -1;
+						var mouseTileRow = -1;
+						var mouseTileColumn = -1;
 					}
 					for (let i = 0; i < blockProperties.length; i++) {
 						if (blockProperties[i][15]) {
@@ -7403,7 +7403,7 @@ function draw() {
 					// let h = _frameCount;
 					ctx.save();
 					ctx.translate(0, -bgsTabScrollBar);
-					for (let i = 0; i < imgBgs.length; i++) {
+					for (var i = 0; i < imgBgs.length; i++) {
 						if (i == selectedBg) {
 							ctx.fillStyle = '#a0a0a0';
 							ctx.fillRect(
