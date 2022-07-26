@@ -8083,34 +8083,16 @@ function getExploreUser(id) {
 	.catch(err => { console.log(err) });
 }
 
-function postExploreLevel(t, desc, dat) {
+function postExploreLevel(t, desc, data) {
+	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000) return; // check if token is expired
 	exploreLoading = true;
-	if (loggedInExploreUser5beamID == -1) {
-		// first get the user's discord id
-		return fetch('https://discord.com/api/users/@me', {method: 'GET', headers: {'Authorization': 'Bearer ' + getCookie('access_token')}})
-		.then(response => {
-			response.json().then(data => {
-				// then get their user id on 5beam
-				fetch('https://5beam.zelo.dev/api/user?discordId=' + data.id, {method: 'GET'})
-				.then(response => {
-					response.json().then(data => {
-						// finally; make the actual post request.
-						loggedInExploreUser5beamID = data.id;
-						postExploreLevelReqInner(loggedInExploreUser5beamID, t, desc, dat);
-					})
-				})
-				.catch(err => { console.log(err) });
-			})
-		})
-		.catch(err => { console.log(err) });
-	} else {
-		return postExploreLevelReqInner(loggedInExploreUser5beamID, t, desc, dat);
-	}
-}
+	let f = new FormData();
+	f.set('access_token', getCookie('access_token'));
+	f.set('title', t);
+	f.set('description', desc);
+	f.set('file', new File([data], "file.txt"));
 
-function postExploreLevelReqInner(u, t, desc, dat) {
-	// exploreLoading = true;
-	return fetch('https://5beam.zelo.dev/api/create/level?creatorId=' + u + '&title=' + t + '&description=' + desc + '&data=' + dat, {method: 'POST'})
+	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: f})
 	.then(response => {
 		exploreLoading = false;
 		// We don't really need to do anything with the response data.
