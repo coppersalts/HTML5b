@@ -8087,7 +8087,7 @@ function postExploreLevel(t, desc, dat) {
 	exploreLoading = true;
 	if (loggedInExploreUser5beamID == -1) {
 		// first get the user's discord id
-		return fetch('https://discord.com/api/users/@me', {method: 'GET'})
+		return fetch('https://discord.com/api/users/@me', {method: 'GET', headers: {'Authorization': 'Bearer ' + getCookie('access_token')}})
 		.then(response => {
 			response.json().then(data => {
 				// then get their user id on 5beam
@@ -8116,4 +8116,21 @@ function postExploreLevelReqInner(u, t, desc, dat) {
 		// We don't really need to do anything with the response data.
 	})
 	.catch(err => { console.log(err) });
+}
+
+// https://www.w3schools.com/js/js_cookies.asp
+function getCookie(cname) {
+	let name = cname + '=';
+	let decodedCookie = decodeURIComponent(document.cookie);
+	let ca = decodedCookie.split(';');
+	for(let i = 0; i < ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return '';
 }
