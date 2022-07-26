@@ -76,6 +76,7 @@ let timer;
 let coins;
 let longMode = false;
 let quirksMode = false;
+let enableExperimentalFeatures = false;
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -5368,6 +5369,18 @@ function generateCharFromInfo(info) {
 }
 
 function copyLevelString() {
+	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
+	navigator.clipboard.writeText(generateLevelString()).then(function() {
+		lcMessageTimer = 1;
+		lcMessageText = 'Level string successfuly copied to clipboard!';
+	}, function(err) {
+		lcMessageTimer = 1;
+		lcMessageText = 'There was an error while copying the level string.';
+		console.error('Could not copy text: ', err);
+	});
+}
+
+function generateLevelString() {
 	longMode = false;
 	for (let y = 0; y < levelHeight; y++) {
 		for (let x = 0; x < levelWidth; x++) {
@@ -5412,16 +5425,7 @@ function copyLevelString() {
 	}
 	lcLevelString += myLevelNecessaryDeaths.toString().padStart(6, '0') + '\r\n';
 
-	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-	// console.log(lcLevelString);
-	navigator.clipboard.writeText(lcLevelString).then(function() {
-		lcMessageTimer = 1;
-		lcMessageText = 'Level string successfuly copied to clipboard!';
-	}, function(err) {
-		lcMessageTimer = 1;
-		lcMessageText = 'There was an error while copying the level string.';
-		console.error('Could not copy text: ', err);
-	});
+	return lcLevelString;
 }
 
 function openLevelLoader() {
@@ -6080,7 +6084,7 @@ function drawArrow(x, y, w, h, dir) {
 
 function shareToExplore() {
 	// Currently there are no checks to see if the access token is still valid or if the user has even logged in, but this is just in the testing phase, so.
-	postExploreLevel();
+	postExploreLevel(myLevelInfo.name, myLevelInfo.desc, generateLevelString);
 }
 
 
@@ -7609,7 +7613,7 @@ function draw() {
 					drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
 					drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
 					drawMenu0Button('EXIT',673, tabWindowY + 160, 15, false, menuExitLevelCreator);
-					// drawMenu0Button('SHARE TO EXPLORE',673, tabWindowY + 190, 16, false, shareToExplore);
+					if (enableExperimentalFeatures) drawMenu0Button('SHARE TO EXPLORE',673, tabWindowY + 190, 16, false, shareToExplore);
 					ctx.fillStyle = '#000000';
 					ctx.textAlign = 'center';
 					ctx.textBaseline = 'top';
@@ -7942,6 +7946,7 @@ function draw() {
 			drawArrow(720,460,25,30,1);
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
+			if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
 			break;
 
 		case 7:
