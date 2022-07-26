@@ -6084,7 +6084,7 @@ function drawArrow(x, y, w, h, dir) {
 
 function shareToExplore() {
 	// Currently there are no checks to see if the access token is still valid or if the user has even logged in, but this is just in the testing phase, so.
-	postExploreLevel(myLevelInfo.name, myLevelInfo.desc, generateLevelString);
+	postExploreLevel(myLevelInfo.name, myLevelInfo.desc, generateLevelString());
 }
 
 
