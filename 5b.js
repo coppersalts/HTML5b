@@ -7613,30 +7613,30 @@ function draw() {
 					drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
 					drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
 					drawMenu0Button('EXIT',673, tabWindowY + 160, 15, false, menuExitLevelCreator);
-					if (enableExperimentalFeatures) drawMenu0Button('SHARE TO EXPLORE',673, tabWindowY + 190, 16, false, shareToExplore);
+					drawMenu0Button('SHARE TO EXPLORE',673, tabWindowY + 210, 16, !enableExperimentalFeatures, shareToExplore);
 					ctx.fillStyle = '#000000';
 					ctx.textAlign = 'center';
 					ctx.textBaseline = 'top';
 					ctx.font = '25px Helvetica';
-					ctx.fillText('Necessary Deaths:', 660 + (cwidth-660)/2, tabWindowY + 220);
+					ctx.fillText('Necessary Deaths:', 660 + (cwidth-660)/2, tabWindowY + 270);
 					let necessaryDeathsW = 100;
 					ctx.fillStyle = '#808080';
-					ctx.fillRect(660 + ((cwidth-660)-necessaryDeathsW)/2, tabWindowY + 250, necessaryDeathsW, 25);
+					ctx.fillRect(660 + ((cwidth-660)-necessaryDeathsW)/2, tabWindowY + 300, necessaryDeathsW, 25);
 					// ctx.fillStyle = '#ee3333';
-					drawMinusButton(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 3);
-					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths < 999999) {
+					drawMinusButton(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 300, 25, 3);
+					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 300, 25, 25) && myLevelNecessaryDeaths < 999999) {
 						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
 					}
 					// ctx.fillStyle = '#33ee33';
-					drawAddButton(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 250, 25, 3);
-					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 250, 25, 25) && myLevelNecessaryDeaths > 0) {
+					drawAddButton(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 300, 25, 3);
+					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 300, 25, 25) && myLevelNecessaryDeaths > 0) {
 						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
 					}
 
 					ctx.fillStyle = '#ffffff';
 					ctx.textAlign = 'center';
 					ctx.textBaseline = 'top';
-					ctx.fillText(myLevelNecessaryDeaths.toString().padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 250);
+					ctx.fillText(myLevelNecessaryDeaths.toString().padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 300);
 					break;
 			}
 
@@ -7946,7 +7946,8 @@ function draw() {
 			drawArrow(720,460,25,30,1);
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
-			if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
+			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
+			drawMenu0Button('LOG IN', 300, 15, 16, !enableExperimentalFeatures, logInExplore);
 			break;
 
 		case 7:
