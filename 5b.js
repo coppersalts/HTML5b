@@ -77,6 +77,7 @@ let coins;
 let longMode = false;
 let quirksMode = false;
 let enableExperimentalFeatures = false;
+let levelAlreadySharedToExplore = false;
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -4439,6 +4440,7 @@ function resetLevelCreator() {
 	// levelCreator.createEmptyMovieClip("grid",100);
 	// levelCreator.createEmptyMovieClip("tiles",98);
 	// levelCreator.createEmptyMovieClip("rectSelect",99);
+	levelAlreadySharedToExplore = false;
 	lcPopUp = false;
 	duplicateChar = false;
 	reorderCharUp = false;
@@ -4640,12 +4642,14 @@ function fillTile(x, y, after, before) {
 }
 
 function setUndo() {
+	levelAlreadySharedToExplore = false;
 	LCSwapLevelData(1,0);
 	undid = false;
 	// levelCreator.tools.tool9.gotoAndStop(1);
 }
 
 function undo() {
+	levelAlreadySharedToExplore = false;
 	LCSwapLevelData(1,2);
 	LCSwapLevelData(0,1);
 	LCSwapLevelData(2,0);
@@ -8085,7 +8089,17 @@ function getExploreUser(id) {
 }
 
 function postExploreLevel(t, desc, data) {
-	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000) return; // check if token is expired
+	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000 || getCookie('token_created_at')=='') {
+		setLCMessage('You are not logged in to explore.\nYour login expires after 10 minutes because\nI haven\'t yet figured out how to refresh the tokens.\nFor now you can just copy your level, go to the explore menu to log in,\nthen come back here and load your level back.');
+		return;
+	}
+	if (levelAlreadySharedToExplore) {
+		setLCMessage('You already shared that level to explore.');
+		return;
+	}
+	
+	levelAlreadySharedToExplore = true;
+	// check if token is expired
 	exploreLoading = true;
 	let f = new FormData();
 	f.set('access_token', getCookie('access_token'));
@@ -8096,9 +8110,16 @@ function postExploreLevel(t, desc, data) {
 	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: f})
 	.then(response => {
 		exploreLoading = false;
-		// We don't really need to do anything with the response data.
+		if (response.status == 200) {
+			setLCMessage('Level successfuly sent to explore!');
+		} else {
+			setLCMessage('Server responded with status ' + response.status);
+		}
 	})
-	.catch(err => { console.log(err) });
+	.catch(err => {
+		console.log(err);
+		setLCMessage('Sorry, there was an error while attempting to send the level.');
+	});
 }
 
 // https://www.w3schools.com/js/js_cookies.asp
