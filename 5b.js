@@ -2613,7 +2613,7 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 			back = false;
 			if (ctx.measureText(lines[lines.length-1] + lb[l]).width > maxWidth) {
 				if (lines[lines.length-1].length == 0) {
-					for (let j = 0; j < lb[l].length; j++) {
+					for (var j = 0; j < lb[l].length; j++) {
 						if (ctx.measureText(lines[lines.length-1]+lb[l].charAt(j)).width > maxWidth) break;
 						lines[lines.length-1] += lb[l].charAt(j);
 					}
