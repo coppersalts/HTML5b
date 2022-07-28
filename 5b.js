@@ -2204,8 +2204,8 @@ function setQual() {
 
 function exitLevel() {
 	menuScreen = 2;
-	cameraX = 0;
-	cameraY = 0;
+	// cameraX = 0;
+	// cameraY = 0;
 }
 
 function playGame() {
@@ -7997,13 +7997,23 @@ function draw() {
 	ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	if (pmenuScreen == 2) {
 		drawLevelMapBorder();
-		shakeX = 0;
-		shakeY = 0;
+		if (menuScreen != 2) {
+			cameraX = 0;
+			cameraY = 0;
+			shakeX = 0;
+			shakeY = 0;
+		}
 	} else if (pmenuScreen == 3) {
 		if (cutScene == 1 || cutScene == 2) {
 			drawCutScene();
 		}
 		drawLevelButtons();
+		if (menuScreen != 3) {
+			cameraX = 0;
+			cameraY = 0;
+			shakeX = 0;
+			shakeY = 0;
+		}
 	}
 	if (white_alpha > 0) {
 		ctx.fillStyle = '#ffffff';
