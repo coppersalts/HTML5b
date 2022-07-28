@@ -6585,7 +6585,7 @@ function draw() {
 						}
 						qPress = true;
 					} else qPress = false;
-					if (_keysDown[32]) {
+					if (_keysDown[32] || _keysDown[88]) {
 						if ((char[control].onob || char[control].submerged == 3) && char[control].landTimer > 2 && !recover) {
 							if (char[control].submerged == 3) char[control].swimUp(0.14 / char[control].weight2);
 							else char[control].jump(- jumpPower);
