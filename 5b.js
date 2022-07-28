@@ -1847,17 +1847,6 @@ function toHMS(i) {
 	);
 }
 
-function addCommas(i) {
-	let iStr = String(i);
-	let iStr2 = '';
-	let len = iStr.length;
-	for (let j = 0; j < len; j++) {
-		if ((len - j) % 3 == 0 && j != 0) iStr2 += ',';
-		iStr2 += iStr.charAt(j);
-	}
-	return iStr2;
-}
-
 // I missed processing's map() function so much I wrote my own that I think I stole parts of from stackoverflow, but didn't link to.
 function mapRange(value, min1, max1, min2, max2) {
 	return min2 + ((value - min1) / (max1 - min1)) * (max2 - min2);
@@ -2523,7 +2512,7 @@ function drawLevelMap() {
 	ctx.fillText('x ' + coins, 477.95, 50.9);
 	ctx.font = '21px Helvetica';
 	ctx.fillText(toHMS(timer), 767.3, 27.5);
-	ctx.fillText(addCommas(deathCount), 767.3, 55.9);
+	ctx.fillText(deathCount.toLocaleString(), 767.3, 55.9);
 	ctx.textAlign = 'right';
 	ctx.fillText('Time:', 757.05, 27.5);
 	ctx.fillText('Deaths:', 757.05, 55.9);
@@ -2535,7 +2524,7 @@ function drawLevelMap() {
 		ctx.fillText('Unnecessary deaths:', 756.3, 116.8);
 		ctx.textAlign = 'left';
 		ctx.fillText(mdao[levelProgress - 1], 767.3, 85.4);
-		ctx.fillText(addCommas(deathCount - mdao[levelProgress - 1]), 767.3, 116.8);
+		ctx.fillText((deathCount - mdao[levelProgress - 1]).toLocaleString(), 767.3, 116.8);
 	}
 	for (let i = 0; i < 133; i++) {
 		let j = i;
