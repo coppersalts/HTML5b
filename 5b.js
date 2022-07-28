@@ -3186,11 +3186,6 @@ function drawCharacters() {
 			ctx.restore();
 		}
 
-		// TODO: Move this to setBody()
-		// if (char[i].charState == 9) {
-		// 	char[i].dire = 2;
-		// 	char[i].frame = 1;
-		// }
 		if (i == HPRC2) {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
@@ -5182,13 +5177,13 @@ function drawLCChars() {
 			if (!char[i].placed) ctx.globalAlpha = 0.5;
 			if (char[i].id < 35) {
 				let model = charModels[char[i].id];
+				let dire = char[i].charState==9?-1:1;
 
-				let legdire = -1;
 				let legf = legFrames[0];
 				let f = [ legf.bodypart, legf.bodypart ];
 				ctx.save();
 				ctx.transform(
-					0.3648529052734375,0,0,0.3648529052734375,
+					0.3648529052734375*dire,0,0,0.3648529052734375,
 					char[i].x+model.legx[0]+0.35,
 					char[i].y+model.legy[0]-0.35
 				);
@@ -5197,7 +5192,7 @@ function drawLCChars() {
 				ctx.restore();
 				ctx.save();
 				ctx.transform(
-					0.3648529052734375,0,0,0.3648529052734375,
+					0.3648529052734375*dire,0,0,0.3648529052734375,
 					char[i].x+model.legx[1]+0.35,
 					char[i].y+model.legy[1]-0.35
 				);
@@ -5205,7 +5200,7 @@ function drawLCChars() {
 				ctx.drawImage(leg2img, -leg2img.width/2, -leg2img.height/2);
 				ctx.restore();
 
-				let modelFrame = model.frames[3];
+				let modelFrame = model.frames[dire==1?3:1];
 				ctx.save();
 				ctx.transform(
 					charModels[char[i].id].torsomat.a,
@@ -5234,7 +5229,7 @@ function drawLCChars() {
 						let mat = bodyPartAnimations[modelFrame[j].anim].frames[bpanimframe];
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					} else if (modelFrame[j].type == 'dia') {
-						img = svgBodyParts[diaMouths[char[i].dExpr + charModels[char[i].id].mouthType*2].frames[0].bodypart];
+						img = svgBodyParts[diaMouths[(char[i].charState==9?1:char[i].dExpr) + charModels[char[i].id].mouthType*2].frames[0].bodypart];
 						let mat = diaMouths[model.defaultExpr].frames[0].mat;
 						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
 					}
