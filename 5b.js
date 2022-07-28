@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.0*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.1'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -11,7 +11,11 @@ const cwidth = 960;
 const cheight = 540;
 let pixelRatio = window.devicePixelRatio;
 let highQual = true;
-const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+const requestAnimationFrame =
+	window.requestAnimationFrame ||
+	window.mozRequestAnimationFrame ||
+	window.webkitRequestAnimationFrame ||
+	window.msRequestAnimationFrame;
 
 // offscreen canvases
 let osc1, osctx1;
@@ -115,7 +119,6 @@ if (bfdia5b.getItem('levelProgress') == undefined) {
 	}
 }
 
-
 let white_alpha = 0;
 
 function getTimer() {
@@ -166,14 +169,16 @@ function loadLevels() {
 		if (longMode) {
 			for (let y = 0; y < levelHeight; y++) {
 				for (let x = 0; x < levelWidth; x++) {
-					levels[i][y][x] = 111 * tileAt(y * (levelWidth * 2 + 2) + x * 2 + 17,i,y) + tileAt(y * (levelWidth * 2 + 2) + x * 2 + 18,i,y);
+					levels[i][y][x] =
+						111 * tileAt(y * (levelWidth * 2 + 2) + x * 2 + 17, i, y) +
+						tileAt(y * (levelWidth * 2 + 2) + x * 2 + 18, i, y);
 				}
 			}
 			levelStart += levelHeight * (levelWidth * 2 + 2) + 17;
 		} else {
 			for (let y = 0; y < levelHeight; y++) {
 				for (let x = 0; x < levelWidth; x++) {
-					levels[i][y][x] = tileAt(y * (levelWidth + 2) + x + 17,i,y);
+					levels[i][y][x] = tileAt(y * (levelWidth + 2) + x + 17, i, y);
 				}
 			}
 			levelStart += levelHeight * (levelWidth + 2) + 17;
@@ -212,7 +217,7 @@ function loadLevels() {
 			lineLength = 0;
 			dialogueText[i][j] = '';
 			while (charAt(lineLength) != -35) {
-				lineLength++
+				lineLength++;
 				dialogueText[i][j] += charAt2(lineLength - 1);
 			}
 			levelStart += lineLength + 2;
@@ -1790,14 +1795,14 @@ let LCEndGateX = 0;
 let LCEndGateY = 0;
 let LCCoinX = 0;
 let LCCoinY = 0;
-let cardinal = [[0,-1],[0,1],[-1,0],[1,0]];
-let diagonal = [[-1,-1],[1,-1],[1,1],[-1,1]];
-let diagonal2 = [[0,2],[0,3],[1,2],[1,3]];
-const direLetters = ['U','D','L','R'];
+let cardinal = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+let diagonal = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
+let diagonal2 = [[0, 2], [0, 3], [1, 2], [1, 3]];
+const direLetters = ['U', 'D', 'L', 'R'];
 let undid = false;
 let copied = false;
 let tileClipboard = [[]];
-let LCRect = [-1,-1,-1,-1];
+let LCRect = [-1, -1, -1, -1];
 let levelTimer = 0;
 let levelTimer2 = 0;
 let bgXScale = 0;
@@ -1814,11 +1819,18 @@ let tileBorders;
 let HPRCBubbleFrame;
 let HPRCText = '';
 let HPRCCrankRot = 0;
-let hprcCrankPos = {x:-29.5,y:-23.7}
+let hprcCrankPos = {x: -29.5, y: -23.7};
 let hprcBubbleAnimationTimer = 0;
 let charDepths = [];
 let tileDepths;
-let doorLightX = [[27.5],[15,40],[10,27.5,45],[10,21.75,33.25,45],[4,16.25,27.5,38.75,50],[4,14,23,32,41,50]];
+let doorLightX = [
+	[27.5],
+	[15, 40],
+	[10, 27.5, 45],
+	[10, 21.75, 33.25, 45],
+	[4, 16.25, 27.5, 38.75, 50],
+	[4, 14, 23, 32, 41, 50]
+];
 let doorLightFade = [];
 let doorLightFadeDire = [];
 
@@ -1827,7 +1839,12 @@ function toHMS(i) {
 	let m = Math.floor(i / 60000) % 60;
 	let s = Math.floor(i / 1000) % 60;
 	let ds = Math.floor(i / 100) % 10;
-	return h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0') + '.' + ds;
+	return (
+		h.toString().padStart(2, '0') + ':' +
+		m.toString().padStart(2, '0') + ':' +
+		s.toString().padStart(2, '0') + '.' +
+		ds
+	);
 }
 
 function addCommas(i) {
@@ -1843,15 +1860,8 @@ function addCommas(i) {
 
 // I missed processing's map() function so much I wrote my own that I think I stole parts of from stackoverflow, but didn't link to.
 function mapRange(value, min1, max1, min2, max2) {
-	return min2 + (((value - min1) / (max1 - min1)) * (max2 - min2));
+	return min2 + ((value - min1) / (max1 - min1)) * (max2 - min2);
 }
-
-
-
-
-
-
-
 
 let imgBgs = new Array(12);
 let svgTiles = new Array(blockProperties.length);
@@ -1871,16 +1881,13 @@ let svgAcidDrop = new Array(9);
 let svgIceCubeMelt;
 let svgCharsVB = new Array(charD.length);
 let svgTilesVB = new Array(blockProperties.length);
-
 let svgMenu0;
 let svgMenu2;
 let svgMenu6;
 let svgMenu2border;
 let svgMenu2borderimg;
 let preMenuBG;
-
 let svgTools = new Array(12);
-
 let menu2_3Buttons = [
 	new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'),
 	new Path2D('M 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nM 92.9 6.5\nL 99.6 6.5 90.05 16.15 100.55 30.9 93.8 30.9 86.45 19.95 83.4 23.05 83.4 30.9 78 30.9 78 6.5 83.4 6.5 83.4 16.6 92.9 6.5\nM 67.15 11.65\nQ 66.45 11.05 65.55 10.75\nL 63.65 10.4\nQ 61.85 10.4 60.6 11.1 59.3 11.85 58.55 13 57.75 14.2 57.4 15.7 57.05 17.2 57.05 18.8 57.05 20.35 57.4 21.8 57.75 23.25 58.55 24.4 59.3 25.6 60.6 26.3 61.85 27 63.65 27 66.1 27 67.5 25.45 68.9 23.95 69.2 21.5\nL 74.4 21.5\nQ 74.2 23.8 73.35 25.65 72.45 27.5 71.05 28.8 69.65 30.1 67.8 30.8\nL 63.65 31.5\nQ 60.8 31.5 58.6 30.5 56.35 29.5 54.8 27.8 53.3 26.1 52.45 23.75 51.65 21.45 51.65 18.8 51.65 16.1 52.45 13.75 53.3 11.4 54.8 9.65 56.35 7.9 58.6 6.9 60.8 5.9 63.65 5.9 65.65 5.9 67.45 6.5 69.25 7.1 70.65 8.2 72.1 9.3 73 10.95 73.95 12.6 74.15 14.7\nL 68.95 14.7\nQ 68.85 13.8 68.35 13\nL 67.15 11.65\nM 50.6 30.9\nL 45 30.9 43.15 25.5 34.05 25.5 32.15 30.9 26.7 30.9 35.95 6.5 41.45 6.5 50.6 30.9\nM 22.35 7.8\nQ 23.35 8.5 23.9 9.65 24.5 10.85 24.5 12.55 24.5 14.35 23.65 15.6 22.8 16.85 21.15 17.65 23.45 18.3 24.55 19.9 25.65 21.55 25.65 23.8 25.65 25.7 24.95 27.05 24.2 28.4 23 29.25 21.8 30.1 20.2 30.5\nL 17.05 30.9 5.2 30.9 5.2 6.5 16.7 6.5 19.85 6.8\nQ 21.3 7.1 22.35 7.8\nM 19.2 20.85\nQ 18.15 20.05 16.4 20.05\nL 10.6 20.05 10.6 26.75 16.3 26.75 17.8 26.6 19.05 26.05 19.95 25.1 20.25 23.5\nQ 20.25 21.65 19.2 20.85\nM 19 12.1\nQ 18.65 11.5 18.15 11.2\nL 17 10.8 15.6 10.65 10.6 10.65 10.6 16.4 16 16.4\nQ 17.45 16.4 18.35 15.7 19.3 15 19.3 13.5\nL 19 12.1\nM 38.7 12.5\nL 38.65 12.5 35.45 21.45 41.75 21.45 38.7 12.5 Z'),
@@ -1903,7 +1910,6 @@ let showingNewGame2 = false;
 
 let musicSound = new Audio('data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
-
 
 // Creates an image object was a base64 src.
 function createImage(base64) {
@@ -1968,7 +1974,9 @@ async function loadingScreen() {
 			svgTiles[i] = new Array(blockProperties[i][16]);
 			svgTilesVB[i] = new Array(blockProperties[i][16]);
 			for (let j = 0; j < svgTiles[i].length; j++) {
-				svgTiles[i][j] = createImage(resourceData['blocks/b' + id + 'f' + j.toString().padStart(4, '0') + '.svg']);
+				svgTiles[i][j] = createImage(
+					resourceData['blocks/b' + id + 'f' + j.toString().padStart(4, '0') + '.svg']
+				);
 				svgTilesVB[i][j] = getVB(svgTiles[i][j].src);
 			}
 		}
@@ -1992,7 +2000,9 @@ async function loadingScreen() {
 			svgChars[i] = new Array(charD[i][7]);
 			svgCharsVB[i] = new Array(charD[i][7]);
 			for (let j = 0; j < svgChars[i].length; j++) {
-				svgChars[i][j] = createImage(resourceData['entities/e' + id + 'f' + j.toString().padStart(4, '0') + '.svg']);
+				svgChars[i][j] = createImage(
+					resourceData['entities/e' + id + 'f' + j.toString().padStart(4, '0') + '.svg']
+				);
 				svgCharsVB[i][j] = getVB(svgChars[i][j].src);
 			}
 		}
@@ -2001,7 +2011,9 @@ async function loadingScreen() {
 		svgBodyParts[i] = createImage(resourceData['bodyparts/bp' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgHPRCBubble.length; i++) {
-		svgHPRCBubble[i] = createImage(resourceData['ui/hprcbubble/hprcbubble' + i.toString().padStart(4, '0') + '.svg']);
+		svgHPRCBubble[i] = createImage(
+			resourceData['ui/hprcbubble/hprcbubble' + i.toString().padStart(4, '0') + '.svg']
+		);
 	}
 	for (let i = 0; i < svgCoinGet.length; i++) {
 		svgCoinGet[i] = createImage(resourceData['effects/wtgetf' + i.toString().padStart(4, '0') + '.svg']);
@@ -2027,53 +2039,12 @@ async function loadingScreen() {
 	setup();
 }
 
-
-window.onload = function() {
+window.onload = function () {
 	loadingScreen();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
 
 function onRect(mx, my, x, y, w, h) {
-	return mx>x&&mx<x+w&&my>y&&my<y+h;
+	return mx > x && mx < x + w && my > y && my < y + h;
 }
 
 function setCursor(newCursor) {
@@ -2159,7 +2130,11 @@ function playExploreLevel() {
 
 function logInExplore() {
 	loggedInExploreUser5beamID = -1;
-	newWindow = window.open('https://discord.com/api/oauth2/authorize?client_id=747831622556057693&redirect_uri=https%3A%2F%2F5beam.zelo.dev%2Fapi%2Fauth%2Fcallback%2Fhtml5b&response_type=code&scope=identify','Window Name','height=750,width=450');
+	newWindow = window.open(
+		'https://discord.com/api/oauth2/authorize?client_id=747831622556057693&redirect_uri=https%3A%2F%2F5beam.zelo.dev%2Fapi%2Fauth%2Fcallback%2Fhtml5b&response_type=code&scope=identify',
+		'Window Name',
+		'height=750,width=450'
+	);
 	if (window.focus) newWindow.focus();
 }
 
@@ -2198,21 +2173,18 @@ function setQual() {
 	} else {
 		pixelRatio = window.devicePixelRatio / 2;
 	}
-	canvas.width = cwidth*pixelRatio;
-	canvas.height = cheight*pixelRatio;
+	canvas.width = cwidth * pixelRatio;
+	canvas.height = cheight * pixelRatio;
 }
 
 function exitLevel() {
 	menuScreen = 2;
-	// cameraX = 0;
-	// cameraY = 0;
 }
 
 function playGame() {
 	menuScreen = 0;
 	musicSound.play();
 	musicSound.loop = true;
-	// toggleSound();
 }
 
 function testLevelCreator() {
@@ -2228,7 +2200,6 @@ function testLevelCreator() {
 		currentLevel = -1;
 		editingTextBox = -1;
 		wipeTimer = 30;
-		// bg.cacheAsBitmap = true;
 		menuScreen = 3;
 		toSeeCS = true;
 		transitionType = 1;
@@ -2264,9 +2235,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 			menu0ButtonClicked = -1;
 			action();
 		}
-	} else {
-		fill = '#b8b8b8';
-	}
+	} else fill = '#b8b8b8';
 
 	drawRoundedRect(fill, x, y, menu0ButtonSize.w, menu0ButtonSize.h, menu0ButtonSize.cr);
 
@@ -2274,7 +2243,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 	ctx.fillStyle = '#666666';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillText(text, x+menu0ButtonSize.w/2, y+menu0ButtonSize.h*1.1/2);
+	ctx.fillText(text, x + menu0ButtonSize.w / 2, y + (menu0ButtonSize.h * 1.1) / 2);
 }
 
 function drawMenu2_3Button(id, x, y, action) {
@@ -2306,7 +2275,10 @@ function drawLevelButton(text, x, y, id, color) {
 	else if (color == 3) fill = '#efe303';
 	else if (color == 4) fill = '#00cc00';
 	if (color > 1) {
-		if (onRect(_xmouse, _ymouse-cameraY, x, y, levelButtonSize.w, levelButtonSize.h) && (_xmouse < 587 || _ymouse < 469)) {
+		if (
+			onRect(_xmouse, _ymouse - cameraY, x, y, levelButtonSize.w, levelButtonSize.h) &&
+			(_xmouse < 587 || _ymouse < 469)
+		) {
 			onButton = true;
 			if (mouseIsDown) {
 				if (color == 2) fill = '#d56a00';
@@ -2321,7 +2293,7 @@ function drawLevelButton(text, x, y, id, color) {
 		}
 		if (!mouseIsDown && levelButtonClicked === id) {
 			levelButtonClicked = -1;
-			if (id <= levelProgress || (id > 99 && id < bonusProgress+100)) {
+			if (id <= levelProgress || (id > 99 && id < bonusProgress + 100)) {
 				playLevel(id);
 				white_alpha = 100;
 			}
@@ -2338,7 +2310,7 @@ function drawLevelButton(text, x, y, id, color) {
 	ctx.fillStyle = '#000000';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillText(text, x+levelButtonSize.w/2, y+levelButtonSize.h*1.1/2);
+	ctx.fillText(text, x + levelButtonSize.w / 2, y + (levelButtonSize.h * 1.1) / 2);
 }
 
 function drawNewGame2Button(text, x, y, id, color, action) {
@@ -2360,7 +2332,7 @@ function drawNewGame2Button(text, x, y, id, color, action) {
 	ctx.fillStyle = '#ffffff';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillText(text, x+size/2, y+size*1.1/2);
+	ctx.fillText(text, x + size / 2, y + (size * 1.1) / 2);
 }
 
 function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, c2, font) {
@@ -2371,7 +2343,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 	ctx.font = textSize + 'px ' + font;
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
-	let lines = wrapText(text, x+pad[0], y+pad[1], w-pad[0]-pad[2], textSize);
+	let lines = wrapText(text, x + pad[0], y + pad[1], w - pad[0] - pad[2], textSize);
 
 	if (onRect(_xmouse, _ymouse, x, y, w, h)) {
 		onTextBox = true;
@@ -2382,7 +2354,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 				setUndo();
 			}
 			currentTextBoxAllowsLineBreaks = allowsLineBreaks;
-			let textBoxCursorLine = Math.max(Math.floor((_ymouse-y-pad[1])/textSize),0);
+			let textBoxCursorLine = Math.max(Math.floor((_ymouse - y - pad[1]) / textSize), 0);
 			if (textBoxCursorLine >= lines.length) {
 				textBoxCursorLoc = text.length;
 			} else {
@@ -2391,9 +2363,9 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 					textBoxCursorLoc += lines[i].length;
 				}
 				for (var i = 0; i < lines[textBoxCursorLine].length; i++) {
-					if (ctx.measureText(lines[textBoxCursorLine].slice(0,i)).width >= _xmouse-x-pad[0]) break;
+					if (ctx.measureText(lines[textBoxCursorLine].slice(0, i)).width >= _xmouse - x - pad[0]) break;
 				}
-				textBoxCursorLoc += i-1;
+				textBoxCursorLoc += i - 1;
 			}
 			inputText = text.slice(0, textBoxCursorLoc);
 			valueAtClick = text.slice(textBoxCursorLoc, text.length);
@@ -2403,7 +2375,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 		textBoxCursorLoc = inputText.length;
 		if (_keysDown[39]) {
 			if (!rightPress) {
-				textBoxCursorLoc = Math.max(inputText.length+1,0);
+				textBoxCursorLoc = Math.max(inputText.length + 1, 0);
 				inputText = text.slice(0, textBoxCursorLoc);
 				valueAtClick = text.slice(textBoxCursorLoc, text.length);
 				rightPress = true;
@@ -2411,7 +2383,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 		} else rightPress = false;
 		if (_keysDown[37]) {
 			if (!leftPress) {
-				textBoxCursorLoc = Math.max(inputText.length-1,0);
+				textBoxCursorLoc = Math.max(inputText.length - 1, 0);
 				inputText = text.slice(0, textBoxCursorLoc);
 				valueAtClick = text.slice(textBoxCursorLoc, text.length);
 				leftPress = true;
@@ -2434,42 +2406,42 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			}
 		} else downPress = false;
 		text = inputText + valueAtClick;
-		if (_frameCount%60 < 30) {
+		if (_frameCount % 60 < 30) {
 			ctx.strokeStyle = c2;
 			ctx.lineWidth = 2;
 			let blinkyLineY = 0;
 			let lineLengthBeforeCursor = 0;
 			while (blinkyLineY < lines.length) {
 				let newlen = lineLengthBeforeCursor + lines[blinkyLineY].length;
-				if (newlen > textBoxCursorLoc || (newlen == textBoxCursorLoc && blinkyLineY == lines.length-1)) break;
+				if (newlen > textBoxCursorLoc || (newlen == textBoxCursorLoc && blinkyLineY == lines.length - 1)) break;
 				lineLengthBeforeCursor = newlen;
 				blinkyLineY++;
 			}
 			if (blinkyLineY >= lines.length) blinkyLineY--;
-			let blinkyLineX = ctx.measureText(text.slice(lineLengthBeforeCursor,textBoxCursorLoc)).width + x+pad[0];
+			let blinkyLineX = ctx.measureText(text.slice(lineLengthBeforeCursor, textBoxCursorLoc)).width + x + pad[0];
 			ctx.beginPath();
-			ctx.moveTo(blinkyLineX, y+pad[1]+textSize*blinkyLineY);
-			ctx.lineTo(blinkyLineX, y+pad[1]+textSize*(blinkyLineY+1));
+			ctx.moveTo(blinkyLineX, y + pad[1] + textSize * blinkyLineY);
+			ctx.lineTo(blinkyLineX, y + pad[1] + textSize * (blinkyLineY + 1));
 			ctx.stroke();
 		}
 
 		if (_keysDown[13] && !_keysDown[16]) editingTextBox = -1;
 	}
 
-	return [text,lines];
+	return [text, lines];
 }
 
 function drawRoundedRect(fill, x, y, w, h, cr) {
-	let x1 = x+cr;
-	let y1 = y+cr;
-	let w1 = w-cr-cr;
-	let h1 = h-cr-cr;
+	let x1 = x + cr;
+	let y1 = y + cr;
+	let w1 = w - cr - cr;
+	let h1 = h - cr - cr;
 	ctx.beginPath();
 	ctx.fillStyle = fill;
-	ctx.arc(x1,   y1,   cr, Math.PI,       Math.PI * 1.5, false);
-	ctx.arc(x1+w1,y1,   cr, Math.PI * 1.5, Math.PI * 2,   false);
-	ctx.arc(x1+w1,y1+h1,cr, Math.PI * 2,   Math.PI * 2.5, false);
-	ctx.arc(x1,   y1+h1,cr, Math.PI * 2.5, Math.PI * 3,   false);
+	ctx.arc(x1, y1, cr, Math.PI, Math.PI * 1.5, false);
+	ctx.arc(x1 + w1, y1, cr, Math.PI * 1.5, Math.PI * 2, false);
+	ctx.arc(x1 + w1, y1 + h1, cr, Math.PI * 2, Math.PI * 2.5, false);
+	ctx.arc(x1, y1 + h1, cr, Math.PI * 2.5, Math.PI * 3, false);
 	ctx.lineTo(x1 - cr, y);
 	ctx.fill();
 }
@@ -2495,10 +2467,10 @@ function drawMenu() {
 		linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
 		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
 		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
-	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false,  menuNewGame);
-	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0,  menuContGame);
-	drawMenu0Button('EXPLORE (pre-α)', 665.55, 482.5, 4, false,  menuExplore);
-	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false,  menuLevelCreator);
+	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false, menuNewGame);
+	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0, menuContGame);
+	drawMenu0Button('EXPLORE (pre-α)', 665.55, 482.5, 4, false, menuExplore);
+	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false, menuLevelCreator);
 
 	// let started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -2514,20 +2486,20 @@ function drawLevelMapBorder() {
 	// It might be better to use a path object here instead of hard-coding it.
 	ctx.save();
 	ctx.beginPath();
-	ctx.moveTo(0,0);
-	ctx.lineTo(0,540);
-	ctx.lineTo(960,540);
-	ctx.lineTo(960,0);
-	ctx.lineTo(0,0);
-	ctx.moveTo(20,38.75);
-	ctx.quadraticCurveTo(20.6,20.6,38.75,20);
-	ctx.lineTo(921.25,20);
-	ctx.quadraticCurveTo(939.4,20.6,940,38.75);
-	ctx.lineTo(940,501.25);
-	ctx.quadraticCurveTo(939.4,519.4,921.25,520);
-	ctx.lineTo(38.75,520);
-	ctx.quadraticCurveTo(20.6,519.4,20,501.25);
-	ctx.lineTo(20,38.75);
+	ctx.moveTo(0, 0);
+	ctx.lineTo(0, 540);
+	ctx.lineTo(960, 540);
+	ctx.lineTo(960, 0);
+	ctx.lineTo(0, 0);
+	ctx.moveTo(20, 38.75);
+	ctx.quadraticCurveTo(20.6, 20.6, 38.75, 20);
+	ctx.lineTo(921.25, 20);
+	ctx.quadraticCurveTo(939.4, 20.6, 940, 38.75);
+	ctx.lineTo(940, 501.25);
+	ctx.quadraticCurveTo(939.4, 519.4, 921.25, 520);
+	ctx.lineTo(38.75, 520);
+	ctx.quadraticCurveTo(20.6, 519.4, 20, 501.25);
+	ctx.lineTo(20, 38.75);
 	ctx.closePath();
 	ctx.clip();
 	ctx.drawImage(svgMenu2borderimg, 0, 0, cwidth, cheight);
@@ -2572,14 +2544,14 @@ function drawLevelMap() {
 		if (gotCoin[i]) color = 4;
 		else if (levelProgress == i) color = 2;
 		else if (levelProgress > i) color = 3;
-		else if (i > 99 && i < bonusProgress+100) {
-			if (!bonusesCleared[i-100]) color = 2;
+		else if (i > 99 && i < bonusProgress + 100) {
+			if (!bonusesCleared[i - 100]) color = 2;
 			else color = 3;
 		}
 		let text = '';
-		if (i >= 100) text = 'B' + (i- 99).toString().padStart(2, '0');
+		if (i >= 100) text = 'B' + (i - 99).toString().padStart(2, '0');
 		else text = (i + 1).toString().padStart(3, '0');
-		drawLevelButton(text, j % 8 * 110 + 45, Math.floor(j / 8) * 50 + 160, i, color);
+		drawLevelButton(text, (j % 8) * 110 + 45, Math.floor(j / 8) * 50 + 160, i, color);
 	}
 }
 
@@ -2589,14 +2561,14 @@ function drawLevelButtons() {
 	ctx.textBaseline = 'top';
 	ctx.font = 'bold 32px Helvetica';
 	ctx.fillText(currentLevelDisplayName, 12.85, 489.45);
-	drawMenu2_3Button(0, 837.5, 486.95, playMode==3?exitExploreLevel:(playMode==2?exitTestLevel:menu3Menu));
+	drawMenu2_3Button(0, 837.5, 486.95, playMode == 3 ? exitExploreLevel : playMode == 2 ? exitTestLevel : menu3Menu);
 }
 
 //https://thewebdev.info/2021/05/15/how-to-add-line-breaks-into-the-html5-canvas-with-filltext/
 function linebreakText(text, x, y, lineheight) {
 	let lines = text.split('\n');
 	for (let i = 0; i < lines.length; i++) {
-		ctx.fillText(lines[i], x, y + (i * lineheight));
+		ctx.fillText(lines[i], x, y + i * lineheight);
 	}
 }
 
@@ -2611,18 +2583,18 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 				lines.push('');
 			}
 			back = false;
-			if (ctx.measureText(lines[lines.length-1] + lb[l]).width > maxWidth) {
-				if (lines[lines.length-1].length == 0) {
+			if (ctx.measureText(lines[lines.length - 1] + lb[l]).width > maxWidth) {
+				if (lines[lines.length - 1].length == 0) {
 					for (var j = 0; j < lb[l].length; j++) {
-						if (ctx.measureText(lines[lines.length-1]+lb[l].charAt(j)).width > maxWidth) break;
-						lines[lines.length-1] += lb[l].charAt(j);
+						if (ctx.measureText(lines[lines.length - 1] + lb[l].charAt(j)).width > maxWidth) break;
+						lines[lines.length - 1] += lb[l].charAt(j);
 					}
 					lines.push('');
 					if (lb.length == 1) {
-						words[i] = words[i].slice(j,words[i].length);
+						words[i] = words[i].slice(j, words[i].length);
 						i--;
 					} else {
-						lb[l] = lb[l].slice(j,lb[l].length);
+						lb[l] = lb[l].slice(j, lb[l].length);
 						l--;
 						back = true;
 					}
@@ -2636,12 +2608,12 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 					}
 				}
 			} else {
-				lines[lines.length-1] += lb[l] + ' ';
+				lines[lines.length - 1] += lb[l] + ' ';
 			}
 		}
 	}
 	for (let i = 0; i < lines.length; i++) {
-		ctx.fillText(lines[i], x, y + lineHeight*i);
+		ctx.fillText(lines[i], x, y + lineHeight * i);
 	}
 	return lines;
 }
@@ -2679,15 +2651,6 @@ function fitString(context, str, maxWidth) {
 	return str.substring(0, index) + ellipsis;
 }
 
-
-
-
-
-
-
-
-
-
 function playLevel(i) {
 	if (i == levelProgress) playMode = 0;
 	else if (i < levelProgress) playMode = 1;
@@ -2701,7 +2664,7 @@ function playLevel(i) {
 
 function resetLevel() {
 	HPRCBubbleFrame = 0;
-	tileDepths = [[],[],[],[]];
+	tileDepths = [[], [], [], []];
 	if (playMode == 2) {
 		charCount = myLevelChars[1].length;
 		levelWidth = myLevel[1][0].length;
@@ -2729,7 +2692,7 @@ function resetLevel() {
 				charD[id][4],
 				charD[id][6],
 				charD[id][8],
-				id<35?charModels[id].defaultExpr:0
+				id < 35 ? charModels[id].defaultExpr : 0
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
@@ -2787,7 +2750,7 @@ function resetLevel() {
 				charD[id][4],
 				charD[id][6],
 				charD[id][8],
-				id<35?charModels[id].defaultExpr:0
+				id < 35 ? charModels[id].defaultExpr : 0
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
@@ -2827,8 +2790,8 @@ function resetLevel() {
 			let id = startLocations[currentLevel][i][0];
 			char[i] = new Character(
 				id,
-				startLocations[currentLevel][i][1] * 30 + startLocations[currentLevel][i][2] * 30 / 100,
-				startLocations[currentLevel][i][3] * 30 + startLocations[currentLevel][i][4] * 30 / 100,
+				startLocations[currentLevel][i][1] * 30 + (startLocations[currentLevel][i][2] * 30) / 100,
+				startLocations[currentLevel][i][3] * 30 + (startLocations[currentLevel][i][4] * 30) / 100,
 				70 + i * 40,
 				400 - i * 30,
 				startLocations[currentLevel][i][5],
@@ -2840,7 +2803,7 @@ function resetLevel() {
 				charD[id][4],
 				charD[id][6],
 				charD[id][8],
-				id<35?charModels[id].defaultExpr:0
+				id < 35 ? charModels[id].defaultExpr : 0
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
@@ -2863,25 +2826,26 @@ function resetLevel() {
 		cLevelDialogueText = dialogueText[currentLevel];
 
 		if (currentLevel > 99) {
-			currentLevelDisplayName = 'B' + (currentLevel - 99).toString().padStart(2, '0') + '. ' + levelName[currentLevel];
+			currentLevelDisplayName =
+				'B' + (currentLevel - 99).toString().padStart(2, '0') + '. ' + levelName[currentLevel];
 		} else {
 			currentLevelDisplayName = (currentLevel + 1).toString().padStart(3, '0') + '. ' + levelName[currentLevel];
 		}
 	}
 	charDepths = new Array((charCount + 1) * 2).fill(-1);
-	for (let i = 0; i < charCount; i++) charDepths[i*2] = Math.floor(charCount-i-1);
+	for (let i = 0; i < charCount; i++) charDepths[i * 2] = Math.floor(charCount - i - 1);
 	// move the control to the front
-	charDepths[(charCount-1)*2] = -1;
-	charDepths[charCount*2] = 0;
+	charDepths[(charCount - 1) * 2] = -1;
+	charDepths[charCount * 2] = 0;
 	charDepth = levelWidth * levelHeight + charCount * 2;
 	getTileDepths();
 	calculateShadowsAndBorders();
 
-	osc1.width = Math.floor(levelWidth*30 * pixelRatio);
-	osc1.height = Math.floor(levelHeight*30 * pixelRatio);
+	osc1.width = Math.floor(levelWidth * 30 * pixelRatio);
+	osc1.height = Math.floor(levelHeight * 30 * pixelRatio);
 	osctx1.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-	osc2.width = Math.floor(levelWidth*30 * pixelRatio);
-	osc2.height = Math.floor(levelHeight*30 * pixelRatio);
+	osc2.width = Math.floor(levelWidth * 30 * pixelRatio);
+	osc2.height = Math.floor(levelHeight * 30 * pixelRatio);
 	osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	drawStaticTiles();
 	recover = false;
@@ -2892,13 +2856,13 @@ function resetLevel() {
 	bgXScale = Math.max(((levelWidth - 32) * 10 + 960) / 9.6, 100);
 	bgYScale = Math.max(((levelHeight - 18) * 10 + 540) / 5.4, 100);
 	drawLevelBG();
-	cameraX = Math.min(Math.max(char[0].x - 480,0),levelWidth * 30 - 960);
-	cameraY = Math.min(Math.max(char[0].y - 270,0),levelHeight * 30 - 540);
+	cameraX = Math.min(Math.max(char[0].x - 480, 0), levelWidth * 30 - 960);
+	cameraY = Math.min(Math.max(char[0].y - 270, 0), levelHeight * 30 - 540);
 	gotThisCoin = false;
 	levelTimer = 0;
 	recoverTimer = 0;
 	levelTimer2 = getTimer();
-	if (char[0].charState <= 9)  changeControl();
+	if (char[0].charState <= 9) changeControl();
 
 	doorLightFade = new Array(charCount2).fill(0);
 	doorLightFadeDire = new Array(charCount2).fill(0);
@@ -2916,8 +2880,8 @@ function copyLevel(thatLevel) {
 		tileBorders[y] = new Array(thatLevel[y].length);
 		for (let x = 0; x < levelWidth; x++) {
 			thisLevel[y][x] = thatLevel[y][x];
-			let sw = Math.ceil(blockProperties[thisLevel[y][x]][11]/6);
-			tileFrames[y][x] = {cf: 0, playing: false, rotation: (sw==1?-60:(sw==2?60:0))};
+			let sw = Math.ceil(blockProperties[thisLevel[y][x]][11] / 6);
+			tileFrames[y][x] = {cf: 0, playing: false, rotation: sw == 1 ? -60 : sw == 2 ? 60 : 0};
 			tileShadows[y][x] = [];
 			tileBorders[y][x] = [];
 		}
@@ -2926,15 +2890,15 @@ function copyLevel(thatLevel) {
 
 function drawStaticTiles() {
 	for (let j = 0; j < tileDepths[0].length; j++) {
-		addTileMovieClip(tileDepths[0][j].x,tileDepths[0][j].y, osctx1);
+		addTileMovieClip(tileDepths[0][j].x, tileDepths[0][j].y, osctx1);
 	}
 	for (let y = 0; y < levelHeight; y++) {
 		for (let x = 0; x < levelWidth; x++) {
 			for (let i = 0; i < tileShadows[y][x].length; i++) {
-				osctx2.drawImage(svgShadows[tileShadows[y][x][i] - 1], x*30, y*30);
+				osctx2.drawImage(svgShadows[tileShadows[y][x][i] - 1], x * 30, y * 30);
 			}
 			for (let i = 0; i < tileBorders[y][x].length; i++) {
-				osctx2.drawImage(svgTileBorders[tileBorders[y][x][i] - 1], x*30, y*30);
+				osctx2.drawImage(svgTileBorders[tileBorders[y][x][i] - 1], x * 30, y * 30);
 			}
 		}
 	}
@@ -2942,35 +2906,41 @@ function drawStaticTiles() {
 
 function drawLevelBG() {
 	let bgScale = Math.max(bgXScale, bgYScale);
-	osc4.width = Math.floor((bgScale/100)*cwidth * pixelRatio);
-	osc4.height = Math.floor((bgScale/100)*cheight * pixelRatio);
+	osc4.width = Math.floor((bgScale / 100) * cwidth * pixelRatio);
+	osc4.height = Math.floor((bgScale / 100) * cheight * pixelRatio);
 	osctx4.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-	osctx4.drawImage(imgBgs[playMode>=2?selectedBg:bgs[currentLevel]], 0, 0, (bgScale/100)*cwidth, (bgScale/100)*cheight);
+	osctx4.drawImage(
+		imgBgs[playMode >= 2 ? selectedBg : bgs[currentLevel]],
+		0,
+		0,
+		(bgScale / 100) * cwidth,
+		(bgScale / 100) * cheight
+	);
 }
 
 function drawLevel() {
 	// Draw Static tiles
-	ctx.drawImage(osc1, 0, 0, osc1.width/pixelRatio, osc1.height/pixelRatio);
+	ctx.drawImage(osc1, 0, 0, osc1.width / pixelRatio, osc1.height / pixelRatio);
 	// Draw Normal Animated Tiles
 	for (let j = 0; j < tileDepths[1].length; j++) {
-		addTileMovieClip(tileDepths[1][j].x,tileDepths[1][j].y, ctx);
+		addTileMovieClip(tileDepths[1][j].x, tileDepths[1][j].y, ctx);
 	}
 	// Draw Borders and Shadows
-	ctx.drawImage(osc2, 0, 0, osc2.width/pixelRatio, osc2.height/pixelRatio);
+	ctx.drawImage(osc2, 0, 0, osc2.width / pixelRatio, osc2.height / pixelRatio);
 	// Draw Active2 Switches & Buttons
 	for (let j = 0; j < tileDepths[2].length; j++) {
-		addTileMovieClip(tileDepths[2][j].x,tileDepths[2][j].y, ctx);
+		addTileMovieClip(tileDepths[2][j].x, tileDepths[2][j].y, ctx);
 	}
 	// We draw the characters in here so we can layer liquids above them.
 	drawCharacters();
 	// Draw Liquids
 	for (let j = 0; j < tileDepths[3].length; j++) {
-		addTileMovieClip(tileDepths[3][j].x,tileDepths[3][j].y, ctx);
+		addTileMovieClip(tileDepths[3][j].x, tileDepths[3][j].y, ctx);
 	}
 }
 
 function drawCharacters() {
-	for (let d = 0; d < (charCount+1)*2; d++) {
+	for (let d = 0; d < (charCount + 1) * 2; d++) {
 		let i = charDepths[d];
 		if (i < 0) continue;
 		let currCharID = char[i].id;
@@ -2980,12 +2950,19 @@ function drawCharacters() {
 				ctx.save();
 				let burstImg = svgBurst[char[i].burstFrame];
 				let burstmat = charModels[char[i].id].burstmat;
-				ctx.transform(burstmat.a,burstmat.b,burstmat.c,burstmat.d,burstmat.tx+char[i].x,burstmat.ty+char[i].y);
-				ctx.drawImage(burstImg, -burstImg.width/2, -burstImg.height/2);
+				ctx.transform(
+					burstmat.a,
+					burstmat.b,
+					burstmat.c,
+					burstmat.d,
+					burstmat.tx + char[i].x,
+					burstmat.ty + char[i].y
+				);
+				ctx.drawImage(burstImg, -burstImg.width / 2, -burstImg.height / 2);
 				ctx.restore();
 
 				char[i].burstFrame++;
-				if (char[i].burstFrame > svgBurst.length-1) char[i].burstFrame = -1;
+				if (char[i].burstFrame > svgBurst.length - 1) char[i].burstFrame = -1;
 			}
 
 			ctx.save();
@@ -2993,14 +2970,14 @@ function drawCharacters() {
 				if (qTimer > 0 || char[i].justChanged >= 1) {
 					let littleJump = 0;
 					if (i == control && qTimer > 0) {
-						littleJump = 9 - Math.pow(qTimer - 4,2);
+						littleJump = 9 - Math.pow(qTimer - 4, 2);
 					}
 					ctx.translate(0, -littleJump);
 					// levelChar["char" + i]._x = char[i].x;
 					// levelChar["char" + i]._y = char[i].y - littleJump;
 					// if (i == HPRC2) {
-						// HPRCBubble.charImage._x = char[i].x;
-						// HPRCBubble.charImage._y = char[i].y - 78;
+					// HPRCBubble.charImage._x = char[i].x;
+					// HPRCBubble.charImage._y = char[i].y - 78;
 					// }
 					// if (char[i].deathTimer >= 30) setTint(i);
 				}
@@ -3009,20 +2986,31 @@ function drawCharacters() {
 
 			if (char[i].charState == 2) {
 				let amt = (60 - recoverTimer) / 60;
-				ctx.transform(1, 0, 0, amt, 0, (1-amt)*char[i].y);
+				ctx.transform(1, 0, 0, amt, 0, (1 - amt) * char[i].y);
 			}
 
 			if (char[i].deathTimer < 30 && char[i].deathTimer % 6 <= 2 && char[i].charState > 2) ctx.globalAlpha = 0.3;
 			if (currCharID > 34) {
 				if (charD[currCharID][7] == 1) {
-					drawPossiblyTintedImage(svgChars[currCharID], char[i].x+svgCharsVB[currCharID][0], char[i].y+svgCharsVB[currCharID][1], char[i].temp);
+					drawPossiblyTintedImage(
+						svgChars[currCharID],
+						char[i].x + svgCharsVB[currCharID][0],
+						char[i].y + svgCharsVB[currCharID][1],
+						char[i].temp
+					);
 				} else {
-					let currCharFrame = _frameCount%charD[currCharID][7];
-					drawPossiblyTintedImage(svgChars[currCharID][currCharFrame], char[i].x+svgCharsVB[currCharID][currCharFrame][0], char[i].y+svgCharsVB[currCharID][currCharFrame][1], char[i].temp);
+					let currCharFrame = _frameCount % charD[currCharID][7];
+					drawPossiblyTintedImage(
+						svgChars[currCharID][currCharFrame],
+						char[i].x + svgCharsVB[currCharID][currCharFrame][0],
+						char[i].y + svgCharsVB[currCharID][currCharFrame][1],
+						char[i].temp
+					);
 				}
 
 				if (currCharID == 50) {
-					if (char[i].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 17.7, char[i].y - 1.5);
+					if (char[i].acidDropTimer[0] < 9)
+						ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 17.7, char[i].y - 1.5);
 					char[i].acidDropTimer[0]++;
 					if (char[i].acidDropTimer[0] > 28) {
 						if (Math.random() < 0.8) {
@@ -3032,8 +3020,22 @@ function drawCharacters() {
 						}
 					}
 				} else if (currCharID == 51) {
-					if (char[i].acidDropTimer[0] < 9) ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 25.75, char[i].y + 1.6, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
-					if (char[i].acidDropTimer[1] < 9) ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[1]], char[i].x + 18.3, char[i].y + 6.7, svgAcidDrop[0].width*0.7826, svgAcidDrop[0].height*0.7826);
+					if (char[i].acidDropTimer[0] < 9)
+						ctx.drawImage(
+							svgAcidDrop[char[i].acidDropTimer[0]],
+							char[i].x - 25.75,
+							char[i].y + 1.6,
+							svgAcidDrop[0].width * 0.7826,
+							svgAcidDrop[0].height * 0.7826
+						);
+					if (char[i].acidDropTimer[1] < 9)
+						ctx.drawImage(
+							svgAcidDrop[char[i].acidDropTimer[1]],
+							char[i].x + 18.3,
+							char[i].y + 6.7,
+							svgAcidDrop[0].width * 0.7826,
+							svgAcidDrop[0].height * 0.7826
+						);
 					char[i].acidDropTimer[0]++;
 					char[i].acidDropTimer[1]++;
 					if (char[i].acidDropTimer[0] > 28) {
@@ -3055,76 +3057,101 @@ function drawCharacters() {
 				let model = charModels[char[i].id];
 
 				// If we're not bubble dying, draw the legs
-				if (!(char[i].id == 5 && Math.floor(char[i].frame/2) == 4)) {
+				if (!(char[i].id == 5 && Math.floor(char[i].frame / 2) == 4)) {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
 					// ... or just make them one variable instead of two. whichever one I feel like doing at the time ig.
-					let legdire = char[i].legdire>0?1:-1;
+					let legdire = char[i].legdire > 0 ? 1 : -1;
 					let legmat = [
-						{a:0.3648529052734375,b:0,c:char[i].leg1skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35},
-						{a:0.3648529052734375,b:0,c:char[i].leg2skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35}
+						{
+							a: 0.3648529052734375,
+							b: 0,
+							c: char[i].leg1skew * legdire,
+							d: 0.3814697265625,
+							tx: legdire > 0 ? -0.75 : 0.35,
+							ty: -0.35
+						},
+						{
+							a: 0.3648529052734375,
+							b: 0,
+							c: char[i].leg2skew * legdire,
+							d: 0.3814697265625,
+							tx: legdire > 0 ? -0.75 : 0.35,
+							ty: -0.35
+						}
 					];
 					let f = [];
 					let legf = legFrames[char[i].leg1frame];
 					if (legf.type == 'static') {
-						f = [ legf.bodypart, legf.bodypart ];
-							// f[i] = f[i][Math.max(char[i].legAnimationFrame[i], 0)%f[i].length];
+						f = [legf.bodypart, legf.bodypart];
+						// f[i] = f[i][Math.max(char[i].legAnimationFrame[i], 0)%f[i].length];
 					} else if (legf.type == 'anim') {
 						if (legf.usesMats) {
-							f = [ legf.bodypart, legf.bodypart ];
+							f = [legf.bodypart, legf.bodypart];
 							legmat = [
-								legf.frames[Math.max(char[i].legAnimationFrame[0], 0)%legf.frames.length],
-								legf.frames[Math.max(char[i].legAnimationFrame[1], 0)%legf.frames.length]
+								legf.frames[Math.max(char[i].legAnimationFrame[0], 0) % legf.frames.length],
+								legf.frames[Math.max(char[i].legAnimationFrame[1], 0) % legf.frames.length]
 							];
 						} else {
 							f = [
-								legf.frames[Math.max(char[i].legAnimationFrame[0], 0)%legf.frames.length],
-								legf.frames[Math.max(char[i].legAnimationFrame[1], 0)%legf.frames.length]
+								legf.frames[Math.max(char[i].legAnimationFrame[0], 0) % legf.frames.length],
+								legf.frames[Math.max(char[i].legAnimationFrame[1], 0) % legf.frames.length]
 							];
 						}
 					}
 					ctx.save();
 					ctx.transform(
-						legdire*legmat[0].a,
+						legdire * legmat[0].a,
 						legmat[0].b,
-						legdire*legmat[0].c,
+						legdire * legmat[0].c,
 						legmat[0].d,
-						char[i].x+model.legx[0]+legmat[0].tx,
-						char[i].y+model.legy[0]+legmat[0].ty
+						char[i].x + model.legx[0] + legmat[0].tx,
+						char[i].y + model.legy[0] + legmat[0].ty
 					);
 					let leg1img = svgBodyParts[f[0]];
-					drawPossiblyTintedImage(leg1img, -leg1img.width/2, -leg1img.height/2, char[i].temp);
+					drawPossiblyTintedImage(leg1img, -leg1img.width / 2, -leg1img.height / 2, char[i].temp);
 					ctx.restore();
 					ctx.save();
 					ctx.transform(
-						legdire*legmat[1].a,
+						legdire * legmat[1].a,
 						legmat[1].b,
-						legdire*legmat[1].c,
+						legdire * legmat[1].c,
 						legmat[1].d,
-						char[i].x+model.legx[1]+legmat[1].tx,
-						char[i].y+model.legy[1]+legmat[1].ty
+						char[i].x + model.legx[1] + legmat[1].tx,
+						char[i].y + model.legy[1] + legmat[1].ty
 					);
 					let leg2img = svgBodyParts[f[1]];
-					drawPossiblyTintedImage(leg2img, -leg2img.width/2, -leg2img.height/2, char[i].temp);
+					drawPossiblyTintedImage(leg2img, -leg2img.width / 2, -leg2img.height / 2, char[i].temp);
 					ctx.restore();
 				}
 
 				let modelFrame = model.frames[char[i].frame];
 				ctx.save();
-				let runbob = (char[i].frame==0||char[i].frame==2)?bounceY(4/charModels[char[i].id].torsomat.a, 13, char[i].poseTimer):0;
+				let runbob =
+					char[i].frame == 0 || char[i].frame == 2
+						? bounceY(4 / charModels[char[i].id].torsomat.a, 13, char[i].poseTimer)
+						: 0;
 				ctx.transform(
 					charModels[char[i].id].torsomat.a,
 					charModels[char[i].id].torsomat.b,
 					charModels[char[i].id].torsomat.c,
 					charModels[char[i].id].torsomat.d,
-					char[i].x+charModels[char[i].id].torsomat.tx,
-					char[i].y+charModels[char[i].id].torsomat.ty
-					);
+					char[i].x + charModels[char[i].id].torsomat.tx,
+					char[i].y + charModels[char[i].id].torsomat.ty
+				);
 				for (let j = 0; j < modelFrame.length; j++) {
 					if (char[i].frame > 9 && modelFrame[j].type == 'armroot') {
-						let handOff = modelFrame[j].id==0?10:20;
-						let handX = -charModels[char[i].id].torsomat.tx + (char[HPRC2].x - char[i].x) + hprcCrankPos.x + handOff * Math.cos(Math.PI * recoverTimer / 15 - 0.2);
-						let handY = -charModels[char[i].id].torsomat.ty + (char[HPRC2].y - char[i].y) + hprcCrankPos.y + handOff * Math.sin(Math.PI * recoverTimer / 15 - 0.2);
+						let handOff = modelFrame[j].id == 0 ? 10 : 20;
+						let handX =
+							-charModels[char[i].id].torsomat.tx +
+							(char[HPRC2].x - char[i].x) +
+							hprcCrankPos.x +
+							handOff * Math.cos((Math.PI * recoverTimer) / 15 - 0.2);
+						let handY =
+							-charModels[char[i].id].torsomat.ty +
+							(char[HPRC2].y - char[i].y) +
+							hprcCrankPos.y +
+							handOff * Math.sin((Math.PI * recoverTimer) / 15 - 0.2);
 						ctx.strokeStyle = '#000000';
 						ctx.lineWidth = 1.5;
 						ctx.beginPath();
@@ -3134,7 +3161,7 @@ function drawCharacters() {
 
 						ctx.fillStyle = '#000000';
 						ctx.beginPath();
-						ctx.arc(handX, handY, 2.5, 0, 2*Math.PI, false);
+						ctx.arc(handX, handY, 2.5, 0, 2 * Math.PI, false);
 						ctx.fill();
 						continue;
 					}
@@ -3148,29 +3175,38 @@ function drawCharacters() {
 						modelFrame[j].mat.c,
 						modelFrame[j].mat.d,
 						modelFrame[j].mat.tx,
-						modelFrame[j].mat.ty+(modelFrame[j].type != 'anim'?runbob:0)
+						modelFrame[j].mat.ty + (modelFrame[j].type != 'anim' ? runbob : 0)
 					);
 					if (modelFrame[j].type == 'anim') {
 						img = svgBodyParts[bodyPartAnimations[modelFrame[j].anim].bodypart];
-						let bpanimframe = modelFrame[j].loop ? ((char[i].poseTimer+modelFrame[j].offset)%bodyPartAnimations[modelFrame[j].anim].frames.length) : Math.min((char[i].poseTimer+modelFrame[j].offset),bodyPartAnimations[modelFrame[j].anim].frames.length-1);
+						let bpanimframe = modelFrame[j].loop
+							? (char[i].poseTimer + modelFrame[j].offset) %
+							  bodyPartAnimations[modelFrame[j].anim].frames.length
+							: Math.min(
+									char[i].poseTimer + modelFrame[j].offset,
+									bodyPartAnimations[modelFrame[j].anim].frames.length - 1
+							  );
 						let mat = bodyPartAnimations[modelFrame[j].anim].frames[bpanimframe];
-						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					} else if (modelFrame[j].type == 'dia') {
 						let dmf = 0;
 						if (cutScene == 1) {
-							let expr = char[i].expr + charModels[char[i].id].mouthType*2;
+							let expr = char[i].expr + charModels[char[i].id].mouthType * 2;
 							dmf = diaMouths[expr].frameorder[char[i].diaMouthFrame];
 							img = svgBodyParts[diaMouths[expr].frames[dmf].bodypart];
 
 							// TODO: move this somehwere else
-							if (char[i].diaMouthFrame < diaMouths[expr].frameorder.length-1) char[i].diaMouthFrame++;
+							if (char[i].diaMouthFrame < diaMouths[expr].frameorder.length - 1) char[i].diaMouthFrame++;
 						} else {
-							img = svgBodyParts[diaMouths[char[i].expr + charModels[char[i].id].mouthType*2].frames[dmf].bodypart];
+							img =
+								svgBodyParts[
+									diaMouths[char[i].expr + charModels[char[i].id].mouthType * 2].frames[dmf].bodypart
+								];
 						}
 						let mat = diaMouths[model.defaultExpr].frames[dmf].mat;
-						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					}
-					drawPossiblyTintedImage(img, -img.width/2, -img.height/2, char[i].temp);
+					drawPossiblyTintedImage(img, -img.width / 2, -img.height / 2, char[i].temp);
 					ctx.restore();
 				}
 				ctx.restore();
@@ -3190,10 +3226,10 @@ function drawCharacters() {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
-			ctx.fillText(HPRCText, char[i].x+12.65, char[i].y-39.6);
-			let radius = svgHPRCCrank.height/2;
+			ctx.fillText(HPRCText, char[i].x + 12.65, char[i].y - 39.6);
+			let radius = svgHPRCCrank.height / 2;
 			ctx.save();
-			ctx.translate(char[i].x+hprcCrankPos.x, char[i].y+hprcCrankPos.y);
+			ctx.translate(char[i].x + hprcCrankPos.x, char[i].y + hprcCrankPos.y);
 			ctx.rotate(HPRCCrankRot);
 			ctx.drawImage(svgHPRCCrank, -radius, -radius);
 			ctx.restore();
@@ -3201,24 +3237,24 @@ function drawCharacters() {
 
 		if (char[i].temp >= 50 && char[i].id != 5) {
 			ctx.save();
-			let fireImg = svgFire[_frameCount%svgFire.length];
+			let fireImg = svgFire[_frameCount % svgFire.length];
 			if (char[i].id == 2) fireImg = svgIceCubeMelt;
 			else ctx.globalAlpha = 0.57;
 			let firemat = charModels[char[i].id].firemat;
-			ctx.transform(firemat.a,firemat.b,firemat.c,firemat.d,firemat.tx+char[i].x,firemat.ty+char[i].y);
-			ctx.drawImage(fireImg, -fireImg.width/2, -fireImg.height/2);
+			ctx.transform(firemat.a, firemat.b, firemat.c, firemat.d, firemat.tx + char[i].x, firemat.ty + char[i].y);
+			ctx.drawImage(fireImg, -fireImg.width / 2, -fireImg.height / 2);
 			ctx.restore();
 		}
 	}
 }
 
 function drawCutScene() {
-	let currdiachar = cLevelDialogueChar[Math.min(cutSceneLine, cLevelDialogueChar.length-1)];
+	let currdiachar = cLevelDialogueChar[Math.min(cutSceneLine, cLevelDialogueChar.length - 1)];
 	if (currdiachar >= 50 && currdiachar < 99) return;
 	ctx.save();
 	ctx.transform(bubSc, 0, 0, bubSc, bubX, bubY);
-	let bubLoc = {x:-bubWidth/2,y:-bubHeight/2};
-	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y)
+	let bubLoc = {x: -bubWidth / 2, y: -bubHeight / 2};
+	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y);
 	let textwidth = 386.55;
 	let textx = 106.7;
 	if (currdiachar == 99) {
@@ -3226,24 +3262,31 @@ function drawCutScene() {
 		textx = 4.25;
 	} else {
 		ctx.fillStyle = '#ce6fce';
-		ctx.fillRect(bubLoc.x+10, bubLoc.y+10, 80, 80);
+		ctx.fillRect(bubLoc.x + 10, bubLoc.y + 10, 80, 80);
 		ctx.save();
 		let charimg = svgChars[char[currdiachar].id];
 		if (Array.isArray(charimg)) charimg = charimg[0];
 		let charimgmat = charModels[char[currdiachar].id].charimgmat;
-		ctx.transform(charimgmat.a*2.6,charimgmat.b,charimgmat.c,charimgmat.d*2.6,charimgmat.tx+bubLoc.x+50,charimgmat.ty+bubLoc.y+50);
-		ctx.drawImage(charimg, -charimg.width/2, -charimg.height/2);
+		ctx.transform(
+			charimgmat.a * 2.6,
+			charimgmat.b,
+			charimgmat.c,
+			charimgmat.d * 2.6,
+			charimgmat.tx + bubLoc.x + 50,
+			charimgmat.ty + bubLoc.y + 50
+		);
+		ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
 		ctx.restore();
 	}
 	ctx.fillStyle = '#000000';
-	ctx.textAlign = 'left'
+	ctx.textAlign = 'left';
 	ctx.font = '21px Helvetica';
-	wrapText(csText, bubLoc.x+textx, bubLoc.y+4.25, textwidth, 23);
+	wrapText(csText, bubLoc.x + textx, bubLoc.y + 4.25, textwidth, 23);
 	ctx.restore();
 	if (cutScene == 2) {
-		if (bubSc > 0.1) bubSc -= bubSc/4;
+		if (bubSc > 0.1) bubSc -= bubSc / 4;
 	} else {
-		if (bubSc < 0.99) bubSc += (1-bubSc)/4;
+		if (bubSc < 0.99) bubSc += (1 - bubSc) / 4;
 		else bubSc = 1;
 	}
 }
@@ -3251,10 +3294,17 @@ function drawCutScene() {
 function drawHPRCBubbleCharImg(dead, sc, xoff) {
 	let charimgmat = charModels[char[dead].id].charimgmat;
 	ctx.save();
-	ctx.transform(charimgmat.a*sc,charimgmat.b,charimgmat.c,charimgmat.d*sc,(charimgmat.tx*sc)/2+char[HPRC2].x+xoff,(charimgmat.ty*sc)/2+char[HPRC2].y-107);
+	ctx.transform(
+		charimgmat.a * sc,
+		charimgmat.b,
+		charimgmat.c,
+		charimgmat.d * sc,
+		(charimgmat.tx * sc) / 2 + char[HPRC2].x + xoff,
+		(charimgmat.ty * sc) / 2 + char[HPRC2].y - 107
+	);
 	let charimg = svgChars[char[dead].id];
 	if (Array.isArray(charimg)) charimg = charimg[0];
-	ctx.drawImage(charimg, -charimg.width/2, -charimg.height/2);
+	ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
 	ctx.restore();
 }
 
@@ -3269,8 +3319,8 @@ function offSetLegs(i, duration, frame) {
 }
 
 function bounceY(amt, time, t) {
-	let base = Math.sin(mapRange((t%time), 0, time*2, 0, Math.PI))*time*2;
-	return (base>time?time-base+time:base)*amt/time;
+	let base = Math.sin(mapRange(t % time, 0, time * 2, 0, Math.PI)) * time * 2;
+	return ((base > time ? time - base + time : base) * amt) / time;
 }
 
 function getTintedCanvasImage(img, a, color) {
@@ -3290,7 +3340,13 @@ function getTintedCanvasImage(img, a, color) {
 
 function drawPossiblyTintedImage(img, x, y, temp) {
 	if (temp > 0 && temp < 50) {
-		ctx.drawImage(getTintedCanvasImage(img, temp/70, 'rgb(255,' + (100-temp) + ',' + (100-temp) + ')'), x, y, img.width, img.height);
+		ctx.drawImage(
+			getTintedCanvasImage(img, temp / 70, 'rgb(255,' + (100 - temp) + ',' + (100 - temp) + ')'),
+			x,
+			y,
+			img.width,
+			img.height
+		);
 	} else {
 		ctx.drawImage(img, x, y);
 	}
@@ -3301,7 +3357,7 @@ function setBody(i) {
 	char[i].leg2skew = 0;
 
 	let legX;
-	let skew = [0,0];
+	let skew = [0, 0];
 	char[i].legdire = char[i].dire / 2 - 1;
 	if (ifCarried(i) && cornerHangTimer == 0) {
 		offSetLegs(i, 60, 3);
@@ -3311,24 +3367,27 @@ function setBody(i) {
 		if (char[i].standingOn >= 0) {
 			let j = char[i].standingOn;
 			for (let z = 1; z <= 2; z++) {
-				legX = char[i].x + charModels[char[i].id].legx[z-1];
+				legX = char[i].x + charModels[char[i].id].legx[z - 1];
 				if (legX >= char[j].x + char[j].w) {
 					skew[z - 1] = char[j].x + char[j].w - legX;
 				} else if (legX <= char[j].x - char[j].w) {
 					skew[z - 1] = char[j].x - char[j].w - legX;
 				}
 			}
-		}
-		else if (char[i].fricGoal == 0) {
+		} else if (char[i].fricGoal == 0) {
 			for (let z = 1; z <= 2; z++) {
-				legX = char[i].x + charModels[char[i].id].legx[z-1];
-				if (!safeToStandAt(legX,char[i].y + 1)) {
-					let s1 = safeToStandAt(legX - 30,char[i].y + 1);
-					let s2 = safeToStandAt(legX + 30,char[i].y + 1);
-					if (s1 && (!s2 || legX % 30 - (z - 1.5) * 10 < 30 - legX % 30) && !horizontalProp(i,-1,1,char[i].x - 15,char[i].y)) {
-						skew[z - 1] = (- legX) % 30;
-					} else if (s2 && !horizontalProp(i,1,1,char[i].x + 15,char[i].y)) {
-						skew[z - 1] = 30 - legX % 30;
+				legX = char[i].x + charModels[char[i].id].legx[z - 1];
+				if (!safeToStandAt(legX, char[i].y + 1)) {
+					let s1 = safeToStandAt(legX - 30, char[i].y + 1);
+					let s2 = safeToStandAt(legX + 30, char[i].y + 1);
+					if (
+						s1 &&
+						(!s2 || (legX % 30) - (z - 1.5) * 10 < 30 - (legX % 30)) &&
+						!horizontalProp(i, -1, 1, char[i].x - 15, char[i].y)
+					) {
+						skew[z - 1] = -legX % 30;
+					} else if (s2 && !horizontalProp(i, 1, 1, char[i].x + 15, char[i].y)) {
+						skew[z - 1] = 30 - (legX % 30);
 					}
 				} else {
 					skew[z - 1] = 0;
@@ -3342,18 +3401,18 @@ function setBody(i) {
 		if (skew[0] > skew[1] && skew[1] >= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = skew[0]/42;
-			char[i].leg2skew = skew[0]/42;
+			char[i].leg1skew = skew[0] / 42;
+			char[i].leg2skew = skew[0] / 42;
 		} else if (skew[0] > skew[1] && skew[0] <= 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = skew[1]/42;
-			char[i].leg2skew = skew[1]/42;
+			char[i].leg1skew = skew[1] / 42;
+			char[i].leg2skew = skew[1] / 42;
 		} else if (skew[0] < 0 && skew[1] > 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
-			char[i].leg1skew = skew[0]/42;
-			char[i].leg2skew = skew[1]/42;
+			char[i].leg1skew = skew[0] / 42;
+			char[i].leg2skew = skew[1] / 42;
 		} else if (skew[1] > 0 && skew[0] == 0) {
 			char[i].leg1frame = 0;
 			char[i].leg2frame = 0;
@@ -3421,20 +3480,20 @@ function getTileDepths() {
 			if (thisLevel[y][x] >= 1) {
 				// switchable
 				if (blockProperties[thisLevel[y][x]][12] >= 1) {
-					switchable[blockProperties[thisLevel[y][x]][12] - 1].push([x,y]);
+					switchable[blockProperties[thisLevel[y][x]][12] - 1].push([x, y]);
 				}
 				// levelActive3 - liquids
 				if (blockProperties[thisLevel[y][x]][14]) {
-					tileDepths[3].push({x:x,y:y});
-				// levelActive2 - switches & buttons
+					tileDepths[3].push({x: x, y: y});
+					// levelActive2 - switches & buttons
 				} else if (blockProperties[thisLevel[y][x]][11] >= 1) {
-					tileDepths[2].push({x:x,y:y});
-				// levelActive - animated blocks
+					tileDepths[2].push({x: x, y: y});
+					// levelActive - animated blocks
 				} else if (blockProperties[thisLevel[y][x]][8]) {
-					tileDepths[1].push({x:x,y:y});
-				// levelStill - static blocks
+					tileDepths[1].push({x: x, y: y});
+					// levelStill - static blocks
 				} else {
-					tileDepths[0].push({x:x,y:y});
+					tileDepths[0].push({x: x, y: y});
 				}
 
 				if (thisLevel[y][x] == 6) {
@@ -3457,12 +3516,12 @@ function addTileMovieClip(x, y, context) {
 	let t = thisLevel[y][x];
 	if (blockProperties[t][16] > 0) {
 		if (blockProperties[t][16] == 1) {
-			if (blockProperties[t][11] > 0 && typeof svgLevers[(blockProperties[t][11]-1)%6] !== 'undefined') {
+			if (blockProperties[t][11] > 0 && typeof svgLevers[(blockProperties[t][11] - 1) % 6] !== 'undefined') {
 				context.save();
-				context.translate(x*30+15, y*30+28);
-				context.rotate(tileFrames[y][x].rotation*(Math.PI/180));
-				context.translate(-x*30-15, -y*30-28); // TODO: find out how to remove this line
-				context.drawImage(svgLevers[(blockProperties[t][11]-1)%6], x*30, y*30);
+				context.translate(x * 30 + 15, y * 30 + 28);
+				context.rotate(tileFrames[y][x].rotation * (Math.PI / 180));
+				context.translate(-x * 30 - 15, -y * 30 - 28); // TODO: find out how to remove this line
+				context.drawImage(svgLevers[(blockProperties[t][11] - 1) % 6], x * 30, y * 30);
 				context.restore();
 				// Math.floor(blockProperties[t][11]/6);
 				// Math.floor(blockProperties[t][11]/6)
@@ -3471,33 +3530,46 @@ function addTileMovieClip(x, y, context) {
 			}
 			// context.fillStyle = '#cc33ff';
 			// context.fillRect(x*30, y*30, 30, 30);
-			context.drawImage(svgTiles[t], x*30+svgTilesVB[t][0], y*30+svgTilesVB[t][1]);
+			context.drawImage(svgTiles[t], x * 30 + svgTilesVB[t][0], y * 30 + svgTilesVB[t][1]);
 		} else if (blockProperties[t][16] > 1) {
 			let frame = 0;
-			if (blockProperties[t][17]) frame = blockProperties[t][18][_frameCount%blockProperties[t][18].length];
+			if (blockProperties[t][17]) frame = blockProperties[t][18][_frameCount % blockProperties[t][18].length];
 			else {
 				frame = tileFrames[y][x].cf;
 				if (tileFrames[y][x].playing) tileFrames[y][x].cf++;
-				if (tileFrames[y][x].cf >= blockProperties[t][16]-1) {
+				if (tileFrames[y][x].cf >= blockProperties[t][16] - 1) {
 					tileFrames[y][x].playing = false;
 					tileFrames[y][x].cf = 0;
 				}
 			}
 			// context.fillStyle = '#00ffcc';
 			// context.fillRect(x*30, y*30, 30, 30);
-			context.drawImage(svgTiles[t][frame], x*30+svgTilesVB[t][frame][0], y*30+svgTilesVB[t][frame][1]);
+			context.drawImage(svgTiles[t][frame], x * 30 + svgTilesVB[t][frame][0], y * 30 + svgTilesVB[t][frame][1]);
 			// context.drawImage(svgTiles[t][0], x*30, y*30);
 		}
 	} else if (t == 6) {
 		// Door
-		let bgid = playMode==2?selectedBg:bgs[currentLevel];
-		context.fillStyle = bgid==9||bgid==10?'#999999':'#505050';
-		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
+		let bgid = playMode == 2 ? selectedBg : bgs[currentLevel];
+		context.fillStyle = bgid == 9 || bgid == 10 ? '#999999' : '#505050';
+		context.fillRect((x - 1) * 30, (y - 3) * 30, 60, 120);
 		for (let i = 0; i < charCount2; i++) {
-			context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
-			context.fillRect((x-1)*30+doorLightX[Math.floor(i/6)==Math.floor((charCount2-1)/6)?(charCount2-1)%6:5][i%6], y*30-80 + Math.floor(i/6)*10, 5, 5);
+			context.fillStyle =
+				'rgb(' +
+				mapRange(doorLightFade[i], 0, 1, 40, 0) +
+				',' +
+				mapRange(doorLightFade[i], 0, 1, 40, 255) +
+				',' +
+				mapRange(doorLightFade[i], 0, 1, 40, 0) +
+				')';
+			context.fillRect(
+				(x - 1) * 30 +
+					doorLightX[Math.floor(i / 6) == Math.floor((charCount2 - 1) / 6) ? (charCount2 - 1) % 6 : 5][i % 6],
+				y * 30 - 80 + Math.floor(i / 6) * 10,
+				5,
+				5
+			);
 			if (doorLightFadeDire[i] != 0) {
-				doorLightFade[i] = Math.max(Math.min(doorLightFade[i]+doorLightFadeDire[i]*0.0625, 1), 0);
+				doorLightFade[i] = Math.max(Math.min(doorLightFade[i] + doorLightFadeDire[i] * 0.0625, 1), 0);
 				if (doorLightFade[i] == 1 || doorLightFade[i] == 0) doorLightFadeDire[i] = 0;
 			}
 		}
@@ -3506,15 +3578,15 @@ function addTileMovieClip(x, y, context) {
 		if (!gotThisCoin) {
 			if (locations[4] < 200) {
 				context.save();
-				context.translate(x*30+15, y*30+15);
-				let wtrot = Math.sin((_frameCount*Math.PI)/20)*0.5235987756;
-				context.transform(Math.cos(wtrot),-Math.sin(wtrot),Math.sin(wtrot),Math.cos(wtrot),0,0);
-				context.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7)/100, 1), 0);
+				context.translate(x * 30 + 15, y * 30 + 15);
+				let wtrot = Math.sin((_frameCount * Math.PI) / 20) * 0.5235987756;
+				context.transform(Math.cos(wtrot), -Math.sin(wtrot), Math.sin(wtrot), Math.cos(wtrot), 0, 0);
+				context.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7) / 100, 1), 0);
 				context.drawImage(svgCoin, -15, -15, 30, 30);
 				context.restore();
 			}
 		} else if (tileFrames[y][x].cf < svgCoinGet.length) {
-			context.drawImage(svgCoinGet[tileFrames[y][x].cf], x*30-21, y*30-21);
+			context.drawImage(svgCoinGet[tileFrames[y][x].cf], x * 30 - 21, y * 30 - 21);
 			tileFrames[y][x].cf++;
 		}
 	}
@@ -3528,20 +3600,20 @@ function calculateShadowsAndBorders() {
 				if (t == 6) {
 					for (let x2 = 0; x2 < 2 && x - x2 >= 0; x2++) {
 						for (let y2 = 0; y2 < 4 && y - y2 >= 0; y2++) {
-							setAmbientShadow(x - x2,y - y2);
+							setAmbientShadow(x - x2, y - y2);
 						}
 					}
 				} else if (t >= 110 && t <= 129) {
 					for (let x2 = 0; x2 < 3; x2++) {
 						for (let y2 = 0; y2 < 2; y2++) {
-							setAmbientShadow(x - x2,y - y2);
+							setAmbientShadow(x - x2, y - y2);
 						}
 					}
 				} else if (blockProperties[thisLevel[y][x]][10]) {
-					setAmbientShadow(x,y);
+					setAmbientShadow(x, y);
 				}
 				if (blockProperties[thisLevel[y][x]][13]) {
-					setBorder(x,y,t);
+					setBorder(x, y, t);
 				}
 			}
 		}
@@ -3553,17 +3625,25 @@ function setAmbientShadow(x, y) {
 	if (outOfRange(x, y)) return;
 	let count = 0;
 	for (let i = 0; i < 4; i++) {
-		if ((!outOfRange(x + cardinal[i][0],y + cardinal[i][1]))) {
+		if (!outOfRange(x + cardinal[i][0], y + cardinal[i][1])) {
 			let t = blockProperties[thisLevel[y + cardinal[i][1]][x + cardinal[i][0]]][12];
 			if (blockProperties[thisLevel[y + cardinal[i][1]][x + cardinal[i][0]]][i] && (t == 0 || t == 6)) {
-				count += Math.pow(2,3 - i);
+				count += Math.pow(2, 3 - i);
 			}
 		}
 	}
 	if (count > 0) tileShadows[y][x].push(count);
 	for (let i = 0; i < 4; i++) {
-		if ((!outOfRange(x + diagonal[i][0],y + diagonal[i][1])) && !blockProperties[thisLevel[y][x + diagonal[i][0]]][opposite(i,0)] && !blockProperties[thisLevel[y + diagonal[i][1]][x]][opposite(i,1)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i,0)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0 && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i,1)] && blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0) {
-			tileShadows[y][x].push(16+i);
+		if (
+			!outOfRange(x + diagonal[i][0], y + diagonal[i][1]) &&
+			!blockProperties[thisLevel[y][x + diagonal[i][0]]][opposite(i, 0)] &&
+			!blockProperties[thisLevel[y + diagonal[i][1]][x]][opposite(i, 1)] &&
+			blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i, 0)] &&
+			blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0 &&
+			blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][opposite(i, 1)] &&
+			blockProperties[thisLevel[y + diagonal[i][1]][x + diagonal[i][0]]][12] == 0
+		) {
+			tileShadows[y][x].push(16 + i);
 		}
 	}
 }
@@ -3571,20 +3651,28 @@ function setAmbientShadow(x, y) {
 function setBorder(x, y, s) {
 	let borderset = 0;
 	// TODO: remove this hard-coded array
-	let metalBlocks = [98,102,105,107];
+	let metalBlocks = [98, 102, 105, 107];
 	if (metalBlocks.includes(thisLevel[y][x])) borderset = 19;
 	tileBorders[y][x] = [];
 	if (outOfRange(x, y)) return;
 	let count = 0;
 	for (let i = 0; i < 4; i++) {
-		if ((!outOfRange(x + cardinal[i][0],y + cardinal[i][1])) && thisLevel[y + cardinal[i][1]][x + cardinal[i][0]] != s) {
-			count += Math.pow(2,3 - i);
+		if (
+			!outOfRange(x + cardinal[i][0], y + cardinal[i][1]) &&
+			thisLevel[y + cardinal[i][1]][x + cardinal[i][0]] != s
+		) {
+			count += Math.pow(2, 3 - i);
 		}
 	}
-	if (count > 0) tileBorders[y][x].push(count+borderset);
+	if (count > 0) tileBorders[y][x].push(count + borderset);
 	for (let i = 0; i < 4; i++) {
-		if ((!outOfRange(x + diagonal[i][0],y + diagonal[i][1])) &&  thisLevel[y][x + diagonal[i][0]] == s && thisLevel[y + diagonal[i][1]][x] == s && thisLevel[y + diagonal[i][1]][x + diagonal[i][0]] != s) {
-			tileBorders[y][x].push(16+i+borderset);
+		if (
+			!outOfRange(x + diagonal[i][0], y + diagonal[i][1]) &&
+			thisLevel[y][x + diagonal[i][0]] == s &&
+			thisLevel[y + diagonal[i][1]][x] == s &&
+			thisLevel[y + diagonal[i][1]][x + diagonal[i][0]] != s
+		) {
+			tileBorders[y][x].push(16 + i + borderset);
 		}
 	}
 }
@@ -3600,7 +3688,12 @@ function opposite(i, xOrY) {
 
 function getCoin(i) {
 	if (!gotThisCoin && char[i].charState >= 7) {
-		if (Math.floor((char[i].x - char[i].w) / 30) <= locations[2] && Math.ceil((char[i].x + char[i].w) / 30) - 1 >= locations[2] && Math.floor((char[i].y - char[i].h) / 30) <= locations[3] && Math.ceil(char[i].y / 30) - 1 >= locations[3]) {
+		if (
+			Math.floor((char[i].x - char[i].w) / 30) <= locations[2] &&
+			Math.ceil((char[i].x + char[i].w) / 30) - 1 >= locations[2] &&
+			Math.floor((char[i].y - char[i].h) / 30) <= locations[3] &&
+			Math.ceil(char[i].y / 30) - 1 >= locations[3]
+		) {
 			gotThisCoin = true;
 		}
 	}
@@ -3610,17 +3703,17 @@ function setCamera() {
 	if (levelWidth <= 32) {
 		cameraX = levelWidth * 15 - 480;
 	} else if (char[control].x - cameraX < 384) {
-		cameraX = Math.min(Math.max(cameraX + (char[control].x - 384 - cameraX) * 0.12,0),levelWidth * 30 - 960);
+		cameraX = Math.min(Math.max(cameraX + (char[control].x - 384 - cameraX) * 0.12, 0), levelWidth * 30 - 960);
 	} else if (char[control].x - cameraX >= 576) {
-		cameraX = Math.min(Math.max(cameraX + (char[control].x - 576 - cameraX) * 0.12,0),levelWidth * 30 - 960);
+		cameraX = Math.min(Math.max(cameraX + (char[control].x - 576 - cameraX) * 0.12, 0), levelWidth * 30 - 960);
 	}
 
 	if (levelHeight <= 18) {
 		cameraY = levelHeight * 15 - 270;
 	} else if (char[control].y - cameraY < 216) {
-		cameraY = Math.min(Math.max(cameraY + (char[control].y - 216 - cameraY) * 0.12,0),levelHeight * 30 - 540);
+		cameraY = Math.min(Math.max(cameraY + (char[control].y - 216 - cameraY) * 0.12, 0), levelHeight * 30 - 540);
 	} else if (char[control].y - cameraY >= 324) {
-		cameraY = Math.min(Math.max(cameraY + (char[control].y - 324 - cameraY) * 0.12,0),levelHeight * 30 - 540);
+		cameraY = Math.min(Math.max(cameraY + (char[control].y - 324 - cameraY) * 0.12, 0), levelHeight * 30 - 540);
 	}
 }
 
@@ -3645,7 +3738,7 @@ function checkButton(i) {
 							}
 						}
 						if (okay) {
-							char[i].buttonsPressed.push([j,yTile]);
+							char[i].buttonsPressed.push([j, yTile]);
 						}
 						// break;
 					}
@@ -3657,10 +3750,16 @@ function checkButton(i) {
 
 function checkButton2(i, bypass) {
 	if (char[i].y < levelHeight * 30 + 30) {
-		for (let j = char[i].buttonsPressed.length-1; j >= 0; j--) {
+		for (let j = char[i].buttonsPressed.length - 1; j >= 0; j--) {
 			let x = char[i].buttonsPressed[j][0];
 			let y = char[i].buttonsPressed[j][1];
-			if (!char[i].onob || char[i].standingOn >= 0 || char[i].x < x * 30 - char[i].w || char[i].x >= x * 30 + 30 + char[i].w || bypass) {
+			if (
+				!char[i].onob ||
+				char[i].standingOn >= 0 ||
+				char[i].x < x * 30 - char[i].w ||
+				char[i].x >= x * 30 + 30 + char[i].w ||
+				bypass
+			) {
 				let okay = true;
 				for (let k = 0; k < charCount; k++) {
 					if (k != i) {
@@ -3691,8 +3790,8 @@ function checkButton2(i, bypass) {
 
 function leverSwitch(j) {
 	for (let z = 0; z < switchable[j].length; z++) {
-		let x = switchable[Math.min(j,5)][z][0];
-		let y = switchable[Math.min(j,5)][z][1];
+		let x = switchable[Math.min(j, 5)][z][0];
+		let y = switchable[Math.min(j, 5)][z][1];
 		for (let k = 0; k < switches[j].length; k++) {
 			if (thisLevel[y][x] == switches[j][k * 2]) {
 				thisLevel[y][x] = switches[j][k * 2 + 1];
@@ -3710,8 +3809,8 @@ function leverSwitch(j) {
 // the exact same as leverSwitch(), but with an aditional argument to avoid calling checkDeath() on the same character.
 function leverSwitch2(j, c) {
 	for (let z = 0; z < switchable[j].length; z++) {
-		let x = switchable[Math.min(j,5)][z][0];
-		let y = switchable[Math.min(j,5)][z][1];
+		let x = switchable[Math.min(j, 5)][z][0];
+		let y = switchable[Math.min(j, 5)][z][1];
 		for (let k = 0; k < switches[j].length; k++) {
 			if (thisLevel[y][x] == switches[j][k * 2]) {
 				thisLevel[y][x] = switches[j][k * 2 + 1];
@@ -3733,7 +3832,12 @@ function checkDeath(i) {
 	for (let y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor((char[i].y - 0.01) / 30); y++) {
 		for (let x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w) / 30); x++) {
 			if (!outOfRange(x, y)) {
-				if (blockProperties[thisLevel[y][x]][4] || blockProperties[thisLevel[y][x]][5] || blockProperties[thisLevel[y][x]][6] || blockProperties[thisLevel[y][x]][7]) {
+				if (
+					blockProperties[thisLevel[y][x]][4] ||
+					blockProperties[thisLevel[y][x]][5] ||
+					blockProperties[thisLevel[y][x]][6] ||
+					blockProperties[thisLevel[y][x]][7]
+				) {
 					startDeath(i);
 				}
 			}
@@ -3756,7 +3860,7 @@ function heat(i) {
 }
 
 function unheat(i) {
-	if (exitTileHorizontal(i,-1) || exitTileHorizontal(i,1) || exitTileVertical(i,1) || exitTileVertical(i,-1)) {
+	if (exitTileHorizontal(i, -1) || exitTileHorizontal(i, 1) || exitTileVertical(i, 1) || exitTileVertical(i, -1)) {
 		if (!somewhereHeated(i)) {
 			char[i].heated = 0;
 		}
@@ -3764,8 +3868,16 @@ function unheat(i) {
 }
 
 function somewhereHeated(i) {
-	for (let x = Math.max(Math.floor((char[i].x - char[i].w) / 30),0); x <= Math.min(Math.floor((char[i].x + char[i].w) / 30),levelWidth-1); x++) {
-		for (let y = Math.max(Math.floor((char[i].y - char[i].h) / 30),0); y <= Math.min(Math.floor(char[i].y / 30),levelHeight-1); y++) {
+	for (
+		let x = Math.max(Math.floor((char[i].x - char[i].w) / 30), 0);
+		x <= Math.min(Math.floor((char[i].x + char[i].w) / 30), levelWidth - 1);
+		x++
+	) {
+		for (
+			let y = Math.max(Math.floor((char[i].y - char[i].h) / 30), 0);
+			y <= Math.min(Math.floor(char[i].y / 30), levelHeight - 1);
+			y++
+		) {
 			if (thisLevel[y][x] == 15) return true;
 		}
 	}
@@ -3775,7 +3887,11 @@ function somewhereHeated(i) {
 function extinguish(i) {
 	for (let j = 0; j < charCount; j++) {
 		if (char[j].charState >= 5 && j != i && char[j].temp > 0) {
-			if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+			if (
+				Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w &&
+				char[j].y > char[i].y - char[i].h &&
+				char[j].y < char[i].y + char[j].h
+			) {
 				char[j].temp = 0;
 			}
 		}
@@ -3787,7 +3903,7 @@ function submerge(i) {
 	let goal = somewhereSubmerged(i);
 	if (char[i].submerged <= 1 && goal >= 2) {
 		char[i].weight2 -= 0.16;
-		rippleWeight(i,0.16,-1);
+		rippleWeight(i, 0.16, -1);
 		char[i].vx *= 0.1;
 		char[i].vy *= 0.1;
 	}
@@ -3795,16 +3911,16 @@ function submerge(i) {
 }
 
 function unsubmerge(i) {
-	if (exitTileHorizontal(i,-1) || exitTileHorizontal(i,1) || exitTileVertical(i,1) || exitTileVertical(i,-1)) {
+	if (exitTileHorizontal(i, -1) || exitTileHorizontal(i, 1) || exitTileVertical(i, 1) || exitTileVertical(i, -1)) {
 		let goal = somewhereSubmerged(i);
 		if (goal == 0 && char[i].submerged >= 1) {
-			if (char[i].submerged == 2 && exitTileVertical(i,-1) && char[i].weight2 < 0 && !ifCarried(i)) {
+			if (char[i].submerged == 2 && exitTileVertical(i, -1) && char[i].weight2 < 0 && !ifCarried(i)) {
 				char[i].vy = 0;
 				char[i].y = Math.ceil(char[i].y / 30) * 30;
 				goal = 1;
 			}
 			char[i].weight2 += 0.16;
-			rippleWeight(i,0.16,1);
+			rippleWeight(i, 0.16, 1);
 		}
 		char[i].submerged = goal;
 	}
@@ -3839,16 +3955,25 @@ function newTileDown(i) {
 }
 
 function newTileHorizontal(i, sign) {
-	return Math.ceil(sign * (char[i].x + char[i].w * sign) / 30) > Math.ceil(sign * (char[i].px + char[i].w * sign) / 30);
+	return (
+		Math.ceil((sign * (char[i].x + char[i].w * sign)) / 30) >
+		Math.ceil((sign * (char[i].px + char[i].w * sign)) / 30)
+	);
 }
 
 function exitTileHorizontal(i, sign) {
-	return Math.ceil(sign * (char[i].x - char[i].w * sign) / 30) > Math.ceil(sign * (char[i].px - char[i].w * sign) / 30);
+	return (
+		Math.ceil((sign * (char[i].x - char[i].w * sign)) / 30) >
+		Math.ceil((sign * (char[i].px - char[i].w * sign)) / 30)
+	);
 }
 
 function exitTileVertical(i, sign) {
 	let includeHeight = 0.5 * sign + 0.5;
-	return Math.ceil(sign * (char[i].y - char[i].h * includeHeight) / 30) > Math.ceil(sign * (char[i].py - char[i].h * includeHeight) / 30);
+	return (
+		Math.ceil((sign * (char[i].y - char[i].h * includeHeight)) / 30) >
+		Math.ceil((sign * (char[i].py - char[i].h * includeHeight)) / 30)
+	);
 }
 
 function allSolid(i) {
@@ -3856,17 +3981,21 @@ function allSolid(i) {
 }
 
 function solidAt(x, y) {
-	let t = getBlockTypeAt(x,y);
-	return (typeof t === 'number')?(blockProperties[t][0] && blockProperties[t][1] && blockProperties[t][2] && blockProperties[t][3]):true;
+	let t = getBlockTypeAt(x, y);
+	return typeof t === 'number'
+		? blockProperties[t][0] && blockProperties[t][1] && blockProperties[t][2] && blockProperties[t][3]
+		: true;
 }
 
 function solidCeiling(x, y) {
-	return blockProperties[getBlockTypeAt(x,y)][0];
+	return blockProperties[getBlockTypeAt(x, y)][0];
 }
 
 function safeToStandAt(x, y) {
-	let t = getBlockTypeAt(x,y);
-	return (typeof t === 'number')?(blockProperties[t][1] && !blockProperties[t][5] && t != 14 && t != 16 && t != 83 && t != 85):true;
+	let t = getBlockTypeAt(x, y);
+	return typeof t === 'number'
+		? blockProperties[t][1] && !blockProperties[t][5] && t != 14 && t != 16 && t != 83 && t != 85
+		: true;
 }
 
 function getBlockTypeAt(x, y) {
@@ -3902,13 +4031,17 @@ function verticalProp(i, sign, prop, x, y) {
 
 function horizontalProp(i, sign, prop, x, y) {
 	let xTile = Math.floor((x + char[i].w * sign) / 30);
-	if (prop <= 3 && (sign == -1 && xTile <= -1 || sign == 1 && xTile >= levelWidth)) {
+	if (prop <= 3 && ((sign == -1 && xTile <= -1) || (sign == 1 && xTile >= levelWidth))) {
 		return true;
 	}
 	if (prop >= 4 && prop <= 7) {
 		for (let j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
 			if (!outOfRange(xTile, j)) {
-				if (blockProperties[thisLevel[j][xTile]][prop - 4] && !blockProperties[thisLevel[j][xTile - sign]][prop - 4] && !blockProperties[thisLevel[j][xTile]][prop]) {
+				if (
+					blockProperties[thisLevel[j][xTile]][prop - 4] &&
+					!blockProperties[thisLevel[j][xTile - sign]][prop - 4] &&
+					!blockProperties[thisLevel[j][xTile]][prop]
+				) {
 					return false;
 				}
 			}
@@ -3957,7 +4090,7 @@ function horizontalType(i, sign, prop) {
 function land(i, y, vy) {
 	char[i].y = y;
 	if (char[i].weight2 <= 0) {
-		char[i].vy = - Math.abs(vy);
+		char[i].vy = -Math.abs(vy);
 	} else {
 		char[i].vy = vy;
 		char[i].onob = true;
@@ -3966,14 +4099,14 @@ function land(i, y, vy) {
 
 function land2(i, y) {
 	if (control < 1000) char[control].landTimer = 0;
-	stopCarrierY(i,y,false);
+	stopCarrierY(i, y, false);
 }
 
 function centered(i, len) {
 	if (i % 2 == 0) {
-		return (len - i - 2 + len % 2) / 2;
+		return (len - i - 2 + (len % 2)) / 2;
 	}
-	return (i + len - 1 + len % 2) / 2;
+	return (i + len - 1 + (len % 2)) / 2;
 }
 
 function onlyConveyorsUnder(i) {
@@ -3982,7 +4115,7 @@ function onlyConveyorsUnder(i) {
 	let max = Math.floor((char[i].x + char[i].w - 0.01) / 30);
 	let todo = 0;
 	for (let j = 0; j <= max - min; j++) {
-		let j2 = centered(j,1 + max - min) + min;
+		let j2 = centered(j, 1 + max - min) + min;
 		if (!outOfRange(j2, yTile)) {
 			let t = thisLevel[yTile][j2];
 			if (blockProperties[t][1]) {
@@ -4005,9 +4138,11 @@ function startCutScene() {
 			cutScene = 1;
 			cutSceneLine = 0;
 			for (let i = 0; i < char.length; i++) {
-				if (char[i].charState >= 7 && char[i].id < 35) char[i].diaMouthFrame = diaMouths[char[i].expr + charModels[char[i].id].mouthType*2].frameorder.length-1;
+				if (char[i].charState >= 7 && char[i].id < 35)
+					char[i].diaMouthFrame =
+						diaMouths[char[i].expr + charModels[char[i].id].mouthType * 2].frameorder.length - 1;
 			}
-			displayLine(currentLevel,cutSceneLine);
+			displayLine(currentLevel, cutSceneLine);
 			char[control].dire = Math.ceil(char[control].dire / 2) * 2;
 		} else {
 			rescue();
@@ -4052,7 +4187,7 @@ function displayLine(level, line) {
 	if (p == 99) {
 		x = 480;
 	} else if (p < char.length) {
-		x = Math.min(Math.max(char[p].x,bubWidth / 2 + bubMargin),960 - bubWidth / 2 - bubMargin);
+		x = Math.min(Math.max(char[p].x, bubWidth / 2 + bubMargin), 960 - bubWidth / 2 - bubMargin);
 		putDown(p);
 	}
 	bubSc = 0.1;
@@ -4063,7 +4198,7 @@ function displayLine(level, line) {
 		bubY = 520 - bubMargin - bubHeight / 2;
 	}
 	if (p < char.length) {
-		char[p].expr = cLevelDialogueFace[line]-2;
+		char[p].expr = cLevelDialogueFace[line] - 2;
 		char[p].diaMouthFrame = 0;
 	}
 	csText = cLevelDialogueText[line];
@@ -4077,7 +4212,7 @@ function startDeath(i) {
 			putDown(char[i].carriedBy);
 		}
 		char[i].pcharState = char[i].charState;
-		checkButton2(i,true);
+		checkButton2(i, true);
 		fallOff(i);
 		char[i].deathTimer = 20;
 		char[i].leg1frame = 1;
@@ -4096,7 +4231,7 @@ function endDeath(i) {
 	char[i].charState = 1;
 	// OG bug fix
 	if (char[i].atEnd && !quirksMode) {
-		doorLightFadeDire[charsAtEnd-1] = -1;
+		doorLightFadeDire[charsAtEnd - 1] = -1;
 		charsAtEnd--;
 		char[i].atEnd = false;
 	}
@@ -4114,7 +4249,7 @@ function bounce(i) {
 	if (char[i].dire % 2 == 0) {
 		char[i].fricGoal = 0;
 	}
-	char[i].jump((- jumpPower) * 1.66);
+	char[i].jump(-jumpPower * 1.66);
 	char[i].onob = false;
 	char[i].y = Math.floor(char[i].y / 30) * 30 - 10;
 }
@@ -4142,14 +4277,22 @@ function stopCarrierX(i, x) {
 }
 
 function stopCarrierY(i, y, canCornerHang) {
-	if (ifCarried(i) && (!char[char[i].carriedBy].onob || char[char[i].carriedBy].standingOn >= 0 && char[char[char[i].carriedBy].standingOn].vy != 0)) {
+	if (
+		ifCarried(i) &&
+		(!char[char[i].carriedBy].onob ||
+			(char[char[i].carriedBy].standingOn >= 0 && char[char[char[i].carriedBy].standingOn].vy != 0))
+	) {
 		if (char[char[i].carriedBy].standingOn >= 0) {
 			char[char[char[i].carriedBy].standingOn].vy = 0;
 			fallOff(char[i].carriedBy);
 		}
-		if (char[char[i].carriedBy].vy >= 0 && canCornerHang && !solidAt(char[char[i].carriedBy].x,char[i].y + 15)) {
-			let lSolid = solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 45,char[i].y + 15);
-			let rSolid = solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 15,char[i].y + 15) || solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 45,char[i].y + 15);
+		if (char[char[i].carriedBy].vy >= 0 && canCornerHang && !solidAt(char[char[i].carriedBy].x, char[i].y + 15)) {
+			let lSolid =
+				solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 15, char[i].y + 15) ||
+				solidAt(char[char[i].carriedBy].x - char[char[i].carriedBy].w - 45, char[i].y + 15);
+			let rSolid =
+				solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 15, char[i].y + 15) ||
+				solidAt(char[char[i].carriedBy].x + char[char[i].carriedBy].w + 45, char[i].y + 15);
 			char[i].justChanged = 2;
 			char[char[i].carriedBy].justChanged = 2;
 			if (lSolid && rSolid) {
@@ -4167,7 +4310,10 @@ function stopCarrierY(i, y, canCornerHang) {
 		if (char[i].carriedBy != -1) {
 			char[char[i].carriedBy].vy = 0;
 			char[char[i].carriedBy].y = y + yOff(i);
-			if (newTileDown(char[i].carriedBy) && verticalProp(char[i].carriedBy,1,1,char[char[i].carriedBy].x,char[char[i].carriedBy].y)) {
+			if (
+				newTileDown(char[i].carriedBy) &&
+				verticalProp(char[i].carriedBy, 1, 1, char[char[i].carriedBy].x, char[char[i].carriedBy].y)
+			) {
 				char[char[i].carriedBy].y = Math.floor(char[char[i].carriedBy].y / 30) * 30;
 			}
 		}
@@ -4180,23 +4326,27 @@ function rippleWeight(i, w, sign) {
 		if (char[char[i].standingOn].submerged == 1 && char[char[i].standingOn].weight2 < 0) {
 			char[char[i].standingOn].submerged = 2;
 		}
-		if (char[char[i].standingOn].submerged >= 2 && char[char[i].standingOn].weight2 < 0 && char[char[i].standingOn].onob) {
+		if (
+			char[char[i].standingOn].submerged >= 2 &&
+			char[char[i].standingOn].weight2 < 0 &&
+			char[char[i].standingOn].onob
+		) {
 			char[char[i].standingOn].onob = false;
 		}
-		rippleWeight(char[i].standingOn,w,sign);
+		rippleWeight(char[i].standingOn, w, sign);
 	}
 }
 
 function onlyMovesOneBlock(i, j) {
 	let sign = Math.floor((char[j].dire - 1) / 2) * 2 - 1;
-	let x1 = Math.ceil(sign * (char[i].x + char[i].w * sign) / 30);
-	let x2 = Math.ceil(sign * (char[control].x + xOff2(control) + char[i].w * sign) / 30);
+	let x1 = Math.ceil((sign * (char[i].x + char[i].w * sign)) / 30);
+	let x2 = Math.ceil((sign * (char[control].x + xOff2(control) + char[i].w * sign)) / 30);
 	return Math.abs(x2 - x1) <= 1;
 }
 
 function putDown(i) {
 	if (char[i].carry) {
-		rippleWeight(i,char[char[i].carryObject].weight2,-1);
+		rippleWeight(i, char[char[i].carryObject].weight2, -1);
 		char[i].weight2 = char[i].weight;
 		char[char[i].carryObject].weight2 = char[char[i].carryObject].weight;
 		char[i].carry = false;
@@ -4226,7 +4376,11 @@ function landOnObject(i) {
 	for (let j = 0; j < charCount; j++) {
 		if (!ifCarried(j) && (char[j].charState == 6 || char[j].charState == 4)) {
 			let dist = Math.abs(char[i].x - char[j].x);
-			if (dist < char[i].w + char[j].w && char[i].y >= char[j].y - char[j].h && (char[i].py < char[j].py - char[j].h || char[i].py == char[j].py - char[j].h && char[i].vy == 0)) {
+			if (
+				dist < char[i].w + char[j].w &&
+				char[i].y >= char[j].y - char[j].h &&
+				(char[i].py < char[j].py - char[j].h || (char[i].py == char[j].py - char[j].h && char[i].vy == 0))
+			) {
 				if (dist - char[j].w < record) {
 					record = dist - char[j].w;
 					k = j;
@@ -4236,12 +4390,13 @@ function landOnObject(i) {
 	}
 	if (record < 10000 && char[i].standingOn != k) {
 		if (char[i].standingOn >= 0) fallOff(i);
-		if (char[k].charState == 6 && !char[k].onob) char[k].vy = inter(char[k].vy,char[i].vy,char[i].weight2 / (char[k].weight2 + char[i].weight2));
-		land(i,char[k].y - char[k].h,char[k].vy);
-		if (char[k].onob) land2(i,char[k].y - char[k].h);
+		if (char[k].charState == 6 && !char[k].onob)
+			char[k].vy = inter(char[k].vy, char[i].vy, char[i].weight2 / (char[k].weight2 + char[i].weight2));
+		land(i, char[k].y - char[k].h, char[k].vy);
+		if (char[k].onob) land2(i, char[k].y - char[k].h);
 		char[i].standingOn = k;
 		char[k].stoodOnBy.push(i);
-		rippleWeight(i,char[i].weight2,1);
+		rippleWeight(i, char[i].weight2, 1);
 		char[i].fricGoal = char[k].fricGoal;
 		if (char[k].submerged == 1 && char[k].weight2 >= 0) {
 			char[k].submerged = 2;
@@ -4254,18 +4409,23 @@ function objectsLandOn(i) {
 	for (let j = 0; j < charCount; j++) {
 		if (char[j].charState >= 5 && char[j].standingOn != i) {
 			let dist = Math.abs(char[i].x - char[j].x);
-			if (dist < char[i].w + char[j].w && char[i].y - char[i].h <= char[j].y && char[i].py - char[i].h > char[j].py && (char[i].submerged <= 1 || !char[j].onob || char[j].submerged == 2)) {
+			if (
+				dist < char[i].w + char[j].w &&
+				char[i].y - char[i].h <= char[j].y &&
+				char[i].py - char[i].h > char[j].py &&
+				(char[i].submerged <= 1 || !char[j].onob || char[j].submerged == 2)
+			) {
 				if (char[j].standingOn >= 0) {
 					fallOff(j);
 				}
 				char[j].standingOn = i;
 				char[i].stoodOnBy.push(j);
-				land(j,char[i].y - char[i].h,char[j].vy);
+				land(j, char[i].y - char[i].h, char[j].vy);
 				if (char[i].charState == 6) {
-					char[i].vy = inter(char[i].vy,char[j].vy,char[j].weight2 / (char[i].weight2 + char[j].weight2));
+					char[i].vy = inter(char[i].vy, char[j].vy, char[j].weight2 / (char[i].weight2 + char[j].weight2));
 				}
 				char[j].vy = char[i].vy;
-				rippleWeight(j,char[j].weight2,1);
+				rippleWeight(j, char[j].weight2, 1);
 				char[j].fricGoal = char[i].fricGoal;
 			}
 		}
@@ -4278,7 +4438,7 @@ function fallOff(i) {
 		if (char[char[i].standingOn].submerged == 1) {
 			char[char[i].standingOn].submerged = 2;
 		} else {
-			rippleWeight(i,char[i].weight2,-1);
+			rippleWeight(i, char[i].weight2, -1);
 		}
 		let len = char[char[i].standingOn].stoodOnBy.length;
 		for (let j = 0; j < len; j++) {
@@ -4413,23 +4573,23 @@ function inter(a, b, x) {
 }
 
 function calcDist(i) {
-	return Math.sqrt(Math.pow(char[i].x - locations[2] * 30 + 15,2) + Math.pow(char[i].y - char[i].h / 2 - locations[3] * 30 + 15,2));
+	return Math.sqrt(
+		Math.pow(char[i].x - locations[2] * 30 + 15, 2) +
+			Math.pow(char[i].y - char[i].h / 2 - locations[3] * 30 + 15, 2)
+	);
 }
 
 function outOfRange(x, y) {
-	return x < 0 || y < 0 || x > levelWidth-1 || y > levelHeight-1;
+	return x < 0 || y < 0 || x > levelWidth - 1 || y > levelHeight - 1;
 }
 
-
-
-
-
-
-
-
-
 function mouseOnGrid() {
-	return _xmouse >= 330 - scale * levelWidth / 2 && _xmouse <= 330 + scale * levelWidth / 2 && _ymouse >= 240 - scale * levelHeight / 2 && _ymouse <= 240 + scale * levelHeight / 2;
+	return (
+		_xmouse >= 330 - (scale * levelWidth) / 2 &&
+		_xmouse <= 330 + (scale * levelWidth) / 2 &&
+		_ymouse >= 240 - (scale * levelHeight) / 2 &&
+		_ymouse <= 240 + (scale * levelHeight) / 2
+	);
 }
 
 function resetLevelCreator() {
@@ -4463,8 +4623,8 @@ function resetLevelCreator() {
 	// fillTilesTab();
 	charCount2 = 0;
 	charCount = 0;
-	myLevelDialogue = [[],[],[]];
-	myLevelInfo = {name:'Untitled',creator:'',desc:''};
+	myLevelDialogue = [[], [], []];
+	myLevelInfo = {name: 'Untitled', creator: '', desc: ''};
 	// setEndGateLights();
 	LCEndGateX = -1;
 	LCEndGateY = -1;
@@ -4494,12 +4654,17 @@ function resetLCOSC() {
 	let bgh = 54;
 	let bgdist = 110;
 	osc2.width = Math.floor(300 * pixelRatio);
-	osc2.height = Math.floor((Math.floor(imgBgs.length/bgpr + 1) * bgdist) * pixelRatio);
+	osc2.height = Math.floor(Math.floor(imgBgs.length / bgpr + 1) * bgdist * pixelRatio);
 	osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	for (let i = 0; i < imgBgs.length; i++) {
-		osctx2.drawImage(imgBgs[i], (bgdist-bgw) + (i%bgpr)*bgdist, (bgdist-bgh) + Math.floor(i/bgpr)*bgdist, bgw, bgh);
+		osctx2.drawImage(
+			imgBgs[i],
+			bgdist - bgw + (i % bgpr) * bgdist,
+			bgdist - bgh + Math.floor(i / bgpr) * bgdist,
+			bgw,
+			bgh
+		);
 	}
-
 
 	osc3.width = Math.floor(cwidth * pixelRatio);
 	osc3.height = Math.floor(cheight * pixelRatio);
@@ -4508,7 +4673,7 @@ function resetLCOSC() {
 }
 
 function setLCBG() {
-	osctx1.drawImage(imgBgs[selectedBg],-97,0,854,480);
+	osctx1.drawImage(imgBgs[selectedBg], -97, 0, 854, 480);
 }
 
 function drawLCGrid() {
@@ -4519,12 +4684,12 @@ function drawLCGrid() {
 	ctx.globalAlpha = 0.5;
 	ctx.beginPath();
 	for (let i = 0; i <= levelWidth; i++) {
-		ctx.moveTo(330 - scale * levelWidth / 2 + i * scale,240 - scale * levelHeight / 2);
-		ctx.lineTo(330 - scale * levelWidth / 2 + i * scale,240 + scale * levelHeight / 2);
+		ctx.moveTo(330 - (scale * levelWidth) / 2 + i * scale, 240 - (scale * levelHeight) / 2);
+		ctx.lineTo(330 - (scale * levelWidth) / 2 + i * scale, 240 + (scale * levelHeight) / 2);
 	}
 	for (let i = 0; i <= levelHeight; i++) {
-		ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + i * scale);
-		ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + i * scale);
+		ctx.moveTo(330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + i * scale);
+		ctx.lineTo(330 + (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + i * scale);
 	}
 	ctx.stroke();
 	ctx.globalAlpha = 1;
@@ -4536,19 +4701,24 @@ function drawLCTiles() {
 	ctx.drawImage(osc3, 0, 0, cwidth, cheight);
 
 	// animated tiles are drawn here.
-	let tlx = 330 - scale * levelWidth / 2;
-	let tly = 240 - scale * levelHeight / 2;
+	let tlx = 330 - (scale * levelWidth) / 2;
+	let tly = 240 - (scale * levelHeight) / 2;
 	for (let x = 0; x < levelWidth; x++) {
 		for (let y = 0; y < levelHeight; y++) {
 			let tile = myLevel[1][y][x];
 			ctx.globalAlpha = 1;
 			let showTile = blockProperties[tile][16] > 1;
 			if (tool == 5 && copied && mouseOnGrid()) {
-				let mouseGridX = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-				let mouseGridY = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
-				if (x >= mouseGridX && x < mouseGridX + tileClipboard[0].length && y >= mouseGridY && y < mouseGridY + tileClipboard.length) {
+				let mouseGridX = Math.floor((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
+				let mouseGridY = Math.floor((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
+				if (
+					x >= mouseGridX &&
+					x < mouseGridX + tileClipboard[0].length &&
+					y >= mouseGridY &&
+					y < mouseGridY + tileClipboard.length
+				) {
 					clipboardTileCandidate = tileClipboard[y - mouseGridY][x - mouseGridX];
-					if ( !(_keysDown[18] && tile != 0) && clipboardTileCandidate != 0) {
+					if (!(_keysDown[18] && tile != 0) && clipboardTileCandidate != 0) {
 						tile = clipboardTileCandidate;
 						ctx.globalAlpha = 0.5;
 						showTile = true;
@@ -4564,9 +4734,21 @@ function drawLCTiles() {
 			// 	ctx.restore();
 			// }
 			if (showTile) {
-				let img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
-				let vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
-				ctx.drawImage(img, tlx + x * scale + scale * vb[0]/30, tly + y * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+				let img =
+					blockProperties[tile][16] > 1
+						? svgTiles[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+						: svgTiles[tile];
+				let vb =
+					blockProperties[tile][16] > 1
+						? svgTilesVB[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+						: svgTilesVB[tile];
+				ctx.drawImage(
+					img,
+					tlx + x * scale + (scale * vb[0]) / 30,
+					tly + y * scale + (scale * vb[1]) / 30,
+					(scale * vb[2]) / 30,
+					(scale * vb[3]) / 30
+				);
 			}
 			// else if (tile == 6) {
 			// 	ctx.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
@@ -4587,11 +4769,14 @@ function drawLCRect(x1, y1, x2, y2) {
 	// ctx.beginFill(16776960,50);
 	ctx.fillStyle = '#ffff00';
 	ctx.globalAlpha = 0.5;
-	ctx.moveTo(x1 * scale + (330 - scale * levelWidth / 2),y1 * scale + (240 - scale * levelHeight / 2));
-	ctx.lineTo((x2 + 1) * scale + (330 - scale * levelWidth / 2),y1 * scale + (240 - scale * levelHeight / 2));
-	ctx.lineTo((x2 + 1) * scale + (330 - scale * levelWidth / 2),(y2 + 1) * scale + (240 - scale * levelHeight / 2));
-	ctx.lineTo(x1 * scale + (330 - scale * levelWidth / 2),(y2 + 1) * scale + (240 - scale * levelHeight / 2));
-	ctx.lineTo(x1 * scale + (330 - scale * levelWidth / 2),y1 * scale + (240 - scale * levelHeight / 2));
+	ctx.moveTo(x1 * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
+	ctx.lineTo((x2 + 1) * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
+	ctx.lineTo(
+		(x2 + 1) * scale + (330 - (scale * levelWidth) / 2),
+		(y2 + 1) * scale + (240 - (scale * levelHeight) / 2)
+	);
+	ctx.lineTo(x1 * scale + (330 - (scale * levelWidth) / 2), (y2 + 1) * scale + (240 - (scale * levelHeight) / 2));
+	ctx.lineTo(x1 * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
 	ctx.fill();
 	ctx.globalAlpha = 1;
 }
@@ -4601,33 +4786,40 @@ function clearMyWholeLevel() {
 	for (let i = 0; i < 3; i++) {
 		clearMyLevel(i);
 	}
-	myLevelChars = [[],[],[]];
+	myLevelChars = [[], [], []];
 }
 
 function clearMyLevel(i) {
 	myLevel[i] = new Array(levelHeight);
-	for (let j = 0; j < levelHeight; j++){
+	for (let j = 0; j < levelHeight; j++) {
 		myLevel[i][j] = new Array(levelWidth);
-		for (let k = 0; k < levelWidth; k++){
+		for (let k = 0; k < levelWidth; k++) {
 			myLevel[i][j][k] = 0;
 		}
 	}
 }
 
 function clearRectSelect() {
-	LCRect = [-1,-1,-1,-1];
+	LCRect = [-1, -1, -1, -1];
 }
 
 function fillTile(x, y, after, before) {
 	if (after == before) return;
-	let rc = [[x,y]];
+	let rc = [[x, y]];
 	while (rc.length >= 1) {
 		for (let i = 0; i < 4; i++) {
-			if (!(i == 3 && x == levelWidth - 1 || i == 2 && x == 0 || i == 1 && y == levelHeight - 1 || i == 0 && y == 0)) {
+			if (
+				!(
+					(i == 3 && x == levelWidth - 1) ||
+					(i == 2 && x == 0) ||
+					(i == 1 && y == levelHeight - 1) ||
+					(i == 0 && y == 0)
+				)
+			) {
 				let x2 = rc[0][0] + cardinal[i][0];
 				let y2 = rc[0][1] + cardinal[i][1];
-				if (!outOfRange(x2,y2) && myLevel[1][y2][x2] == before) {
-					rc.push([x2,y2]);
+				if (!outOfRange(x2, y2) && myLevel[1][y2][x2] == before) {
+					rc.push([x2, y2]);
 					myLevel[1][y2][x2] = after;
 					// levelCreator.tiles["tileX" + x2 + "Y" + y2].gotoAndStop(after + 1);
 				}
@@ -4640,16 +4832,16 @@ function fillTile(x, y, after, before) {
 
 function setUndo() {
 	levelAlreadySharedToExplore = false;
-	LCSwapLevelData(1,0);
+	LCSwapLevelData(1, 0);
 	undid = false;
 	// levelCreator.tools.tool9.gotoAndStop(1);
 }
 
 function undo() {
 	levelAlreadySharedToExplore = false;
-	LCSwapLevelData(1,2);
-	LCSwapLevelData(0,1);
-	LCSwapLevelData(2,0);
+	LCSwapLevelData(1, 2);
+	LCSwapLevelData(0, 1);
+	LCSwapLevelData(2, 0);
 	// if(undid)
 	// {
 	// 	levelCreator.tools.tool9.gotoAndStop(1);
@@ -4671,18 +4863,18 @@ function copyRect() {
 	if (copied) {
 		copied = false;
 	} else if (tool == 5 && LCRect[0] != -1) {
-		let x1 = Math.min(LCRect[0],LCRect[2]);
-		let y1 = Math.min(LCRect[1],LCRect[3]);
-		let x2 = Math.max(LCRect[0],LCRect[2]);
-		let y2 = Math.max(LCRect[1],LCRect[3]);
-		tileClipboard = new Array(y2-y1);
+		let x1 = Math.min(LCRect[0], LCRect[2]);
+		let y1 = Math.min(LCRect[1], LCRect[3]);
+		let x2 = Math.max(LCRect[0], LCRect[2]);
+		let y2 = Math.max(LCRect[1], LCRect[3]);
+		tileClipboard = new Array(y2 - y1);
 		for (let i = y1; i <= y2; i++) {
-			tileClipboard[i-y1] = new Array(x2-x1);
+			tileClipboard[i - y1] = new Array(x2 - x1);
 			for (let j = x1; j <= x2; j++) {
-				tileClipboard[i-y1][j-x1] = myLevel[1][i][j];
+				tileClipboard[i - y1][j - x1] = myLevel[1][i][j];
 			}
 		}
-		LCRect = [-1,-1,-1,-1];
+		LCRect = [-1, -1, -1, -1];
 		copied = true;
 	}
 }
@@ -4712,7 +4904,7 @@ function LCSwapLevelData(a, b) {
 	myLevelDialogue[b] = new Array(myLevelDialogue[a].length);
 	for (let y = 0; y < myLevelDialogue[a].length; y++) {
 		let obj = myLevelDialogue[a][y];
-		myLevelDialogue[b][y] = {char:obj.char,face:obj.face,text:obj.text,linecount:obj.linecount};
+		myLevelDialogue[b][y] = {char: obj.char, face: obj.face, text: obj.text, linecount: obj.linecount};
 	}
 }
 
@@ -4732,12 +4924,12 @@ function setSelectedTile(i) {
 }
 
 function closeToEdgeY() {
-	let y2 = (_ymouse - (240 - scale * levelHeight / 2)) / scale % 1;
+	let y2 = ((_ymouse - (240 - (scale * levelHeight) / 2)) / scale) % 1;
 	return Math.abs(y2 - 0.5) > 0.25;
 }
 
 function closeToEdgeX() {
-	let x2 = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
+	let x2 = ((_xmouse - (330 - (scale * levelWidth) / 2)) / scale) % 1;
 	return Math.abs(x2 - 0.5) > 0.25;
 }
 
@@ -4775,44 +4967,82 @@ function updateLCtiles() {
 	// 	y = y + 1;
 	// }
 
+	let tintBlocks = [33, 34, 53, 54, 61, 62, 64, 82, 134];
+	let tintBlockOneWay = [false, false, false, false, false, false, true, true, true];
+	let tintColors = [
+		'#ffcc00',
+		'#d5aa00',
+		'#0066ff',
+		'#0051ca',
+		'#20df20',
+		'#1ab01a',
+		'#20df20',
+		'#ffcc00',
+		'#0066ff'
+	];
 
-	let tintBlocks = [33,34,53,54,61,62,64,82,134];
-	let tintBlockOneWay = [false,false,false,false,false,false,true,true,true];
-	let tintColors = ['#ffcc00','#d5aa00','#0066ff','#0051ca','#20df20','#1ab01a','#20df20','#ffcc00','#0066ff'];
-
-	let tlx = 330 - scale * levelWidth / 2;
-	let tly = 240 - scale * levelHeight / 2;
+	let tlx = 330 - (scale * levelWidth) / 2;
+	let tly = 240 - (scale * levelHeight) / 2;
 	for (let x = 0; x < levelWidth; x++) {
 		for (let y = 0; y < levelHeight; y++) {
 			let tile = myLevel[1][y][x];
 			if (blockProperties[tile][11] > 0 && blockProperties[tile][11] < 13) {
 				osctx3.save();
-				osctx3.translate(tlx + (x+0.5) * scale, tly + (y+0.9333) * scale);
-				osctx3.rotate(blockProperties[tile][11]<7?-1:1);
-				osctx3.translate(-tlx - (x+0.5) * scale, -tly - (y+0.9333) * scale);
-				osctx3.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], tlx + x * scale, tly + y * scale, scale, scale);
+				osctx3.translate(tlx + (x + 0.5) * scale, tly + (y + 0.9333) * scale);
+				osctx3.rotate(blockProperties[tile][11] < 7 ? -1 : 1);
+				osctx3.translate(-tlx - (x + 0.5) * scale, -tly - (y + 0.9333) * scale);
+				osctx3.drawImage(
+					svgLevers[(blockProperties[tile][11] - 1) % 6],
+					tlx + x * scale,
+					tly + y * scale,
+					scale,
+					scale
+				);
 				osctx3.restore();
 			}
 
 			if (blockProperties[tile][16] > 0) {
 				if (blockProperties[tile][16] == 1) {
-					let img = (blockProperties[tile][16]>1)?svgTiles[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTiles[tile];
-					let vb = (blockProperties[tile][16]>1)?svgTilesVB[tile][blockProperties[tile][17]?_frameCount%blockProperties[tile][16]:0]:svgTilesVB[tile];
-					osctx3.drawImage(img, tlx + x * scale + scale * vb[0]/30, tly + y * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+					let img =
+						blockProperties[tile][16] > 1
+							? svgTiles[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+							: svgTiles[tile];
+					let vb =
+						blockProperties[tile][16] > 1
+							? svgTilesVB[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+							: svgTilesVB[tile];
+					osctx3.drawImage(
+						img,
+						tlx + x * scale + (scale * vb[0]) / 30,
+						tly + y * scale + (scale * vb[1]) / 30,
+						(scale * vb[2]) / 30,
+						(scale * vb[3]) / 30
+					);
 				}
 			} else if (tile == 6) {
-				osctx3.fillStyle = selectedBg==9||selectedBg==10?'#999999':'#505050';
-				osctx3.fillRect(tlx + (x-1) * scale, tly + (y-3) * scale, scale*2, scale*4);
+				osctx3.fillStyle = selectedBg == 9 || selectedBg == 10 ? '#999999' : '#505050';
+				osctx3.fillRect(tlx + (x - 1) * scale, tly + (y - 3) * scale, scale * 2, scale * 4);
 			} else if (blockProperties[tile][15] && tile > 0) {
 				let img = svgTiles[tile];
 				let vb = svgTilesVB[tile];
-				osctx3.drawImage(img, tlx + x * scale + scale * vb[0]/30, tly + y * scale + scale * vb[1]/30, scale * vb[2]/30, scale * vb[3]/30);
+				osctx3.drawImage(
+					img,
+					tlx + x * scale + (scale * vb[0]) / 30,
+					tly + y * scale + (scale * vb[1]) / 30,
+					(scale * vb[2]) / 30,
+					(scale * vb[3]) / 30
+				);
 			}
 			if (tintBlocks.indexOf(tile) != -1) {
 				osctx3.globalAlpha = 0.25;
 				let tintbBlockIndex = tintBlocks.indexOf(tile);
 				osctx3.fillStyle = tintColors[tintbBlockIndex];
-				osctx3.fillRect(tlx + x * scale, tly + y * scale, scale, tintBlockOneWay[tintbBlockIndex]?scale/3:scale);
+				osctx3.fillRect(
+					tlx + x * scale,
+					tly + y * scale,
+					scale,
+					tintBlockOneWay[tintbBlockIndex] ? scale / 3 : scale
+				);
 				osctx3.globalAlpha = 1;
 			}
 		}
@@ -4842,80 +5072,126 @@ function drawLCCharInfo(i, y) {
 	ctx.fillStyle = '#808080';
 	ctx.fillRect(665, y, charInfoHeight, charInfoHeight);
 	ctx.fillStyle = '#808080';
-	ctx.fillRect((665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight);
+	ctx.fillRect(665 + 240 - charInfoHeight * 1.5, y, charInfoHeight * 1.5, charInfoHeight);
 	let charimgmat = charModels[myLevelChars[1][i][0]].charimgmat;
 	if (typeof charimgmat !== 'undefined') {
 		let charimg = svgChars[myLevelChars[1][i][0]];
 		if (Array.isArray(charimg)) charimg = charimg[0];
-		let sc = charInfoHeight/32;
+		let sc = charInfoHeight / 32;
 		ctx.save();
 		ctx.transform(
-			charimgmat.a*sc,
+			charimgmat.a * sc,
 			charimgmat.b,
 			charimgmat.c,
-			charimgmat.d*sc,
-			(charimgmat.tx*sc)/2 + 665 + charInfoHeight/2,
-			(charimgmat.ty*sc)/2 + y + charInfoHeight/2
+			charimgmat.d * sc,
+			(charimgmat.tx * sc) / 2 + 665 + charInfoHeight / 2,
+			(charimgmat.ty * sc) / 2 + y + charInfoHeight / 2
 		);
-		ctx.drawImage(charimg, -charimg.width/2, -charimg.height/2);
+		ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
 		ctx.restore();
 	}
 	ctx.fillStyle = '#ffffff';
-	ctx.fillText(twoDecimalPlaceNumFormat(Math.max(myLevelChars[1][i][1],0)) + ', ' + twoDecimalPlaceNumFormat(Math.max(myLevelChars[1][i][2],0)), 665 + charInfoHeight + 5, y + charInfoHeight/2);
-	ctx.fillText(charStateNamesShort[myLevelChars[1][i][3]], (665+240)-charInfoHeight*1.5 + 5, y + charInfoHeight/2);
+	ctx.fillText(
+		twoDecimalPlaceNumFormat(Math.max(myLevelChars[1][i][1], 0)) +
+			', ' +
+			twoDecimalPlaceNumFormat(Math.max(myLevelChars[1][i][2], 0)),
+		665 + charInfoHeight + 5,
+		y + charInfoHeight / 2
+	);
+	ctx.fillText(
+		charStateNamesShort[myLevelChars[1][i][3]],
+		665 + 240 - charInfoHeight * 1.5 + 5,
+		y + charInfoHeight / 2
+	);
 
 	if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) {
 		ctx.fillStyle = '#808080';
-		ctx.fillRect(665, y+charInfoHeight, charInfoHeight, diaInfoHeight);
+		ctx.fillRect(665, y + charInfoHeight, charInfoHeight, diaInfoHeight);
 		ctx.fillStyle = '#ffffff';
-		ctx.fillText(char[i].speed.toString().padStart(2, '0'), 665 + 5, y + charInfoHeight + diaInfoHeight*0.5);
-		let canDropDown = mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !duplicateChar && !reorderCharUp && !reorderCharDown && !addButtonPressed;
-		if (canDropDown && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y+charInfoHeight, charInfoHeight, diaInfoHeight)) {
+		ctx.fillText(char[i].speed.toString().padStart(2, '0'), 665 + 5, y + charInfoHeight + diaInfoHeight * 0.5);
+		let canDropDown =
+			mouseOnTabWindow &&
+			!lcPopUp &&
+			charDropdown == -1 &&
+			!duplicateChar &&
+			!reorderCharUp &&
+			!reorderCharDown &&
+			!addButtonPressed;
+		if (
+			canDropDown &&
+			onRect(_xmouse, _ymouse + charsTabScrollBar, 665, y + charInfoHeight, charInfoHeight, diaInfoHeight)
+		) {
 			onButton = true;
 			hoverText = 'Movement Speed';
 			if (mouseIsDown && !pmouseIsDown) {
 				setUndo();
-				charDropdown = -i-3;
+				charDropdown = -i - 3;
 				charDropdownType = 3;
 				valueAtClick = char[i].speed;
 			}
 		}
 
-		let drawingDeleteButtons = myLevelChars[1][i][5].length>1;
+		let drawingDeleteButtons = myLevelChars[1][i][5].length > 1;
 
 		for (let j = 0; j < myLevelChars[1][i][5].length; j++) {
 			ctx.fillStyle = '#626262';
-			ctx.fillRect(665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 100-charInfoHeight, diaInfoHeight);
+			ctx.fillRect(
+				665 + charInfoHeight,
+				y + charInfoHeight + diaInfoHeight * j,
+				100 - charInfoHeight,
+				diaInfoHeight
+			);
 			ctx.fillStyle = '#ffffff';
-			ctx.fillText(direLetters[myLevelChars[1][i][5][j][0]], 665 + charInfoHeight + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
-			ctx.fillText(myLevelChars[1][i][5][j][1], 665 + charInfoHeight*1.5 + 5, y + charInfoHeight + diaInfoHeight * (j+0.5), 240-charInfoHeight, charInfoHeight);
+			ctx.fillText(
+				direLetters[myLevelChars[1][i][5][j][0]],
+				665 + charInfoHeight + 5,
+				y + charInfoHeight + diaInfoHeight * (j + 0.5),
+				240 - charInfoHeight,
+				charInfoHeight
+			);
+			ctx.fillText(
+				myLevelChars[1][i][5][j][1],
+				665 + charInfoHeight * 1.5 + 5,
+				y + charInfoHeight + diaInfoHeight * (j + 0.5),
+				240 - charInfoHeight,
+				charInfoHeight
+			);
 
 			if (canDropDown) {
-				if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight, y + charInfoHeight + diaInfoHeight * j, 120-charInfoHeight, diaInfoHeight)) {
-					if (_xmouse < 665 + charInfoHeight*1.5) {
+				if (
+					onRect(
+						_xmouse,
+						_ymouse + charsTabScrollBar,
+						665 + charInfoHeight,
+						y + charInfoHeight + diaInfoHeight * j,
+						120 - charInfoHeight,
+						diaInfoHeight
+					)
+				) {
+					if (_xmouse < 665 + charInfoHeight * 1.5) {
 						onButton = true;
 						hoverText = 'Direction';
 						if (mouseIsDown && !pmouseIsDown) {
 							setUndo();
-							charDropdown = -i-3;
+							charDropdown = -i - 3;
 							charDropdownType = 4;
 							charDropdownMS = j;
 						}
-					} else if (_xmouse < 665 + charInfoHeight + 100-charInfoHeight) {
+					} else if (_xmouse < 665 + charInfoHeight + 100 - charInfoHeight) {
 						onButton = true;
 						hoverText = 'Block Count';
 						if (mouseIsDown && !pmouseIsDown) {
 							setUndo();
-							charDropdown = -i-3;
+							charDropdown = -i - 3;
 							charDropdownType = 5;
 							charDropdownMS = j;
-							valueAtClick = myLevelChars[1][i][5][j][1]
+							valueAtClick = myLevelChars[1][i][5][j][1];
 						}
 					} else if (drawingDeleteButtons) {
 						onButton = true;
 						if (mouseIsDown && !pmouseIsDown) {
 							setUndo();
-							myLevelChars[1][i][5].splice(j,1);
+							myLevelChars[1][i][5].splice(j, 1);
 							char[i].motionString = generateMS(myLevelChars[1][i]);
 							levelTimer = 0;
 							resetCharPositions();
@@ -4923,16 +5199,36 @@ function drawLCCharInfo(i, y) {
 					}
 					if (drawingDeleteButtons) {
 						// ctx.fillStyle = '#ee3333';
-						drawRemoveButton(665 + charInfoHeight + 100-charInfoHeight, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, 3);
+						drawRemoveButton(
+							665 + charInfoHeight + 100 - charInfoHeight,
+							y + charInfoHeight + diaInfoHeight * j,
+							diaInfoHeight,
+							3
+						);
 						// ctx.fillRect(665 + charInfoHeight + 100-charInfoHeight, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight);
 					}
-				} else if (j > 0 && onRect(_xmouse, _ymouse+charsTabScrollBar, 665 + charInfoHeight + 120-charInfoHeight, y + charInfoHeight + diaInfoHeight * (j-0.5), diaInfoHeight, diaInfoHeight)) {
-					drawAddButton(665 + charInfoHeight + 120-charInfoHeight, y + charInfoHeight + diaInfoHeight * (j-0.5), diaInfoHeight, 3);
+				} else if (
+					j > 0 &&
+					onRect(
+						_xmouse,
+						_ymouse + charsTabScrollBar,
+						665 + charInfoHeight + 120 - charInfoHeight,
+						y + charInfoHeight + diaInfoHeight * (j - 0.5),
+						diaInfoHeight,
+						diaInfoHeight
+					)
+				) {
+					drawAddButton(
+						665 + charInfoHeight + 120 - charInfoHeight,
+						y + charInfoHeight + diaInfoHeight * (j - 0.5),
+						diaInfoHeight,
+						3
+					);
 					onButton = true;
 					hoverText = 'Insert Into Path';
 					if (mouseIsDown && !pmouseIsDown) {
 						setUndo();
-						myLevelChars[1][i][5].splice(j, 0, [0,1]);
+						myLevelChars[1][i][5].splice(j, 0, [0, 1]);
 						char[i].motionString = generateMS(myLevelChars[1][i]);
 						levelTimer = 0;
 						resetCharPositions();
@@ -4941,14 +5237,28 @@ function drawLCCharInfo(i, y) {
 				// Draw add button
 				if (j == myLevelChars[1][i][5].length - 1) {
 					// ctx.fillStyle = '#33ee33';
-					drawAddButton((665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, 3);
+					drawAddButton(
+						665 + 240 - charInfoHeight * 1.5,
+						y + charInfoHeight + diaInfoHeight * j,
+						diaInfoHeight,
+						3
+					);
 					// ctx.fillRect((665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight);
-					if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y + charInfoHeight + diaInfoHeight * j, diaInfoHeight, diaInfoHeight)) {
+					if (
+						onRect(
+							_xmouse,
+							_ymouse + charsTabScrollBar,
+							665 + 240 - charInfoHeight * 1.5,
+							y + charInfoHeight + diaInfoHeight * j,
+							diaInfoHeight,
+							diaInfoHeight
+						)
+					) {
 						onButton = true;
 						hoverText = 'Add to Path';
 						if (mouseIsDown && !pmouseIsDown) {
 							setUndo();
-							myLevelChars[1][i][5].push([0,1]);
+							myLevelChars[1][i][5].push([0, 1]);
 							char[i].motionString = generateMS(myLevelChars[1][i]);
 							levelTimer = 0;
 							resetCharPositions();
@@ -4959,14 +5269,20 @@ function drawLCCharInfo(i, y) {
 		}
 	}
 
-	if (mouseOnTabWindow && !lcPopUp && charDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, 260, charInfoHeight)) {
+	if (
+		mouseOnTabWindow &&
+		!lcPopUp &&
+		charDropdown == -1 &&
+		!addButtonPressed &&
+		onRect(_xmouse, _ymouse + charsTabScrollBar, 665, y, 260, charInfoHeight)
+	) {
 		if (duplicateChar) {
 			if (mouseIsDown && !pmouseIsDown) {
 				setUndo();
-				char.splice(i+1,0,cloneChar(char[i]));
-				myLevelChars[1].splice(i+1,0,cloneCharInfo(myLevelChars[1][i], true));
+				char.splice(i + 1, 0, cloneChar(char[i]));
+				myLevelChars[1].splice(i + 1, 0, cloneCharInfo(myLevelChars[1][i], true));
 				// Update dialogue tab
-				for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
+				for (let j = myLevelDialogue[1].length - 1; j >= 0; j--) {
 					if (myLevelDialogue[1][j].char < 50) {
 						if (myLevelDialogue[1][j].char > i) {
 							myLevelDialogue[1][j].char++;
@@ -4977,16 +5293,16 @@ function drawLCCharInfo(i, y) {
 			}
 		} else if (reorderCharDown) {
 			if (mouseIsDown && !pmouseIsDown) {
-				if (i < myLevelChars[1].length-1) {
+				if (i < myLevelChars[1].length - 1) {
 					setUndo();
-					[char[i], char[i+1]] = [char[i+1], char[i]];
-					[myLevelChars[1][i], myLevelChars[1][i+1]] = [myLevelChars[1][i+1], myLevelChars[1][i]];
+					[char[i], char[i + 1]] = [char[i + 1], char[i]];
+					[myLevelChars[1][i], myLevelChars[1][i + 1]] = [myLevelChars[1][i + 1], myLevelChars[1][i]];
 					// Update dialogue tab
-					for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
+					for (let j = myLevelDialogue[1].length - 1; j >= 0; j--) {
 						if (myLevelDialogue[1][j].char < 50) {
 							if (myLevelDialogue[1][j].char == i) {
 								myLevelDialogue[1][j].char++;
-							} else if (myLevelDialogue[1][j].char == i+1) {
+							} else if (myLevelDialogue[1][j].char == i + 1) {
 								myLevelDialogue[1][j].char--;
 							}
 						}
@@ -4998,14 +5314,14 @@ function drawLCCharInfo(i, y) {
 			if (mouseIsDown && !pmouseIsDown) {
 				if (i > 0) {
 					setUndo();
-					[char[i], char[i-1]] = [char[i-1], char[i]];
-					[myLevelChars[1][i], myLevelChars[1][i-1]] = [myLevelChars[1][i-1], myLevelChars[1][i]];
+					[char[i], char[i - 1]] = [char[i - 1], char[i]];
+					[myLevelChars[1][i], myLevelChars[1][i - 1]] = [myLevelChars[1][i - 1], myLevelChars[1][i]];
 					// Update dialogue tab
-					for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
+					for (let j = myLevelDialogue[1].length - 1; j >= 0; j--) {
 						if (myLevelDialogue[1][j].char < 50) {
 							if (myLevelDialogue[1][j].char == i) {
 								myLevelDialogue[1][j].char--;
-							} else if (myLevelDialogue[1][j].char == i-1) {
+							} else if (myLevelDialogue[1][j].char == i - 1) {
 								myLevelDialogue[1][j].char++;
 							}
 						}
@@ -5015,42 +5331,51 @@ function drawLCCharInfo(i, y) {
 			}
 		} else {
 			ctx.fillStyle = '#ee3333';
-			drawRemoveButton(665+240, y + charInfoHeight/2 - 10, 20, 3);
+			drawRemoveButton(665 + 240, y + charInfoHeight / 2 - 10, 20, 3);
 			// ctx.fillRect(665+240, y + charInfoHeight/2 - 10, 20, 20);
-			if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
+			if (onRect(_xmouse, _ymouse + charsTabScrollBar, 665, y, charInfoHeight, charInfoHeight)) {
 				onButton = true;
 				hoverText = 'ID';
 				if (mouseIsDown && !pmouseIsDown) {
 					setUndo();
-					charDropdown = -i-3;
+					charDropdown = -i - 3;
 					charDropdownType = 0;
 				}
-			} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*1.5, y, charInfoHeight*1.5, charInfoHeight)) {
+			} else if (
+				onRect(
+					_xmouse,
+					_ymouse + charsTabScrollBar,
+					665 + 240 - charInfoHeight * 1.5,
+					y,
+					charInfoHeight * 1.5,
+					charInfoHeight
+				)
+			) {
 				onButton = true;
 				hoverText = 'State';
 				if (mouseIsDown && !pmouseIsDown) {
-					charDropdown = -i-3;
+					charDropdown = -i - 3;
 					charDropdownType = 1;
 				}
-			} else if (_xmouse < 665+240) {
+			} else if (_xmouse < 665 + 240) {
 				onButton = true;
 				hoverText = 'Start Location';
 				if (mouseIsDown && !pmouseIsDown) {
 					setUndo();
-					charDropdown = -i-3;
+					charDropdown = -i - 3;
 					charDropdownType = 2;
 				}
-			} else if (onRect(_xmouse, _ymouse+charsTabScrollBar, 665+240, y + charInfoHeight/2 - 10, 20, 20)) {
+			} else if (onRect(_xmouse, _ymouse + charsTabScrollBar, 665 + 240, y + charInfoHeight / 2 - 10, 20, 20)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					setUndo();
-					char.splice(i,1);
-					myLevelChars[1].splice(i,1);
+					char.splice(i, 1);
+					myLevelChars[1].splice(i, 1);
 					// Update dialogue tab
-					for (let j = myLevelDialogue[1].length-1; j >= 0; j--) {
+					for (let j = myLevelDialogue[1].length - 1; j >= 0; j--) {
 						if (myLevelDialogue[1][j].char < 50) {
 							if (myLevelDialogue[1][j].char == i) {
-								myLevelDialogue[1].splice(j,1);
+								myLevelDialogue[1].splice(j, 1);
 							} else if (myLevelDialogue[1][j].char > i) {
 								myLevelDialogue[1][j].char--;
 							}
@@ -5071,10 +5396,10 @@ function drawLCDiaInfo(i, y) {
 	// ctx.fillStyle = '#626262';
 	// ctx.fillRect(665, y, 240, diaInfoHeight*myLevelDialogue[1][i].linecount);
 	ctx.fillStyle = '#808080';
-	ctx.fillRect(665, y, diaInfoHeight*3, diaInfoHeight*myLevelDialogue[1][i].linecount);
+	ctx.fillRect(665, y, diaInfoHeight * 3, diaInfoHeight * myLevelDialogue[1][i].linecount);
 	ctx.fillStyle = '#ffffff';
-	if (myLevelDialogue[1][i].char>=50&&myLevelDialogue[1][i].char<99) {
-		var diaTextBox = [myLevelDialogue[1][i].text,['lever switch']];
+	if (myLevelDialogue[1][i].char >= 50 && myLevelDialogue[1][i].char < 99) {
+		var diaTextBox = [myLevelDialogue[1][i].text, ['lever switch']];
 		switch (myLevelDialogue[1][i].char) {
 			case 50:
 				ctx.fillStyle = '#ffcc00';
@@ -5095,29 +5420,51 @@ function drawLCDiaInfo(i, y) {
 				ctx.fillStyle = '#505050';
 				break;
 		}
-		ctx.fillRect(665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight);
+		ctx.fillRect(665 + diaInfoHeight * 3, y, 240 - diaInfoHeight * 3, diaInfoHeight);
 
 		ctx.fillStyle = '#ffffff';
 		ctx.font = diaInfoHeight + 'px Helvetica';
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
-		ctx.fillText('lever switch', 665 + diaInfoHeight*3 + 5, y);
+		ctx.fillText('lever switch', 665 + diaInfoHeight * 3 + 5, y);
 	} else {
-		var diaTextBox = drawTextBox(myLevelDialogue[1][i].text, 665 + diaInfoHeight*3, y, 240 - diaInfoHeight*3, diaInfoHeight*myLevelDialogue[1][i].linecount, 20, [5,0,0,0], i, false, '#626262', '#ffffff', 'Helvetica');
+		var diaTextBox = drawTextBox(
+			myLevelDialogue[1][i].text,
+			665 + diaInfoHeight * 3,
+			y,
+			240 - diaInfoHeight * 3,
+			diaInfoHeight * myLevelDialogue[1][i].linecount,
+			20,
+			[5, 0, 0, 0],
+			i,
+			false,
+			'#626262',
+			'#ffffff',
+			'Helvetica'
+		);
 	}
 	myLevelDialogue[1][i].text = diaTextBox[0];
 	myLevelDialogue[1][i].linecount = diaTextBox[1].length;
-	ctx.fillText(myLevelDialogue[1][i].face==2?'H':'S', 665 + diaInfoHeight*2 + 5, y);
+	ctx.fillText(myLevelDialogue[1][i].face == 2 ? 'H' : 'S', 665 + diaInfoHeight * 2 + 5, y);
 	ctx.fillText(myLevelDialogue[1][i].char.toString().padStart(2, '0'), 665 + 5, y);
 	// ctx.fillText(charStateNamesShort[myLevelChars[1][i][3]], (665+240)-diaInfoHeight*1.5 + 5, y + diaInfoHeight/2);
 
 	//myLevelDialogue[1][diaDropdown].face
-	if (mouseOnTabWindow && !lcPopUp && diaDropdown == -1 && !addButtonPressed && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+	if (
+		mouseOnTabWindow &&
+		!lcPopUp &&
+		diaDropdown == -1 &&
+		!addButtonPressed &&
+		onRect(_xmouse, _ymouse + diaTabScrollBar, 665, y, 260, diaInfoHeight * myLevelDialogue[1][i].linecount)
+	) {
 		if (reorderDiaDown) {
 			if (mouseIsDown && !pmouseIsDown) {
-				if (i < myLevelDialogue[1].length-1) {
+				if (i < myLevelDialogue[1].length - 1) {
 					setUndo();
-					[myLevelDialogue[1][i], myLevelDialogue[1][i+1]] = [myLevelDialogue[1][i+1], myLevelDialogue[1][i]];
+					[myLevelDialogue[1][i], myLevelDialogue[1][i + 1]] = [
+						myLevelDialogue[1][i + 1],
+						myLevelDialogue[1][i]
+					];
 				}
 				reorderDiaDown = false;
 				editingTextBox = -1;
@@ -5126,41 +5473,71 @@ function drawLCDiaInfo(i, y) {
 			if (mouseIsDown && !pmouseIsDown) {
 				if (i > 0) {
 					setUndo();
-					[myLevelDialogue[1][i], myLevelDialogue[1][i-1]] = [myLevelDialogue[1][i-1], myLevelDialogue[1][i]];
+					[myLevelDialogue[1][i], myLevelDialogue[1][i - 1]] = [
+						myLevelDialogue[1][i - 1],
+						myLevelDialogue[1][i]
+					];
 				}
 				reorderDiaUp = false;
 				editingTextBox = -1;
 			}
 		} else {
 			ctx.fillStyle = '#ee3333';
-			drawRemoveButton(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 3);
+			drawRemoveButton(665 + 240, y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10, 20, 3);
 			// ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20);
-			if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665, y, diaInfoHeight*2, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+			if (
+				onRect(
+					_xmouse,
+					_ymouse + diaTabScrollBar,
+					665,
+					y,
+					diaInfoHeight * 2,
+					diaInfoHeight * myLevelDialogue[1][i].linecount
+				)
+			) {
 				onButton = true;
 				hoverText = 'Character';
 				if (mouseIsDown && !pmouseIsDown) {
-					diaDropdown = -i-3;
+					diaDropdown = -i - 3;
 					diaDropdownType = 1;
 					editingTextBox = -1;
 				}
-			} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665 + diaInfoHeight*2, y, diaInfoHeight, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+			} else if (
+				onRect(
+					_xmouse,
+					_ymouse + diaTabScrollBar,
+					665 + diaInfoHeight * 2,
+					y,
+					diaInfoHeight,
+					diaInfoHeight * myLevelDialogue[1][i].linecount
+				)
+			) {
 				onButton = true;
 				hoverText = 'Face';
 				if (mouseIsDown && !pmouseIsDown) {
-					diaDropdown = -i-3;
+					diaDropdown = -i - 3;
 					diaDropdownType = 0;
 					editingTextBox = -1;
 				}
-			} else if (_xmouse < 665+240 && _xmouse > 665 + diaInfoHeight*3) {
+			} else if (_xmouse < 665 + 240 && _xmouse > 665 + diaInfoHeight * 3) {
 				if (mouseIsDown && !pmouseIsDown) {
-					diaDropdown = -i-3;
+					diaDropdown = -i - 3;
 					diaDropdownType = 2;
 				}
-			} else if (onRect(_xmouse, _ymouse+diaTabScrollBar, 665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20)) {
+			} else if (
+				onRect(
+					_xmouse,
+					_ymouse + diaTabScrollBar,
+					665 + 240,
+					y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10,
+					20,
+					20
+				)
+			) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					setUndo();
-					myLevelDialogue[1].splice(i,1);
+					myLevelDialogue[1].splice(i, 1);
 					editingTextBox = -1;
 				}
 			}
@@ -5171,45 +5548,51 @@ function drawLCDiaInfo(i, y) {
 function drawLCChars() {
 	ctx.save();
 	let scale2 = scale / 30;
-	ctx.transform(scale2, 0, 0, scale2, 330 - scale * levelWidth / 2, 240 - scale * levelHeight / 2);
-	for (let i = char.length-1; i >= 0; i--) {
-		if (char[i].placed || charDropdown == i && charDropdownType == 2) {
+	ctx.transform(scale2, 0, 0, scale2, 330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2);
+	for (let i = char.length - 1; i >= 0; i--) {
+		if (char[i].placed || (charDropdown == i && charDropdownType == 2)) {
 			if (!char[i].placed) ctx.globalAlpha = 0.5;
 			if (char[i].id < 35) {
 				let model = charModels[char[i].id];
-				let dire = char[i].charState==9?-1:1;
+				let dire = char[i].charState == 9 ? -1 : 1;
 
 				let legf = legFrames[0];
-				let f = [ legf.bodypart, legf.bodypart ];
+				let f = [legf.bodypart, legf.bodypart];
 				ctx.save();
 				ctx.transform(
-					0.3648529052734375*dire,0,0,0.3648529052734375,
-					char[i].x+model.legx[0]+0.35,
-					char[i].y+model.legy[0]-0.35
+					0.3648529052734375 * dire,
+					0,
+					0,
+					0.3648529052734375,
+					char[i].x + model.legx[0] + 0.35,
+					char[i].y + model.legy[0] - 0.35
 				);
 				let leg1img = svgBodyParts[f[0]];
-				ctx.drawImage(leg1img, -leg1img.width/2, -leg1img.height/2);
+				ctx.drawImage(leg1img, -leg1img.width / 2, -leg1img.height / 2);
 				ctx.restore();
 				ctx.save();
 				ctx.transform(
-					0.3648529052734375*dire,0,0,0.3648529052734375,
-					char[i].x+model.legx[1]+0.35,
-					char[i].y+model.legy[1]-0.35
+					0.3648529052734375 * dire,
+					0,
+					0,
+					0.3648529052734375,
+					char[i].x + model.legx[1] + 0.35,
+					char[i].y + model.legy[1] - 0.35
 				);
 				let leg2img = svgBodyParts[f[1]];
-				ctx.drawImage(leg2img, -leg2img.width/2, -leg2img.height/2);
+				ctx.drawImage(leg2img, -leg2img.width / 2, -leg2img.height / 2);
 				ctx.restore();
 
-				let modelFrame = model.frames[dire==1?3:1];
+				let modelFrame = model.frames[dire == 1 ? 3 : 1];
 				ctx.save();
 				ctx.transform(
 					charModels[char[i].id].torsomat.a,
 					charModels[char[i].id].torsomat.b,
 					charModels[char[i].id].torsomat.c,
 					charModels[char[i].id].torsomat.d,
-					char[i].x+charModels[char[i].id].torsomat.tx,
-					char[i].y+charModels[char[i].id].torsomat.ty
-					);
+					char[i].x + charModels[char[i].id].torsomat.tx,
+					char[i].y + charModels[char[i].id].torsomat.ty
+				);
 				for (let j = 0; j < modelFrame.length; j++) {
 					let img = svgBodyParts[modelFrame[j].bodypart];
 					if (modelFrame[j].type == 'body') img = svgChars[char[i].id];
@@ -5225,15 +5608,22 @@ function drawLCChars() {
 					);
 					if (modelFrame[j].type == 'anim') {
 						img = svgBodyParts[bodyPartAnimations[modelFrame[j].anim].bodypart];
-						let bpanimframe = modelFrame[j].loop ? (_frameCount%bodyPartAnimations[modelFrame[j].anim].frames.length) : 0;
+						let bpanimframe = modelFrame[j].loop
+							? _frameCount % bodyPartAnimations[modelFrame[j].anim].frames.length
+							: 0;
 						let mat = bodyPartAnimations[modelFrame[j].anim].frames[bpanimframe];
-						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					} else if (modelFrame[j].type == 'dia') {
-						img = svgBodyParts[diaMouths[(char[i].charState==9?1:char[i].dExpr) + charModels[char[i].id].mouthType*2].frames[0].bodypart];
+						img =
+							svgBodyParts[
+								diaMouths[
+									(char[i].charState == 9 ? 1 : char[i].dExpr) + charModels[char[i].id].mouthType * 2
+								].frames[0].bodypart
+							];
 						let mat = diaMouths[model.defaultExpr].frames[0].mat;
-						ctx.transform(mat.a,mat.b,mat.c,mat.d,mat.tx,mat.ty);
+						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					}
-					ctx.drawImage(img, -img.width/2, -img.height/2);
+					ctx.drawImage(img, -img.width / 2, -img.height / 2);
 					ctx.restore();
 				}
 				ctx.restore();
@@ -5242,15 +5632,11 @@ function drawLCChars() {
 					var vb = svgCharsVB[char[i].id];
 					var img = svgChars[char[i].id];
 				} else {
-					let f = _frameCount%charD[char[i].id][7];
+					let f = _frameCount % charD[char[i].id][7];
 					var vb = svgCharsVB[char[i].id][f];
 					var img = svgChars[char[i].id][f];
 				}
-				ctx.drawImage(img,
-					char[i].x + vb[0],
-					char[i].y + vb[1],
-					vb[2],
-					vb[3]);
+				ctx.drawImage(img, char[i].x + vb[0], char[i].y + vb[1], vb[2], vb[3]);
 			}
 			ctx.globalAlpha = 1;
 		}
@@ -5267,13 +5653,16 @@ function drawLCChars() {
 }
 
 function resetLCChar(i) {
-	if ((myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4)) {
+	if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) {
 		if (char[i].motionString.length == 0) {
 			while (myLevelChars[1][i].length < 6) {
 				myLevelChars[1][i].push([]);
 			}
 			myLevelChars[1][i][4] = 10;
-			myLevelChars[1][i][5] = [[3,1],[2,1]];
+			myLevelChars[1][i][5] = [
+				[3, 1],
+				[2, 1]
+			];
 			char[i].speed = myLevelChars[1][i][4];
 			char[i].motionString = generateMS(myLevelChars[1][i]);
 		} else {
@@ -5300,16 +5689,16 @@ function resetLCChar(i) {
 	char[i].friction = charD[id][4];
 	char[i].heatSpeed = charD[id][6];
 	char[i].hasArms = charD[id][8];
-	char[i].dExpr = id<35?charModels[id].defaultExpr:0;
+	char[i].dExpr = id < 35 ? charModels[id].defaultExpr : 0;
 }
 
 function cloneChar(charObj) {
 	let clone = new Character(
 		charObj.id,
-		0.00,
-		0.00,
-		0.00,
-		0.00,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
 		charObj.charState,
 		charObj.w,
 		charObj.h,
@@ -5320,7 +5709,7 @@ function cloneChar(charObj) {
 		charObj.heatSpeed,
 		charObj.hasArms,
 		charObj.dExpr
-		);
+	);
 	clone.placed = false;
 	clone.speed = charObj.speed;
 	clone.motionString = Object.values(charObj.motionString);
@@ -5329,7 +5718,7 @@ function cloneChar(charObj) {
 
 function cloneCharInfo(info, unplace) {
 	// console.log(info);
-	let clone = [info[0],unplace?-1:info[1],unplace?-1:info[2],info[3]];
+	let clone = [info[0], unplace ? -1 : info[1], unplace ? -1 : info[2], info[3]];
 	if (info.length == 6) {
 		clone.push(info[4]);
 		clone.push([]);
@@ -5344,10 +5733,10 @@ function generateCharFromInfo(info) {
 	let id = info[0];
 	let newChar = new Character(
 		id,
-		info[1]*30,
-		info[2]*30,
-		info[1]*30,
-		info[2]*30,
+		info[1] * 30,
+		info[2] * 30,
+		info[1] * 30,
+		info[2] * 30,
 		info[3],
 		charD[id][0],
 		charD[id][1],
@@ -5357,7 +5746,7 @@ function generateCharFromInfo(info) {
 		charD[id][4],
 		charD[id][6],
 		charD[id][8],
-		id<35?charModels[id].defaultExpr:0
+		id < 35 ? charModels[id].defaultExpr : 0
 	);
 	if (info[1] == -1 || info[2] == -1) {
 		newChar.placed = false;
@@ -5371,14 +5760,17 @@ function generateCharFromInfo(info) {
 
 function copyLevelString() {
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-	navigator.clipboard.writeText(generateLevelString()).then(function() {
-		lcMessageTimer = 1;
-		lcMessageText = 'Level string successfuly copied to clipboard!';
-	}, function(err) {
-		lcMessageTimer = 1;
-		lcMessageText = 'There was an error while copying the level string.';
-		console.error('Could not copy text: ', err);
-	});
+	navigator.clipboard.writeText(generateLevelString()).then(
+		function () {
+			lcMessageTimer = 1;
+			lcMessageText = 'Level string successfuly copied to clipboard!';
+		},
+		function (err) {
+			lcMessageTimer = 1;
+			lcMessageText = 'There was an error while copying the level string.';
+			console.error('Could not copy text: ', err);
+		}
+	);
 }
 
 function generateLevelString() {
@@ -5391,8 +5783,18 @@ function generateLevelString() {
 	}
 
 	var lcLevelString = '\r\n';
-	lcLevelString += myLevelInfo.name==''?'Untitled level':myLevelInfo.name + '\r\n';
-	lcLevelString += levelWidth.toString().padStart(2, '0') + ',' + levelHeight.toString().padStart(2, '0') + ',' + char.length.toString().padStart(2, '0') + ',' + selectedBg.toString().padStart(2, '0') + ',' + (longMode?'H':'L') +'\r\n';
+	lcLevelString += myLevelInfo.name == '' ? 'Untitled level' : myLevelInfo.name + '\r\n';
+	lcLevelString +=
+		levelWidth.toString().padStart(2, '0') +
+		',' +
+		levelHeight.toString().padStart(2, '0') +
+		',' +
+		char.length.toString().padStart(2, '0') +
+		',' +
+		selectedBg.toString().padStart(2, '0') +
+		',' +
+		(longMode ? 'H' : 'L') +
+		'\r\n';
 	if (longMode) {
 		for (let y = 0; y < levelHeight; y++) {
 			for (let x = 0; x < levelWidth; x++) {
@@ -5414,7 +5816,14 @@ function generateLevelString() {
 		}
 	}
 	for (let i = 0; i < char.length; i++) {
-		lcLevelString += myLevelChars[1][i][0].toString().padStart(2, '0') + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][1]) + ',' + twoDecimalPlaceNumFormat(myLevelChars[1][i][2]) + ',' + myLevelChars[1][i][3].toString().padStart(2, '0');
+		lcLevelString +=
+			myLevelChars[1][i][0].toString().padStart(2, '0') +
+			',' +
+			twoDecimalPlaceNumFormat(myLevelChars[1][i][1]) +
+			',' +
+			twoDecimalPlaceNumFormat(myLevelChars[1][i][2]) +
+			',' +
+			myLevelChars[1][i][3].toString().padStart(2, '0');
 		if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) {
 			lcLevelString += ' ' + char[i].motionString.map(String).join('');
 		}
@@ -5422,7 +5831,12 @@ function generateLevelString() {
 	}
 	lcLevelString += myLevelDialogue[1].length.toString().padStart(2, '0') + '\r\n';
 	for (let i = 0; i < myLevelDialogue[1].length; i++) {
-		lcLevelString += myLevelDialogue[1][i].char.toString().padStart(2, '0') + (myLevelDialogue[1][i].face==2?'H':'S') + ' ' + myLevelDialogue[1][i].text + '\r\n';
+		lcLevelString +=
+			myLevelDialogue[1][i].char.toString().padStart(2, '0') +
+			(myLevelDialogue[1][i].face == 2 ? 'H' : 'S') +
+			' ' +
+			myLevelDialogue[1][i].text +
+			'\r\n';
 	}
 	lcLevelString += myLevelNecessaryDeaths.toString().padStart(6, '0') + '\r\n';
 
@@ -5452,13 +5866,13 @@ function readLevelString(str) {
 	// read level info
 	let levelInfo = lines[i].split(',');
 	if (levelInfo.length != 5) return;
-	levelWidth = Math.max(parseInt(levelInfo[0],10),1);
-	levelHeight = Math.max(parseInt(levelInfo[1],10),1);
-	charCount = parseInt(levelInfo[2],10);
-	selectedBg = parseInt(levelInfo[3],10);
+	levelWidth = Math.max(parseInt(levelInfo[0], 10), 1);
+	levelHeight = Math.max(parseInt(levelInfo[1], 10), 1);
+	charCount = parseInt(levelInfo[2], 10);
+	selectedBg = parseInt(levelInfo[3], 10);
 	if (selectedBg > imgBgs.length || isNaN(selectedBg)) selectedBg = 0;
 	setLCBG();
-	longMode = levelInfo[4]=='H';
+	longMode = levelInfo[4] == 'H';
 	i++;
 	// If we're at the end of the lines, or any of these parseInts returned NaN; then stop here and reset some things.
 	if (i >= lines.length || isNaN(levelWidth) || isNaN(levelHeight) || isNaN(charCount) || charCount > 50) {
@@ -5467,7 +5881,12 @@ function readLevelString(str) {
 		charCount = 0;
 		myLevelChars[1].length = 0;
 		char.length = 0;
-		setLCMessage('Error while loading from string:\n' + (i>=lines.length?'no tile map was provided.':'one or more values in the level\'s metadata was invalid.'));
+		setLCMessage(
+			'Error while loading from string:\n' +
+				(i >= lines.length
+					? 'no tile map was provided.'
+					: "one or more values in the level's metadata was invalid.")
+		);
 		return;
 	}
 	myLevelChars[1] = new Array(charCount);
@@ -5479,10 +5898,12 @@ function readLevelString(str) {
 		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (let x = 0; x < levelWidth; x++) {
-				if (i+y >= lines.length || x * 2 + 1 >= lines[i+y].length) {
+				if (i + y >= lines.length || x * 2 + 1 >= lines[i + y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
-					myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
+					myLevel[1][y][x] =
+						111 * tileIDFromChar(lines[i + y].charCodeAt(x * 2)) +
+						tileIDFromChar(lines[i + y].charCodeAt(x * 2 + 1));
 					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
 				}
 			}
@@ -5491,10 +5912,10 @@ function readLevelString(str) {
 		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (let x = 0; x < levelWidth; x++) {
-				if (i+y >= lines.length || x >= lines[i+y].length) {
+				if (i + y >= lines.length || x >= lines[i + y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
-					myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
+					myLevel[1][y][x] = tileIDFromChar(lines[i + y].charCodeAt(x));
 					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
 				}
 			}
@@ -5514,29 +5935,34 @@ function readLevelString(str) {
 	// read entity data
 	levelTimer = 0;
 	for (let e = 0; e < myLevelChars[1].length; e++) {
-		if (i+e >= lines.length) {
+		if (i + e >= lines.length) {
 			myLevelChars[1].length = e;
 			char.length = e;
 			setLCMessage('Error while loading from string:\nnumber of entities did not match the provided count.');
 			return;
 		}
-		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
-		myLevelChars[1][e] = [0,-1.0,-1.0,10];
+		let entityInfo = lines[i + e].split(',').join(' ').split(' ');
+		myLevelChars[1][e] = [0, -1.0, -1.0, 10];
 		if (entityInfo.length > 3) {
-			if (isNaN(parseInt(entityInfo[0],10)) || isNaN(parseFloat(entityInfo[1],10)) || isNaN(parseFloat(entityInfo[2],10)) || isNaN(parseInt(entityInfo[3],10))) {
+			if (
+				isNaN(parseInt(entityInfo[0], 10)) ||
+				isNaN(parseFloat(entityInfo[1], 10)) ||
+				isNaN(parseFloat(entityInfo[2], 10)) ||
+				isNaN(parseInt(entityInfo[3], 10))
+			) {
 				myLevelChars[1].length = e;
 				char.length = e;
-				setLCMessage('Error while loading from string:\na data value in one entity\'s data parsed to NaN.');
+				setLCMessage("Error while loading from string:\na data value in one entity's data parsed to NaN.");
 				// myLevelChars[1][e] = [0,0.0,0.0,10];
 				return;
 			}
-			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0],10),charD.length),0);
-			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1],10),100),0);
-			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2],10),100),0);
-			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3],10),10),3);
+			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length), 0);
+			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1], 10), 100), 0);
+			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2], 10), 100), 0);
+			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3], 10), 10), 3);
 		}
 		let id = myLevelChars[1][e][0];
-		if (charD[id][7] < 1) id = id<35?8:37;
+		if (charD[id][7] < 1) id = id < 35 ? 8 : 37;
 		char[e] = new Character(
 			id,
 			+myLevelChars[1][e][1].toFixed(2) * 30,
@@ -5552,25 +5978,25 @@ function readLevelString(str) {
 			charD[id][4],
 			charD[id][6],
 			charD[id][8],
-			id<35?charModels[id].defaultExpr:0
+			id < 35 ? charModels[id].defaultExpr : 0
 		);
 		if (myLevelChars[1][e][1] < 0 || myLevelChars[1][e][2] < 0) char[e].placed = false;
 		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
 			if (entityInfo.length == 5) {
-				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2),10);
+				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0, 2), 10);
 				myLevelChars[1][e][5] = [];
-				let d = entityInfo[4].charCodeAt(2)-48;
+				let d = entityInfo[4].charCodeAt(2) - 48;
 				let btm = 1;
-				for (let m = 2; m < entityInfo[4].length-1; m++) {
-					if (d != entityInfo[4].charCodeAt(m+1)-48) {
-						myLevelChars[1][e][5].push([Math.min(Math.max(d,0),3),btm]);
+				for (let m = 2; m < entityInfo[4].length - 1; m++) {
+					if (d != entityInfo[4].charCodeAt(m + 1) - 48) {
+						myLevelChars[1][e][5].push([Math.min(Math.max(d, 0), 3), btm]);
 						btm = 1;
-						d = entityInfo[4].charCodeAt(m+1)-48;
+						d = entityInfo[4].charCodeAt(m + 1) - 48;
 					} else {
 						btm++;
 					}
 				}
-				myLevelChars[1][e][5].push([d,btm]);
+				myLevelChars[1][e][5].push([d, btm]);
 				char[e].motionString = generateMS(myLevelChars[1][e]);
 				char[e].speed = myLevelChars[1][e][4];
 			} else {
@@ -5585,34 +6011,38 @@ function readLevelString(str) {
 	}
 
 	// read dialogue
-	myLevelDialogue[1] = new Array(parseInt(lines[i],10));
+	myLevelDialogue[1] = new Array(parseInt(lines[i], 10));
 	i++;
 	for (let d = 0; d < myLevelDialogue[1].length; d++) {
-		if (i+d >= lines.length) {
+		if (i + d >= lines.length) {
 			myLevelDialogue[1].length = d;
-			setLCMessage('Error while loading from string:\nnumber of dialogue lines did not match the provided count.');
+			setLCMessage(
+				'Error while loading from string:\nnumber of dialogue lines did not match the provided count.'
+			);
 			return;
 		}
-		myLevelDialogue[1][d] = {char:0,face:2,text:''};
-		myLevelDialogue[1][d].char = parseInt(lines[i+d].slice(0,2),10);
+		myLevelDialogue[1][d] = {char: 0, face: 2, text: ''};
+		myLevelDialogue[1][d].char = parseInt(lines[i + d].slice(0, 2), 10);
 		if (isNaN(myLevelDialogue[1][d].char)) myLevelDialogue[1][d].char = 99;
-		myLevelDialogue[1][d].face = lines[i+d].charAt(2)=='S'?3:2;
-		myLevelDialogue[1][d].text = lines[i+d].substring(4);
+		myLevelDialogue[1][d].face = lines[i + d].charAt(2) == 'S' ? 3 : 2;
+		myLevelDialogue[1][d].text = lines[i + d].substring(4);
 	}
 	i += myLevelDialogue[1].length;
 	if (i >= lines.length) {
-		setLCMessage('Error while loading from string:\nnecessary deaths was not provided.\n(but everything else loaded so it\'s probably fine)');
+		setLCMessage(
+			"Error while loading from string:\nnecessary deaths was not provided.\n(but everything else loaded so it's probably fine)"
+		);
 		return;
 	}
 
-	myLevelNecessaryDeaths = parseInt(lines[i],10);
+	myLevelNecessaryDeaths = parseInt(lines[i], 10);
 }
 
 function readExploreLevelString(str) {
 	myLevelChars = new Array(3);
 	myLevel = new Array(3);
 	myLevelDialogue = new Array(3);
-	myLevelInfo = {name: 'Untitled'}
+	myLevelInfo = {name: 'Untitled'};
 
 	let lines = str.split('\r\n');
 	if (lines.length == 1) lines = str.split('\n');
@@ -5628,13 +6058,13 @@ function readExploreLevelString(str) {
 	// read level info
 	let levelInfo = lines[i].split(',');
 	if (levelInfo.length != 5) return;
-	levelWidth = Math.max(parseInt(levelInfo[0],10),1);
-	levelHeight = Math.max(parseInt(levelInfo[1],10),1);
-	charCount = parseInt(levelInfo[2],10);
-	selectedBg = parseInt(levelInfo[3],10);
+	levelWidth = Math.max(parseInt(levelInfo[0], 10), 1);
+	levelHeight = Math.max(parseInt(levelInfo[1], 10), 1);
+	charCount = parseInt(levelInfo[2], 10);
+	selectedBg = parseInt(levelInfo[3], 10);
 	if (selectedBg > imgBgs.length || isNaN(selectedBg)) selectedBg = 0;
 	// setLCBG();
-	longMode = levelInfo[4]=='H';
+	longMode = levelInfo[4] == 'H';
 	i++;
 	// If we're at the end of the lines, or any of these parseInts returned NaN; then stop here and reset some things.
 	if (i >= lines.length || isNaN(levelWidth) || isNaN(levelHeight) || isNaN(charCount) || charCount > 50) {
@@ -5655,10 +6085,12 @@ function readExploreLevelString(str) {
 		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (let x = 0; x < levelWidth; x++) {
-				if (i+y >= lines.length || x * 2 + 1 >= lines[i+y].length) {
+				if (i + y >= lines.length || x * 2 + 1 >= lines[i + y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
-					myLevel[1][y][x] = 111 * tileIDFromChar(lines[i+y].charCodeAt(x * 2)) + tileIDFromChar(lines[i+y].charCodeAt(x * 2 + 1));
+					myLevel[1][y][x] =
+						111 * tileIDFromChar(lines[i + y].charCodeAt(x * 2)) +
+						tileIDFromChar(lines[i + y].charCodeAt(x * 2 + 1));
 					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
 				}
 			}
@@ -5667,10 +6099,10 @@ function readExploreLevelString(str) {
 		for (let y = 0; y < levelHeight; y++) {
 			myLevel[1][y] = new Array(levelWidth);
 			for (let x = 0; x < levelWidth; x++) {
-				if (i+y >= lines.length || x >= lines[i+y].length) {
+				if (i + y >= lines.length || x >= lines[i + y].length) {
 					myLevel[1][y][x] = 0;
 				} else {
-					myLevel[1][y][x] = tileIDFromChar(lines[i+y].charCodeAt(x));
+					myLevel[1][y][x] = tileIDFromChar(lines[i + y].charCodeAt(x));
 					if (myLevel[1][y][x] > blockProperties.length || myLevel[1][y][x] < 0) myLevel[1][y][x] = 0;
 				}
 			}
@@ -5690,29 +6122,34 @@ function readExploreLevelString(str) {
 	// read entity data
 	levelTimer = 0;
 	for (let e = 0; e < myLevelChars[1].length; e++) {
-		if (i+e >= lines.length) {
+		if (i + e >= lines.length) {
 			myLevelChars[1].length = e;
 			char.length = e;
 			// setLCMessage('Error while loading from string:\nnumber of entities did not match the provided count.');
 			return;
 		}
-		let entityInfo = lines[i+e].split(',').join(' ').split(' ');
-		myLevelChars[1][e] = [0,-1.0,-1.0,10];
+		let entityInfo = lines[i + e].split(',').join(' ').split(' ');
+		myLevelChars[1][e] = [0, -1.0, -1.0, 10];
 		if (entityInfo.length > 3) {
-			if (isNaN(parseInt(entityInfo[0],10)) || isNaN(parseFloat(entityInfo[1],10)) || isNaN(parseFloat(entityInfo[2],10)) || isNaN(parseInt(entityInfo[3],10))) {
+			if (
+				isNaN(parseInt(entityInfo[0], 10)) ||
+				isNaN(parseFloat(entityInfo[1], 10)) ||
+				isNaN(parseFloat(entityInfo[2], 10)) ||
+				isNaN(parseInt(entityInfo[3], 10))
+			) {
 				myLevelChars[1].length = e;
 				char.length = e;
 				// setLCMessage('Error while loading from string:\na data value in one entity\'s data parsed to NaN.');
 				// myLevelChars[1][e] = [0,0.0,0.0,10];
 				return;
 			}
-			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0],10),charD.length),0);
-			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1],10),100),0);
-			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2],10),100),0);
-			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3],10),10),3);
+			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length), 0);
+			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1], 10), 100), 0);
+			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2], 10), 100), 0);
+			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3], 10), 10), 3);
 		}
 		let id = myLevelChars[1][e][0];
-		if (charD[id][7] < 1) id = id<35?8:37;
+		if (charD[id][7] < 1) id = id < 35 ? 8 : 37;
 		char[e] = new Character(
 			id,
 			+myLevelChars[1][e][1].toFixed(2) * 30,
@@ -5728,25 +6165,25 @@ function readExploreLevelString(str) {
 			charD[id][4],
 			charD[id][6],
 			charD[id][8],
-			id<35?charModels[id].defaultExpr:0
+			id < 35 ? charModels[id].defaultExpr : 0
 		);
 		if (myLevelChars[1][e][1] < 0 || myLevelChars[1][e][2] < 0) char[e].placed = false;
 		if (myLevelChars[1][e][3] == 3 || myLevelChars[1][e][3] == 4) {
 			if (entityInfo.length == 5) {
-				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0,2),10);
+				myLevelChars[1][e][4] = parseInt(entityInfo[4].slice(0, 2), 10);
 				myLevelChars[1][e][5] = [];
-				let d = entityInfo[4].charCodeAt(2)-48;
+				let d = entityInfo[4].charCodeAt(2) - 48;
 				let btm = 1;
-				for (let m = 2; m < entityInfo[4].length-1; m++) {
-					if (d != entityInfo[4].charCodeAt(m+1)-48) {
-						myLevelChars[1][e][5].push([Math.min(Math.max(d,0),3),btm]);
+				for (let m = 2; m < entityInfo[4].length - 1; m++) {
+					if (d != entityInfo[4].charCodeAt(m + 1) - 48) {
+						myLevelChars[1][e][5].push([Math.min(Math.max(d, 0), 3), btm]);
 						btm = 1;
-						d = entityInfo[4].charCodeAt(m+1)-48;
+						d = entityInfo[4].charCodeAt(m + 1) - 48;
 					} else {
 						btm++;
 					}
 				}
-				myLevelChars[1][e][5].push([d,btm]);
+				myLevelChars[1][e][5].push([d, btm]);
 				char[e].motionString = generateMS(myLevelChars[1][e]);
 				char[e].speed = myLevelChars[1][e][4];
 			} else {
@@ -5761,19 +6198,19 @@ function readExploreLevelString(str) {
 	}
 
 	// read dialogue
-	myLevelDialogue[1] = new Array(parseInt(lines[i],10));
+	myLevelDialogue[1] = new Array(parseInt(lines[i], 10));
 	i++;
 	for (let d = 0; d < myLevelDialogue[1].length; d++) {
-		if (i+d >= lines.length) {
+		if (i + d >= lines.length) {
 			myLevelDialogue[1].length = d;
 			// setLCMessage('Error while loading from string:\nnumber of dialogue lines did not match the provided count.');
 			return;
 		}
-		myLevelDialogue[1][d] = {char:0,face:2,text:''};
-		myLevelDialogue[1][d].char = parseInt(lines[i+d].slice(0,2),10);
+		myLevelDialogue[1][d] = {char: 0, face: 2, text: ''};
+		myLevelDialogue[1][d].char = parseInt(lines[i + d].slice(0, 2), 10);
 		if (isNaN(myLevelDialogue[1][d].char)) myLevelDialogue[1][d].char = 99;
-		myLevelDialogue[1][d].face = lines[i+d].charAt(2)=='S'?3:2;
-		myLevelDialogue[1][d].text = lines[i+d].substring(4);
+		myLevelDialogue[1][d].face = lines[i + d].charAt(2) == 'S' ? 3 : 2;
+		myLevelDialogue[1][d].text = lines[i + d].substring(4);
 	}
 	i += myLevelDialogue[1].length;
 	if (i >= lines.length) {
@@ -5781,7 +6218,7 @@ function readExploreLevelString(str) {
 		return;
 	}
 
-	myLevelNecessaryDeaths = parseInt(lines[i],10);
+	myLevelNecessaryDeaths = parseInt(lines[i], 10);
 }
 
 function setLCMessage(text) {
@@ -5813,8 +6250,8 @@ function twoDecimalPlaceNumFormat(num) {
 
 function generateMS(info) {
 	let out = [];
-	out.push(Math.floor(info[4]/10));
-	out.push(info[4]%10);
+	out.push(Math.floor(info[4] / 10));
+	out.push(info[4] % 10);
 	let a = info[5];
 	for (let i = 0; i < a.length; i++) {
 		for (let j = 0; j < a[i][1]; j++) {
@@ -5828,23 +6265,23 @@ function generateMSOtherFormatted(c) {
 	let out = [];
 	let d = char[c].motionString[2];
 	let btm = 1;
-	for (let m = 2; m < char[c].motionString.length-1; m++) {
-		if (d != char[c].motionString[m+1]) {
-			out.push([d,btm]);
+	for (let m = 2; m < char[c].motionString.length - 1; m++) {
+		if (d != char[c].motionString[m + 1]) {
+			out.push([d, btm]);
 			btm = 1;
-			d = char[c].motionString[m+1];
+			d = char[c].motionString[m + 1];
 		} else {
 			btm++;
 		}
 	}
-	out.push([d,btm]);
+	out.push([d, btm]);
 	return out;
 }
 
 function resetCharPositions() {
 	for (let i = 0; i < myLevelChars[1].length; i++) {
-		char[i].x = myLevelChars[1][i][1]*30;
-		char[i].y = myLevelChars[1][i][2]*30;
+		char[i].x = myLevelChars[1][i][1] * 30;
+		char[i].y = myLevelChars[1][i][2] * 30;
 	}
 }
 
@@ -5877,12 +6314,12 @@ function drawAddButton(x, y, s, p) {
 	ctx.lineWidth = 3;
 	x += p;
 	y += p;
-	s -= p*2;
+	s -= p * 2;
 	ctx.beginPath();
-	ctx.moveTo(x+s/2, y);
-	ctx.lineTo(x+s/2, y+s);
-	ctx.moveTo(x, y+s/2);
-	ctx.lineTo(x+s, y+s/2);
+	ctx.moveTo(x + s / 2, y);
+	ctx.lineTo(x + s / 2, y + s);
+	ctx.moveTo(x, y + s / 2);
+	ctx.lineTo(x + s, y + s / 2);
 	ctx.stroke();
 }
 
@@ -5891,14 +6328,14 @@ function drawDuplicateButton(x, y, s, p) {
 	ctx.lineWidth = 3;
 	x += p;
 	y += p;
-	s -= p*2;
-	ctx.strokeRect(x+s/3,y+s/3,s*2/3,s*2/3);
+	s -= p * 2;
+	ctx.strokeRect(x + s / 3, y + s / 3, (s * 2) / 3, (s * 2) / 3);
 	ctx.beginPath();
-	ctx.moveTo(x+s/3, y+s*2/3);
-	ctx.lineTo(x, y+s*2/3);
+	ctx.moveTo(x + s / 3, y + (s * 2) / 3);
+	ctx.lineTo(x, y + (s * 2) / 3);
 	ctx.lineTo(x, y);
-	ctx.lineTo(x+s*2/3, y);
-	ctx.lineTo(x+s*2/3, y+s/3);
+	ctx.lineTo(x + (s * 2) / 3, y);
+	ctx.lineTo(x + (s * 2) / 3, y + s / 3);
 	ctx.stroke();
 }
 
@@ -5907,13 +6344,13 @@ function drawUpButton(x, y, s, p) {
 	ctx.lineWidth = 3;
 	x += p;
 	y += p;
-	s -= p*2;
+	s -= p * 2;
 	ctx.beginPath();
-	ctx.moveTo(x+s/2, y+s);
-	ctx.lineTo(x+s/2, y);
-	ctx.moveTo(x, y+s/2);
-	ctx.lineTo(x+s/2, y);
-	ctx.lineTo(x+s, y+s/2);
+	ctx.moveTo(x + s / 2, y + s);
+	ctx.lineTo(x + s / 2, y);
+	ctx.moveTo(x, y + s / 2);
+	ctx.lineTo(x + s / 2, y);
+	ctx.lineTo(x + s, y + s / 2);
 	ctx.stroke();
 }
 
@@ -5922,13 +6359,13 @@ function drawDownButton(x, y, s, p) {
 	ctx.lineWidth = 3;
 	x += p;
 	y += p;
-	s -= p*2;
+	s -= p * 2;
 	ctx.beginPath();
-	ctx.moveTo(x+s/2, y);
-	ctx.lineTo(x+s/2, y+s);
-	ctx.moveTo(x, y+s/2);
-	ctx.lineTo(x+s/2, y+s);
-	ctx.lineTo(x+s, y+s/2);
+	ctx.moveTo(x + s / 2, y);
+	ctx.lineTo(x + s / 2, y + s);
+	ctx.moveTo(x, y + s / 2);
+	ctx.lineTo(x + s / 2, y + s);
+	ctx.lineTo(x + s, y + s / 2);
 	ctx.stroke();
 }
 
@@ -5937,10 +6374,10 @@ function drawMinusButton(x, y, s, p) {
 	ctx.lineWidth = 3;
 	x += p;
 	y += p;
-	s -= p*2;
+	s -= p * 2;
 	ctx.beginPath();
-	ctx.moveTo(x, y+s/2);
-	ctx.lineTo(x+s, y+s/2);
+	ctx.moveTo(x, y + s / 2);
+	ctx.lineTo(x + s, y + s / 2);
 	ctx.stroke();
 }
 
@@ -5949,19 +6386,20 @@ function drawRemoveButton(x, y, s, p) {
 	ctx.lineWidth = 3;
 	x += p;
 	y += p;
-	s -= p*2;
+	s -= p * 2;
 	ctx.beginPath();
 	ctx.moveTo(x, y);
-	ctx.lineTo(x+s, y+s);
-	ctx.moveTo(x+s, y);
-	ctx.lineTo(x, y+s);
+	ctx.lineTo(x + s, y + s);
+	ctx.moveTo(x + s, y);
+	ctx.lineTo(x, y + s);
 	ctx.stroke();
 }
 
 function truncateLevelTitles() {
 	ctx.font = '20px Helvetica';
 	exploreLevelTitlesTruncated = new Array(explorePageLevels.length);
-	for (let i = 0; i < exploreLevelTitlesTruncated.length; i++) exploreLevelTitlesTruncated[i] = fitString(ctx, explorePageLevels[i].title, 195.3);
+	for (let i = 0; i < exploreLevelTitlesTruncated.length; i++)
+		exploreLevelTitlesTruncated[i] = fitString(ctx, explorePageLevels[i].title, 195.3);
 }
 
 function drawExploreLevel(x, y, i) {
@@ -5976,19 +6414,19 @@ function drawExploreLevel(x, y, i) {
 	ctx.fillRect(x, y, 208, 155);
 	// ctx.fillStyle = '#cccccc';
 	// ctx.fillRect(x+8, y+8, 192, 108);
-	ctx.drawImage(thumbs[i], x+8, y+8, 192, 108);
+	ctx.drawImage(thumbs[i], x + 8, y + 8, 192, 108);
 
 	ctx.fillStyle = '#ffffff';
 	ctx.textBaseline = 'top';
 	ctx.textAlign = 'left';
 	ctx.font = '20px Helvetica';
-	ctx.fillText(exploreLevelTitlesTruncated[i], x+6.35, y+119.4);
+	ctx.fillText(exploreLevelTitlesTruncated[i], x + 6.35, y + 119.4);
 	// ctx.fillText(fitString(ctx, explorePageLevels[i].title, 195.3), x+6.35, y+119.4);
 	// fitString(ctx, explorePageLevels[i].title, 142.3);
 
 	ctx.fillStyle = '#999999';
 	ctx.font = '10px Helvetica';
-	ctx.fillText('by ' + explorePageLevels[i].creator.name, x+7, y+138.3);
+	ctx.fillText('by ' + explorePageLevels[i].creator.name, x + 7, y + 138.3);
 
 	// explorePageLevels[i]
 }
@@ -6005,9 +6443,10 @@ function setExploreThumbs() {
 	}
 }
 
-function drawExploreThumb(context, size, data, scale) {  // size is the width
+function drawExploreThumb(context, size, data, scale) {
+	// size is the width
 	if (exploreTab == 1 && menuScreen == 6) return;
-	context.clearRect(0, 0, size * pixelRatio / scale, size * 0.5625 * pixelRatio / scale);
+	context.clearRect(0, 0, (size * pixelRatio) / scale, (size * 0.5625 * pixelRatio) / scale);
 
 	let lines = data.split('\r\n');
 	if (lines.length == 1) lines = data.split('\n');
@@ -6020,16 +6459,23 @@ function drawExploreThumb(context, size, data, scale) {  // size is the width
 	let thumbLevelH = parseInt(thumbLevelHead[1]);
 	context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
 
-	if (thumbLevelHead[4]=='H') {
+	if (thumbLevelHead[4] == 'H') {
 		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
 			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-				exploreDrawThumbTile(context, x, y, 111 * tileIDFromChar(lines[y+2].charCodeAt(x * 2)) + tileIDFromChar(lines[y+2].charCodeAt(x * 2 + 1)), scale);
+				exploreDrawThumbTile(
+					context,
+					x,
+					y,
+					111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
+						tileIDFromChar(lines[y + 2].charCodeAt(x * 2 + 1)),
+					scale
+				);
 			}
 		}
 	} else {
 		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
 			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-				exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y+2].charCodeAt(x)), scale);
+				exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
 			}
 		}
 	}
@@ -6038,24 +6484,27 @@ function drawExploreThumb(context, size, data, scale) {  // size is the width
 function exploreDrawThumbTile(context, x, y, tile, scale) {
 	if (blockProperties[tile][16] > 0) {
 		if (blockProperties[tile][16] == 1) {
-			if (blockProperties[tile][11] > 0 && typeof svgLevers[(blockProperties[tile][11]-1)%6] !== 'undefined') {
+			if (
+				blockProperties[tile][11] > 0 &&
+				typeof svgLevers[(blockProperties[tile][11] - 1) % 6] !== 'undefined'
+			) {
 				context.save();
-				context.translate(x*30+15, y*30+28);
-				context.rotate((Math.ceil(blockProperties[tile][11]/6)==1?-60:60)*(Math.PI/180));
-				context.translate(-x*30-15, -y*30-28);
-				context.drawImage(svgLevers[(blockProperties[tile][11]-1)%6], x*30, y*30);
+				context.translate(x * 30 + 15, y * 30 + 28);
+				context.rotate((Math.ceil(blockProperties[tile][11] / 6) == 1 ? -60 : 60) * (Math.PI / 180));
+				context.translate(-x * 30 - 15, -y * 30 - 28);
+				context.drawImage(svgLevers[(blockProperties[tile][11] - 1) % 6], x * 30, y * 30);
 				context.restore();
 			}
-			context.drawImage(svgTiles[tile], (x*30+svgTilesVB[tile][0]), y*30+svgTilesVB[tile][1]);
+			context.drawImage(svgTiles[tile], x * 30 + svgTilesVB[tile][0], y * 30 + svgTilesVB[tile][1]);
 		} else if (blockProperties[tile][16] > 1) {
-			context.drawImage(svgTiles[tile][0], x*30+svgTilesVB[tile][0][0], y*30+svgTilesVB[tile][0][1]);
+			context.drawImage(svgTiles[tile][0], x * 30 + svgTilesVB[tile][0][0], y * 30 + svgTilesVB[tile][0][1]);
 		}
 	} else if (tile == 6) {
 		// Door
 		// let bgid = playMode==2?selectedBg:bgs[currentLevel];
 		// context.fillStyle = bgid==9||bgid==10?'#999999':'#505050';
 		context.fillStyle = '#505050';
-		context.fillRect((x-1)*30, (y-3)*30, 60, 120);
+		context.fillRect((x - 1) * 30, (y - 3) * 30, 60, 120);
 		// for (let i = 0; i < charCount2; i++) {
 		// 	context.fillStyle = 'rgb(' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 255) + ',' + mapRange(doorLightFade[i], 0, 1, 40, 0) + ')';
 		// 	context.fillRect((x-1)*30+doorLightX[Math.floor(i/6)==Math.floor((charCount2-1)/6)?(charCount2-1)%6:5][i%6], y*30-80 + Math.floor(i/6)*10, 5, 5);
@@ -6072,14 +6521,14 @@ function drawExploreLoadingText() {
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.fillStyle = '#ffffff';
-	ctx.fillText('loading...', cwidth/2, cheight/2);
+	ctx.fillText('loading...', cwidth / 2, cheight / 2);
 }
 
 function drawArrow(x, y, w, h, dir) {
 	ctx.beginPath();
-	ctx.moveTo(x + w*(dir==1?1:(dir==3?0:0.5)), y + h*(dir==2?1:(dir==0?0:0.5)));
-	ctx.lineTo(x + w*(dir!=1), y + h*(dir!=2));
-	ctx.lineTo(x + w*(dir==3), y + h*(dir==0));
+	ctx.moveTo(x + w * (dir == 1 ? 1 : dir == 3 ? 0 : 0.5), y + h * (dir == 2 ? 1 : dir == 0 ? 0 : 0.5));
+	ctx.lineTo(x + w * (dir != 1), y + h * (dir != 2));
+	ctx.lineTo(x + w * (dir == 3), y + h * (dir == 0));
 	ctx.fill();
 }
 
@@ -6088,16 +6537,12 @@ function shareToExplore() {
 	postExploreLevel(myLevelInfo.name, myLevelInfo.desc, generateLevelString());
 }
 
-
-
-
-
-function mousemove(event){
+function mousemove(event) {
 	_xmouse = event.pageX - canvas.getBoundingClientRect().left;
 	_ymouse = event.pageY - canvas.getBoundingClientRect().top;
 }
 
-function mousedown(event){
+function mousedown(event) {
 	mouseIsDown = true;
 	lastClickX = _xmouse;
 	lastClickY = _ymouse;
@@ -6123,7 +6568,6 @@ function mousedown(event){
 			// 		break;
 			// 	}
 			// }
-
 
 			// if (selectedTab == 2) {
 			// 	let x = Math.floor((_xmouse - 660) / 60);
@@ -6166,19 +6610,19 @@ function mousedown(event){
 				if (tool != 4) {
 					setUndo();
 				}
-				let x = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
-				let y = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+				let x = Math.floor((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
+				let y = Math.floor((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
 				if (mouseOnScreen()) {
-					if (tool == 2 || tool == 5 && !copied) {
-						LCRect[0] = LCRect[2] = Math.min(Math.max(x,0),levelWidth - 1);
-						LCRect[1] = LCRect[3] = Math.min(Math.max(y,0),levelHeight - 1);
+					if (tool == 2 || (tool == 5 && !copied)) {
+						LCRect[0] = LCRect[2] = Math.min(Math.max(x, 0), levelWidth - 1);
+						LCRect[1] = LCRect[3] = Math.min(Math.max(y, 0), levelHeight - 1);
 					}
 				}
 				if (mouseOnGrid()) {
 					if (tool == 3) {
 						if (!blockProperties[selectedTile][9]) {
 							let fillType = myLevel[1][y][x];
-							fillTile(x,y,selectedTile,fillType);
+							fillTile(x, y, selectedTile, fillType);
 						} else {
 							setTool(0);
 						}
@@ -6188,10 +6632,16 @@ function mousedown(event){
 						setSelectedTile(myLevel[1][y][x]);
 					} else if (tool == 5) {
 						if (copied) {
-							for (let i = 0; i < tileClipboard.length && y+i < levelHeight; i++) {
-								for (let j = 0; j < tileClipboard[i].length && x+j < levelWidth; j++) {
+							for (let i = 0; i < tileClipboard.length && y + i < levelHeight; i++) {
+								for (let j = 0; j < tileClipboard[i].length && x + j < levelWidth; j++) {
 									let testTile = tileClipboard[i][j];
-									if (!(_keysDown[18] && myLevel[1][y+i][x+j] != 0) && testTile != 0 && testTile != 6 && testTile != 12) myLevel[1][y+i][x+j] = testTile;
+									if (
+										!(_keysDown[18] && myLevel[1][y + i][x + j] != 0) &&
+										testTile != 0 &&
+										testTile != 6 &&
+										testTile != 12
+									)
+										myLevel[1][y + i][x + j] = testTile;
 								}
 							}
 						}
@@ -6208,7 +6658,7 @@ function mousedown(event){
 								sizeChange = -1;
 							}
 							removeLCTiles();
-							let y2 = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+							let y2 = Math.round((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
 							levelHeight += sizeChange;
 							myLevel[1] = new Array(levelHeight);
 							let y4 = 0;
@@ -6216,7 +6666,7 @@ function mousedown(event){
 								if (y3 < y2) {
 									y4 = y3;
 								} else {
-									y4 = Math.max(y3 - sizeChange,0);
+									y4 = Math.max(y3 - sizeChange, 0);
 								}
 								myLevel[1][y3] = new Array(levelWidth);
 								for (let x3 = 0; x3 < levelWidth; x3++) {
@@ -6235,7 +6685,7 @@ function mousedown(event){
 							// drawLCGrid();
 						}
 					} else if (tool == 7) {
-						let x2 = (_xmouse - (330 - scale * levelWidth / 2)) / scale % 1;
+						let x2 = ((_xmouse - (330 - (scale * levelWidth) / 2)) / scale) % 1;
 						sizeChange = 0;
 						if (closeToEdgeX() || levelWidth >= 2) {
 							if (closeToEdgeX()) {
@@ -6244,7 +6694,7 @@ function mousedown(event){
 								sizeChange = -1;
 							}
 							removeLCTiles();
-							x2 = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+							x2 = Math.round((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
 							levelWidth += sizeChange;
 							myLevel[1] = new Array(levelHeight);
 							let x4 = 0;
@@ -6252,10 +6702,10 @@ function mousedown(event){
 								myLevel[1][y3] = new Array(levelWidth);
 								x3 = 0;
 								for (let x3 = 0; x3 < levelWidth; x3++) {
-									if(x3 < x2) {
+									if (x3 < x2) {
 										x4 = x3;
 									} else {
-										x4 = Math.max(x3 - sizeChange,0);
+										x4 = Math.max(x3 - sizeChange, 0);
 									}
 									myLevel[1][y3][x3] = myLevel[0][y3][x4];
 								}
@@ -6283,10 +6733,10 @@ function mouseup(event) {
 	if (menuScreen == 5) {
 		if (!blockProperties[selectedTile][9]) {
 			if (tool == 2 && LCRect[0] != -1) {
-				y = Math.min(LCRect[1],LCRect[3]);
-				while (y <= Math.max(LCRect[1],LCRect[3])) {
-					x = Math.min(LCRect[0],LCRect[2]);
-					while (x <= Math.max(LCRect[0],LCRect[2])) {
+				y = Math.min(LCRect[1], LCRect[3]);
+				while (y <= Math.max(LCRect[1], LCRect[3])) {
+					x = Math.min(LCRect[0], LCRect[2]);
+					while (x <= Math.max(LCRect[0], LCRect[2])) {
 						myLevel[1][y][x] = selectedTile;
 						// levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(selectedTile + 1);
 						x++;
@@ -6304,14 +6754,21 @@ function keydown(event) {
 	_keysDown[event.keyCode || event.charCode] = true;
 	if (editingTextBox >= 0 && event.keyCode) {
 		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
-			navigator.clipboard.readText().then(clipText => {
-				inputText += clipText;
-			}).catch(err => console.log(err));
+			navigator.clipboard
+				.readText()
+				.then(clipText => {
+					inputText += clipText;
+				})
+				.catch(err => console.log(err));
 		} else if (event.key.length == 1) {
 			inputText += event.key;
 		} else if (event.key == 'Backspace') {
-			inputText = inputText.slice(0,-1);
-		} else if (currentTextBoxAllowsLineBreaks && (event.key == 'Enter' || event.key == 'Return') && event.shiftKey) {
+			inputText = inputText.slice(0, -1);
+		} else if (
+			currentTextBoxAllowsLineBreaks &&
+			(event.key == 'Enter' || event.key == 'Return') &&
+			event.shiftKey
+		) {
 			inputText += '\n';
 		}
 	}
@@ -6335,7 +6792,7 @@ function keydown(event) {
 	}
 }
 
-function keyup(event){
+function keyup(event) {
 	_keysDown[event.keyCode || event.charCode] = false;
 	if (event.metaKey || event.ctrlKey) controlOrCommandPress = false;
 }
@@ -6387,13 +6844,13 @@ function setup() {
 		thumbs[i].width = Math.floor(192 * pixelRatio);
 		thumbs[i].height = Math.floor(108 * pixelRatio);
 		thumbsctx[i] = thumbs[i].getContext('2d');
-		thumbsctx[i].scale(pixelRatio*0.2, pixelRatio*0.2);
+		thumbsctx[i].scale(pixelRatio * 0.2, pixelRatio * 0.2);
 	}
 	thumbBig = document.createElement('canvas');
 	thumbBig.width = Math.floor(384 * pixelRatio);
 	thumbBig.height = Math.floor(216 * pixelRatio);
 	thumbBigctx = thumbBig.getContext('2d');
-	thumbBigctx.scale(pixelRatio*0.4, pixelRatio*0.4);
+	thumbBigctx.scale(pixelRatio * 0.4, pixelRatio * 0.4);
 
 	window.addEventListener('mousemove', mousemove);
 	window.addEventListener('mousedown', mousedown);
@@ -6410,11 +6867,18 @@ function draw() {
 	hoverText = '';
 	onTextBox = false;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX+shakeX), Math.floor(cameraY+shakeY));
+	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX + shakeX), Math.floor(cameraY + shakeY));
 	switch (menuScreen) {
 		case -1:
 			ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
-			drawMenu0Button('START GAME', (cwidth-menu0ButtonSize.w)/2, (cheight-menu0ButtonSize.h)/2, 0, false, playGame);
+			drawMenu0Button(
+				'START GAME',
+				(cwidth - menu0ButtonSize.w) / 2,
+				(cheight - menu0ButtonSize.h) / 2,
+				0,
+				false,
+				playGame
+			);
 			break;
 
 		case 0:
@@ -6425,29 +6889,36 @@ function draw() {
 			drawLevelMap();
 			if (_xmouse < 587 || _ymouse < 469) {
 				if (_ymouse <= 180) {
-					cameraY = Math.min(Math.max(cameraY + (180 - _ymouse) * 0.1,-1080),0);
+					cameraY = Math.min(Math.max(cameraY + (180 - _ymouse) * 0.1, -1080), 0);
 				} else if (_ymouse >= 360) {
-					cameraY = Math.min(Math.max(cameraY - (_ymouse - 360) * 0.1,-1080),0);
+					cameraY = Math.min(Math.max(cameraY - (_ymouse - 360) * 0.1, -1080), 0);
 				}
 			}
 			break;
 
 		case 3:
-
 			// let bgScale = Math.max(bgXScale, bgYScale);
 			// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
-			ctx.drawImage(osc4, -Math.floor((Math.max(cameraX,0)+shakeX)/1.5 + (cameraX<0?cameraX/3:0)), -Math.floor((Math.max(cameraY,0)+shakeY)/1.5 + (cameraY<0?cameraY/3:0)), osc4.width/pixelRatio, osc4.height/pixelRatio);
+			ctx.drawImage(
+				osc4,
+				-Math.floor((Math.max(cameraX, 0) + shakeX) / 1.5 + (cameraX < 0 ? cameraX / 3 : 0)),
+				-Math.floor((Math.max(cameraY, 0) + shakeY) / 1.5 + (cameraY < 0 ? cameraY / 3 : 0)),
+				osc4.width / pixelRatio,
+				osc4.height / pixelRatio
+			);
 			drawLevel();
-			
+
 			if (wipeTimer == 30) {
-				if (transitionType == 0) { // resetting preexisting level
+				if (transitionType == 0) {
+					// resetting preexisting level
 					if (!quirksMode) timer += getTimer() - levelTimer2;
-					resetLevel();	
-				} else if (charsAtEnd >= charCount2) { // beat the level!
+					resetLevel();
+				} else if (charsAtEnd >= charCount2) {
+					// beat the level!
 					if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
 						gotCoin[currentLevel] = true;
 						coins++;
-						bonusProgress = Math.floor(coins*0.33);
+						bonusProgress = Math.floor(coins * 0.33);
 					}
 					timer += getTimer() - levelTimer2;
 					if (playMode == 0 && currentLevel < 99) {
@@ -6463,7 +6934,7 @@ function draw() {
 						} else {
 							exitLevel();
 							if (currentLevel > 99) {
-								bonusesCleared[currentLevel-100] = true;
+								bonusesCleared[currentLevel - 100] = true;
 							}
 						}
 					}
@@ -6476,7 +6947,7 @@ function draw() {
 					if (!csPress && cutScene == 1) {
 						cutSceneLine++;
 						if (cutSceneLine >= cLevelDialogueChar.length) endCutScene();
-						else displayLine(currentLevel,cutSceneLine);
+						else displayLine(currentLevel, cutSceneLine);
 					}
 					csPress = true;
 				} else {
@@ -6489,18 +6960,18 @@ function draw() {
 						char[control].justChanged = 2;
 						if (recoverTimer == 0) {
 							if (_keysDown[37]) {
-								if (!leftPress) recoverCycle(HPRC2,-1);
+								if (!leftPress) recoverCycle(HPRC2, -1);
 								leftPress = true;
 							} else leftPress = false;
 							if (_keysDown[39]) {
-								if (!rightPress) recoverCycle(HPRC2,1);
+								if (!rightPress) recoverCycle(HPRC2, 1);
 								rightPress = true;
 							} else rightPress = false;
 						}
 					} else {
 						if (cornerHangTimer == 0) {
 							if (_keysDown[37]) {
-								char[control].moveHorizontal(- power);
+								char[control].moveHorizontal(-power);
 							} else if (_keysDown[39]) {
 								char[control].moveHorizontal(power);
 							}
@@ -6528,7 +6999,13 @@ function draw() {
 									charThrow(control);
 								} else {
 									for (let i = 0; i < charCount; i++) {
-										if (i != control && near(control,i) && char[i].charState >= 6 && char[control].standingOn != i && onlyMovesOneBlock(i,control)) {
+										if (
+											i != control &&
+											near(control, i) &&
+											char[i].charState >= 6 &&
+											char[control].standingOn != i &&
+											onlyMovesOneBlock(i, control)
+										) {
 											if (char[i].carry) putDown(i);
 											if (ifCarried(i)) putDown(char[i].carriedBy);
 											char[control].carry = true;
@@ -6537,7 +7014,7 @@ function draw() {
 											char[i].carriedBy = control;
 											char[i].weight2 = char[i].weight;
 											char[control].weight2 = char[i].weight + char[control].weight;
-											rippleWeight(control,char[i].weight2,1);
+											rippleWeight(control, char[i].weight2, 1);
 											fallOff(i);
 											aboveFallOff(i);
 											char[i].justChanged = 2;
@@ -6564,13 +7041,18 @@ function draw() {
 									recover = false;
 									HPRCBubbleFrame = 0;
 								}
-							} else if (HPRC2 < 10000 && near2(control,HPRC2) && char[control].hasArms && char[control].onob) {
+							} else if (
+								HPRC2 < 10000 &&
+								near2(control, HPRC2) &&
+								char[control].hasArms &&
+								char[control].onob
+							) {
 								char[control].stopMoving();
 								if (char[control].x >= char[HPRC2].x - 33) char[control].dire = 2;
 								else char[control].dire = 4;
 								recover = true;
 								recover2 = charCount - 1;
-								recoverCycle(HPRC2,0);
+								recoverCycle(HPRC2, 0);
 							}
 						}
 						downPress = true;
@@ -6583,17 +7065,19 @@ function draw() {
 						qPress = true;
 					} else qPress = false;
 					if (_keysDown[32]) {
-						if ((char[control].onob || char[control].submerged == 3) && char[control].landTimer > 2 && !recover) {
+						if (
+							(char[control].onob || char[control].submerged == 3) &&
+							char[control].landTimer > 2 &&
+							!recover
+						) {
 							if (char[control].submerged == 3) char[control].swimUp(0.14 / char[control].weight2);
-							else char[control].jump(- jumpPower);
+							else char[control].jump(-jumpPower);
 							char[control].onob = false;
 							fallOff(control);
 						}
 					} else char[control].landTimer = 80;
 				}
 			}
-
-
 
 			if (_keysDown[82] && wipeTimer == 0) {
 				wipeTimer = 1;
@@ -6615,13 +7099,17 @@ function draw() {
 						}
 					} else char[i].fricGoal = char[char[i].standingOn].vx;
 
-					char[i].applyForces(char[i].weight2,control == i,jumpPower * 0.7);
+					char[i].applyForces(char[i].weight2, control == i, jumpPower * 0.7);
 					if (char[i].deathTimer >= 30) char[i].charMove();
 					if (char[i].id == 3) {
 						if (char[i].temp > 50) {
 							for (let j = 0; j < charCount; j++) {
 								if (char[j].charState >= 5 && j != i) {
-									if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+									if (
+										Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w &&
+										char[j].y > char[i].y - char[i].h &&
+										char[j].y < char[i].y + char[j].h
+									) {
 										char[j].heated = 2;
 										heat(j);
 									}
@@ -6636,10 +7124,15 @@ function draw() {
 					char[i].px = char[i].x;
 					char[i].py = char[i].y;
 					char[i].charMove();
-				} if (char[i].charState == 3 || char[i].charState == 5) {
+				}
+				if (char[i].charState == 3 || char[i].charState == 5) {
 					for (let j = 0; j < charCount; j++) {
 						if (char[j].charState >= 7 && j != i) {
-							if (Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w && char[j].y > char[i].y - char[i].h && char[j].y < char[i].y + char[j].h) {
+							if (
+								Math.abs(char[i].x - char[j].x) < char[i].w + char[j].w &&
+								char[j].y > char[i].y - char[i].h &&
+								char[j].y < char[i].y + char[j].h
+							) {
 								startDeath(j);
 							}
 						}
@@ -6660,7 +7153,7 @@ function draw() {
 						char[i].weight2 = char[i].weight - 0.16;
 					}
 					if (char[i].charState >= 5 && !ifCarried(i)) {
-						if (char[i].vy > 0 || char[i].vy == 0 && char[i].vx != 0) {
+						if (char[i].vy > 0 || (char[i].vy == 0 && char[i].vx != 0)) {
 							landOnObject(i);
 						}
 						if (char[i].vy < 0 && (char[i].charState == 4 || char[i].charState == 6) && !ifCarried(i)) {
@@ -6679,13 +7172,14 @@ function draw() {
 			}
 			let alph;
 			if (!gotThisCoin) alph = 140 - locations[4] * 0.7;
-			if (playMode != 2 && gotCoin[currentLevel]) alph = Math.max(alph,30);
+			if (playMode != 2 && gotCoin[currentLevel]) alph = Math.max(alph, 30);
 			for (let i = 0; i < charCount; i++) {
-				if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y) char[i].justChanged = 2;
+				if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y)
+					char[i].justChanged = 2;
 				if (char[i].charState == 2) {
 					recoverTimer--;
 					let trans = (60 - recoverTimer) / 60;
-					char[i].x = inter(char[HPRC1].x,goal,trans);
+					char[i].x = inter(char[HPRC1].x, goal, trans);
 					if (recoverTimer <= 0) {
 						recoverTimer = 0;
 						recover = false;
@@ -6700,13 +7194,26 @@ function draw() {
 					}
 				} else if (char[i].justChanged >= 1 && char[i].charState >= 5) {
 					for (let y = Math.floor((char[i].y - char[i].h) / 30); y <= Math.floor(char[i].y / 30); y++) {
-						for (let x = Math.floor((char[i].x - char[i].w) / 30); x <= Math.floor((char[i].x + char[i].w - 0.01) / 30); x++) {
+						for (
+							let x = Math.floor((char[i].x - char[i].w) / 30);
+							x <= Math.floor((char[i].x + char[i].w - 0.01) / 30);
+							x++
+						) {
 							if (!outOfRange(x, y)) {
-								if (blockProperties[thisLevel[y][x]][11] >= 1 && blockProperties[thisLevel[y][x]][11] <= 12) {
+								if (
+									blockProperties[thisLevel[y][x]][11] >= 1 &&
+									blockProperties[thisLevel[y][x]][11] <= 12
+								) {
 									if (Math.floor(char[i].x / 30) == x) {
 										let rot = (char[i].x - Math.floor(char[i].x / 30) * 30 - 15) * 5;
-										if (rot < tileFrames[y][x].rotation && char[i].vx < 0 || rot > tileFrames[y][x].rotation && char[i].vx > 0) {
-											if (rot < 0 && tileFrames[y][x].rotation > 0 || rot > 0 && tileFrames[y][x].rotation < 0) {
+										if (
+											(rot < tileFrames[y][x].rotation && char[i].vx < 0) ||
+											(rot > tileFrames[y][x].rotation && char[i].vx > 0)
+										) {
+											if (
+												(rot < 0 && tileFrames[y][x].rotation > 0) ||
+												(rot > 0 && tileFrames[y][x].rotation < 0)
+											) {
 												leverSwitch((blockProperties[thisLevel[y][x]][11] - 1) % 6);
 											}
 											tileFrames[y][x].rotation = rot;
@@ -6716,7 +7223,7 @@ function draw() {
 							}
 						}
 					}
-					checkButton2(i,false);
+					checkButton2(i, false);
 					if (ifCarried(i)) {
 						char[i].vx = char[char[i].carriedBy].vx;
 						char[i].vy = char[char[i].carriedBy].vy;
@@ -6745,56 +7252,57 @@ function draw() {
 					stopX = 0;
 					stopY = 0;
 					toBounce = false;
-					if (newTileHorizontal(i,1)) {
-						if (horizontalType(i,1,8) && char[i].charState == 10) {
+					if (newTileHorizontal(i, 1)) {
+						if (horizontalType(i, 1, 8) && char[i].charState == 10) {
 							startCutScene();
 						}
-						if (horizontalProp(i,1,7,char[i].x,char[i].y) && char[i].charState >= 7) {
+						if (horizontalProp(i, 1, 7, char[i].x, char[i].y) && char[i].charState >= 7) {
 							startDeath(i);
-						} else if (char[i].x > char[i].px && horizontalProp(i,1,3,char[i].x,char[i].y)) {
+						} else if (char[i].x > char[i].px && horizontalProp(i, 1, 3, char[i].x, char[i].y)) {
 							stopX = 1;
 						}
 					}
-					if (newTileHorizontal(i,-1)) {
-						if (horizontalType(i,-1,8) && char[i].charState == 10) {
+					if (newTileHorizontal(i, -1)) {
+						if (horizontalType(i, -1, 8) && char[i].charState == 10) {
 							startCutScene();
 						}
-						if (horizontalProp(i,-1,6,char[i].x,char[i].y) && char[i].charState >= 7) {
+						if (horizontalProp(i, -1, 6, char[i].x, char[i].y) && char[i].charState >= 7) {
 							startDeath(i);
-						} else if (char[i].x < char[i].px && horizontalProp(i,-1,2,char[i].x,char[i].y)) {
+						} else if (char[i].x < char[i].px && horizontalProp(i, -1, 2, char[i].x, char[i].y)) {
 							stopX = -1;
 						}
 					}
 					if (newTileDown(i)) {
-						if (verticalType(i,1,8,false) && char[i].charState == 10) {
+						if (verticalType(i, 1, 8, false) && char[i].charState == 10) {
 							startCutScene();
 						}
-						if (verticalType(i,1,13,true)) {
+						if (verticalType(i, 1, 13, true)) {
 							toBounce = true;
-						} else if (verticalProp(i,1,5,char[i].px,char[i].y) && char[i].charState >= 7) {
+						} else if (verticalProp(i, 1, 5, char[i].px, char[i].y) && char[i].charState >= 7) {
 							startDeath(i);
-						} else if (char[i].y > char[i].py && verticalProp(i,1,1,char[i].px,char[i].y)) {
+						} else if (char[i].y > char[i].py && verticalProp(i, 1, 1, char[i].px, char[i].y)) {
 							stopY = 1;
 						}
 					}
 					if (newTileUp(i)) {
-						if (verticalType(i,-1,8,false) && char[i].charState == 10) {
+						if (verticalType(i, -1, 8, false) && char[i].charState == 10) {
 							startCutScene();
 						}
-						if (verticalProp(i,-1,4,char[i].x,char[i].y) && char[i].charState >= 7) {
+						if (verticalProp(i, -1, 4, char[i].x, char[i].y) && char[i].charState >= 7) {
 							startDeath(i);
-						} else if (char[i].y < char[i].py && verticalProp(i,-1,0,char[i].px,char[i].y)) {
+						} else if (char[i].y < char[i].py && verticalProp(i, -1, 0, char[i].px, char[i].y)) {
 							stopY = -1;
 						}
 					}
-					if (stopX != 0 && stopY != 0) { // two coordinates changed at once! Make sure snags don't happen
+					if (stopX != 0 && stopY != 0) {
+						// two coordinates changed at once! Make sure snags don't happen
 						if (stopY == 1) {
 							y = Math.floor(char[i].y / 30) * 30;
 						}
 						if (stopY == -1) {
 							y = Math.ceil((char[i].y - char[i].h) / 30) * 30 + char[i].h;
 						}
-						if (!horizontalProp(i,stopX,stopX / 2 + 2.5,char[i].x,y)) {
+						if (!horizontalProp(i, stopX, stopX / 2 + 2.5, char[i].x, y)) {
 							stopX = 0;
 						} else {
 							if (stopX == 1) {
@@ -6803,7 +7311,7 @@ function draw() {
 							if (stopX == -1) {
 								x = Math.ceil((char[i].x - char[i].w) / 30) * 30 + char[i].w;
 							}
-							if (!verticalProp(i,stopY,stopY / 2 + 0.5,x,char[i].y)) {
+							if (!verticalProp(i, stopY, stopY / 2 + 0.5, x, char[i].y)) {
 								stopY = 0;
 							}
 						}
@@ -6833,15 +7341,15 @@ function draw() {
 						}
 						char[i].x = x;
 						char[i].vx = 0;
-						stopCarrierX(i,x);
+						stopCarrierX(i, x);
 					}
 					if (stopY != 0) {
 						if (stopY == 1) {
 							y = Math.floor(char[i].y / 30) * 30;
 							if (!ifCarried(i)) cornerHangTimer = 0;
 							fallOff(i);
-							land(i,y,0);
-							land2(i,y);
+							land(i, y, 0);
+							land2(i, y);
 							checkButton(i);
 						} else if (stopY == -1) {
 							if (char[i].id == 5) {
@@ -6858,33 +7366,36 @@ function draw() {
 								bumpHead(char[i].carriedBy);
 							}
 						}
-						stopCarrierY(i,y,stopY == 1);
+						stopCarrierY(i, y, stopY == 1);
 					}
-					if (newTileHorizontal(i,1) || newTileHorizontal(i,-1)) {
-						if (verticalType(i,1,13,true)) {
+					if (newTileHorizontal(i, 1) || newTileHorizontal(i, -1)) {
+						if (verticalType(i, 1, 13, true)) {
 							toBounce = true;
 						}
-						if (horizontalProp(i,1,14,char[i].x,char[i].y) || horizontalProp(i,-1,14,char[i].x,char[i].y)) {
+						if (
+							horizontalProp(i, 1, 14, char[i].x, char[i].y) ||
+							horizontalProp(i, -1, 14, char[i].x, char[i].y)
+						) {
 							submerge(i);
 						}
-						if (horizontalType(i,1,15) || horizontalType(i,-1,15)) {
+						if (horizontalType(i, 1, 15) || horizontalType(i, -1, 15)) {
 							char[i].heated = 1;
 						}
 						checkButton(i);
 					}
 					if (newTileUp(i)) {
-						if (verticalProp(i,-1,14,char[i].x,char[i].y)) {
+						if (verticalProp(i, -1, 14, char[i].x, char[i].y)) {
 							submerge(i);
 						}
-						if (verticalType(i,-1,15,false)) {
+						if (verticalType(i, -1, 15, false)) {
 							char[i].heated = 1;
 						}
 					}
 					if (newTileDown(i)) {
-						if (verticalProp(i,1,14,char[i].x,char[i].y)) {
+						if (verticalProp(i, 1, 14, char[i].x, char[i].y)) {
 							submerge(i);
 						}
-						if (verticalType(i,1,15,false)) {
+						if (verticalType(i, 1, 15, false)) {
 							char[i].heated = 1;
 						}
 					}
@@ -6913,14 +7424,15 @@ function draw() {
 					} else if (char[i].onob) {
 						if (!ifCarried(i) && char[i].standingOn == -1) {
 							char[i].y = Math.round(char[i].y / 30) * 30;
-						} if (!verticalProp(i,1,1,char[i].x,char[i].y)) {
+						}
+						if (!verticalProp(i, 1, 1, char[i].x, char[i].y)) {
 							char[i].onob = false;
 							aboveFallOff(i);
 							if (ifCarried(i)) {
 								cornerHangTimer = 0;
 							}
 						}
-						if (char[i].charState >= 7 && verticalProp(i,1,5,char[i].x,char[i].y)) {
+						if (char[i].charState >= 7 && verticalProp(i, 1, 5, char[i].x, char[i].y)) {
 							startDeath(i);
 						}
 					}
@@ -6942,7 +7454,11 @@ function draw() {
 						if (char[i].deathTimer <= 0) {
 							endDeath(i);
 						}
-					} else if (char[i].charState >= 7 && char[i].id < 35 && (char[i].justChanged >= 1 || levelTimer == 0)) {
+					} else if (
+						char[i].charState >= 7 &&
+						char[i].id < 35 &&
+						(char[i].justChanged >= 1 || levelTimer == 0)
+					) {
 						setBody(i);
 					}
 					if (i == HPRC2) {
@@ -6957,9 +7473,9 @@ function draw() {
 						} else {
 							HPRCText = 'Done';
 						}
-						HPRCCrankRot = (recoverTimer * 12) * (Math.PI/180);
+						HPRCCrankRot = recoverTimer * 12 * (Math.PI / 180);
 						if (!recover && HPRCBubbleFrame <= 2) {
-							if (control < 10000 && near(control,i) && numberOfDead() >= 1 && char[control].hasArms) {
+							if (control < 10000 && near(control, i) && numberOfDead() >= 1 && char[control].hasArms) {
 								HPRCBubbleFrame = 1;
 							} else {
 								HPRCBubbleFrame = 0;
@@ -6967,22 +7483,50 @@ function draw() {
 						}
 						// TODO: make this not so hard coded.
 						if (HPRCBubbleFrame == 1) {
-							ctx.drawImage(svgHPRCBubble[0], char[i].x-svgHPRCBubble[0].width/2, char[i].y-128+bounceY(9, 30, _frameCount));
+							ctx.drawImage(
+								svgHPRCBubble[0],
+								char[i].x - svgHPRCBubble[0].width / 2,
+								char[i].y - 128 + bounceY(9, 30, _frameCount)
+							);
 						} else if (HPRCBubbleFrame == 2) {
-							ctx.drawImage(svgHPRCBubble[1], char[i].x-svgHPRCBubble[1].width/2, char[i].y-150);
+							ctx.drawImage(svgHPRCBubble[1], char[i].x - svgHPRCBubble[1].width / 2, char[i].y - 150);
 							drawHPRCBubbleCharImg(recover2, 1, 0);
 						} else if (HPRCBubbleFrame == 3) {
-							ctx.drawImage(svgHPRCBubble[2], char[i].x-svgHPRCBubble[2].width/2, char[i].y-150);
+							ctx.drawImage(svgHPRCBubble[2], char[i].x - svgHPRCBubble[2].width / 2, char[i].y - 150);
 							if (hprcBubbleAnimationTimer > 0) {
-								drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer/16), inter(0, -31.45, hprcBubbleAnimationTimer/16));
-								drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer/16), inter(31.45, 0, hprcBubbleAnimationTimer/16));
-								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer/16), inter(44.75, 31.45, hprcBubbleAnimationTimer/16));
+								drawHPRCBubbleCharImg(
+									nextDeadPerson(recover2, -1),
+									inter(1, 0.6, hprcBubbleAnimationTimer / 16),
+									inter(0, -31.45, hprcBubbleAnimationTimer / 16)
+								);
+								drawHPRCBubbleCharImg(
+									recover2,
+									inter(0.6, 1, hprcBubbleAnimationTimer / 16),
+									inter(31.45, 0, hprcBubbleAnimationTimer / 16)
+								);
+								drawHPRCBubbleCharImg(
+									nextDeadPerson(recover2, 1),
+									inter(0.25, 0.6, hprcBubbleAnimationTimer / 16),
+									inter(44.75, 31.45, hprcBubbleAnimationTimer / 16)
+								);
 								hprcBubbleAnimationTimer++;
 								if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
-							}else if (hprcBubbleAnimationTimer < 0) {
-								drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer/16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer/16));
-								drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer/16), inter(-31.45, 0, -hprcBubbleAnimationTimer/16));
-								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer/16), inter(0, 31.45, -hprcBubbleAnimationTimer/16));
+							} else if (hprcBubbleAnimationTimer < 0) {
+								drawHPRCBubbleCharImg(
+									nextDeadPerson(recover2, -1),
+									inter(0.25, 0.6, -hprcBubbleAnimationTimer / 16),
+									inter(-44.75, -31.45, -hprcBubbleAnimationTimer / 16)
+								);
+								drawHPRCBubbleCharImg(
+									recover2,
+									inter(0.6, 1, -hprcBubbleAnimationTimer / 16),
+									inter(-31.45, 0, -hprcBubbleAnimationTimer / 16)
+								);
+								drawHPRCBubbleCharImg(
+									nextDeadPerson(recover2, 1),
+									inter(1, 0.6, -hprcBubbleAnimationTimer / 16),
+									inter(0, 31.45, -hprcBubbleAnimationTimer / 16)
+								);
 								hprcBubbleAnimationTimer--;
 								if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
 							} else {
@@ -6991,10 +7535,10 @@ function draw() {
 								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), 0.6, 31.45);
 							}
 						} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
-							if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer+64)/33;
-							ctx.drawImage(svgHPRCBubble[3], char[i].x-svgHPRCBubble[3].width/2, char[i].y-120);
+							if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer + 64) / 33;
+							ctx.drawImage(svgHPRCBubble[3], char[i].x - svgHPRCBubble[3].width / 2, char[i].y - 120);
 							ctx.globalAlpha = 1;
-							ctx.drawImage(svgHPRCBubble[4], char[i].x-svgHPRCBubble[4].width/2, char[i].y-120);
+							ctx.drawImage(svgHPRCBubble[4], char[i].x - svgHPRCBubble[4].width / 2, char[i].y - 120);
 							hprcBubbleAnimationTimer++;
 						}
 					}
@@ -7002,10 +7546,13 @@ function draw() {
 						startDeath(i);
 					}
 					if (char[i].charState == 10 && char[i].justChanged >= 1) {
-						if (Math.abs(char[i].x - locations[0] * 30) <= 30 && Math.abs(char[i].y - (locations[1] * 30 + 10)) <= 50) {
+						if (
+							Math.abs(char[i].x - locations[0] * 30) <= 30 &&
+							Math.abs(char[i].y - (locations[1] * 30 + 10)) <= 50
+						) {
 							if (!char[i].atEnd) {
 								charsAtEnd++;
-								doorLightFadeDire[charsAtEnd-1] = 1;
+								doorLightFadeDire[charsAtEnd - 1] = 1;
 								if (charsAtEnd >= charCount2) {
 									wipeTimer = 1;
 									if (playMode == 0) {
@@ -7018,7 +7565,7 @@ function draw() {
 							char[i].atEnd = true;
 						} else {
 							if (char[i].atEnd) {
-								doorLightFadeDire[charsAtEnd-1] = -1;
+								doorLightFadeDire[charsAtEnd - 1] = -1;
 								charsAtEnd--;
 							}
 							char[i].atEnd = false;
@@ -7029,8 +7576,8 @@ function draw() {
 			}
 
 			qTimer--;
-			x = - cameraX;
-			y = - cameraY;
+			x = -cameraX;
+			y = -cameraY;
 			if (wipeTimer < 60) {
 				x += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
 				y += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
@@ -7050,17 +7597,16 @@ function draw() {
 			// menuExitLevelCreator
 
 			ctx.fillStyle = '#ffffff';
-			ctx.fillRect(0,0,960,540);
-			ctx.drawImage(osc1,0,0,cwidth,cheight);
+			ctx.fillRect(0, 0, 960, 540);
+			ctx.drawImage(osc1, 0, 0, cwidth, cheight);
 			ctx.fillStyle = '#aeaeae';
-			ctx.fillRect(0,480,660,60);
+			ctx.fillRect(0, 480, 660, 60);
 			ctx.fillStyle = '#cccccc';
-			ctx.fillRect(660,0,300,540);
-
+			ctx.fillRect(660, 0, 300, 540);
 
 			let tabWindowH = cheight - tabHeight * tabNames.length;
 			let tabWindowY = (selectedTab + 1) * tabHeight;
-			mouseOnTabWindow = onRect(_xmouse, _ymouse, 660, (selectedTab+1)*tabHeight, 300, tabWindowH);
+			mouseOnTabWindow = onRect(_xmouse, _ymouse, 660, (selectedTab + 1) * tabHeight, 300, tabWindowH);
 			// Draw Tab Contents
 			switch (selectedTab) {
 				case 0:
@@ -7069,12 +7615,51 @@ function draw() {
 					ctx.textBaseline = 'top';
 					ctx.font = '18px Helvetica';
 					ctx.fillStyle = '#000000';
-					ctx.fillText('Name:',770,tabWindowY + 10);
-					ctx.fillText('Creator:',770,tabWindowY + 60);
-					ctx.fillText('Description:',770,tabWindowY + 110);
-					myLevelInfo.name = drawTextBox(myLevelInfo.name, 785, tabWindowY + 10, 160, 40, 18, [5,2,2,2], 0, false, '#e0e0e0', '#000000', 'Helvetica')[0];
-					myLevelInfo.creator = drawTextBox(myLevelInfo.creator, 785, tabWindowY + 60, 160, 40, 18, [5,2,2,2], 1, false, '#e0e0e0', '#000000', 'Helvetica')[0];
-					myLevelInfo.desc = drawTextBox(myLevelInfo.desc, 785, tabWindowY + 110, 160, 220, 14, [5,2,2,2], 2, true, '#e0e0e0', '#000000', 'Helvetica')[0];
+					ctx.fillText('Name:', 770, tabWindowY + 10);
+					ctx.fillText('Creator:', 770, tabWindowY + 60);
+					ctx.fillText('Description:', 770, tabWindowY + 110);
+					myLevelInfo.name = drawTextBox(
+						myLevelInfo.name,
+						785,
+						tabWindowY + 10,
+						160,
+						40,
+						18,
+						[5, 2, 2, 2],
+						0,
+						false,
+						'#e0e0e0',
+						'#000000',
+						'Helvetica'
+					)[0];
+					myLevelInfo.creator = drawTextBox(
+						myLevelInfo.creator,
+						785,
+						tabWindowY + 60,
+						160,
+						40,
+						18,
+						[5, 2, 2, 2],
+						1,
+						false,
+						'#e0e0e0',
+						'#000000',
+						'Helvetica'
+					)[0];
+					myLevelInfo.desc = drawTextBox(
+						myLevelInfo.desc,
+						785,
+						tabWindowY + 110,
+						160,
+						220,
+						14,
+						[5, 2, 2, 2],
+						2,
+						true,
+						'#e0e0e0',
+						'#000000',
+						'Helvetica'
+					)[0];
 					if (mouseIsDown && !pmouseIsDown && !onTextBox) {
 						editingTextBox = -1;
 					}
@@ -7082,18 +7667,29 @@ function draw() {
 
 				case 1:
 					// Entities
-					let charInfoY = (selectedTab+1)*tabHeight + 5;
+					let charInfoY = (selectedTab + 1) * tabHeight + 5;
 					// TODO: only compute the look up table when it changes
 					let charInfoYLookUp = [];
 					for (let i = 0; i < myLevelChars[1].length; i++) {
 						charInfoYLookUp.push(charInfoY);
 						charInfoY += charInfoHeight + 5;
-						if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4) charInfoY += diaInfoHeight*myLevelChars[1][i][5].length;
+						if (myLevelChars[1][i][3] == 3 || myLevelChars[1][i][3] == 4)
+							charInfoY += diaInfoHeight * myLevelChars[1][i][5].length;
 					}
-					var tabContentsHeight = Math.max(charInfoY, charInfoYLookUp[myLevelChars[1].length-1] + (charInfoHeight*2));
-					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-					var scrollBarY = (selectedTab+1)*tabHeight + (charsTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+					var tabContentsHeight = Math.max(
+						charInfoY,
+						charInfoYLookUp[myLevelChars[1].length - 1] + charInfoHeight * 2
+					);
+					var scrollBarH = (tabWindowH / tabContentsHeight) * tabWindowH;
+					var scrollBarY =
+						(selectedTab + 1) * tabHeight +
+						(charsTabScrollBar / (tabContentsHeight == tabWindowH ? 1 : tabContentsHeight - tabWindowH)) *
+							(tabWindowH - scrollBarH);
+					if (
+						!draggingScrollBar &&
+						!lcPopUp &&
+						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
@@ -7104,9 +7700,16 @@ function draw() {
 					if (draggingScrollBar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
-						charsTabScrollBar = Math.floor(Math.max(Math.min(
-							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-							tabContentsHeight-tabWindowH), 0));
+						charsTabScrollBar = Math.floor(
+							Math.max(
+								Math.min(
+									((_ymouse - valueAtClick - tabWindowY) / (tabWindowH - scrollBarH)) *
+										(tabContentsHeight - tabWindowH),
+									tabContentsHeight - tabWindowH
+								),
+								0
+							)
+						);
 						if (!mouseIsDown) draggingScrollBar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -7116,7 +7719,10 @@ function draw() {
 					ctx.textBaseline = 'middle';
 					ctx.font = '20px Helvetica';
 					for (let i = 0; i < Math.min(myLevelChars[1].length, charInfoYLookUp.length); i++) {
-						if ((duplicateChar || reorderCharUp || reorderCharDown) && onRect(_xmouse, _ymouse+charsTabScrollBar, 665, charInfoYLookUp[i], 260, charInfoHeight)) {
+						if (
+							(duplicateChar || reorderCharUp || reorderCharDown) &&
+							onRect(_xmouse, _ymouse + charsTabScrollBar, 665, charInfoYLookUp[i], 260, charInfoHeight)
+						) {
 							ctx.fillStyle = '#e8e8e8';
 							ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
 						}
@@ -7124,7 +7730,17 @@ function draw() {
 						if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
 					}
 					addButtonPressed = false;
-					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+					if (
+						!lcPopUp &&
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + 5,
+							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+							15,
+							15
+						)
+					) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Add New Character or Object';
@@ -7133,32 +7749,44 @@ function draw() {
 								reorderCharUp = false;
 								reorderCharDown = false;
 								setUndo();
-								myLevelChars[1].push([0,-1,-1,10]);
-								let newestCharIndex = myLevelChars[1].length-1;
+								myLevelChars[1].push([0, -1, -1, 10]);
+								let newestCharIndex = myLevelChars[1].length - 1;
 								let i = myLevelChars[1][newestCharIndex][0];
-								char.push(new Character(
-									i,
-									0.00,
-									0.00,
-									70 + newestCharIndex * 40,
-									400 - newestCharIndex * 30,
-									myLevelChars[1][newestCharIndex][3],
-									charD[i][0],
-									charD[i][1],
-									charD[i][2],
-									charD[i][2],
-									charD[i][3],
-									charD[i][4],
-									charD[i][6],
-									charD[i][8],
-									i<35?charModels[i].defaultExpr:0
-								));
-								char[char.length-1].placed = false;
+								char.push(
+									new Character(
+										i,
+										0.0,
+										0.0,
+										70 + newestCharIndex * 40,
+										400 - newestCharIndex * 30,
+										myLevelChars[1][newestCharIndex][3],
+										charD[i][0],
+										charD[i][1],
+										charD[i][2],
+										charD[i][2],
+										charD[i][3],
+										charD[i][4],
+										charD[i][6],
+										charD[i][8],
+										i < 35 ? charModels[i].defaultExpr : 0
+									)
+								);
+								char[char.length - 1].placed = false;
 							}
 						}
 						addButtonPressed = true;
 					}
-					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+					if (
+						!lcPopUp &&
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + 25,
+							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+							15,
+							15
+						)
+					) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Duplicate Character or Object';
@@ -7172,7 +7800,17 @@ function draw() {
 						addButtonPressed = true;
 					}
 					if (duplicateChar && !addButtonPressed && mouseIsDown && !pmouseIsDown) duplicateChar = false;
-					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+					if (
+						!lcPopUp &&
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + 45,
+							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+							15,
+							15
+						)
+					) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Move Character or Object Up';
@@ -7185,7 +7823,17 @@ function draw() {
 						addButtonPressed = true;
 					}
 					if (reorderCharUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderCharUp = false;
-					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+					if (
+						!lcPopUp &&
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + 65,
+							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+							15,
+							15
+						)
+					) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Move Character or Object Down';
@@ -7204,17 +7852,21 @@ function draw() {
 						if (charDropdownType == 0) {
 							if (_keysDown[16]) {
 								myLevelChars[1][charDropdown][0]--;
-								if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
+								if (myLevelChars[1][charDropdown][0] < 0)
+									myLevelChars[1][charDropdown][0] = charD.length - 1;
 								while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
 									myLevelChars[1][charDropdown][0]--;
-									if (myLevelChars[1][charDropdown][0] < 0) myLevelChars[1][charDropdown][0] = charD.length-1;
+									if (myLevelChars[1][charDropdown][0] < 0)
+										myLevelChars[1][charDropdown][0] = charD.length - 1;
 								}
 							} else {
 								myLevelChars[1][charDropdown][0]++;
-								if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
+								if (myLevelChars[1][charDropdown][0] > charD.length - 1)
+									myLevelChars[1][charDropdown][0] = 0;
 								while (charD[myLevelChars[1][charDropdown][0]][7] == 0) {
 									myLevelChars[1][charDropdown][0]++;
-									if (myLevelChars[1][charDropdown][0] > charD.length-1) myLevelChars[1][charDropdown][0] = 0;
+									if (myLevelChars[1][charDropdown][0] > charD.length - 1)
+										myLevelChars[1][charDropdown][0] = 0;
 								}
 							}
 							myLevelChars[1][charDropdown][3] = charD[myLevelChars[1][charDropdown][0]][9];
@@ -7227,7 +7879,12 @@ function draw() {
 						} else if (charDropdownType == 1) {
 							ctx.fillStyle = '#ffffff';
 							let textSize = 12.5;
-							ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight, charInfoHeight*3.5, textSize*7);
+							ctx.fillRect(
+								665 + 240 - charInfoHeight * 3.5,
+								charDropdownY + charInfoHeight,
+								charInfoHeight * 3.5,
+								textSize * 7
+							);
 							ctx.textBaseline = 'top';
 							ctx.textAlign = 'right';
 							ctx.font = textSize + 'px Helvetica';
@@ -7235,33 +7892,73 @@ function draw() {
 							let j = 0;
 							for (let i = 3; i < charStateNames.length; i++) {
 								if (charStateNames[i] != '') {
-									if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+charsTabScrollBar, (665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize)) {
+									if (
+										mouseOnTabWindow &&
+										!lcPopUp &&
+										onRect(
+											_xmouse,
+											_ymouse + charsTabScrollBar,
+											665 + 240 - charInfoHeight * 3.5,
+											charDropdownY + charInfoHeight + j * textSize,
+											charInfoHeight * 3.5,
+											textSize
+										)
+									) {
 										ctx.fillStyle = '#dddddd';
-										ctx.fillRect((665+240)-charInfoHeight*3.5, charDropdownY + charInfoHeight + j*textSize, charInfoHeight*3.5, textSize);
+										ctx.fillRect(
+											665 + 240 - charInfoHeight * 3.5,
+											charDropdownY + charInfoHeight + j * textSize,
+											charInfoHeight * 3.5,
+											textSize
+										);
 										ctx.fillStyle = '#000000';
 										if (mouseIsDown && !addButtonPressed) {
 											setUndo();
 											myLevelChars[1][charDropdown][3] = i;
 										}
 									}
-									ctx.fillText(charStateNames[i], 665+240-1, charDropdownY + charInfoHeight + j*textSize);
+									ctx.fillText(
+										charStateNames[i],
+										665 + 240 - 1,
+										charDropdownY + charInfoHeight + j * textSize
+									);
 									j++;
 								}
 							}
 						} else if (charDropdownType == 2) {
-							let xmouseConstrained = Math.min(Math.max(_xmouse - (330 - scale * levelWidth / 2), 0), levelWidth*scale);
-							let ymouseConstrained = Math.min(Math.max(_ymouse - (240 - scale * levelHeight / 2), 0), levelHeight*scale);
-							myLevelChars[1][charDropdown][1] = mapRange(xmouseConstrained, 0, levelWidth*scale, 0, levelWidth);
-							myLevelChars[1][charDropdown][2] = mapRange(ymouseConstrained, 0, levelHeight*scale, 0, levelHeight);
+							let xmouseConstrained = Math.min(
+								Math.max(_xmouse - (330 - (scale * levelWidth) / 2), 0),
+								levelWidth * scale
+							);
+							let ymouseConstrained = Math.min(
+								Math.max(_ymouse - (240 - (scale * levelHeight) / 2), 0),
+								levelHeight * scale
+							);
+							myLevelChars[1][charDropdown][1] = mapRange(
+								xmouseConstrained,
+								0,
+								levelWidth * scale,
+								0,
+								levelWidth
+							);
+							myLevelChars[1][charDropdown][2] = mapRange(
+								ymouseConstrained,
+								0,
+								levelHeight * scale,
+								0,
+								levelHeight
+							);
 							if (_keysDown[16]) {
-								myLevelChars[1][charDropdown][1] = Math.round(myLevelChars[1][charDropdown][1]*2) / 2;
-								myLevelChars[1][charDropdown][2] = Math.round(myLevelChars[1][charDropdown][2]*2) / 2;
+								myLevelChars[1][charDropdown][1] = Math.round(myLevelChars[1][charDropdown][1] * 2) / 2;
+								myLevelChars[1][charDropdown][2] = Math.round(myLevelChars[1][charDropdown][2] * 2) / 2;
 							}
-							char[charDropdown].x = char[charDropdown].px = +myLevelChars[1][charDropdown][1].toFixed(2) * 30;
-							char[charDropdown].y = char[charDropdown].py = +myLevelChars[1][charDropdown][2].toFixed(2) * 30;
+							char[charDropdown].x = char[charDropdown].px =
+								+myLevelChars[1][charDropdown][1].toFixed(2) * 30;
+							char[charDropdown].y = char[charDropdown].py =
+								+myLevelChars[1][charDropdown][2].toFixed(2) * 30;
 						} else if (charDropdownType == 3) {
-							let flat = (valueAtClick + (lastClickY-_ymouse)) * 0.5;
-							char[charDropdown].speed = flat>100?100:-Math.log(1 - flat / 100) * 100;
+							let flat = (valueAtClick + (lastClickY - _ymouse)) * 0.5;
+							char[charDropdown].speed = flat > 100 ? 100 : -Math.log(1 - flat / 100) * 100;
 							char[charDropdown].speed = Math.floor(Math.max(Math.min(char[charDropdown].speed, 99), 1));
 							myLevelChars[1][charDropdown][4] = char[charDropdown].speed;
 							levelTimer = 0;
@@ -7271,7 +7968,7 @@ function draw() {
 								charDropdown = -2;
 							}
 						} else if (charDropdownType == 4) {
-							let newDire = myLevelChars[1][charDropdown][5][charDropdownMS][0]+1;
+							let newDire = myLevelChars[1][charDropdown][5][charDropdownMS][0] + 1;
 							if (newDire > 3) newDire = 0;
 							myLevelChars[1][charDropdown][5][charDropdownMS][0] = newDire;
 							char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
@@ -7280,7 +7977,9 @@ function draw() {
 							charDropdown = -2;
 						} else if (charDropdownType == 5) {
 							// let flat = (valueAtClick + (lastClickY-_ymouse));
-							myLevelChars[1][charDropdown][5][charDropdownMS][1] = Math.floor(Math.max(Math.min(valueAtClick + (lastClickY-_ymouse) * 0.3, 32), 1));
+							myLevelChars[1][charDropdown][5][charDropdownMS][1] = Math.floor(
+								Math.max(Math.min(valueAtClick + (lastClickY - _ymouse) * 0.3, 32), 1)
+							);
 							if (!mouseIsDown && pmouseIsDown) {
 								char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
 								levelTimer = 0;
@@ -7310,15 +8009,20 @@ function draw() {
 							charDropdown = -2;
 						}
 					}
-					if (charDropdown < -2) charDropdown = -charDropdown-3;
+					if (charDropdown < -2) charDropdown = -charDropdown - 3;
 					ctx.restore();
 
 					ctx.fillStyle = '#cccccc';
-					ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 85, 25);
-					drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
-					drawDuplicateButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-					drawUpButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-					drawDownButton(660+65, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+					ctx.fillRect(660, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 25, 85, 25);
+					drawAddButton(660 + 5, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20, 15, 0);
+					drawDuplicateButton(
+						660 + 25,
+						cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+						15,
+						1
+					);
+					drawUpButton(660 + 45, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20, 15, 1);
+					drawDownButton(660 + 65, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20, 15, 1);
 					break;
 
 				case 2:
@@ -7330,14 +8034,14 @@ function draw() {
 					ctx.save();
 					ctx.translate(0, -tileTabScrollBar);
 					if (mouseOnTabWindow && !lcPopUp) {
-						var mouseTileRow = _ymouse+tileTabScrollBar-tabWindowY;
-						var mouseTileColumn = _xmouse-660;
-						if (mouseTileRow%bdist < (bdist-bs) || mouseTileColumn%bdist < (bdist-bs)) {
+						var mouseTileRow = _ymouse + tileTabScrollBar - tabWindowY;
+						var mouseTileColumn = _xmouse - 660;
+						if (mouseTileRow % bdist < bdist - bs || mouseTileColumn % bdist < bdist - bs) {
 							mouseTileRow = -1;
 							mouseTileColumn = -1;
 						} else {
-							mouseTileRow = Math.floor((mouseTileRow-(bdist-bs)) / bdist);
-							mouseTileColumn = Math.floor((mouseTileColumn-(bdist-bs)) / bdist);
+							mouseTileRow = Math.floor((mouseTileRow - (bdist - bs)) / bdist);
+							mouseTileColumn = Math.floor((mouseTileColumn - (bdist - bs)) / bdist);
 						}
 					} else {
 						var mouseTileRow = -1;
@@ -7347,15 +8051,31 @@ function draw() {
 						if (blockProperties[i][15]) {
 							if (i == selectedTile) {
 								ctx.fillStyle = '#a0a0a0';
-								ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+								ctx.fillRect(
+									660 + (bdist - bs) + (j % bpr) * bdist - (bdist - bs) / 2,
+									(selectedTab + 1) * tabHeight +
+										(bdist - bs) +
+										Math.floor(j / bpr) * bdist -
+										(bdist - bs) / 2,
+									bs + bdist - bs,
+									bs + bdist - bs
+								);
 							}
-							if ((j%bpr) == mouseTileColumn && Math.floor(j/bpr) == mouseTileRow) {
+							if (j % bpr == mouseTileColumn && Math.floor(j / bpr) == mouseTileRow) {
 								hoverText = tileNames[i];
 								if (i != selectedTile) {
 									onButton = true;
 									ctx.fillStyle = '#dddddd';
 									// ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - bpr/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - bpr/2, bs + bpr, bs + bpr);
-									ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist - (bdist-bs)/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (bdist-bs)/2, bs + bdist-bs, bs + bdist-bs);
+									ctx.fillRect(
+										660 + (bdist - bs) + (j % bpr) * bdist - (bdist - bs) / 2,
+										(selectedTab + 1) * tabHeight +
+											(bdist - bs) +
+											Math.floor(j / bpr) * bdist -
+											(bdist - bs) / 2,
+										bs + bdist - bs,
+										bs + bdist - bs
+									);
 									if (mouseIsDown && !pmouseIsDown) {
 										// selectedTile = i;
 										setSelectedTile(i);
@@ -7365,27 +8085,51 @@ function draw() {
 							}
 							if (i == 6) {
 								ctx.fillStyle = '#505050';
-								ctx.fillRect(660 + (bdist-bs) + (j%bpr)*bdist + bs/4, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist, bs/2, bs);
+								ctx.fillRect(
+									660 + (bdist - bs) + (j % bpr) * bdist + bs / 4,
+									(selectedTab + 1) * tabHeight + (bdist - bs) + Math.floor(j / bpr) * bdist,
+									bs / 2,
+									bs
+								);
 							} else {
-								let img = (blockProperties[i][16]>1)?svgTiles[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTiles[i];
-								let vb = (blockProperties[i][16]>1)?svgTilesVB[i][blockProperties[i][17]?_frameCount%blockProperties[i][16]:0]:svgTilesVB[i];
+								let img =
+									blockProperties[i][16] > 1
+										? svgTiles[i][blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0]
+										: svgTiles[i];
+								let vb =
+									blockProperties[i][16] > 1
+										? svgTilesVB[i][
+												blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0
+										  ]
+										: svgTilesVB[i];
 								if (vb[2] <= 60) {
-									let sc = bs/30;
-									let tlx = 660 + (bdist-bs) + (j%bpr)*bdist;
-									let tly = (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist;
+									let sc = bs / 30;
+									let tlx = 660 + (bdist - bs) + (j % bpr) * bdist;
+									let tly =
+										(selectedTab + 1) * tabHeight + (bdist - bs) + Math.floor(j / bpr) * bdist;
 									if (blockProperties[i][11] > 0 && blockProperties[i][11] < 13) {
 										ctx.save();
 										ctx.translate(tlx + 15 * sc, tly + 28 * sc);
-										ctx.rotate(blockProperties[i][11]<7?-1:1);
+										ctx.rotate(blockProperties[i][11] < 7 ? -1 : 1);
 										ctx.translate(-tlx - 15 * sc, -tly - 28 * sc);
 										// ctx.translate(-tlx - (rot+0.5) * scale, -tly - (i+0.9333) * scale);
-										ctx.drawImage(svgLevers[(blockProperties[i][11]-1)%6], tlx, tly, bs, bs);
+										ctx.drawImage(svgLevers[(blockProperties[i][11] - 1) % 6], tlx, tly, bs, bs);
 										ctx.restore();
 									}
-									ctx.drawImage(img, tlx + vb[0]*sc, tly + vb[1]*sc, vb[2]*sc, vb[3]*sc);
+									ctx.drawImage(img, tlx + vb[0] * sc, tly + vb[1] * sc, vb[2] * sc, vb[3] * sc);
 								} else {
-									let sc = bs/vb[2];
-									ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist - vb[2]*sc/2 + bs/2, (selectedTab+1)*tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - vb[3]*sc/2 + bs/2, vb[2]*sc, vb[3]*sc);
+									let sc = bs / vb[2];
+									ctx.drawImage(
+										img,
+										660 + (bdist - bs) + (j % bpr) * bdist - (vb[2] * sc) / 2 + bs / 2,
+										(selectedTab + 1) * tabHeight +
+											(bdist - bs) +
+											Math.floor(j / bpr) * bdist -
+											(vb[3] * sc) / 2 +
+											bs / 2,
+										vb[2] * sc,
+										vb[3] * sc
+									);
 								}
 							}
 							j++;
@@ -7393,10 +8137,15 @@ function draw() {
 					}
 					ctx.restore();
 
-					var tabContentsHeight = (bdist-bs) + Math.floor((j-1)/bpr + 1) * bdist;
-					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-					var scrollBarY = tabWindowY + (tileTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+					var tabContentsHeight = bdist - bs + Math.floor((j - 1) / bpr + 1) * bdist;
+					var scrollBarH = (tabWindowH / tabContentsHeight) * tabWindowH;
+					var scrollBarY =
+						tabWindowY + (tileTabScrollBar / (tabContentsHeight - tabWindowH)) * (tabWindowH - scrollBarH);
+					if (
+						!draggingScrollBar &&
+						!lcPopUp &&
+						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
@@ -7407,9 +8156,16 @@ function draw() {
 					if (draggingScrollBar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
-						tileTabScrollBar = Math.floor(Math.max(Math.min(
-							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-							tabContentsHeight-tabWindowH), 0));
+						tileTabScrollBar = Math.floor(
+							Math.max(
+								Math.min(
+									((_ymouse - valueAtClick - tabWindowY) / (tabWindowH - scrollBarH)) *
+										(tabContentsHeight - tabWindowH),
+									tabContentsHeight - tabWindowH
+								),
+								0
+							)
+						);
 						if (!mouseIsDown) draggingScrollBar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -7429,23 +8185,30 @@ function draw() {
 						if (i == selectedBg) {
 							ctx.fillStyle = '#a0a0a0';
 							ctx.fillRect(
-								660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
-								tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
-								bgw + bgdist-bgw,
-								bgh + bgdist-bgh
+								660 + (bgdist - bgw) + (i % bgpr) * bgdist - (bgdist - bgw) / 2,
+								tabWindowY + (bgdist - bgh) + Math.floor(i / bgpr) * bgdist - (bgdist - bgh) / 2,
+								bgw + bgdist - bgw,
+								bgh + bgdist - bgh
 							);
-						} else if (mouseOnTabWindow && !lcPopUp && onRect(_xmouse, _ymouse+bgsTabScrollBar,
-							660 + (bgdist-bgw) + (i%bgpr)*bgdist,
-							tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist,
-							bgw,
-							bgh)) {
+						} else if (
+							mouseOnTabWindow &&
+							!lcPopUp &&
+							onRect(
+								_xmouse,
+								_ymouse + bgsTabScrollBar,
+								660 + (bgdist - bgw) + (i % bgpr) * bgdist,
+								tabWindowY + (bgdist - bgh) + Math.floor(i / bgpr) * bgdist,
+								bgw,
+								bgh
+							)
+						) {
 							onButton = true;
 							ctx.fillStyle = '#dddddd';
 							ctx.fillRect(
-								660 + (bgdist-bgw) + (i%bgpr)*bgdist - (bgdist-bgw)/2,
-								tabWindowY + (bgdist-bgh) + Math.floor(i/bgpr)*bgdist - (bgdist-bgh)/2,
-								bgw + bgdist-bgw,
-								bgh + bgdist-bgh
+								660 + (bgdist - bgw) + (i % bgpr) * bgdist - (bgdist - bgw) / 2,
+								tabWindowY + (bgdist - bgh) + Math.floor(i / bgpr) * bgdist - (bgdist - bgh) / 2,
+								bgw + bgdist - bgw,
+								bgh + bgdist - bgh
 							);
 							if (mouseIsDown && !pmouseIsDown) {
 								selectedBg = i;
@@ -7463,10 +8226,16 @@ function draw() {
 					ctx.drawImage(osc2, 660, tabWindowY, osc2.width / pixelRatio, osc2.height / pixelRatio);
 					ctx.restore();
 
-					var tabContentsHeight = (bgdist-bgh) + Math.floor((i-1)/bgpr + 1) * bgdist;
-					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-					var scrollBarY = (selectedTab+1)*tabHeight + (bgsTabScrollBar/(tabContentsHeight-tabWindowH)) * (tabWindowH-scrollBarH);
-					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+					var tabContentsHeight = bgdist - bgh + Math.floor((i - 1) / bgpr + 1) * bgdist;
+					var scrollBarH = (tabWindowH / tabContentsHeight) * tabWindowH;
+					var scrollBarY =
+						(selectedTab + 1) * tabHeight +
+						(bgsTabScrollBar / (tabContentsHeight - tabWindowH)) * (tabWindowH - scrollBarH);
+					if (
+						!draggingScrollBar &&
+						!lcPopUp &&
+						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
@@ -7477,9 +8246,16 @@ function draw() {
 					if (draggingScrollBar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
-						bgsTabScrollBar = Math.floor(Math.max(Math.min(
-							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-							tabContentsHeight-tabWindowH), 0));
+						bgsTabScrollBar = Math.floor(
+							Math.max(
+								Math.min(
+									((_ymouse - valueAtClick - tabWindowY) / (tabWindowH - scrollBarH)) *
+										(tabContentsHeight - tabWindowH),
+									tabContentsHeight - tabWindowH
+								),
+								0
+							)
+						);
 						if (!mouseIsDown) draggingScrollBar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -7489,11 +8265,18 @@ function draw() {
 					// Dialogue
 					var tabContentsHeight = 5;
 					for (let i = 0; i < myLevelDialogue[1].length; i++) {
-						tabContentsHeight += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
+						tabContentsHeight += diaInfoHeight * myLevelDialogue[1][i].linecount + 5;
 					}
-					var scrollBarH = (tabWindowH/tabContentsHeight) * tabWindowH;
-					var scrollBarY = (selectedTab+1)*tabHeight + (diaTabScrollBar/(tabContentsHeight==tabWindowH?1:(tabContentsHeight-tabWindowH))) * (tabWindowH-scrollBarH);
-					if (!draggingScrollBar && !lcPopUp && onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)) {
+					var scrollBarH = (tabWindowH / tabContentsHeight) * tabWindowH;
+					var scrollBarY =
+						(selectedTab + 1) * tabHeight +
+						(diaTabScrollBar / (tabContentsHeight == tabWindowH ? 1 : tabContentsHeight - tabWindowH)) *
+							(tabWindowH - scrollBarH);
+					if (
+						!draggingScrollBar &&
+						!lcPopUp &&
+						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
@@ -7504,9 +8287,16 @@ function draw() {
 					if (draggingScrollBar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
-						diaTabScrollBar = Math.floor(Math.max(Math.min(
-							(((_ymouse - valueAtClick) - tabWindowY)/(tabWindowH-scrollBarH)) * (tabContentsHeight-tabWindowH),
-							tabContentsHeight-tabWindowH), 0));
+						diaTabScrollBar = Math.floor(
+							Math.max(
+								Math.min(
+									((_ymouse - valueAtClick - tabWindowY) / (tabWindowH - scrollBarH)) *
+										(tabContentsHeight - tabWindowH),
+									tabContentsHeight - tabWindowH
+								),
+								0
+							)
+						);
 						if (!mouseIsDown) draggingScrollBar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
@@ -7516,20 +8306,40 @@ function draw() {
 					// ctx.textBaseline = 'middle';
 					// ctx.font = '20px Helvetica';
 					//myLevelDialogue[1][i].linecount
-					let diaInfoY = (selectedTab+1)*tabHeight + 5;
+					let diaInfoY = (selectedTab + 1) * tabHeight + 5;
 					for (let i = 0; i < myLevelDialogue[1].length; i++) {
-						if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse, _ymouse+diaTabScrollBar, 665, diaInfoY, 260, diaInfoHeight*myLevelDialogue[1][i].linecount)) {
+						if (
+							(reorderDiaUp || reorderDiaDown) &&
+							onRect(
+								_xmouse,
+								_ymouse + diaTabScrollBar,
+								665,
+								diaInfoY,
+								260,
+								diaInfoHeight * myLevelDialogue[1][i].linecount
+							)
+						) {
 							ctx.fillStyle = '#e8e8e8';
-							ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight*myLevelDialogue[1][i].linecount + 10);
+							ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight * myLevelDialogue[1][i].linecount + 10);
 						}
 						drawLCDiaInfo(i, diaInfoY);
 						if (i >= myLevelDialogue[1].length) break;
-						diaInfoY += diaInfoHeight*myLevelDialogue[1][i].linecount + 5;
+						diaInfoY += diaInfoHeight * myLevelDialogue[1][i].linecount + 5;
 						// ctx.fillStyle = '#000000';
 						// ctx.fillText(myLevelChars[1][i], 660, 60+i*20);
 					}
 					addButtonPressed = false;
-					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+					if (
+						!lcPopUp &&
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + 5,
+							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+							15,
+							15
+						)
+					) {
 						onButton = true;
 						hoverText = 'Add New Dialogue Line';
 						if (mouseIsDown && !pmouseIsDown) {
@@ -7537,11 +8347,21 @@ function draw() {
 							reorderDiaUp = false;
 							editingTextBox = -1;
 							setUndo();
-							myLevelDialogue[1].push({char:99,face:2,text:'Enter text',linecount:1});
+							myLevelDialogue[1].push({char: 99, face: 2, text: 'Enter text', linecount: 1});
 						}
 						addButtonPressed = true;
 					}
-					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+					if (
+						!lcPopUp &&
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + 25,
+							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+							15,
+							15
+						)
+					) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Move Dialogue Line Up';
@@ -7554,7 +8374,17 @@ function draw() {
 						addButtonPressed = true;
 					}
 					if (reorderDiaUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaUp = false;
-					if (!lcPopUp && onRect(_xmouse, _ymouse, 660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 15)) {
+					if (
+						!lcPopUp &&
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + 45,
+							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
+							15,
+							15
+						)
+					) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Move Dialogue Line Down';
@@ -7572,12 +8402,14 @@ function draw() {
 						if (diaDropdownType == 0) {
 							setUndo();
 							if (myLevelDialogue[1][diaDropdown].face == 2) myLevelDialogue[1][diaDropdown].face = 3;
-							else if (myLevelDialogue[1][diaDropdown].face == 3) myLevelDialogue[1][diaDropdown].face = 2;
+							else if (myLevelDialogue[1][diaDropdown].face == 3)
+								myLevelDialogue[1][diaDropdown].face = 2;
 							diaDropdown = -2;
 						} else if (diaDropdownType == 1) {
 							setUndo();
 							let allowedDiaCharIndices = [99, 55, 52, 51, 50];
-							for (let i = myLevelChars[1].length - 1; i >= 0; i--) if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
+							for (let i = myLevelChars[1].length - 1; i >= 0; i--)
+								if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
 							let ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[1][diaDropdown].char);
 							if (_keysDown[16]) {
 								ourCurrentIndex++;
@@ -7592,52 +8424,81 @@ function draw() {
 							if (_keysDown[13]) diaDropdown = -2;
 						}
 
-
-
 						if (diaDropdown >= 0 && mouseIsDown && !pmouseIsDown && !addButtonPressed) {
 							diaDropdown = -2;
 						}
 					}
-					if (diaDropdown < -2) diaDropdown = -diaDropdown-3;
+					if (diaDropdown < -2) diaDropdown = -diaDropdown - 3;
 					ctx.restore();
 
 					ctx.fillStyle = '#cccccc';
-					ctx.fillRect(660, cheight-((tabNames.length-selectedTab-1)*tabHeight)-25, 65, 25);
-					drawAddButton(660+5, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 0);
-					drawUpButton(660+25, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
-					drawDownButton(660+45, cheight-((tabNames.length-selectedTab-1)*tabHeight)-20, 15, 1);
+					ctx.fillRect(660, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 25, 65, 25);
+					drawAddButton(660 + 5, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20, 15, 0);
+					drawUpButton(660 + 25, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20, 15, 1);
+					drawDownButton(660 + 45, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20, 15, 1);
 					break;
 
 				case 5:
 					// Options
-					drawMenu0Button('COPY LEVEL',673, tabWindowY + 10, 11, false, copyLevelString);
-					drawMenu0Button('LOAD LEVEL',673, tabWindowY + 60, 14, false, openLevelLoader);
-					drawMenu0Button('TEST LEVEL',673, tabWindowY + 110, 10, false, testLevelCreator);
-					drawMenu0Button('EXIT',673, tabWindowY + 160, 15, false, menuExitLevelCreator);
-					drawMenu0Button('SHARE TO EXPLORE',673, tabWindowY + 210, 16, !enableExperimentalFeatures, shareToExplore);
+					drawMenu0Button('COPY LEVEL', 673, tabWindowY + 10, 11, false, copyLevelString);
+					drawMenu0Button('LOAD LEVEL', 673, tabWindowY + 60, 14, false, openLevelLoader);
+					drawMenu0Button('TEST LEVEL', 673, tabWindowY + 110, 10, false, testLevelCreator);
+					drawMenu0Button('EXIT', 673, tabWindowY + 160, 15, false, menuExitLevelCreator);
+					drawMenu0Button(
+						'SHARE TO EXPLORE',
+						673,
+						tabWindowY + 210,
+						16,
+						!enableExperimentalFeatures,
+						shareToExplore
+					);
 					ctx.fillStyle = '#000000';
 					ctx.textAlign = 'center';
 					ctx.textBaseline = 'top';
 					ctx.font = '25px Helvetica';
-					ctx.fillText('Necessary Deaths:', 660 + (cwidth-660)/2, tabWindowY + 270);
+					ctx.fillText('Necessary Deaths:', 660 + (cwidth - 660) / 2, tabWindowY + 270);
 					let necessaryDeathsW = 100;
 					ctx.fillStyle = '#808080';
-					ctx.fillRect(660 + ((cwidth-660)-necessaryDeathsW)/2, tabWindowY + 300, necessaryDeathsW, 25);
+					ctx.fillRect(660 + (cwidth - 660 - necessaryDeathsW) / 2, tabWindowY + 300, necessaryDeathsW, 25);
 					// ctx.fillStyle = '#ee3333';
-					drawMinusButton(660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 300, 25, 3);
-					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 300, 25, 25) && myLevelNecessaryDeaths < 999999) {
+					drawMinusButton(660 + (cwidth - 660 - necessaryDeathsW) / 2 - 35, tabWindowY + 300, 25, 3);
+					if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + (cwidth - 660 + necessaryDeathsW) / 2 + 10,
+							tabWindowY + 300,
+							25,
+							25
+						) &&
+						myLevelNecessaryDeaths < 999999
+					) {
 						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
 					}
 					// ctx.fillStyle = '#33ee33';
-					drawAddButton(660 + (cwidth-660+necessaryDeathsW)/2 + 10, tabWindowY + 300, 25, 3);
-					if (onRect(_xmouse, _ymouse, 660 + (cwidth-660-necessaryDeathsW)/2 - 35, tabWindowY + 300, 25, 25) && myLevelNecessaryDeaths > 0) {
+					drawAddButton(660 + (cwidth - 660 + necessaryDeathsW) / 2 + 10, tabWindowY + 300, 25, 3);
+					if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + (cwidth - 660 - necessaryDeathsW) / 2 - 35,
+							tabWindowY + 300,
+							25,
+							25
+						) &&
+						myLevelNecessaryDeaths > 0
+					) {
 						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
 					}
 
 					ctx.fillStyle = '#ffffff';
 					ctx.textAlign = 'center';
 					ctx.textBaseline = 'top';
-					ctx.fillText(myLevelNecessaryDeaths.toString().padStart(6, '0'), 660 + (cwidth-660)/2, tabWindowY + 300);
+					ctx.fillText(
+						myLevelNecessaryDeaths.toString().padStart(6, '0'),
+						660 + (cwidth - 660) / 2,
+						tabWindowY + 300
+					);
 					break;
 			}
 
@@ -7646,12 +8507,12 @@ function draw() {
 			ctx.font = '25px Helvetica';
 			ctx.textBaseline = 'middle';
 			for (let i = 0; i < tabNames.length; i++) {
-				if (i%2 == 0) ctx.fillStyle = '#808080';
+				if (i % 2 == 0) ctx.fillStyle = '#808080';
 				else ctx.fillStyle = '#626262';
-				let tabY = i>selectedTab?cheight-((tabNames.length-i)*tabHeight):i*tabHeight;
+				let tabY = i > selectedTab ? cheight - (tabNames.length - i) * tabHeight : i * tabHeight;
 				ctx.fillRect(660, tabY, 300, tabHeight);
 				ctx.fillStyle = '#ffffff';
-				ctx.fillText(tabNames[i], 664, tabY+tabHeight*0.6);
+				ctx.fillText(tabNames[i], 664, tabY + tabHeight * 0.6);
 
 				if (!lcPopUp && onRect(_xmouse, _ymouse, 660, tabY, 300, tabHeight)) {
 					onButton = true;
@@ -7668,16 +8529,15 @@ function draw() {
 				}
 			}
 
-
 			// Draw Tools
 			for (let i = 0; i < 12; i++) {
 				if (i != 8) {
-					if (i == tool || i == 9 && copied) ctx.fillStyle = '#999999';
+					if (i == tool || (i == 9 && copied)) ctx.fillStyle = '#999999';
 					else ctx.fillStyle = '#666666';
-					ctx.fillRect(35 + i*50, 490, 40, 40);
-					ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490);
+					ctx.fillRect(35 + i * 50, 490, 40, 40);
+					ctx.drawImage(svgTools[i == 10 && undid ? 8 : i], 35 + i * 50, 490);
 
-					if (!lcPopUp && _ymouse > 480 && onRect(_xmouse, _ymouse, 35 + i*50, 490, 40, 40)) {
+					if (!lcPopUp && _ymouse > 480 && onRect(_xmouse, _ymouse, 35 + i * 50, 490, 40, 40)) {
 						onButton = true;
 						hoverText = toolNames[i];
 						if (mouseIsDown && !pmouseIsDown) {
@@ -7687,8 +8547,7 @@ function draw() {
 								if ((tool == 2 || tool == 3) && blockProperties[selectedTile][9]) {
 									setSelectedTile(0);
 								}
-							}
-							else if (i == 9) copyRect();
+							} else if (i == 9) copyRect();
 							else if (i == 10) undo();
 							else if (i == 11) {
 								setUndo();
@@ -7704,15 +8563,14 @@ function draw() {
 			drawLCGrid();
 			drawLCChars();
 
-
 			let shiftedXMouse = _xmouse;
 			let shiftedYMouse = _ymouse;
 			if (_keysDown[16]) {
-				if (Math.abs(_ymouse-lastClickY) > Math.abs(_xmouse-lastClickX)) shiftedXMouse = lastClickX;
+				if (Math.abs(_ymouse - lastClickY) > Math.abs(_xmouse - lastClickX)) shiftedXMouse = lastClickX;
 				else shiftedYMouse = lastClickY;
 			}
-			x = Math.floor((shiftedXMouse - (330 - scale * levelWidth / 2)) / scale);
-			y = Math.floor((shiftedYMouse - (240 - scale * levelHeight / 2)) / scale);
+			x = Math.floor((shiftedXMouse - (330 - (scale * levelWidth) / 2)) / scale);
+			y = Math.floor((shiftedYMouse - (240 - (scale * levelHeight) / 2)) / scale);
 			if (mouseIsDown) {
 				if (selectedTab == 2) {
 					if (tool <= 1 && mouseOnGrid()) {
@@ -7741,51 +8599,57 @@ function draw() {
 						}
 					}
 				}
-				if ((tool == 2 || tool == 5 && !copied) && LCRect[0] != -1 && mouseOnGrid()) {
+				if ((tool == 2 || (tool == 5 && !copied)) && LCRect[0] != -1 && mouseOnGrid()) {
 					if (x != LCRect[2] || y != LCRect[3]) {
-						LCRect[2] = Math.min(Math.max(x,0),levelWidth - 1);
-						LCRect[3] = Math.min(Math.max(y,0),levelHeight - 1);
+						LCRect[2] = Math.min(Math.max(x, 0), levelWidth - 1);
+						LCRect[3] = Math.min(Math.max(y, 0), levelHeight - 1);
 					}
 				}
 			}
-			if (LCRect[0] != -1) drawLCRect(Math.min(LCRect[0],LCRect[2]),Math.min(LCRect[1],LCRect[3]),Math.max(LCRect[0],LCRect[2]),Math.max(LCRect[1],LCRect[3]));
+			if (LCRect[0] != -1)
+				drawLCRect(
+					Math.min(LCRect[0], LCRect[2]),
+					Math.min(LCRect[1], LCRect[3]),
+					Math.max(LCRect[0], LCRect[2]),
+					Math.max(LCRect[1], LCRect[3])
+				);
 
 			if (selectedTab == 2 && mouseOnGrid()) {
 				if (tool == 6) {
 					// levelCreator.rectSelect.clear();
 					let y2;
 					let y3;
-					ctx.lineWidth = 2 * scale / 9;
+					ctx.lineWidth = (2 * scale) / 9;
 					if (closeToEdgeY()) {
 						ctx.strokeStyle = '#008000';
-						y2 = Math.round((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+						y2 = Math.round((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
 						y3 = 0;
 					} else {
 						ctx.strokeStyle = '#800000';
-						y2 = Math.floor((_ymouse - (240 - scale * levelHeight / 2)) / scale);
+						y2 = Math.floor((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
 						y3 = 0.5;
 					}
 					ctx.beginPath();
-					ctx.moveTo(330 - scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
-					ctx.lineTo(330 + scale * levelWidth / 2,240 - scale * levelHeight / 2 + scale * (y2 + y3));
+					ctx.moveTo(330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + scale * (y2 + y3));
+					ctx.lineTo(330 + (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + scale * (y2 + y3));
 					ctx.stroke();
 				} else if (tool == 7) {
 					// levelCreator.rectSelect.clear();
 					let x2;
 					let x3;
-					ctx.lineWidth = 2 * scale / 9;
+					ctx.lineWidth = (2 * scale) / 9;
 					if (closeToEdgeX()) {
 						ctx.strokeStyle = '#008000';
-						x2 = Math.round((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+						x2 = Math.round((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
 						x3 = 0;
 					} else {
 						ctx.strokeStyle = '#800000';
-						x2 = Math.floor((_xmouse - (330 - scale * levelWidth / 2)) / scale);
+						x2 = Math.floor((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
 						x3 = 0.5;
 					}
 					ctx.beginPath();
-					ctx.moveTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 - scale * levelHeight / 2);
-					ctx.lineTo(330 - scale * levelWidth / 2 + scale * (x2 + x3),240 + scale * levelHeight / 2);
+					ctx.moveTo(330 - (scale * levelWidth) / 2 + scale * (x2 + x3), 240 - (scale * levelHeight) / 2);
+					ctx.lineTo(330 - (scale * levelWidth) / 2 + scale * (x2 + x3), 240 + (scale * levelHeight) / 2);
 					ctx.stroke();
 				}
 			}
@@ -7814,67 +8678,126 @@ function draw() {
 					let lcPopUpW = 750;
 					let lcPopUpH = 540;
 					ctx.fillStyle = '#eaeaea';
-					ctx.fillRect((cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH);
-					if (mouseIsDown && !pmouseIsDown && !onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2, (cheight-lcPopUpH)/2, lcPopUpW, lcPopUpH)) {
+					ctx.fillRect((cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH);
+					if (
+						mouseIsDown &&
+						!pmouseIsDown &&
+						!onRect(_xmouse, _ymouse, (cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH)
+					) {
 						lcPopUp = false;
 						editingTextBox = -1;
 						levelLoadString = '';
-						canvas.setAttribute('contenteditable', false)
+						canvas.setAttribute('contenteditable', false);
 					}
 					ctx.fillStyle = '#000000';
 					ctx.font = '20px Helvetica';
 					ctx.textBaseline = 'top';
 					ctx.textAlign = 'left';
-					ctx.fillText('Paste your level\'s string here:', (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 5);
-					levelLoadString = drawTextBox(levelLoadString, (cwidth-lcPopUpW)/2 + 10, (cheight-lcPopUpH)/2 + 30, lcPopUpW-20, lcPopUpH-80, 8, [5,5,5,5], 2, true, '#ffffff', '#000000', 'monospace')[0];
+					ctx.fillText(
+						"Paste your level's string here:",
+						(cwidth - lcPopUpW) / 2 + 10,
+						(cheight - lcPopUpH) / 2 + 5
+					);
+					levelLoadString = drawTextBox(
+						levelLoadString,
+						(cwidth - lcPopUpW) / 2 + 10,
+						(cheight - lcPopUpH) / 2 + 30,
+						lcPopUpW - 20,
+						lcPopUpH - 80,
+						8,
+						[5, 5, 5, 5],
+						2,
+						true,
+						'#ffffff',
+						'#000000',
+						'monospace'
+					)[0];
 
 					ctx.font = '18px Helvetica';
 					ctx.textAlign = 'center';
 					ctx.fillStyle = '#a0a0a0';
-					ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
+					ctx.fillRect(
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 140,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+						60,
+						30
+					);
 					ctx.fillStyle = '#ffffff';
-					ctx.fillText('Cancel', (cwidth-lcPopUpW)/2 + lcPopUpW-110, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
+					ctx.fillText(
+						'Cancel',
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 110,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 33
+					);
 					ctx.fillStyle = '#00a0ff';
-					ctx.fillRect((cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30);
+					ctx.fillRect(
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 70,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+						60,
+						30
+					);
 					ctx.fillStyle = '#ffffff';
-					ctx.fillText('Load', (cwidth-lcPopUpW)/2 + lcPopUpW-40, (cheight-lcPopUpH)/2 + lcPopUpH - 33);
-					if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-140, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
+					ctx.fillText(
+						'Load',
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 40,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 33
+					);
+					if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							(cwidth - lcPopUpW) / 2 + lcPopUpW - 140,
+							(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+							60,
+							30
+						)
+					) {
 						onButton = true;
 						if (mouseIsDown && !pmouseIsDown) {
 							lcPopUp = false;
 							editingTextBox = -1;
 							levelLoadString = '';
-							canvas.setAttribute('contenteditable', false)
+							canvas.setAttribute('contenteditable', false);
 						}
-					} else if (onRect(_xmouse, _ymouse, (cwidth-lcPopUpW)/2 + lcPopUpW-70, (cheight-lcPopUpH)/2 + lcPopUpH - 40, 60, 30)) {
+					} else if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							(cwidth - lcPopUpW) / 2 + lcPopUpW - 70,
+							(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+							60,
+							30
+						)
+					) {
 						onButton = true;
 						if (mouseIsDown && !pmouseIsDown) {
 							readLevelString(levelLoadString);
 							lcPopUp = false;
 							editingTextBox = -1;
 							levelLoadString = '';
-							canvas.setAttribute('contenteditable', false)
+							canvas.setAttribute('contenteditable', false);
 						}
 					}
 				}
 			}
 
 			if (lcMessageTimer > 0) {
-				if (lcMessageTimer > 50) ctx.globalAlpha = (100-lcMessageTimer)/50;
+				if (lcMessageTimer > 50) ctx.globalAlpha = (100 - lcMessageTimer) / 50;
 				ctx.font = '25px Helvetica';
 				ctx.textBaseline = 'middle';
 				ctx.textAlign = 'center';
 				ctx.fillStyle = '#ffffff';
 				let lcMessageLines = lcMessageText.split('\n');
-				lcMessageLines.forEach((v,i) => {lcMessageLines[i] = ctx.measureText(v).width + 10});
+				lcMessageLines.forEach((v, i) => {
+					lcMessageLines[i] = ctx.measureText(v).width + 10;
+				});
 				let msgWidth = Math.max(...lcMessageLines);
-				let msgHeight = (25*lcMessageLines.length)+5;
+				let msgHeight = 25 * lcMessageLines.length + 5;
 				// let msgWidth = ctx.measureText(lcMessageText).width+10;
-				ctx.fillRect((cwidth-msgWidth)/2, (cheight-30)/2, msgWidth, msgHeight);
+				ctx.fillRect((cwidth - msgWidth) / 2, (cheight - 30) / 2, msgWidth, msgHeight);
 				ctx.fillStyle = '#000000';
-				linebreakText(lcMessageText, cwidth/2, cheight/2, 25);
+				linebreakText(lcMessageText, cwidth / 2, cheight / 2, 25);
 				lcMessageTimer++;
-				if (lcMessageTimer > 100 || (_pxmouse != _xmouse || _pymouse != _ymouse)) {
+				if (lcMessageTimer > 100 || _pxmouse != _xmouse || _pymouse != _ymouse) {
 					lcMessageTimer = 0;
 				}
 				ctx.globalAlpha = 1;
@@ -7900,11 +8823,10 @@ function draw() {
 						exploreTab = i;
 						setExplorePage(0);
 					}
-				}
-				else ctx.fillStyle = '#999999';
+				} else ctx.fillStyle = '#999999';
 				ctx.fillRect(tabx, 20, exploreTabWidths[i], 45);
 				ctx.fillStyle = '#ffffff';
-				ctx.fillText(exploreTabNames[i], tabx+exploreTabWidths[i]/2, 45);
+				ctx.fillText(exploreTabNames[i], tabx + exploreTabWidths[i] / 2, 45);
 				// exploreTabNames[i];
 				tabx += exploreTabWidths[i] + 5;
 			}
@@ -7914,37 +8836,34 @@ function draw() {
 				drawExploreLoadingText();
 			} else {
 				for (let i = 0; i < explorePageLevels.length; i++) {
-					drawExploreLevel(232 * (i%4) + 28, Math.floor(i/4)*182 + 100, i);
+					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 100, i);
 				}
 			}
-
 
 			// page number
 			ctx.textBaseline = 'top';
 			ctx.textAlign = 'center';
 			ctx.fillStyle = '#ffffff';
 			ctx.font = '30px Helvetica';
-			ctx.fillText(explorePage+1, cwidth/2, 460);
+			ctx.fillText(explorePage + 1, cwidth / 2, 460);
 
 			// previous page
 			if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse,_ymouse,240,460,25,30)) {
+			else if (onRect(_xmouse, _ymouse, 240, 460, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
-				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage-1);
-			}
-			else ctx.fillStyle = '#999999';
-			drawArrow(240,460,25,30,3);
+				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage - 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(240, 460, 25, 30, 3);
 
 			// next page
 			if (exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse,_ymouse,720,460,25,30)){
+			else if (onRect(_xmouse, _ymouse, 720, 460, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
-				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage+1);
-			}
-			else ctx.fillStyle = '#999999';
-			drawArrow(720,460,25,30,1);
+				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage + 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(720, 460, 25, 30, 1);
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
@@ -7973,7 +8892,7 @@ function draw() {
 
 				ctx.fillStyle = '#cccccc';
 				// ctx.fillRect(30, 98, 368, 207);
-				ctx.drawImage(thumbBig, 30, 98, 384, 216)
+				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
 				drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
 			}
@@ -8014,11 +8933,10 @@ function draw() {
 	}
 	if (white_alpha > 0) {
 		ctx.fillStyle = '#ffffff';
-		ctx.globalAlpha = white_alpha/100;
+		ctx.globalAlpha = white_alpha / 100;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		ctx.globalAlpha = 1;
 	}
-
 
 	if (onButton) {
 		setCursor('pointer');
@@ -8035,7 +8953,6 @@ function draw() {
 	pmenuScreen = menuScreen;
 }
 
-
 // Limits the framerate to 60fps.
 // https://gist.github.com/elundmark/38d3596a883521cb24f5
 // https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
@@ -8043,7 +8960,7 @@ let fps = 60;
 let now;
 let then = window.performance.now();
 let lastFrameReq = then;
-let interval = 1000/fps;
+let interval = 1000 / fps;
 let delta;
 
 function rAF60fps() {
@@ -8060,44 +8977,73 @@ function rAF60fps() {
 	lastFrameReq = now;
 }
 
-
-
-
-
-
 // Explore API Stuff
 
 function getLevelPage(p, t) {
 	exploreLoading = true;
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=' + t, {method: 'GET'})
-	.then(response => { response.json().then(data => { explorePageLevels = data; setExploreThumbs(); truncateLevelTitles(); exploreLoading = false }) })
-	.catch(err => { console.log(err) });
+		.then(response => {
+			response.json().then(data => {
+				explorePageLevels = data;
+				setExploreThumbs();
+				truncateLevelTitles();
+				exploreLoading = false;
+			});
+		})
+		.catch(err => {
+			console.log(err);
+		});
 }
 
 function getExploreLevel(id) {
 	exploreLoading = true;
-	return fetch('https://5beam.zelo.dev/api/level?id='+id, {method: 'GET'})
-	.then(response => { response.json().then(data => { exploreLevelPageLevel = data; drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4); exploreLoading = false }) })
-	.catch(err => { console.log(err) });
+	return fetch('https://5beam.zelo.dev/api/level?id=' + id, {method: 'GET'})
+		.then(response => {
+			response.json().then(data => {
+				exploreLevelPageLevel = data;
+				drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
+				exploreLoading = false;
+			});
+		})
+		.catch(err => {
+			console.log(err);
+		});
 }
 
 function getExploreLevelpack(id) {
 	exploreLoading = true;
-	return fetch('https://5beam.zelo.dev/api/levelpack?id='+id, {method: 'GET'})
-	.then(response => { response.json().then(data => { exploreLevelPageLevel = data; drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.levels[0].data, 0.4); exploreLoading = false }) })
-	.catch(err => { console.log(err) });
+	return fetch('https://5beam.zelo.dev/api/levelpack?id=' + id, {method: 'GET'})
+		.then(response => {
+			response.json().then(data => {
+				exploreLevelPageLevel = data;
+				drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.levels[0].data, 0.4);
+				exploreLoading = false;
+			});
+		})
+		.catch(err => {
+			console.log(err);
+		});
 }
 
 function getExploreUser(id) {
 	exploreLoading = true;
 	return fetch('https://5beam.zelo.dev/api/user?discordId=' + id, {method: 'GET'})
-	.then(response => { response.json().then(data => { exploreUser = data; exploreLoading = false }) })
-	.catch(err => { console.log(err) });
+		.then(response => {
+			response.json().then(data => {
+				exploreUser = data;
+				exploreLoading = false;
+			});
+		})
+		.catch(err => {
+			console.log(err);
+		});
 }
 
 function postExploreLevel(t, desc, data) {
-	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000 || getCookie('token_created_at')=='') {
-		setLCMessage('You are not logged in to explore.\nYour login expires after 10 minutes because\nI haven\'t yet figured out how to refresh the tokens.\nFor now you can just copy your level, go to the explore menu to log in,\nthen come back here and load your level back.');
+	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000 || getCookie('token_created_at') == '') {
+		setLCMessage(
+			"You are not logged in to explore.\nYour login expires after 10 minutes because\nI haven't yet figured out how to refresh the tokens.\nFor now you can just copy your level, go to the explore menu to log in,\nthen come back here and load your level back."
+		);
 		return;
 	}
 	if (levelAlreadySharedToExplore) {
@@ -8112,21 +9058,21 @@ function postExploreLevel(t, desc, data) {
 	f.set('access_token', getCookie('access_token'));
 	f.set('title', t);
 	f.set('description', desc);
-	f.set('file', new File([data], "file.txt"));
+	f.set('file', new File([data], 'file.txt'));
 
 	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: f})
-	.then(response => {
-		exploreLoading = false;
-		if (response.status == 200) {
-			setLCMessage('Level successfuly sent to explore!');
-		} else {
-			setLCMessage('Server responded with status ' + response.status);
-		}
-	})
-	.catch(err => {
-		console.log(err);
-		setLCMessage('Sorry, there was an error while attempting to send the level.');
-	});
+		.then(response => {
+			exploreLoading = false;
+			if (response.status == 200) {
+				setLCMessage('Level successfuly sent to explore!');
+			} else {
+				setLCMessage('Server responded with status ' + response.status);
+			}
+		})
+		.catch(err => {
+			console.log(err);
+			setLCMessage('Sorry, there was an error while attempting to send the level.');
+		});
 }
 
 // https://www.w3schools.com/js/js_cookies.asp
@@ -8134,7 +9080,7 @@ function getCookie(cname) {
 	let name = cname + '=';
 	let decodedCookie = decodeURIComponent(document.cookie);
 	let ca = decodedCookie.split(';');
-	for(let i = 0; i < ca.length; i++) {
+	for (let i = 0; i < ca.length; i++) {
 		let c = ca[i];
 		while (c.charAt(0) == ' ') {
 			c = c.substring(1);
