@@ -20,9 +20,9 @@
 </radialGradient>
 
 <linearGradient id="Gradient_4" gradientUnits="userSpaceOnUse" x1="22.5" y1="0" x2="22.5" y2="15" spreadMethod="pad">
-<stop  offset="0%" stop-color="#00000A" stop-opacity="0"/>
+<stop  offset="0%" stop-color="#00000A" stop-opacity="0.4"/>
 
-<stop  offset="100%" stop-color="#00000A" stop-opacity="0.4"/>
+<stop  offset="100%" stop-color="#00000A" stop-opacity="0"/>
 </linearGradient>
 
 <g id="Layer0_0_FILL">
