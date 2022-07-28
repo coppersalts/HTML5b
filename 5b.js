@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.0'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.0*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -2693,7 +2693,6 @@ function playLevel(i) {
 	else if (i < levelProgress) playMode = 1;
 	currentLevel = i;
 	wipeTimer = 30;
-	// bg.cacheAsBitmap = true;
 	menuScreen = 3;
 	toSeeCS = true;
 	transitionType = 1;
@@ -2926,7 +2925,6 @@ function drawStaticTiles() {
 	for (let j = 0; j < tileDepths[0].length; j++) {
 		addTileMovieClip(tileDepths[0][j].x,tileDepths[0][j].y, osctx1);
 	}
-
 	for (let y = 0; y < levelHeight; y++) {
 		for (let x = 0; x < levelWidth; x++) {
 			for (let i = 0; i < tileShadows[y][x].length; i++) {
@@ -3057,7 +3055,7 @@ function drawCharacters() {
 				if (!(char[i].id == 5 && Math.floor(char[i].frame/2) == 4)) {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
-					// ... or just make them one letiable instead of two. whichever one I feel like doing at the time ig.
+					// ... or just make them one variable instead of two. whichever one I feel like doing at the time ig.
 					let legdire = char[i].legdire>0?1:-1;
 					let legmat = [
 						{a:0.3648529052734375,b:0,c:char[i].leg1skew*legdire,d:0.3814697265625,tx:legdire>0?-0.75:0.35,ty:-0.35},
@@ -4098,10 +4096,11 @@ function endDeath(i) {
 	char[i].temp = 0;
 	char[i].heated = 0;
 	char[i].charState = 1;
-	// OG bug fix?
-	if (char[i].atEnd) {
+	// OG bug fix
+	if (char[i].atEnd && !quirksMode) {
 		doorLightFadeDire[charsAtEnd-1] = -1;
 		charsAtEnd--;
+		char[i].atEnd = false;
 	}
 	deathCount++;
 	saveGame();
@@ -6443,10 +6442,10 @@ function draw() {
 			drawLevel();
 			
 			if (wipeTimer == 30) {
-				if (transitionType == 0) {
+				if (transitionType == 0) { // resetting preexisting level
 					if (!quirksMode) timer += getTimer() - levelTimer2;
 					resetLevel();	
-				} else if (charsAtEnd >= charCount2) {
+				} else if (charsAtEnd >= charCount2) { // beat the level!
 					if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
 						gotCoin[currentLevel] = true;
 						coins++;
@@ -6790,7 +6789,7 @@ function draw() {
 							stopY = -1;
 						}
 					}
-					if (stopX != 0 && stopY != 0) {
+					if (stopX != 0 && stopY != 0) { // two coordinates changed at once! Make sure snags don't happen
 						if (stopY == 1) {
 							y = Math.floor(char[i].y / 30) * 30;
 						}
