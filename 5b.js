@@ -2733,8 +2733,11 @@ function resetLevel() {
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
+				char[i].dire = 2;
+				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
-			} else if (char[i].charState >= 7) {
+			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 
@@ -3184,10 +3187,10 @@ function drawCharacters() {
 		}
 
 		// TODO: Move this to setBody()
-		if (char[i].charState == 9) {
-			char[i].dire = 2;
-			char[i].frame = 1;
-		}
+		// if (char[i].charState == 9) {
+		// 	char[i].dire = 2;
+		// 	char[i].frame = 1;
+		// }
 		if (i == HPRC2) {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
