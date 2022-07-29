@@ -6536,9 +6536,9 @@ function mousedown(event) {
 	lastClickX = _xmouse;
 	lastClickY = _ymouse;
 	if (onRect(_xmouse, _ymouse, 0, 0, cwidth, cheight)) {
-		document.getElementById('bottomtext').setAttribute('class', 'unselectable');
+		document.querySelectorAll('.bottomtext').forEach(element => element.classList.add('unselectable'));
 	} else {
-		document.getElementById('bottomtext').removeAttribute('class');
+		document.querySelectorAll('.bottomtext').forEach(element => element.classList.remove('unselectable'));
 	}
 
 	if (menuScreen == 5) {
