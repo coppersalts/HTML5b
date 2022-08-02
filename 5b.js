@@ -6983,8 +6983,8 @@ function draw() {
 							if (recover && recoverTimer == 0) {
 								recoverTimer = 60;
 								char[recover2].charState = 2;
-								char[recover2].x = char[HPRC1].x;
-								char[recover2].y = char[HPRC1].y - 20;
+								char[recover2].x = char[HPRC1] ? char[HPRC1].x : 0;
+								char[recover2].y = char[HPRC1] ? char[HPRC1].y : 0 - 20;
 								char[recover2].vx = 0;
 								char[recover2].vy = -1;
 								char[recover2].frame = 3;
@@ -6992,7 +6992,7 @@ function draw() {
 								char[recover2].leg2frame = 1;
 								char[recover2].legdire = 1;
 								HPRCBubbleFrame = 0;
-								goal = Math.round(char[HPRC1].x / 30) * 30;
+								goal = Math.round(char[HPRC1] ? char[HPRC1].x : 0 / 30) * 30;
 							} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
 								if (char[control].carry) {
 									putDown(control);
@@ -7179,7 +7179,7 @@ function draw() {
 				if (char[i].charState == 2) {
 					recoverTimer--;
 					let trans = (60 - recoverTimer) / 60;
-					char[i].x = inter(char[HPRC1].x, goal, trans);
+					char[i].x = inter(char[HPRC1] ? char[HPRC1].x : 0, goal, trans);
 					if (recoverTimer <= 0) {
 						recoverTimer = 0;
 						recover = false;
