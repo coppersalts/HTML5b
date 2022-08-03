@@ -6992,7 +6992,7 @@ function draw() {
 								char[recover2].leg2frame = 1;
 								char[recover2].legdire = 1;
 								HPRCBubbleFrame = 0;
-								goal = Math.round(char[HPRC1] ? char[HPRC1].x : 0 / 30) * 30;
+								goal = Math.round((char[HPRC1] ? char[HPRC1].x : 0) / 30) * 30;
 							} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
 								if (char[control].carry) {
 									putDown(control);
