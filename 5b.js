@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.1*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
