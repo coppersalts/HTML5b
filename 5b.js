@@ -4046,7 +4046,7 @@ function horizontalProp(i, sign, prop, x, y) {
 	}
 	if (prop >= 4 && prop <= 7) {
 		for (let j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
-			if (!outOfRange(xTile, j)) {
+			if (!outOfRange(xTile, j) && !outOfRange(xTile - sign, j)) {
 				if (
 					blockProperties[thisLevel[j][xTile]][prop - 4] &&
 					!blockProperties[thisLevel[j][xTile - sign]][prop - 4] &&
