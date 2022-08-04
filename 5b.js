@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.1'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -2754,8 +2754,11 @@ function resetLevel() {
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
+				char[i].dire = 2;
+				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
-			} else if (char[i].charState >= 7) {
+			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 
@@ -2807,8 +2810,11 @@ function resetLevel() {
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
+				char[i].dire = 2;
+				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
-			} else if (char[i].charState >= 7) {
+			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 
@@ -5865,7 +5871,10 @@ function readLevelString(str) {
 
 	// read level info
 	let levelInfo = lines[i].split(',');
-	if (levelInfo.length != 5) return;
+	if (levelInfo.length < 5) {
+		setLCMessage('Error while loading from string:\nFewer than 5 comma separated values in the line below the title.');
+		return;
+	}
 	levelWidth = Math.max(parseInt(levelInfo[0], 10), 1);
 	levelHeight = Math.max(parseInt(levelInfo[1], 10), 1);
 	charCount = parseInt(levelInfo[2], 10);
@@ -8797,7 +8806,7 @@ function draw() {
 				ctx.fillStyle = '#000000';
 				linebreakText(lcMessageText, cwidth / 2, cheight / 2, 25);
 				lcMessageTimer++;
-				if (lcMessageTimer > 100 || _pxmouse != _xmouse || _pymouse != _ymouse) {
+				if (lcMessageTimer > 100) {
 					lcMessageTimer = 0;
 				}
 				ctx.globalAlpha = 1;
@@ -8913,12 +8922,6 @@ function draw() {
 	ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	if (pmenuScreen == 2) {
 		drawLevelMapBorder();
-		if (menuScreen != 2) {
-			cameraX = 0;
-			cameraY = 0;
-			shakeX = 0;
-			shakeY = 0;
-		}
 	} else if (pmenuScreen == 3) {
 		if (cutScene == 1 || cutScene == 2) {
 			drawCutScene();
