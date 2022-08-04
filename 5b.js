@@ -9,7 +9,7 @@ let canvas;
 let ctx;
 const cwidth = 960;
 const cheight = 540;
-let pixelRatio = window.devicePixelRatio;
+let pixelRatio;
 let highQual = true;
 const requestAnimationFrame =
 	window.requestAnimationFrame ||
@@ -40,6 +40,7 @@ const _keysDown = new Array(222).fill(false);
 let _frameCount = 0;
 let qTimer = 0;
 let inputText = '';
+let textAfterCursorAtClick = '';
 let controlOrCommandPress = false;
 
 let levelsString = '';
@@ -1931,6 +1932,7 @@ async function loadingScreen() {
 	// Zoom fix on Windows.
 	// https://danreynolds.ca/tech/2017/10/15/Variable-Browser-Zoom/
 	document.querySelector('body').style.zoom = `${1 / window.devicePixelRatio * 100}%`;
+	pixelRatio = window.devicePixelRatio;
 
 	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
@@ -2372,7 +2374,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 				textBoxCursorLoc += i - 1;
 			}
 			inputText = text.slice(0, textBoxCursorLoc);
-			valueAtClick = text.slice(textBoxCursorLoc, text.length);
+			textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
 		}
 	}
 	if (editingTextBox == id) {
@@ -2381,7 +2383,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!rightPress) {
 				textBoxCursorLoc = Math.max(inputText.length + 1, 0);
 				inputText = text.slice(0, textBoxCursorLoc);
-				valueAtClick = text.slice(textBoxCursorLoc, text.length);
+				textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
 				rightPress = true;
 			}
 		} else rightPress = false;
@@ -2389,7 +2391,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!leftPress) {
 				textBoxCursorLoc = Math.max(inputText.length - 1, 0);
 				inputText = text.slice(0, textBoxCursorLoc);
-				valueAtClick = text.slice(textBoxCursorLoc, text.length);
+				textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
 				leftPress = true;
 			}
 		} else leftPress = false;
@@ -2397,7 +2399,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!upPress) {
 				textBoxCursorLoc = 0;
 				inputText = '';
-				valueAtClick = text;
+				textAfterCursorAtClick = text;
 				upPress = true;
 			}
 		} else upPress = false;
@@ -2405,11 +2407,11 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!downPress) {
 				textBoxCursorLoc = text.length;
 				inputText = text;
-				valueAtClick = '';
+				textAfterCursorAtClick = '';
 				downPress = true;
 			}
 		} else downPress = false;
-		text = inputText + valueAtClick;
+		text = inputText + textAfterCursorAtClick;
 		if (_frameCount % 60 < 30) {
 			ctx.strokeStyle = c2;
 			ctx.lineWidth = 2;
@@ -5465,7 +5467,7 @@ function drawLCDiaInfo(i, y) {
 		!lcPopUp &&
 		diaDropdown == -1 &&
 		!addButtonPressed &&
-		onRect(_xmouse, _ymouse + diaTabScrollBar, 665, y, 260, diaInfoHeight * myLevelDialogue[1][i].linecount)
+		onRect(_xmouse, _ymouse - diaTabScrollBar, 665, y, 260, diaInfoHeight * myLevelDialogue[1][i].linecount)
 	) {
 		if (reorderDiaDown) {
 			if (mouseIsDown && !pmouseIsDown) {
@@ -5498,7 +5500,7 @@ function drawLCDiaInfo(i, y) {
 			if (
 				onRect(
 					_xmouse,
-					_ymouse + diaTabScrollBar,
+					_ymouse - diaTabScrollBar,
 					665,
 					y,
 					diaInfoHeight * 2,
@@ -5515,7 +5517,7 @@ function drawLCDiaInfo(i, y) {
 			} else if (
 				onRect(
 					_xmouse,
-					_ymouse + diaTabScrollBar,
+					_ymouse - diaTabScrollBar,
 					665 + diaInfoHeight * 2,
 					y,
 					diaInfoHeight,
@@ -5537,7 +5539,7 @@ function drawLCDiaInfo(i, y) {
 			} else if (
 				onRect(
 					_xmouse,
-					_ymouse + diaTabScrollBar,
+					_ymouse - diaTabScrollBar,
 					665 + 240,
 					y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10,
 					20,
@@ -6910,8 +6912,7 @@ function draw() {
 			break;
 
 		case 3:
-			// let bgScale = Math.max(bgXScale, bgYScale);
-			// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
+			// TODO: Look into if it would be more accurate to the Flash version if this were moved to after the game logic.
 			ctx.drawImage(
 				osc4,
 				-Math.floor((Math.max(cameraX, 0) + shakeX) / 1.5 + (cameraX < 0 ? cameraX / 3 : 0)),
@@ -8313,19 +8314,19 @@ function draw() {
 						if (!mouseIsDown) draggingScrollBar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
-					ctx.save();
-					ctx.translate(0, -diaTabScrollBar);
+					// ctx.save();
+					// ctx.translate(0, -diaTabScrollBar);
 					// ctx.textAlign = 'left';
 					// ctx.textBaseline = 'middle';
 					// ctx.font = '20px Helvetica';
 					//myLevelDialogue[1][i].linecount
-					let diaInfoY = (selectedTab + 1) * tabHeight + 5;
+					let diaInfoY = (selectedTab + 1) * tabHeight + 5 - diaTabScrollBar;
 					for (let i = 0; i < myLevelDialogue[1].length; i++) {
 						if (
 							(reorderDiaUp || reorderDiaDown) &&
 							onRect(
 								_xmouse,
-								_ymouse + diaTabScrollBar,
+								_ymouse - diaTabScrollBar,
 								665,
 								diaInfoY,
 								260,
@@ -8442,7 +8443,7 @@ function draw() {
 						}
 					}
 					if (diaDropdown < -2) diaDropdown = -diaDropdown - 3;
-					ctx.restore();
+					// ctx.restore();
 
 					ctx.fillStyle = '#cccccc';
 					ctx.fillRect(660, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 25, 65, 25);
@@ -9155,98 +9156,47 @@ class Character {
 		this.acidDropTimer = [0, 0]; // Why am I doing it like this
 	}
 
-	applyForces(grav, control, waterUpMaxSpeed)
-	{
+	applyForces(grav, control, waterUpMaxSpeed) {
 		var _loc2_ = undefined;
-		if(grav >= 0)
-		{
-			_loc2_ = Math.sqrt(grav);
-		}
-		if(grav < 0)
-		{
-			_loc2_ = - Math.sqrt(- grav);
-		}
-		if(!this.onob && this.submerged != 1)
-		{
-			this.vy = Math.min(this.vy + _loc2_,25);
-		}
-		if(this.onob || control)
-		{
-			this.vx = (this.vx - this.fricGoal) * this.friction + this.fricGoal;
-		}
-		else
-		{
-			this.vx *= 1 - (1 - this.friction) * 0.12;
-		}
-		if(Math.abs(this.vx) < 0.01)
-		{
-			this.vx = 0;
-		}
-		if(this.submerged == 1)
-		{
+		if (grav >= 0) _loc2_ = Math.sqrt(grav);
+		if (grav < 0) _loc2_ = - Math.sqrt(- grav);
+		if (!this.onob && this.submerged != 1) this.vy = Math.min(this.vy + _loc2_,25);
+		if (this.onob || control) this.vx = (this.vx - this.fricGoal) * this.friction + this.fricGoal;
+		else this.vx *= 1 - (1 - this.friction) * 0.12;
+		if (Math.abs(this.vx) < 0.01) this.vx = 0;
+		if (this.submerged == 1) {
 			this.vy = 0;
-			if(this.weight2 > 0.18)
-			{
-				this.submerged = 2;
-			}
-		}
-		else if(this.submerged >= 2)
-		{
-			if(this.vx > 1.5)
-			{
-				this.vx = 1.5;
-			}
-			if(this.vx < -1.5)
-			{
-				this.vx = -1.5;
-			}
-			if(this.vy > 1.8)
-			{
-				this.vy = 1.8;
-			}
-			if(this.vy < - waterUpMaxSpeed)
-			{
-				this.vy = - waterUpMaxSpeed;
-			}
+			if (this.weight2 > 0.18) this.submerged = 2;
+		} else if (this.submerged >= 2) {
+			if (this.vx > 1.5) this.vx = 1.5;
+			if (this.vx < -1.5) this.vx = -1.5;
+			if (this.vy > 1.8) this.vy = 1.8;
+			if (this.vy < - waterUpMaxSpeed) this.vy = - waterUpMaxSpeed;
 		}
 	}
+
 	charMove() {
 		this.y += this.vy;
 		this.x += this.vx;
 	}
+
 	moveHorizontal(power) {
-		if (power * this.fricGoal <= 0 && !this.onob)
-		{
-			this.fricGoal = 0;
-		}
+		if (power * this.fricGoal <= 0 && !this.onob) this.fricGoal = 0;
 		this.vx += power;
-		if(power < 0)
-		{
-			this.dire = 1;
-		}
-		if(power > 0)
-		{
-			this.dire = 3;
-		}
+		if (power < 0) this.dire = 1;
+		if (power > 0) this.dire = 3;
 		this.justChanged = 2;
 	}
 	stopMoving() {
-		if(this.dire == 1)
-		{
-			this.dire = 2;
-		}
-		if(this.dire == 3)
-		{
-			this.dire = 4;
-		}
+		if (this.dire == 1) this.dire = 2;
+		if (this.dire == 3) this.dire = 4;
 	}
 
 	jump(jumpPower) {
 		this.vy = jumpPower;
 	}
 
-	swimUp(jumpPower)
-	{
+	swimUp(jumpPower) {
 		this.vy -= this.weight2 + jumpPower;
 	}
 
