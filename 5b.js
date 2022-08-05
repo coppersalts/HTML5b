@@ -2102,7 +2102,9 @@ function menuLevelCreator() {
 }
 
 function menuExitLevelCreator() {
+	if(Window.confirm("Are you sure you want to exit?")) {
 	menuScreen = 0;
+	}
 }
 
 function menuExplore() {
