@@ -3,13 +3,13 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.1'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
 const cwidth = 960;
 const cheight = 540;
-let pixelRatio = window.devicePixelRatio;
+let pixelRatio;
 let highQual = true;
 const requestAnimationFrame =
 	window.requestAnimationFrame ||
@@ -40,6 +40,7 @@ const _keysDown = new Array(222).fill(false);
 let _frameCount = 0;
 let qTimer = 0;
 let inputText = '';
+let textAfterCursorAtClick = '';
 let controlOrCommandPress = false;
 
 let levelsString = '';
@@ -1917,6 +1918,11 @@ function getVB(base64) {
 }
 
 async function loadingScreen() {
+	// Zoom fix on Windows.
+	// https://danreynolds.ca/tech/2017/10/15/Variable-Browser-Zoom/
+	document.querySelector('body').style.zoom = `${1 / window.devicePixelRatio * 100}%`;
+	pixelRatio = window.devicePixelRatio;
+
 	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
 	ctx = canvas.getContext('2d');
@@ -2357,7 +2363,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 				textBoxCursorLoc += i - 1;
 			}
 			inputText = text.slice(0, textBoxCursorLoc);
-			valueAtClick = text.slice(textBoxCursorLoc, text.length);
+			textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
 		}
 	}
 	if (editingTextBox == id) {
@@ -2366,7 +2372,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!rightPress) {
 				textBoxCursorLoc = Math.max(inputText.length + 1, 0);
 				inputText = text.slice(0, textBoxCursorLoc);
-				valueAtClick = text.slice(textBoxCursorLoc, text.length);
+				textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
 				rightPress = true;
 			}
 		} else rightPress = false;
@@ -2374,7 +2380,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!leftPress) {
 				textBoxCursorLoc = Math.max(inputText.length - 1, 0);
 				inputText = text.slice(0, textBoxCursorLoc);
-				valueAtClick = text.slice(textBoxCursorLoc, text.length);
+				textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
 				leftPress = true;
 			}
 		} else leftPress = false;
@@ -2382,7 +2388,7 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!upPress) {
 				textBoxCursorLoc = 0;
 				inputText = '';
-				valueAtClick = text;
+				textAfterCursorAtClick = text;
 				upPress = true;
 			}
 		} else upPress = false;
@@ -2390,11 +2396,11 @@ function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, 
 			if (!downPress) {
 				textBoxCursorLoc = text.length;
 				inputText = text;
-				valueAtClick = '';
+				textAfterCursorAtClick = '';
 				downPress = true;
 			}
 		} else downPress = false;
-		text = inputText + valueAtClick;
+		text = inputText + textAfterCursorAtClick;
 		if (_frameCount % 60 < 30) {
 			ctx.strokeStyle = c2;
 			ctx.lineWidth = 2;
@@ -2743,8 +2749,11 @@ function resetLevel() {
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
+				char[i].dire = 2;
+				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
-			} else if (char[i].charState >= 7) {
+			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 
@@ -2796,8 +2805,11 @@ function resetLevel() {
 			);
 			if (char[i].charState == 9) {
 				char[i].expr = 1;
+				char[i].dire = 2;
+				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
-			} else if (char[i].charState >= 7) {
+			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
 			}
 
@@ -4025,7 +4037,7 @@ function horizontalProp(i, sign, prop, x, y) {
 	}
 	if (prop >= 4 && prop <= 7) {
 		for (let j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
-			if (!outOfRange(xTile, j)) {
+			if (!outOfRange(xTile, j) && !outOfRange(xTile - sign, j)) {
 				if (
 					blockProperties[thisLevel[j][xTile]][prop - 4] &&
 					!blockProperties[thisLevel[j][xTile - sign]][prop - 4] &&
@@ -5444,7 +5456,7 @@ function drawLCDiaInfo(i, y) {
 		!lcPopUp &&
 		diaDropdown == -1 &&
 		!addButtonPressed &&
-		onRect(_xmouse, _ymouse + diaTabScrollBar, 665, y, 260, diaInfoHeight * myLevelDialogue[1][i].linecount)
+		onRect(_xmouse, _ymouse - diaTabScrollBar, 665, y, 260, diaInfoHeight * myLevelDialogue[1][i].linecount)
 	) {
 		if (reorderDiaDown) {
 			if (mouseIsDown && !pmouseIsDown) {
@@ -5477,7 +5489,7 @@ function drawLCDiaInfo(i, y) {
 			if (
 				onRect(
 					_xmouse,
-					_ymouse + diaTabScrollBar,
+					_ymouse - diaTabScrollBar,
 					665,
 					y,
 					diaInfoHeight * 2,
@@ -5494,7 +5506,7 @@ function drawLCDiaInfo(i, y) {
 			} else if (
 				onRect(
 					_xmouse,
-					_ymouse + diaTabScrollBar,
+					_ymouse - diaTabScrollBar,
 					665 + diaInfoHeight * 2,
 					y,
 					diaInfoHeight,
@@ -5516,7 +5528,7 @@ function drawLCDiaInfo(i, y) {
 			} else if (
 				onRect(
 					_xmouse,
-					_ymouse + diaTabScrollBar,
+					_ymouse - diaTabScrollBar,
 					665 + 240,
 					y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10,
 					20,
@@ -5854,7 +5866,10 @@ function readLevelString(str) {
 
 	// read level info
 	let levelInfo = lines[i].split(',');
-	if (levelInfo.length != 5) return;
+	if (levelInfo.length < 5) {
+		setLCMessage('Error while loading from string:\nFewer than 5 comma separated values in the line below the title.');
+		return;
+	}
 	levelWidth = Math.max(parseInt(levelInfo[0], 10), 1);
 	levelHeight = Math.max(parseInt(levelInfo[1], 10), 1);
 	charCount = parseInt(levelInfo[2], 10);
@@ -6886,8 +6901,7 @@ function draw() {
 			break;
 
 		case 3:
-			// let bgScale = Math.max(bgXScale, bgYScale);
-			// ctx.drawImage(imgBgs[playMode==2?selectedBg:bgs[currentLevel]], -Math.floor((cameraX+shakeX)/1.5), -Math.floor((cameraY+shakeY)/1.5), (bgScale/100)*cwidth, (bgScale/100)*cheight);
+			// TODO: Look into if it would be more accurate to the Flash version if this were moved to after the game logic.
 			ctx.drawImage(
 				osc4,
 				-Math.floor((Math.max(cameraX, 0) + shakeX) / 1.5 + (cameraX < 0 ? cameraX / 3 : 0)),
@@ -6972,8 +6986,8 @@ function draw() {
 							if (recover && recoverTimer == 0) {
 								recoverTimer = 60;
 								char[recover2].charState = 2;
-								char[recover2].x = char[HPRC1].x;
-								char[recover2].y = char[HPRC1].y - 20;
+								char[recover2].x = char[HPRC1] ? char[HPRC1].x : 0;
+								char[recover2].y = char[HPRC1] ? char[HPRC1].y : 0 - 20;
 								char[recover2].vx = 0;
 								char[recover2].vy = -1;
 								char[recover2].frame = 3;
@@ -6981,7 +6995,7 @@ function draw() {
 								char[recover2].leg2frame = 1;
 								char[recover2].legdire = 1;
 								HPRCBubbleFrame = 0;
-								goal = Math.round(char[HPRC1].x / 30) * 30;
+								goal = Math.round((char[HPRC1] ? char[HPRC1].x : 0) / 30) * 30;
 							} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
 								if (char[control].carry) {
 									putDown(control);
@@ -7168,7 +7182,7 @@ function draw() {
 				if (char[i].charState == 2) {
 					recoverTimer--;
 					let trans = (60 - recoverTimer) / 60;
-					char[i].x = inter(char[HPRC1].x, goal, trans);
+					char[i].x = inter(char[HPRC1] ? char[HPRC1].x : 0, goal, trans);
 					if (recoverTimer <= 0) {
 						recoverTimer = 0;
 						recover = false;
@@ -8289,19 +8303,19 @@ function draw() {
 						if (!mouseIsDown) draggingScrollBar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
-					ctx.save();
-					ctx.translate(0, -diaTabScrollBar);
+					// ctx.save();
+					// ctx.translate(0, -diaTabScrollBar);
 					// ctx.textAlign = 'left';
 					// ctx.textBaseline = 'middle';
 					// ctx.font = '20px Helvetica';
 					//myLevelDialogue[1][i].linecount
-					let diaInfoY = (selectedTab + 1) * tabHeight + 5;
+					let diaInfoY = (selectedTab + 1) * tabHeight + 5 - diaTabScrollBar;
 					for (let i = 0; i < myLevelDialogue[1].length; i++) {
 						if (
 							(reorderDiaUp || reorderDiaDown) &&
 							onRect(
 								_xmouse,
-								_ymouse + diaTabScrollBar,
+								_ymouse - diaTabScrollBar,
 								665,
 								diaInfoY,
 								260,
@@ -8418,7 +8432,7 @@ function draw() {
 						}
 					}
 					if (diaDropdown < -2) diaDropdown = -diaDropdown - 3;
-					ctx.restore();
+					// ctx.restore();
 
 					ctx.fillStyle = '#cccccc';
 					ctx.fillRect(660, cheight - (tabNames.length - selectedTab - 1) * tabHeight - 25, 65, 25);
@@ -8786,7 +8800,7 @@ function draw() {
 				ctx.fillStyle = '#000000';
 				linebreakText(lcMessageText, cwidth / 2, cheight / 2, 25);
 				lcMessageTimer++;
-				if (lcMessageTimer > 100 || _pxmouse != _xmouse || _pymouse != _ymouse) {
+				if (lcMessageTimer > 100) {
 					lcMessageTimer = 0;
 				}
 				ctx.globalAlpha = 1;
@@ -8902,12 +8916,6 @@ function draw() {
 	ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	if (pmenuScreen == 2) {
 		drawLevelMapBorder();
-		if (menuScreen != 2) {
-			cameraX = 0;
-			cameraY = 0;
-			shakeX = 0;
-			shakeY = 0;
-		}
 	} else if (pmenuScreen == 3) {
 		if (cutScene == 1 || cutScene == 2) {
 			drawCutScene();
@@ -9079,4 +9087,113 @@ function getCookie(cname) {
 		}
 	}
 	return '';
+}
+
+
+// Before, this was in a separate file like it was in the Flash version, but it made minifying take more steps and I didn't really edit it that often, so I decided it was just easier to move it into the same file.
+class Character {
+	constructor(tid, tx, ty, tpx, tpy, tcharState, tw, th, tweight, tweight2, th2, tfriction, theatSpeed, thasArms, tdExpr) {
+		this.id = tid;
+		this.x = tx;
+		this.y = ty;
+		this.px = tx;
+		this.py = ty;
+		this.vx = 0;
+		this.vy = 0;
+		this.onob = false;
+		this.dire = 4;
+		this.carry = false;
+		this.carryObject = 0;
+		this.carriedBy = 200;
+		this.landTimer = 200;
+		this.deathTimer = 30;
+		this.charState = tcharState;
+		this.standingOn = -1;
+		this.stoodOnBy = new Array(0);
+		this.w = tw;
+		this.h = th;
+		this.weight = tweight;
+		this.weight2 = tweight2;
+		this.h2 = th2;
+		this.atEnd = false;
+		this.friction = tfriction;
+		this.fricGoal = 0;
+		this.justChanged = 2;
+		this.speed = 0;
+		this.motionString = [];
+		this.buttonsPressed = new Array(0);
+		this.pcharState = 0;
+		this.submerged = 0;
+		this.temp = 0;
+		this.heated = 0;
+		this.heatSpeed = theatSpeed;
+		this.hasArms = thasArms;
+		this.placed = true; // used in the level creator
+
+		this.frame = 3;
+		this.poseTimer = 0;
+		this.leg1frame = 0;
+		this.leg2frame = 0;
+		this.legdire = 1;
+		this.leg1skew = 0;
+		this.leg2skew = 0;
+		this.legAnimationFrame = [0,0]; // Animation offset.
+		this.burstFrame = -1;
+		this.diaMouthFrame = 0;
+		this.expr = 0;
+		this.dExpr = tdExpr;
+		this.acidDropTimer = [0, 0]; // Why am I doing it like this
+	}
+
+	applyForces(grav, control, waterUpMaxSpeed) {
+		var _loc2_ = undefined;
+		if (grav >= 0) _loc2_ = Math.sqrt(grav);
+		if (grav < 0) _loc2_ = - Math.sqrt(- grav);
+		if (!this.onob && this.submerged != 1) this.vy = Math.min(this.vy + _loc2_,25);
+		if (this.onob || control) this.vx = (this.vx - this.fricGoal) * this.friction + this.fricGoal;
+		else this.vx *= 1 - (1 - this.friction) * 0.12;
+		if (Math.abs(this.vx) < 0.01) this.vx = 0;
+		if (this.submerged == 1) {
+			this.vy = 0;
+			if (this.weight2 > 0.18) this.submerged = 2;
+		} else if (this.submerged >= 2) {
+			if (this.vx > 1.5) this.vx = 1.5;
+			if (this.vx < -1.5) this.vx = -1.5;
+			if (this.vy > 1.8) this.vy = 1.8;
+			if (this.vy < - waterUpMaxSpeed) this.vy = - waterUpMaxSpeed;
+		}
+	}
+
+	charMove() {
+		this.y += this.vy;
+		this.x += this.vx;
+	}
+
+	moveHorizontal(power) {
+		if (power * this.fricGoal <= 0 && !this.onob) this.fricGoal = 0;
+		this.vx += power;
+		if (power < 0) this.dire = 1;
+		if (power > 0) this.dire = 3;
+		this.justChanged = 2;
+	}
+	stopMoving() {
+		if (this.dire == 1) this.dire = 2;
+		if (this.dire == 3) this.dire = 4;
+	}
+
+	jump(jumpPower) {
+		this.vy = jumpPower;
+	}
+
+	swimUp(jumpPower) {
+		this.vy -= this.weight2 + jumpPower;
+	}
+
+	setFrame(newFrame) {
+		if (newFrame != this.frame) {
+			if (!((this.frame == 5 && newFrame == 4) || (this.frame == 4 && newFrame == 5))) this.poseTimer = 0;
+			this.frame = newFrame;
+			if (cutScene == 3 && this.expr != this.dExpr) this.expr = this.dExpr;
+		}
+	}
 }
