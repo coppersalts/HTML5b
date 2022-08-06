@@ -9109,7 +9109,7 @@ class Character {
 		this.deathTimer = 30;
 		this.charState = tcharState;
 		this.standingOn = -1;
-		this.stoodOnBy = new Array(0);
+		this.stoodOnBy = [];
 		this.w = tw;
 		this.h = th;
 		this.weight = tweight;
@@ -9121,7 +9121,7 @@ class Character {
 		this.justChanged = 2;
 		this.speed = 0;
 		this.motionString = [];
-		this.buttonsPressed = new Array(0);
+		this.buttonsPressed = [];
 		this.pcharState = 0;
 		this.submerged = 0;
 		this.temp = 0;
@@ -9137,7 +9137,7 @@ class Character {
 		this.legdire = 1;
 		this.leg1skew = 0;
 		this.leg2skew = 0;
-		this.legAnimationFrame = [0,0]; // Animation offset.
+		this.legAnimationFrame = [0, 0]; // Animation offset.
 		this.burstFrame = -1;
 		this.diaMouthFrame = 0;
 		this.expr = 0;
@@ -9146,19 +9146,24 @@ class Character {
 	}
 
 	applyForces(grav, control, waterUpMaxSpeed) {
-		var _loc2_ = undefined;
-		if (grav >= 0) _loc2_ = Math.sqrt(grav);
-		if (grav < 0) _loc2_ = - Math.sqrt(- grav);
-		if (!this.onob && this.submerged != 1) this.vy = Math.min(this.vy + _loc2_,25);
-		if (this.onob || control) this.vx = (this.vx - this.fricGoal) * this.friction + this.fricGoal;
-		else this.vx *= 1 - (1 - this.friction) * 0.12;
+		let gravity = Math.sign(grav) * Math.sqrt(Math.abs(grav));
+
+		if (!this.onob && this.submerged != 1) this.vy = Math.min(this.vy + gravity, 25);
+		if (this.onob || control) {
+			this.vx = (this.vx - this.fricGoal) * this.friction + this.fricGoal;
+		} else {
+			this.vx *= 1 - (1 - this.friction) * 0.12;
+		}
+
 		if (Math.abs(this.vx) < 0.01) this.vx = 0;
+
 		if (this.submerged == 1) {
 			this.vy = 0;
 			if (this.weight2 > 0.18) this.submerged = 2;
 		} else if (this.submerged >= 2) {
 			if (this.vx > 1.5) this.vx = 1.5;
 			if (this.vx < -1.5) this.vx = -1.5;
+
 			if (this.vy > 1.8) this.vy = 1.8;
 			if (this.vy < - waterUpMaxSpeed) this.vy = - waterUpMaxSpeed;
 		}
@@ -9176,6 +9181,7 @@ class Character {
 		if (power > 0) this.dire = 3;
 		this.justChanged = 2;
 	}
+
 	stopMoving() {
 		if (this.dire == 1) this.dire = 2;
 		if (this.dire == 3) this.dire = 4;
