@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.2'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.2*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -43,6 +43,7 @@ let inputText = '';
 let textAfterCursorAtClick = '';
 let controlOrCommandPress = false;
 
+let defaultLevelsString = '';
 let levelsString = '';
 let levelCount = 133;
 let f = 19;
@@ -220,6 +221,94 @@ function loadLevels() {
 			while (charAt(lineLength) != -35) {
 				lineLength++;
 				dialogueText[i][j] += charAt2(lineLength - 1);
+			}
+			levelStart += lineLength + 2;
+		}
+
+		// Read Necessary Deaths
+		mdao2 += 100000 * charAt(0) + 10000 * charAt(1) + 1000 * charAt(2) + 100 * charAt(3) + 10 * charAt(4) + charAt(5);
+		mdao[i] = mdao2;
+		levelStart += 8;
+	}
+}
+
+function loadLevelpack() {
+	let lines = levelsString.replace(/\r/gi, '').split('\n');
+	let lvl = 0;
+
+	for (let i = 0; i < lines; lvl++) {
+		levelStart += 2;
+
+		// Read Level Name
+		levelName[lvl] = lines[i];
+		i++;
+
+		// Read Level Metadata
+		let metadata = lines[i].split(',');
+		levelWidth = parseInt(metadata[0]);
+		levelHeight = parseInt(metadata[1]);
+		charCount = parseInt(metadata[2]);
+		bgs[lvl] = parseInt(metadata[3]);
+		longMode = metadata[4] == 'H';
+
+		// Read Level Block Layout Data
+		levels[lvl] = new Array(levelHeight);
+		if (longMode) {
+			for (let y = 0; y < levelHeight; y++) {
+				levels[lvl][y] = new Array(levelWidth);
+				for (let x = 0; x < levelWidth; x++) {
+					// This is about where I stopped. I'll pick back up on this later.
+					levels[lvl][y][x] =
+						111 * tileAt(y * (levelWidth * 2 + 2) + x * 2 + 17, lvl, y) +
+						tileAt(y * (levelWidth * 2 + 2) + x * 2 + 18, lvl, y);
+				}
+			}
+			levelStart += levelHeight * (levelWidth * 2 + 2) + 17;
+		} else {
+			for (let y = 0; y < levelHeight; y++) {
+				levels[lvl][y] = new Array(levelWidth);
+				for (let x = 0; x < levelWidth; x++) {
+					levels[lvl][y][x] = tileAt(y * (levelWidth + 2) + x + 17, lvl, y);
+				}
+			}
+			levelStart += levelHeight * (levelWidth + 2) + 17;
+		}
+
+		// Read Entity Data
+		startLocations[lvl] = new Array(charCount);
+		for (let j = 0; j < charCount; j++) {
+			startLocations[lvl][j] = new Array(6);
+			for (let k = 0; k < (f - 1) / 3; k++) {
+				startLocations[lvl][j][k] = charAt(k * 3) * 10 + charAt(k * 3 + 1);
+			}
+			levelStart += f - 2;
+			if (startLocations[lvl][j][5] == 3 || startLocations[lvl][j][5] == 4) {
+				levelStart++;
+				startLocations[lvl][j].push([]);
+				for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
+					startLocations[lvl][j][6].push(charAt(lineLength));
+				}
+				levelStart += lineLength;
+			}
+			levelStart += 2;
+		}
+
+		// Read Dialogue
+		lineCount = 10 * charAt(0) + charAt(1);
+		levelStart += 4;
+		dialogueText[lvl] = new Array(lineCount);
+		dialogueChar[lvl] = new Array(lineCount);
+		dialogueFace[lvl] = new Array(lineCount);
+		for (let j = 0; j < lineCount; j++) {
+			dialogueChar[lvl][j] = 10 * charAt(0) + charAt(1);
+			if (charAt(2) == 24) dialogueFace[lvl][j] = 2;
+			else dialogueFace[lvl][j] = 3;
+			levelStart += 4;
+			lineLength = 0;
+			dialogueText[lvl][j] = '';
+			while (charAt(lineLength) != -35) {
+				lineLength++;
+				dialogueText[lvl][j] += charAt2(lineLength - 1);
 			}
 			levelStart += lineLength + 2;
 		}
@@ -1734,10 +1823,10 @@ let lcMessageTimer = 0;
 let lcMessageText = '';
 // const exploreTabNames = ['Featured', 'New', 'Top', '🔍'];
 // const exploreTabWidths = [190, 115, 115, 45];
-// const exploreTabNames = ['Levels', 'Levelpacks'];
-// const exploreTabWidths = [125, 200];
-const exploreTabNames = ['Levels'];
-const exploreTabWidths = [125];
+const exploreTabNames = ['Levels', 'Levelpacks'];
+const exploreTabWidths = [125, 200];
+// const exploreTabNames = ['Levels'];
+// const exploreTabWidths = [125];
 let power = 1;
 let jumpPower = 11;
 let qPress = false;
@@ -1956,7 +2045,8 @@ async function loadingScreen() {
 
 	let req = await fetch('data/levels.txt');
 	let text = await req.text();
-	levelsString = text;
+	defaultLevelsString = text;
+	levelsString = defaultLevelsString;
 	loadLevels();
 
 	req = await fetch('data/images.json');
@@ -2129,9 +2219,15 @@ function menuExploreBack() {
 }
 
 function playExploreLevel() {
-	readExploreLevelString(exploreLevelPageLevel.data);
-	testLevelCreator();
-	playMode = 3;
+	if (exploreTab == 0) {
+		readExploreLevelString(exploreLevelPageLevel.data);
+		testLevelCreator();
+		playMode = 3;
+	} else {
+		loadLevelpack();
+		menuScreen = 2;
+		// playMode = 0;
+	}
 }
 
 function logInExplore() {
@@ -8993,7 +9089,7 @@ function getLevelPage(p, t) {
 		.then(response => {
 			response.json().then(data => {
 				explorePageLevels = data;
-				setExploreThumbs();
+				if (exploreTab == 0) setExploreThumbs();
 				truncateLevelTitles();
 				exploreLoading = false;
 			});
@@ -9120,7 +9216,7 @@ class Character {
 		this.deathTimer = 30;
 		this.charState = tcharState;
 		this.standingOn = -1;
-		this.stoodOnBy = new Array(0);
+		this.stoodOnBy = [];
 		this.w = tw;
 		this.h = th;
 		this.weight = tweight;
@@ -9132,7 +9228,7 @@ class Character {
 		this.justChanged = 2;
 		this.speed = 0;
 		this.motionString = [];
-		this.buttonsPressed = new Array(0);
+		this.buttonsPressed = [];
 		this.pcharState = 0;
 		this.submerged = 0;
 		this.temp = 0;
