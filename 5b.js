@@ -233,11 +233,26 @@ function loadLevels() {
 }
 
 function loadLevelpack() {
+	// reinitialise variables here!
 	let lines = levelsString.replace(/\r/gi, '').split('\n');
 	let lvl = 0;
 
-	for (let i = 0; i < lines; lvl++) {
-		levelStart += 2;
+	for (let i = 0; i < lines.length; lvl++) {
+		while (lines[i] === '') i++;
+		if (i >= lines.length) break;
+		// We can't just skip loadedLevels= because someone might have titles their level that.
+		if (lines[i] == 'loadedLevels=') {
+			// If it's followed by a blank line it's definitely not a title.
+			if (lines[i + 1] == '') {
+				i++;
+				while (lines[i] === '') i++;
+				if (i >= lines.length) break;
+			} else {
+				// Otherwise, check to see if the line two lines after it contains commas.
+				// If it does that means it's not just a title and we can skip it.
+				if (lines[i + 2].split(',').length > 1) i++;
+			}
+		}
 
 		// Read Level Name
 		levelName[lvl] = lines[i];
@@ -250,6 +265,7 @@ function loadLevelpack() {
 		charCount = parseInt(metadata[2]);
 		bgs[lvl] = parseInt(metadata[3]);
 		longMode = metadata[4] == 'H';
+		i++;
 
 		// Read Level Block Layout Data
 		levels[lvl] = new Array(levelHeight);
@@ -257,66 +273,60 @@ function loadLevelpack() {
 			for (let y = 0; y < levelHeight; y++) {
 				levels[lvl][y] = new Array(levelWidth);
 				for (let x = 0; x < levelWidth; x++) {
-					// This is about where I stopped. I'll pick back up on this later.
 					levels[lvl][y][x] =
-						111 * tileAt(y * (levelWidth * 2 + 2) + x * 2 + 17, lvl, y) +
-						tileAt(y * (levelWidth * 2 + 2) + x * 2 + 18, lvl, y);
+						111 * tileIDFromChar(lines[i + y].charCodeAt(x * 2)) +
+						tileIDFromChar(lines[i + y].charCodeAt(x * 2 + 1));
 				}
 			}
-			levelStart += levelHeight * (levelWidth * 2 + 2) + 17;
 		} else {
 			for (let y = 0; y < levelHeight; y++) {
 				levels[lvl][y] = new Array(levelWidth);
 				for (let x = 0; x < levelWidth; x++) {
-					levels[lvl][y][x] = tileAt(y * (levelWidth + 2) + x + 17, lvl, y);
+					levels[lvl][y][x] = tileIDFromChar(lines[i + y].charCodeAt(x));
 				}
 			}
-			levelStart += levelHeight * (levelWidth + 2) + 17;
 		}
+		i += levelHeight;
 
 		// Read Entity Data
 		startLocations[lvl] = new Array(charCount);
 		for (let j = 0; j < charCount; j++) {
+			let entityInfo = lines[i + j].split(/[\s,\.]+/);
 			startLocations[lvl][j] = new Array(6);
-			for (let k = 0; k < (f - 1) / 3; k++) {
-				startLocations[lvl][j][k] = charAt(k * 3) * 10 + charAt(k * 3 + 1);
-			}
-			levelStart += f - 2;
+			startLocations[lvl][j][0] = parseInt(entityInfo[0], 10);
+			startLocations[lvl][j][1] = parseInt(entityInfo[1], 10);
+			startLocations[lvl][j][2] = parseInt(entityInfo[2], 10);
+			startLocations[lvl][j][3] = parseInt(entityInfo[3], 10);
+			startLocations[lvl][j][4] = parseInt(entityInfo[4], 10);
+			startLocations[lvl][j][5] = parseInt(entityInfo[5], 10);
+
 			if (startLocations[lvl][j][5] == 3 || startLocations[lvl][j][5] == 4) {
-				levelStart++;
 				startLocations[lvl][j].push([]);
-				for (lineLength = 0; charAt(lineLength) != -35; lineLength++) {
-					startLocations[lvl][j][6].push(charAt(lineLength));
+				for (let lineLength = 0; lineLength < entityInfo[6].length; lineLength++) {
+					startLocations[lvl][j][6].push(entityInfo[6].charCodeAt(lineLength) - 48);
 				}
-				levelStart += lineLength;
 			}
-			levelStart += 2;
 		}
+		i += charCount;
 
 		// Read Dialogue
-		lineCount = 10 * charAt(0) + charAt(1);
-		levelStart += 4;
+		lineCount = parseInt(lines[i], 10);
+		i++;
 		dialogueText[lvl] = new Array(lineCount);
 		dialogueChar[lvl] = new Array(lineCount);
 		dialogueFace[lvl] = new Array(lineCount);
 		for (let j = 0; j < lineCount; j++) {
-			dialogueChar[lvl][j] = 10 * charAt(0) + charAt(1);
-			if (charAt(2) == 24) dialogueFace[lvl][j] = 2;
+			dialogueChar[lvl][j] = parseInt(lines[i + j].slice(0, 2));
+			if (lines[i + j].charAt(2) == 'H') dialogueFace[lvl][j] = 2;
 			else dialogueFace[lvl][j] = 3;
-			levelStart += 4;
-			lineLength = 0;
-			dialogueText[lvl][j] = '';
-			while (charAt(lineLength) != -35) {
-				lineLength++;
-				dialogueText[lvl][j] += charAt2(lineLength - 1);
-			}
-			levelStart += lineLength + 2;
+			dialogueText[lvl][j] = lines[i + j].substring(4);
 		}
+		i += lineCount;
 
 		// Read Necessary Deaths
-		mdao2 += 100000 * charAt(0) + 10000 * charAt(1) + 1000 * charAt(2) + 100 * charAt(3) + 10 * charAt(4) + charAt(5);
+		mdao2 += parseInt(lines[i], 10);
 		mdao[i] = mdao2;
-		levelStart += 8;
+		i++;
 	}
 }
 
@@ -6057,8 +6067,8 @@ function readLevelString(str) {
 				return;
 			}
 			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length), 0);
-			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1], 10), 100), 0);
-			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2], 10), 100), 0);
+			myLevelChars[1][e][1] = parseFloat(entityInfo[1], 10);
+			myLevelChars[1][e][2] = parseFloat(entityInfo[2], 10);
 			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3], 10), 10), 3);
 		}
 		let id = myLevelChars[1][e][0];
@@ -6244,8 +6254,8 @@ function readExploreLevelString(str) {
 				return;
 			}
 			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length), 0);
-			myLevelChars[1][e][1] = Math.max(Math.min(parseFloat(entityInfo[1], 10), 100), 0);
-			myLevelChars[1][e][2] = Math.max(Math.min(parseFloat(entityInfo[2], 10), 100), 0);
+			myLevelChars[1][e][1] = parseFloat(entityInfo[1], 10);
+			myLevelChars[1][e][2] = parseFloat(entityInfo[2], 10);
 			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3], 10), 10), 3);
 		}
 		let id = myLevelChars[1][e][0];
