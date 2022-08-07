@@ -1937,17 +1937,6 @@ function toHMS(i) {
 	);
 }
 
-function addCommas(i) {
-	let iStr = String(i);
-	let iStr2 = '';
-	let len = iStr.length;
-	for (let j = 0; j < len; j++) {
-		if ((len - j) % 3 == 0 && j != 0) iStr2 += ',';
-		iStr2 += iStr.charAt(j);
-	}
-	return iStr2;
-}
-
 // I missed processing's map() function so much I wrote my own that I think I stole parts of from stackoverflow, but didn't link to.
 function mapRange(value, min1, max1, min2, max2) {
 	return min2 + ((value - min1) / (max1 - min1)) * (max2 - min2);
@@ -2625,7 +2614,7 @@ function drawLevelMap() {
 	ctx.fillText('x ' + coins, 477.95, 50.9);
 	ctx.font = '21px Helvetica';
 	ctx.fillText(toHMS(timer), 767.3, 27.5);
-	ctx.fillText(addCommas(deathCount), 767.3, 55.9);
+	ctx.fillText(deathCount.toLocaleString(), 767.3, 55.9);
 	ctx.textAlign = 'right';
 	ctx.fillText('Time:', 757.05, 27.5);
 	ctx.fillText('Deaths:', 757.05, 55.9);
@@ -2637,7 +2626,7 @@ function drawLevelMap() {
 		ctx.fillText('Unnecessary deaths:', 756.3, 116.8);
 		ctx.textAlign = 'left';
 		ctx.fillText(mdao[levelProgress - 1], 767.3, 85.4);
-		ctx.fillText(addCommas(deathCount - mdao[levelProgress - 1]), 767.3, 116.8);
+		ctx.fillText((deathCount - mdao[levelProgress - 1]).toLocaleString(), 767.3, 116.8);
 	}
 	for (let i = 0; i < 133; i++) {
 		let j = i;
@@ -6658,9 +6647,9 @@ function mousedown(event) {
 	lastClickX = _xmouse;
 	lastClickY = _ymouse;
 	if (onRect(_xmouse, _ymouse, 0, 0, cwidth, cheight)) {
-		document.getElementById('bottomtext').setAttribute('class', 'unselectable');
+		document.querySelectorAll('.bottomtext').forEach(element => element.classList.add('unselectable'));
 	} else {
-		document.getElementById('bottomtext').removeAttribute('class');
+		document.querySelectorAll('.bottomtext').forEach(element => element.classList.remove('unselectable'));
 	}
 
 	if (menuScreen == 5) {
@@ -9244,7 +9233,7 @@ class Character {
 		this.legdire = 1;
 		this.leg1skew = 0;
 		this.leg2skew = 0;
-		this.legAnimationFrame = [0,0]; // Animation offset.
+		this.legAnimationFrame = [0, 0]; // Animation offset.
 		this.burstFrame = -1;
 		this.diaMouthFrame = 0;
 		this.expr = 0;
@@ -9253,19 +9242,24 @@ class Character {
 	}
 
 	applyForces(grav, control, waterUpMaxSpeed) {
-		var _loc2_ = undefined;
-		if (grav >= 0) _loc2_ = Math.sqrt(grav);
-		if (grav < 0) _loc2_ = - Math.sqrt(- grav);
-		if (!this.onob && this.submerged != 1) this.vy = Math.min(this.vy + _loc2_,25);
-		if (this.onob || control) this.vx = (this.vx - this.fricGoal) * this.friction + this.fricGoal;
-		else this.vx *= 1 - (1 - this.friction) * 0.12;
+		let gravity = Math.sign(grav) * Math.sqrt(Math.abs(grav));
+
+		if (!this.onob && this.submerged != 1) this.vy = Math.min(this.vy + gravity, 25);
+		if (this.onob || control) {
+			this.vx = (this.vx - this.fricGoal) * this.friction + this.fricGoal;
+		} else {
+			this.vx *= 1 - (1 - this.friction) * 0.12;
+		}
+
 		if (Math.abs(this.vx) < 0.01) this.vx = 0;
+
 		if (this.submerged == 1) {
 			this.vy = 0;
 			if (this.weight2 > 0.18) this.submerged = 2;
 		} else if (this.submerged >= 2) {
 			if (this.vx > 1.5) this.vx = 1.5;
 			if (this.vx < -1.5) this.vx = -1.5;
+
 			if (this.vy > 1.8) this.vy = 1.8;
 			if (this.vy < - waterUpMaxSpeed) this.vy = - waterUpMaxSpeed;
 		}
@@ -9283,6 +9277,7 @@ class Character {
 		if (power > 0) this.dire = 3;
 		this.justChanged = 2;
 	}
+
 	stopMoving() {
 		if (this.dire == 1) this.dire = 2;
 		if (this.dire == 3) this.dire = 4;
