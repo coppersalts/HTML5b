@@ -2019,7 +2019,15 @@ function getVB(base64) {
 async function loadingScreen() {
 	// Zoom fix on Windows.
 	// https://danreynolds.ca/tech/2017/10/15/Variable-Browser-Zoom/
-	document.querySelector('body').style.zoom = `${1 / window.devicePixelRatio * 100}%`;
+	// On Firefox setting document.body.style.zoom doesn't actually zoom anything in.
+	// We don't really need to worry about the dpi scaling on Firefox though,
+	// and it just so happens that "document.body.style.zoom" is undefined
+	// by default on Firefox, and on Chrome and Safari it's an empty string by default.
+	// So we'll only want to try rescaling if document.body.style.zoom is
+	// an empty string when the page is loaded.
+	if (document.body.style.zoom === '') {
+		document.body.style.zoom = `${1 / window.devicePixelRatio * 100}%`;
+	}
 	pixelRatio = window.devicePixelRatio;
 
 	// Initialize Canvas Stuff
@@ -7093,7 +7101,7 @@ function draw() {
 								recoverTimer = 60;
 								char[recover2].charState = 2;
 								char[recover2].x = char[HPRC1] ? char[HPRC1].x : 0;
-								char[recover2].y = char[HPRC1] ? char[HPRC1].y : 0 - 20;
+								char[recover2].y = char[HPRC1] ? char[HPRC1].y - 20 : 0;
 								char[recover2].vx = 0;
 								char[recover2].vy = -1;
 								char[recover2].frame = 3;
@@ -9037,7 +9045,7 @@ function draw() {
 	if (white_alpha > 0) {
 		ctx.fillStyle = '#ffffff';
 		ctx.globalAlpha = white_alpha / 100;
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.fillRect(0, 0, cwidth, cheight);
 		ctx.globalAlpha = 1;
 	}
 
