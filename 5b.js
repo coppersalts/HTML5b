@@ -10,6 +10,7 @@ let ctx;
 const cwidth = 960;
 const cheight = 540;
 let pixelRatio;
+let addedZoom = 1;
 let highQual = true;
 const requestAnimationFrame =
 	window.requestAnimationFrame ||
@@ -2025,10 +2026,14 @@ async function loadingScreen() {
 	// by default on Firefox, and on Chrome and Safari it's an empty string by default.
 	// So we'll only want to try rescaling if document.body.style.zoom is
 	// an empty string when the page is loaded.
-	if (document.body.style.zoom === '') {
-		document.body.style.zoom = `${1 / window.devicePixelRatio * 100}%`;
-	}
 	pixelRatio = window.devicePixelRatio;
+	if (document.body.style.zoom === '') {
+		if (pixelRatio > 1 && pixelRatio < 2) {
+			addedZoom = pixelRatio;
+			document.body.style.zoom = `${1 / pixelRatio * 100}%`;
+			pixelRatio = window.devicePixelRatio;
+		}
+	}
 
 	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
@@ -6656,8 +6661,8 @@ function shareToExplore() {
 }
 
 function mousemove(event) {
-	_xmouse = event.pageX - canvas.getBoundingClientRect().left;
-	_ymouse = event.pageY - canvas.getBoundingClientRect().top;
+	_xmouse = event.pageX*addedZoom - canvas.getBoundingClientRect().left;
+	_ymouse = event.pageY*addedZoom - canvas.getBoundingClientRect().top;
 }
 
 function mousedown(event) {
