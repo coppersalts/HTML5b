@@ -6,7 +6,8 @@
 	<meta charset="utf-8"/>
 	<!--<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />-->
 	<link rel="stylesheet" href="style.css" type="text/css"/>
-	<script type="text/javascript" src="5b.min.js"></script>
+	<script type="text/javascript" id="5bscript"></script>
+	<script type="text/javascript" src="loadscript.js"></script>
 </head>
 <body>
 <div id="center">
@@ -14,6 +15,7 @@
 	<p class="bottomtext">An HTML5 port of Cary Huang's <a href="https://bfdi.tv/5b/">BFDIA 5b</a>.</p>
 	<p class="bottomtext">While uploading levels has not yet been added to HTML5b, you can still upload levels to explore through <a href="https://5beam.zelo.dev/">the 5beam site</a>.</p>
 	<p class="bottomtext">Alternatively you can upload them directly from the level creator by enabling experimental features by clicking <a onclick="enableExperimentalFeatures = true" href="#">here</a>.</p>
+	<p id="resetmod" class="bottomtext" style="visibility: hidden;">If you are unable to switch your mod (crashing, etc.), click <a onclick="localStorage.setItem('script', '5b.js');window.location.reload();" href="#">here</a> to reset it to the default.</p>
 </div>
 </body>
 </html>

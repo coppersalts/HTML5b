@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.3'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.3-mods'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -85,6 +85,8 @@ let longMode = false;
 let quirksMode = false;
 let enableExperimentalFeatures = false;
 let levelAlreadySharedToExplore = false;
+
+let menuOptionScreen = 1;
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -1882,6 +1884,10 @@ let exploreUser;
 let loggedInExploreUser5beamID = -1;
 let exploreLevelTitlesTruncated;
 let exploreLoading = false;
+let forks = [];
+let forksLoading = false;
+let forkPage = 1;
+let forkSearch = "";
 let myLevel;
 let myLevelChars;
 let myLevelDialogue;
@@ -1974,6 +1980,7 @@ let svgTilesVB = new Array(blockProperties.length);
 let svgMenu0;
 let svgMenu2;
 let svgMenu6;
+let svgMenu8;
 let svgMenu2border;
 let svgMenu2borderimg;
 let preMenuBG;
@@ -2138,6 +2145,7 @@ async function loadingScreen() {
 	svgMenu0 = createImage(resourceData['menu0.svg']);
 	svgMenu2 = createImage(resourceData['menu2.svg']);
 	svgMenu6 = createImage(resourceData['menu6.svg']);
+	svgMenu8 = createImage(resourceData['menu8.svg']);
 	svgMenu2border = createImage(resourceData['menu2border.svg']);
 	svgMenu2borderimg = createImage(resourceData['menu2borderimg.png']);
 	preMenuBG = createImage(resourceData['premenubg.png']);
@@ -2252,6 +2260,12 @@ function logInExplore() {
 	if (window.focus) newWindow.focus();
 }
 
+function menuLoadMod() {
+	menuScreen = 8;
+	forkSearch = "";
+	getForks();
+}
+
 function menu2Back() {
 	menuScreen = 0;
 	cameraX = 0;
@@ -2335,7 +2349,7 @@ function exitExploreLevel() {
 	cameraY = 0;
 }
 
-function drawMenu0Button(text, x, y, id, grayed, action) {
+function drawMenu0Button(text, x, y, id, grayed, action, ...arguments) {
 	let fill = '#ffffff';
 	if (!grayed) {
 		if (!lcPopUp && onRect(_xmouse, _ymouse, x, y, menu0ButtonSize.w, menu0ButtonSize.h)) {
@@ -2347,7 +2361,7 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 		}
 		if (!mouseIsDown && menu0ButtonClicked === id) {
 			menu0ButtonClicked = -1;
-			action();
+			action(...arguments);
 		}
 	} else fill = '#b8b8b8';
 
@@ -2560,7 +2574,9 @@ function drawRoundedRect(fill, x, y, w, h, cr) {
 	ctx.fill();
 }
 
-function drawMenu() {
+function drawMenu(optionScreen) {
+	menuOptionScreen = optionScreen || menuOptionScreen;
+
 	ctx.fillStyle = '#666666';
 	ctx.fillRect(0, 0, cwidth, cheight);
 	ctx.drawImage(svgMenu0, 0, 0);
@@ -2570,21 +2586,32 @@ function drawMenu() {
 	ctx.font = '20px Helvetica';
 	ctx.fillText(version, 5, cheight);
 
-	if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 303.75, 0, false, menuWatchC);
-	else drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatchA);
-	if (showingNewGame2) {
-		drawRoundedRect('#ffffff', 665.5, 81, 273, 72.95, 15);
-		ctx.font = '20px Helvetica';
-		ctx.fillStyle = '#666666';
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'top';
-		linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
-		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
-		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
-	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false, menuNewGame);
-	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0, menuContGame);
-	drawMenu0Button('EXPLORE (pre-α)', 665.55, 482.5, 4, false, menuExplore);
-	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false, menuLevelCreator);
+	switch (menuOptionScreen) {
+		case 1:
+			if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 338.4, 0, false, menuWatchC);
+			else drawMenu0Button('WATCH BFDIA 5a', 665.55, 338.4, 0, false, menuWatchA);
+			if (showingNewGame2) {
+				drawRoundedRect('#ffffff', 665.5, 81, 273, 72.95, 15);
+				ctx.font = '20px Helvetica';
+				ctx.fillStyle = '#666666';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'top';
+				linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
+				drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
+				drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
+			} else drawMenu0Button('NEW GAME', 665.55, 383.05, 1, false, menuNewGame);
+			drawMenu0Button('CONTINUE GAME', 665.55, 427.7, 2, levelProgress == 0, menuContGame);
+			drawMenu0Button('MORE', 665.55, 482.5, 3, false, drawMenu, 2);
+			break;
+		case 2:
+			drawMenu0Button('EXPLORE (pre-α)', 665.55, 338.4, 4, false, menuExplore);
+			drawMenu0Button('LEVEL CREATOR', 665.55, 383.05, 5, false, menuLevelCreator);
+			drawMenu0Button('LOAD MOD', 665.55, 427.7, 6, false, menuLoadMod);
+			drawMenu0Button('BACK', 665.55, 482.5, 7, false, drawMenu, 1);
+			break;
+		default:
+			drawMenu(1);
+	}
 
 	// let started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -6647,6 +6674,69 @@ function drawExploreLoadingText() {
 	ctx.fillText('loading...', cwidth / 2, cheight / 2);
 }
 
+function drawFork(x, y, fork) {
+	if (onRect(_xmouse, _ymouse, x, y, 200, 50)) {
+		onButton = true;
+		ctx.fillStyle = '#404040';
+		if (mouseIsDown && !pmouseIsDown) setMod(fork.full_name);
+	} else {
+		ctx.fillStyle = '#333333';
+	}
+
+	ctx.fillRect(x, y, 200, 50);
+
+	ctx.fillStyle = '#ffffff';
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '20px Helvetica';
+	ctx.fillText(fork.name, x + 6.35, y + 14.4);
+
+	ctx.fillStyle = '#999999';
+	ctx.font = '10px Helvetica';
+	ctx.fillText(fork.owner.login, x + 7, y + 33.3);
+}
+
+function drawForkSearch() {
+	ctx.fillStyle = '#ffffff';
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '20px Helvetica';
+	ctx.fillText('Search...', 28, 115);
+
+	forkSearch = drawTextBox(
+		forkSearch,
+		128,
+		100,
+		796,
+		40,
+		20,
+		[5, 10, 2, 2],
+		1,
+		false,
+		'#e0e0e0',
+		'#000000',
+		'Helvetica'
+	)[0];
+}
+
+function drawForksLoadingText() {
+	ctx.font = 'bold 35px Helvetica';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('loading...', cwidth / 2, cheight / 2);
+}
+
+function setForksPage(page) {
+	forkPage = page;
+	getForks(forkPage);
+}
+
+function setMod(repo) {
+	bfdia5b.setItem('script', 'https://cdn.jsdelivr.net/gh/' + repo + '/5b.min.js');
+	window.location.reload();
+}
+
 function drawArrow(x, y, w, h, dir) {
 	ctx.beginPath();
 	ctx.moveTo(x + w * (dir == 1 ? 1 : dir == 3 ? 0 : 0.5), y + h * (dir == 2 ? 1 : dir == 0 ? 0 : 0.5));
@@ -9021,6 +9111,66 @@ function draw() {
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
 			break;
+
+		case 8:
+			// Leave this alone so user's can switch mods
+
+			ctx.drawImage(svgMenu8, 0, 0, cwidth, cheight);
+			ctx.fillStyle = '#666666';
+
+			// Forks
+			if (forksLoading) {
+				drawForksLoadingText();
+			} else {
+				if (forks.length == 0) setForksPage(forkPage - 1);
+
+				drawForkSearch();
+
+				let tempForks = [];
+
+				if (forkSearch) {
+					forks.forEach(x => {
+						if (x.name.toLowerCase().indexOf(forkSearch.toLowerCase()) != -1 || x.owner.login.toLowerCase().indexOf(forkSearch.toLowerCase()) != -1) {
+							tempForks.push(x);
+						}
+					});
+				} else {
+					tempForks = forks;
+				}
+
+				for (let i = 0; i < tempForks.length; i++) {
+					drawFork(232 * (i % 4) + 28, Math.floor(i / 4) * 77 + 200, tempForks[i]);
+				}
+			}
+
+			// page number
+			ctx.textBaseline = 'top';
+			ctx.textAlign = 'center';
+			ctx.fillStyle = '#ffffff';
+			ctx.font = '30px Helvetica';
+			ctx.fillText(forkPage, cwidth / 2, 460);
+
+			// previous page
+			if (forkPage <= 1 || forksLoading) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse, _ymouse, 240, 460, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setForksPage(forkPage - 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(240, 460, 25, 30, 3);
+
+			// next page
+			if (forksLoading) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse, _ymouse, 720, 460, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setForksPage(forkPage + 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(720, 460, 25, 30, 1);
+
+			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
+
+			break;
 	}
 
 	if (levelTimer <= 30 || menuScreen != 3) {
@@ -9189,6 +9339,25 @@ function postExploreLevel(t, desc, data) {
 			console.log(err);
 			setLCMessage('Sorry, there was an error while attempting to send the level.');
 		});
+}
+
+// GitHub API Stuff
+// Leave this alone so user's can switch mods
+
+function getForks(page = 1, repo = 'coppersalts/HTML5b') {
+	forksLoading = true;
+
+	return fetch('https://api.github.com/repos/' + repo + '/forks?per_page=12&page=' + page, {method: 'GET'})
+	.then(response => {
+		response.json().then(data => {
+			forks = data;
+
+			forksLoading = false;
+		});
+	})
+	.catch(err => {
+		console.log(err);
+	});
 }
 
 // https://www.w3schools.com/js/js_cookies.asp
