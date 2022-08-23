@@ -2591,14 +2591,14 @@ function drawMenu(optionScreen) {
 			if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 338.4, 0, false, menuWatchC);
 			else drawMenu0Button('WATCH BFDIA 5a', 665.55, 338.4, 0, false, menuWatchA);
 			if (showingNewGame2) {
-				drawRoundedRect('#ffffff', 665.5, 81, 273, 72.95, 15);
+				drawRoundedRect('#ffffff', 665.5, 101, 273, 72.95, 15);
 				ctx.font = '20px Helvetica';
 				ctx.fillStyle = '#666666';
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'top';
-				linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
-				drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
-				drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
+				linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 104.3, 22);
+				drawNewGame2Button('YES', 680.4, 189.75, 5, '#993333', menuNewGame2yes);
+				drawNewGame2Button('NO', 815.9, 189.75, 6, '#1a4d1a', menuNewGame2no);
 			} else drawMenu0Button('NEW GAME', 665.55, 383.05, 1, false, menuNewGame);
 			drawMenu0Button('CONTINUE GAME', 665.55, 427.7, 2, levelProgress == 0, menuContGame);
 			drawMenu0Button('MORE', 665.55, 482.5, 3, false, drawMenu, 2);
