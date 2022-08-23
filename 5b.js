@@ -1884,10 +1884,16 @@ let exploreUser;
 let loggedInExploreUser5beamID = -1;
 let exploreLevelTitlesTruncated;
 let exploreLoading = false;
-let forks = [];
+let repo = "coppersalts/HTML5b";
+let branch = "master";
+let forks = {};
 let forksLoading = false;
 let forkPage = 1;
 let forkSearch = "";
+let branches = {};
+let branchesLoading = false;
+let branchPage = 1;
+let branchSearch = "";
 let myLevel;
 let myLevelChars;
 let myLevelDialogue;
@@ -2005,7 +2011,7 @@ let menu2_3ButtonClicked = -1;
 let levelButtonClicked = -1;
 let showingNewGame2 = false;
 
-let musicSound = new Audio('data/the fiber 16x loop.wav');
+let musicSound = new Audio(bfdia5b.getItem('fork') + 'data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
 // Creates an image object was a base64 src.
@@ -2062,13 +2068,13 @@ async function loadingScreen() {
 	ctx.font = '30px Helvetica';
 	ctx.fillText('Loading...', cwidth / 2, cheight / 2);
 
-	let req = await fetch('data/levels.txt');
+	let req = await fetch(bfdia5b.getItem('fork') + 'data/levels.txt');
 	let text = await req.text();
 	defaultLevelsString = text;
 	levelsString = defaultLevelsString;
 	loadLevels();
 
-	req = await fetch('data/images.json');
+	req = await fetch(bfdia5b.getItem('fork') + 'data/images.json');
 	let resourceData = await req.text();
 	resourceData = JSON.parse(resourceData);
 
@@ -2264,6 +2270,21 @@ function menuLoadMod() {
 	menuScreen = 8;
 	forkSearch = "";
 	getForks();
+}
+
+function gotoForkPage(fork) {
+	menuScreen = 9;
+	repo = fork.full_name;
+	getBranches(repo);
+}
+
+function gotoBranchPage(selectedBranch) {
+	menuScreen = 10;
+	branch = selectedBranch.name;
+}
+
+function viewBranchOnGitHub() {
+	window.open('https://github.com/' + repo + '/tree/' + branch);
 }
 
 function menu2Back() {
@@ -6678,7 +6699,7 @@ function drawFork(x, y, fork) {
 	if (onRect(_xmouse, _ymouse, x, y, 200, 50)) {
 		onButton = true;
 		ctx.fillStyle = '#404040';
-		if (mouseIsDown && !pmouseIsDown) setMod(fork.full_name);
+		if (mouseIsDown && !pmouseIsDown) gotoForkPage(fork);
 	} else {
 		ctx.fillStyle = '#333333';
 	}
@@ -6732,8 +6753,66 @@ function setForksPage(page) {
 	getForks(forkPage);
 }
 
-function setMod(repo) {
-	bfdia5b.setItem('script', 'https://cdn.jsdelivr.net/gh/' + repo + '/5b.min.js');
+function drawBranch(x, y, branch) {
+	if (onRect(_xmouse, _ymouse, x, y, 200, 50)) {
+		onButton = true;
+		ctx.fillStyle = '#404040';
+		if (mouseIsDown && !pmouseIsDown) gotoBranchPage(branch);
+	} else {
+		ctx.fillStyle = '#333333';
+	}
+
+	ctx.fillRect(x, y, 200, 50);
+
+	ctx.fillStyle = '#ffffff';
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '20px Helvetica';
+	ctx.fillText(branch.name, x + 6.35, y + 14.4);
+
+	ctx.fillStyle = '#999999';
+	ctx.font = '10px Helvetica';
+	ctx.fillText(repo, x + 7, y + 33.3);
+}
+
+function drawBranchSearch() {
+	ctx.fillStyle = '#ffffff';
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+	ctx.font = '20px Helvetica';
+	ctx.fillText('Search...', 28, 115);
+
+	branchSearch = drawTextBox(
+		branchSearch,
+		128,
+		100,
+		796,
+		40,
+		20,
+		[5, 10, 2, 2],
+		1,
+		false,
+		'#e0e0e0',
+		'#000000',
+		'Helvetica'
+	)[0];
+}
+
+function drawBranchesLoadingText() {
+	ctx.font = 'bold 35px Helvetica';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText('loading...', cwidth / 2, cheight / 2);
+}
+
+function setBranchesPage(page) {
+	branchPage = page;
+	getBranches(repo, branchPage);
+}
+
+function setMod() {
+	bfdia5b.setItem('fork', 'https://cdn.jsdelivr.net/gh/' + repo + '@' + branch + '/');
 	window.location.reload();
 }
 
@@ -9122,20 +9201,20 @@ function draw() {
 			if (forksLoading) {
 				drawForksLoadingText();
 			} else {
-				if (forks.length == 0) setForksPage(forkPage - 1);
+				if (!forks[forkPage - 1].length) setForksPage(forkPage - 1);
 
 				drawForkSearch();
 
 				let tempForks = [];
 
 				if (forkSearch) {
-					forks.forEach(x => {
+					forks[forkPage - 1].forEach(x => {
 						if (x.name.toLowerCase().indexOf(forkSearch.toLowerCase()) != -1 || x.owner.login.toLowerCase().indexOf(forkSearch.toLowerCase()) != -1) {
 							tempForks.push(x);
 						}
 					});
 				} else {
-					tempForks = forks;
+					tempForks = forks[forkPage - 1];
 				}
 
 				for (let i = 0; i < tempForks.length; i++) {
@@ -9160,13 +9239,98 @@ function draw() {
 			drawArrow(240, 460, 25, 30, 3);
 
 			// next page
-			if (forksLoading) ctx.fillStyle = '#505050';
+			if ((forks[forkPage] && !forks[forkPage].length) || forksLoading) ctx.fillStyle = '#505050';
 			else if (onRect(_xmouse, _ymouse, 720, 460, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) setForksPage(forkPage + 1);
 			} else ctx.fillStyle = '#999999';
 			drawArrow(720, 460, 25, 30, 1);
+
+			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
+
+			break;
+
+		case 9:
+			// Leave this alone so user's can switch mods
+
+			ctx.drawImage(svgMenu8, 0, 0, cwidth, cheight);
+			ctx.fillStyle = '#666666';
+
+			// Branches
+			if (branchesLoading) {
+				drawBranchesLoadingText();
+			} else {
+				if (!branches[repo][branchPage - 1].length) setBranchesPage(branchPage - 1);
+
+				drawBranchSearch();
+
+				let tempBranches = [];
+
+				if (branchSearch) {
+					branches[repo][branchPage - 1].forEach(x => {
+						if (x.name.toLowerCase().indexOf(branchSearch.toLowerCase()) != -1) {
+							tempBranches.push(x);
+						}
+					});
+				} else {
+					tempBranches = branches[repo][branchPage - 1];
+				}
+
+				for (let i = 0; i < tempBranches.length; i++) {
+					drawBranch(232 * (i % 4) + 28, Math.floor(i / 4) * 77 + 200, tempBranches[i]);
+				}
+			}
+
+			// page number
+			ctx.textBaseline = 'top';
+			ctx.textAlign = 'center';
+			ctx.fillStyle = '#ffffff';
+			ctx.font = '30px Helvetica';
+			ctx.fillText(branchPage, cwidth / 2, 460);
+
+			// previous page
+			if (branchPage <= 1 || branchesLoading) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse, _ymouse, 240, 460, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setBranchesPage(branchPage - 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(240, 460, 25, 30, 3);
+
+			// next page
+			if ((branches[repo][branchPage] && !branches[repo][branchPage].length) || branchesLoading) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse, _ymouse, 720, 460, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setBranchesPage(branchPage + 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(720, 460, 25, 30, 1);
+
+			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
+
+			break;
+
+		case 10:
+			// Leave this alone so user's can switch mods
+
+			ctx.drawImage(svgMenu8, 0, 0, cwidth, cheight);
+			ctx.fillStyle = '#666666';
+
+			ctx.textBaseline = 'top';
+			ctx.textAlign = 'left';
+			ctx.fillStyle = '#ffffff';
+			ctx.font = '32px Helvetica';
+			ctx.fillText(repo, 28, 115);
+
+			ctx.textBaseline = 'top';
+			ctx.textAlign = 'left';
+			ctx.fillStyle = '#ffffff';
+			ctx.font = '16px Helvetica';
+			ctx.fillText(branch, 28, 145);
+
+			drawMenu0Button('View on GitHub', 28, 250, 0, false, viewBranchOnGitHub);
+			drawMenu0Button('Use mod!', 28, 304.8, 2, false, setMod);
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 
@@ -9344,15 +9508,36 @@ function postExploreLevel(t, desc, data) {
 // GitHub API Stuff
 // Leave this alone so user's can switch mods
 
-function getForks(page = 1, repo = 'coppersalts/HTML5b') {
+function getForks(page = 1) {
 	forksLoading = true;
 
-	return fetch('https://api.github.com/repos/' + repo + '/forks?per_page=12&page=' + page, {method: 'GET'})
+	if (forks[page - 1]) return forksLoading = false;
+
+	return fetch('https://api.github.com/repos/coppersalts/HTML5b/forks?per_page=12&page=' + page, {method: 'GET'})
 	.then(response => {
 		response.json().then(data => {
-			forks = data;
+			forks[page - 1] = data;
 
 			forksLoading = false;
+		});
+	})
+	.catch(err => {
+		console.log(err);
+	});
+}
+
+function getBranches(repo, page = 1) {
+	branchesLoading = true;
+
+	if (branches[repo] && branches[repo][page - 1]) return branchesLoading = false;
+
+	return fetch('https://api.github.com/repos/' + repo + '/branches?per_page=12&page=' + page, {method: 'GET'})
+	.then(response => {
+		response.json().then(data => {
+			branches[repo] = branches[repo] || [];
+			branches[repo][page - 1] = data;
+
+			branchesLoading = false;
 		});
 	})
 	.catch(err => {
