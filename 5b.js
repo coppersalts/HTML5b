@@ -7697,6 +7697,14 @@ function draw() {
 				}
 			}
 
+			// This is an easter egg I added for the wiki camp 2. You can ignore it.
+			if (onRect(_xmouse, _ymouse, 674, 142, 30, 30)) {
+				onButton = true;
+				if (!mouseIsDown && pmouseIsDown) {
+					window.open('https://camp2.rectangle.zone/index.php?title=5b_Challenge_Crystal');
+				}
+			}
+
 			qTimer--;
 			x = -cameraX;
 			y = -cameraY;
