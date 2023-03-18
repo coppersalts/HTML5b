@@ -6975,9 +6975,9 @@ function setup() {
 	thumbBigctx = thumbBig.getContext('2d');
 	thumbBigctx.scale(pixelRatio * 0.4, pixelRatio * 0.4);
 
-	window.addEventListener('mousemove', mousemove);
-	window.addEventListener('mousedown', mousedown);
-	window.addEventListener('mouseup', mouseup);
+	window.addEventListener('pointermove', mousemove);
+	window.addEventListener('pointerdown', mousedown);
+	window.addEventListener('pointerup', mouseup);
 	window.addEventListener('keydown', keydown);
 	window.addEventListener('keyup', keyup);
 	canvas.addEventListener('paste', handlePaste);
