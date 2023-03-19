@@ -1,7 +1,7 @@
 {
   "name": "HTML5b",
   "private": true,
-  "version": "5.2.3",
+  "version": "beta 5.2.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
