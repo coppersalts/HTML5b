@@ -6563,40 +6563,44 @@ function setExploreThumbs() {
 }
 
 function drawExploreThumb(context, size, data, scale) {
-	// size is the width
-	if (exploreTab == 1 && menuScreen == 6) return;
-	context.clearRect(0, 0, (size * pixelRatio) / scale, (size * 0.5625 * pixelRatio) / scale);
+	try {
+		// size is the width
+		if (exploreTab == 1 && menuScreen == 6) return;
+		context.clearRect(0, 0, (size * pixelRatio) / scale, (size * 0.5625 * pixelRatio) / scale);
 
-	let lines = data.split('\r\n');
-	if (lines.length == 1) lines = data.split('\n');
-	// skip past any blank lines at the start
-	let j = 0;
-	while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
-	lines = lines.splice(j);
-	let thumbLevelHead = lines[1].split(',');
-	let thumbLevelW = parseInt(thumbLevelHead[0]);
-	let thumbLevelH = parseInt(thumbLevelHead[1]);
-	context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
+		let lines = data.split('\r\n');
+		if (lines.length == 1) lines = data.split('\n');
+		// skip past any blank lines at the start
+		let j = 0;
+		while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
+		lines = lines.splice(j);
+		let thumbLevelHead = lines[1].split(',');
+		let thumbLevelW = parseInt(thumbLevelHead[0]);
+		let thumbLevelH = parseInt(thumbLevelHead[1]);
+		context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
 
-	if (thumbLevelHead[4] == 'H') {
-		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
-			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-				exploreDrawThumbTile(
-					context,
-					x,
-					y,
-					111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
+		if (thumbLevelHead[4] == 'H') {
+			for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+				for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
+					exploreDrawThumbTile(
+						context,
+						x,
+						y,
+						111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
 						tileIDFromChar(lines[y + 2].charCodeAt(x * 2 + 1)),
-					scale
-				);
+						scale
+					);
+				}
+			}
+		} else {
+			for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+				for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
+					exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
+				}
 			}
 		}
-	} else {
-		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
-			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-				exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
-			}
-		}
+	} catch(e) {
+		console.warn(e);
 	}
 }
 
