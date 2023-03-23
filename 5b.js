@@ -2,9 +2,6 @@
 // TODO: rename some functions
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
-import defaultLevelsString from "./data/levels.txt?raw";
-import resourceData from "./data/images.json";
-import './style.css';
 
 const version = 'beta 5.2.3'; // putting this up here so I can edit the text on the title screen more easily.
 
@@ -47,6 +44,7 @@ let inputText = '';
 let textAfterCursorAtClick = '';
 let controlOrCommandPress = false;
 
+let defaultLevelsString = '';
 let levelsString = '';
 let levelCount = 133;
 let f = 19;
@@ -1851,7 +1849,6 @@ let rightPress = false;
 let recover = false;
 let recover2 = 0;
 let recoverTimer = 0;
-let HPRC1 = 0;
 let HPRC2 = 0;
 let cornerHangTimer = 0;
 let goal = 0;
@@ -1910,7 +1907,7 @@ let LCRect = [-1, -1, -1, -1];
 let levelTimer = 0;
 let levelTimer2 = 0;
 let bgXScale = 0;
-let bgYScale = 0;
+let bgYscale = 0;
 let stopX = 0;
 let stopY = 0;
 let toBounce = false;
@@ -2001,7 +1998,7 @@ let menu2_3ButtonClicked = -1;
 let levelButtonClicked = -1;
 let showingNewGame2 = false;
 
-let musicSound = new Audio('./the fiber 16x loop.wav');
+let musicSound = new Audio('data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
 // Creates an image object was a base64 src.
@@ -2058,8 +2055,15 @@ async function loadingScreen() {
 	ctx.font = '30px Helvetica';
 	ctx.fillText('Loading...', cwidth / 2, cheight / 2);
 
+	let req = await fetch('data/levels.txt');
+	let text = await req.text();
+	defaultLevelsString = text;
 	levelsString = defaultLevelsString;
 	loadLevels();
+
+	req = await fetch('data/images.json');
+	let resourceData = await req.text();
+	resourceData = JSON.parse(resourceData);
 
 	svgCSBubble = createImage(resourceData['ui/csbubble/dia.svg']);
 	svgHPRCCrank = createImage(resourceData['entities/e0035crank.svg']);
@@ -2240,7 +2244,7 @@ function playExploreLevel() {
 
 function logInExplore() {
 	loggedInExploreUser5beamID = -1;
-	let newWindow = window.open(
+	newWindow = window.open(
 		'https://discord.com/api/oauth2/authorize?client_id=747831622556057693&redirect_uri=https%3A%2F%2F5beam.zelo.dev%2Fapi%2Fauth%2Fcallback%2Fhtml5b&response_type=code&scope=identify',
 		'Window Name',
 		'height=750,width=450'
@@ -4125,7 +4129,7 @@ function verticalProp(i, sign, prop, x, y) {
 		return true;
 	}
 	if (prop >= 4 && prop <= 7) {
-		for (let j = Math.floor((x - char[i].w) / 30); j <= Math.floor((x + char[i].w - 0.01) / 30); j++) {
+		for (j = Math.floor((x - char[i].w) / 30); j <= Math.floor((x + char[i].w - 0.01) / 30); j++) {
 			if (!outOfRange(j, yTile)) {
 				if (blockProperties[thisLevel[yTile][j]][prop - 4] && !blockProperties[thisLevel[yTile][j]][prop]) {
 					return false;
@@ -4133,7 +4137,7 @@ function verticalProp(i, sign, prop, x, y) {
 			}
 		}
 	}
-	for (let j = Math.floor((x - char[i].w) / 30); j <= Math.floor((x + char[i].w - 0.01) / 30); j++) {
+	for (j = Math.floor((x - char[i].w) / 30); j <= Math.floor((x + char[i].w - 0.01) / 30); j++) {
 		if (!outOfRange(j, yTile)) {
 			if (blockProperties[thisLevel[yTile][j]][prop]) {
 				if (prop != 1 || !ifCarried(i) || allSolid(thisLevel[yTile][j])) {
@@ -4163,7 +4167,7 @@ function horizontalProp(i, sign, prop, x, y) {
 			}
 		}
 	}
-	for (let j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
+	for (j = Math.floor((y - char[i].h) / 30); j <= Math.floor((y - 0.01) / 30); j++) {
 		if (!outOfRange(xTile, j)) {
 			if (blockProperties[thisLevel[j][xTile]][prop]) {
 				return true;
@@ -4619,7 +4623,7 @@ function swapDepths(i, jdep) {
 }
 
 function nextDeadPerson(i, dire) {
-	let i2 = (i + dire + charCount) % charCount;
+	i2 = (i + dire + charCount) % charCount;
 	while (char[i2].charState != 1) {
 		i2 = (i2 + dire + charCount) % charCount;
 	}
@@ -4833,7 +4837,7 @@ function drawLCTiles() {
 					y >= mouseGridY &&
 					y < mouseGridY + tileClipboard.length
 				) {
-					let clipboardTileCandidate = tileClipboard[y - mouseGridY][x - mouseGridX];
+					clipboardTileCandidate = tileClipboard[y - mouseGridY][x - mouseGridX];
 					if (!(_keysDown[18] && tile != 0) && clipboardTileCandidate != 0) {
 						tile = clipboardTileCandidate;
 						ctx.globalAlpha = 0.5;
@@ -6563,44 +6567,40 @@ function setExploreThumbs() {
 }
 
 function drawExploreThumb(context, size, data, scale) {
-	try {
-		// size is the width
-		if (exploreTab == 1 && menuScreen == 6) return;
-		context.clearRect(0, 0, (size * pixelRatio) / scale, (size * 0.5625 * pixelRatio) / scale);
+	// size is the width
+	if (exploreTab == 1 && menuScreen == 6) return;
+	context.clearRect(0, 0, (size * pixelRatio) / scale, (size * 0.5625 * pixelRatio) / scale);
 
-		let lines = data.split('\r\n');
-		if (lines.length == 1) lines = data.split('\n');
-		// skip past any blank lines at the start
-		let j = 0;
-		while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
-		lines = lines.splice(j);
-		let thumbLevelHead = lines[1].split(',');
-		let thumbLevelW = parseInt(thumbLevelHead[0]);
-		let thumbLevelH = parseInt(thumbLevelHead[1]);
-		context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
+	let lines = data.split('\r\n');
+	if (lines.length == 1) lines = data.split('\n');
+	// skip past any blank lines at the start
+	let j = 0;
+	while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
+	lines = lines.splice(j);
+	let thumbLevelHead = lines[1].split(',');
+	let thumbLevelW = parseInt(thumbLevelHead[0]);
+	let thumbLevelH = parseInt(thumbLevelHead[1]);
+	context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
 
-		if (thumbLevelHead[4] == 'H') {
-			for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
-				for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-					exploreDrawThumbTile(
-						context,
-						x,
-						y,
-						111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
+	if (thumbLevelHead[4] == 'H') {
+		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
+				exploreDrawThumbTile(
+					context,
+					x,
+					y,
+					111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
 						tileIDFromChar(lines[y + 2].charCodeAt(x * 2 + 1)),
-						scale
-					);
-				}
-			}
-		} else {
-			for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
-				for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-					exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
-				}
+					scale
+				);
 			}
 		}
-	} catch(e) {
-		console.warn(e);
+	} else {
+		for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+			for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
+				exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
+			}
+		}
 	}
 }
 
@@ -6809,7 +6809,7 @@ function mousedown(event) {
 						}
 					} else if (tool == 7) {
 						let x2 = ((_xmouse - (330 - (scale * levelWidth) / 2)) / scale) % 1;
-						let sizeChange = 0;
+						sizeChange = 0;
 						if (closeToEdgeX() || levelWidth >= 2) {
 							if (closeToEdgeX()) {
 								sizeChange = 1;
@@ -6823,6 +6823,7 @@ function mousedown(event) {
 							let x4 = 0;
 							for (let y3 = 0; y3 < levelHeight; y3++) {
 								myLevel[1][y3] = new Array(levelWidth);
+								x3 = 0;
 								for (let x3 = 0; x3 < levelWidth; x3++) {
 									if (x3 < x2) {
 										x4 = x3;
@@ -6855,9 +6856,9 @@ function mouseup(event) {
 	if (menuScreen == 5) {
 		if (!blockProperties[selectedTile][9]) {
 			if (tool == 2 && LCRect[0] != -1) {
-				let y = Math.min(LCRect[1], LCRect[3]);
+				y = Math.min(LCRect[1], LCRect[3]);
 				while (y <= Math.max(LCRect[1], LCRect[3])) {
-					let x = Math.min(LCRect[0], LCRect[2]);
+					x = Math.min(LCRect[0], LCRect[2]);
 					while (x <= Math.max(LCRect[0], LCRect[2])) {
 						myLevel[1][y][x] = selectedTile;
 						// levelCreator.tiles["tileX" + x + "Y" + y].gotoAndStop(selectedTile + 1);
@@ -7440,7 +7441,7 @@ function draw() {
 					if (stopX != 0) {
 						char[i].fricGoal = 0;
 						if (char[i].submerged >= 2) {
-							let j = i;
+							j = i;
 							if (ifCarried(i)) {
 								j = char[i].carriedBy;
 							}
@@ -7538,7 +7539,7 @@ function draw() {
 						char[i].heated = 0;
 					}
 					if (char[i].standingOn >= 0) {
-						let j = char[i].standingOn;
+						j = char[i].standingOn;
 						if (Math.abs(char[i].x - char[j].x) >= char[i].w + char[j].w || ifCarried(j)) {
 							fallOff(i);
 						}
@@ -7705,8 +7706,8 @@ function draw() {
 			}
 
 			qTimer--;
-			var x = -cameraX;
-			var y = -cameraY;
+			x = -cameraX;
+			y = -cameraY;
 			if (wipeTimer < 60) {
 				x += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
 				y += (Math.random() - 0.5) * (30 - Math.abs(wipeTimer - 30));
@@ -7856,7 +7857,7 @@ function draw() {
 							ctx.fillRect(660, charInfoYLookUp[i] - 5, 270, charInfoHeight + 10);
 						}
 						drawLCCharInfo(i, charInfoYLookUp[i]);
-						// if (i == charDropdown) let charDropdownY = charInfoYLookUp[i];
+						if (i == charDropdown) charDropdownY = charInfoYLookUp[i];
 					}
 					addButtonPressed = false;
 					if (
