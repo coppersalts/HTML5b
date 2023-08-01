@@ -82,7 +82,8 @@ let longMode = false;
 let quirksMode = false;
 let enableExperimentalFeatures = false;
 let levelAlreadySharedToExplore = false;
-let white_alpha = 0;
+let whiteAlpha = 0;
+let coinAlpha = 0;
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -2267,7 +2268,10 @@ function logInExplore() {
 
 function menu2Back() {
 	if (playingLevelpack && menuScreen == 2) menuScreen = 7;
-	else menuScreen = 0;
+	else {
+		menuScreen = 0;
+		getSavedGame();
+	}
 	cameraX = 0;
 	cameraY = 0;
 }
@@ -2430,7 +2434,7 @@ function drawLevelButton(text, x, y, id, color) {
 			levelButtonClicked = -1;
 			if (id <= levelProgress) { // || (id > 99 && id < bonusProgress + 100)
 				playLevel(id);
-				white_alpha = 100;
+				whiteAlpha = 100;
 			}
 		}
 	}
@@ -3746,7 +3750,7 @@ function addTileMovieClip(x, y, context) {
 				context.translate(x * 30 + 15, y * 30 + 15);
 				let wtrot = Math.sin((_frameCount * Math.PI) / 20) * 0.5235987756;
 				context.transform(Math.cos(wtrot), -Math.sin(wtrot), Math.sin(wtrot), Math.cos(wtrot), 0, 0);
-				context.globalAlpha = Math.max(Math.min((140 - locations[4] * 0.7) / 100, 1), 0);
+				context.globalAlpha = Math.max(Math.min(coinAlpha / 100, 1), 0);
 				context.drawImage(svgCoin, -15, -15, 30, 30);
 				context.restore();
 			}
@@ -6570,7 +6574,7 @@ function truncateLevelTitles() {
 		exploreLevelTitlesTruncated[i] = fitString(ctx, explorePageLevels[i].title, 195.3);
 }
 
-function drawExploreLevel(x, y, i) {
+function drawExploreLevel(x, y, i, type) {
 	if (onRect(_xmouse, _ymouse, x, y, 208, 155)) {
 		onButton = true;
 		ctx.fillStyle = '#404040';
@@ -6582,7 +6586,7 @@ function drawExploreLevel(x, y, i) {
 	ctx.fillRect(x, y, 208, 155);
 	// ctx.fillStyle = '#cccccc';
 	// ctx.fillRect(x+8, y+8, 192, 108);
-	ctx.drawImage(thumbs[i], x + 8, y + 8, 192, 108);
+	if (type == 0) ctx.drawImage(thumbs[i], x + 8, y + 8, 192, 108);
 
 	ctx.fillStyle = '#ffffff';
 	ctx.textBaseline = 'top';
@@ -7342,9 +7346,8 @@ function draw() {
 					}
 				}
 			}
-			let alph;
-			if (!gotThisCoin) alph = 140 - locations[4] * 0.7;
-			if (playMode != 2 && gotCoin[currentLevel]) alph = Math.max(alph, 30);
+			if (!gotThisCoin) coinAlpha = 140 - locations[4] * 0.7;
+			if (gotCoin[currentLevel]) coinAlpha = Math.max(alph, 30);
 			for (let i = 0; i < charCount; i++) {
 				if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y)
 					char[i].justChanged = 2;
@@ -9017,7 +9020,7 @@ function draw() {
 				drawExploreLoadingText();
 			} else {
 				for (let i = 0; i < explorePageLevels.length; i++) {
-					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 100, i);
+					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 100, i, exploreTab==1?1:0);
 				}
 			}
 
@@ -9030,21 +9033,21 @@ function draw() {
 
 			// previous page
 			if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse, _ymouse, 240, 460, 25, 30)) {
+			else if (onRect(_xmouse, _ymouse, 227.5, 460, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage - 1);
 			} else ctx.fillStyle = '#999999';
-			drawArrow(240, 460, 25, 30, 3);
+			drawArrow(227.5, 460, 25, 30, 3);
 
 			// next page
 			if (exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse, _ymouse, 720, 460, 25, 30)) {
+			else if (onRect(_xmouse, _ymouse, 707.5, 460, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage + 1);
 			} else ctx.fillStyle = '#999999';
-			drawArrow(720, 460, 25, 30, 1);
+			drawArrow(707.5, 460, 25, 30, 1);
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
@@ -9084,10 +9087,10 @@ function draw() {
 
 	if (levelTimer <= 30 || menuScreen != 3) {
 		if (wipeTimer >= 30 && wipeTimer <= 60) {
-			white_alpha = 220 - wipeTimer * 4;
+			whiteAlpha = 220 - wipeTimer * 4;
 		}
-	} else white_alpha = 0;
-	if (wipeTimer == 29 && menuScreen == 3 && (charsAtEnd >= charCount2 || transitionType == 0)) white_alpha = 100;
+	} else whiteAlpha = 0;
+	if (wipeTimer == 29 && menuScreen == 3 && (charsAtEnd >= charCount2 || transitionType == 0)) whiteAlpha = 100;
 	if (wipeTimer >= 60) wipeTimer = 0;
 	if (wipeTimer >= 1) wipeTimer++;
 
@@ -9106,9 +9109,9 @@ function draw() {
 			shakeY = 0;
 		}
 	}
-	if (white_alpha > 0) {
+	if (whiteAlpha > 0) {
 		ctx.fillStyle = '#ffffff';
-		ctx.globalAlpha = white_alpha / 100;
+		ctx.globalAlpha = whiteAlpha / 100;
 		ctx.fillRect(0, 0, cwidth, cheight);
 		ctx.globalAlpha = 1;
 	}
