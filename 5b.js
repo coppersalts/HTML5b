@@ -2583,7 +2583,7 @@ function drawMenu() {
 		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
 	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false, menuNewGame);
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0, menuContGame);
-	drawMenu0Button('EXPLORE (pre-α)', 665.55, 482.5, 4, false, menuExplore);
+	drawMenu0Button('EXPLORE (alpha)', 665.55, 482.5, 4, false, menuExplore);
 	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false, menuLevelCreator);
 
 	// let started = true;
@@ -7703,7 +7703,7 @@ function draw() {
 				}
 			}
 
-			// This is an easter egg I added for the wiki camp 2. You can ignore it.
+			// This is an easter egg I added for The Wiki Camp 2. You can ignore it.
 			if (currentLevel == 52 && onRect(_xmouse, _ymouse, 674, 142, 30, 30)) {
 				onButton = true;
 				if (!mouseIsDown && pmouseIsDown) {
@@ -8083,7 +8083,7 @@ function draw() {
 								0,
 								levelHeight
 							);
-							if (_keysDown[16]) {
+							if (!_keysDown[16]) {
 								myLevelChars[1][charDropdown][1] = Math.round(myLevelChars[1][charDropdown][1] * 2) / 2;
 								myLevelChars[1][charDropdown][2] = Math.round(myLevelChars[1][charDropdown][2] * 2) / 2;
 							}
