@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'v0.1.0'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.1.0*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -1886,9 +1886,12 @@ let menuScreen = -1;
 let pmenuScreen = -1;
 let exploreTab = 0;
 let explorePage = 0;
+let exploreSort = 0;
 let explorePageLevels = [];
 let exploreLevelPageLevel;
 let exploreUser;
+let exploreSortText = ['new','?','old'];
+let exploreSortTextWidth = 150;
 let loggedInExploreUser5beamID = -1;
 let exploreLevelTitlesTruncated;
 let exploreLoading = false;
@@ -6605,7 +6608,7 @@ function drawExploreLevel(x, y, i, type) {
 
 function setExplorePage(page) {
 	explorePage = page;
-	getExplorePage(explorePage, exploreTab);
+	getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
 }
 
@@ -7347,7 +7350,7 @@ function draw() {
 				}
 			}
 			if (!gotThisCoin) coinAlpha = 140 - locations[4] * 0.7;
-			if (gotCoin[currentLevel]) coinAlpha = Math.max(alph, 30);
+			if (playMode < 2 && gotCoin[currentLevel]) coinAlpha = Math.max(alph, 30);
 			for (let i = 0; i < charCount; i++) {
 				if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y)
 					char[i].justChanged = 2;
@@ -9020,34 +9023,50 @@ function draw() {
 				drawExploreLoadingText();
 			} else {
 				for (let i = 0; i < explorePageLevels.length; i++) {
-					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 100, i, exploreTab==1?1:0);
+					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, exploreTab==1?1:0);
 				}
 			}
 
-			// page number
+			// Sort by
+			if (onRect(_xmouse, _ymouse, 932-exploreSortTextWidth, 85, exploreSortTextWidth, 30)) {
+				ctx.fillStyle = '#404040';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) {
+					// exploreSort = (exploreSort + 1) % exploreSortText.length;
+					exploreSort = exploreSort==0?2:0;
+					setExplorePage(0);
+				}
+			} else ctx.fillStyle = '#333333';
+			ctx.fillRect(932-exploreSortTextWidth, 85, exploreSortTextWidth, 30);
 			ctx.textBaseline = 'top';
-			ctx.textAlign = 'center';
+			ctx.textAlign = 'left';
 			ctx.fillStyle = '#ffffff';
-			ctx.font = '30px Helvetica';
-			ctx.fillText(explorePage + 1, cwidth / 2, 460);
+			ctx.font = '24px Helvetica';
+			ctx.fillText('Sort by: ' + exploreSortText[exploreSort], 932-exploreSortTextWidth + 5, 90);
 
-			// previous page
+
+			// Page number
+			ctx.textAlign = 'center';
+			ctx.font = '30px Helvetica';
+			ctx.fillText(explorePage + 1, cwidth / 2, 490);
+
+			// Previous page button
 			if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse, _ymouse, 227.5, 460, 25, 30)) {
+			else if (onRect(_xmouse, _ymouse, 227.5, 487, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage - 1);
 			} else ctx.fillStyle = '#999999';
-			drawArrow(227.5, 460, 25, 30, 3);
+			drawArrow(227.5, 487, 25, 30, 3);
 
-			// next page
+			// Next page button
 			if (exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse, _ymouse, 707.5, 460, 25, 30)) {
+			else if (onRect(_xmouse, _ymouse, 707.5, 487, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage + 1);
 			} else ctx.fillStyle = '#999999';
-			drawArrow(707.5, 460, 25, 30, 1);
+			drawArrow(707.5, 487, 25, 30, 1);
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
@@ -9078,7 +9097,7 @@ function draw() {
 				// ctx.fillRect(30, 98, 368, 207);
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				drawMenu0Button('PLAY LEVEL', 30, 389, 2, false, playExploreLevel);
+				drawMenu0Button(exploreTab==0?'PLAY LEVEL':'NEW GAME', 30, 389, 2, false, playExploreLevel);
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
@@ -9157,9 +9176,9 @@ function rAF60fps() {
 
 // Explore API Stuff
 
-function getExplorePage(p, t) {
+function getExplorePage(p, t, s) {
 	exploreLoading = true;
-	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=' + t, {method: 'GET'})
+	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&sort=' + s + '&type=' + t, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				explorePageLevels = data;
