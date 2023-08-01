@@ -2900,6 +2900,8 @@ function resetLevel() {
 		levelWidth = levels[currentLevel][0].length;
 		levelHeight = levels[currentLevel].length;
 
+		if (currentLevel === 0) levels[0][13][29] = levels[0][13][30] = levels[0][13][31] = quirksMode ? 16 : 1; // Adds converyors back to level 1 one quirks mode.
+
 		copyLevel(levels[currentLevel]);
 		charCount2 = 0;
 		HPRC1 = HPRC2 = 1000000;
@@ -7925,7 +7927,6 @@ function draw() {
 							onButton = true;
 							hoverText = 'Duplicate Character or Object';
 							if (mouseIsDown && !pmouseIsDown) {
-								// console.log('mi lon ni');
 								reorderCharUp = false;
 								reorderCharDown = false;
 								duplicateChar = true;
