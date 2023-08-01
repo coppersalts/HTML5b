@@ -8584,7 +8584,7 @@ function draw() {
 						673,
 						tabWindowY + 210,
 						16,
-						!enableExperimentalFeatures,
+						false,
 						shareToExplore
 					);
 					ctx.fillStyle = '#000000';
@@ -9002,7 +9002,7 @@ function draw() {
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
-			drawMenu0Button('LOG IN', 300, 15, 16, !enableExperimentalFeatures, logInExplore);
+			drawMenu0Button('LOG IN', 300, 15, 16, false, logInExplore);
 			break;
 
 		case 7:
