@@ -62,6 +62,7 @@ let lineLength = 0;
 let dialogueChar = new Array(levelCount);
 let dialogueText = new Array(levelCount);
 let dialogueFace = new Array(levelCount);
+// Why are these next three arrays of length levelCount?
 let cLevelDialogueChar = new Array(levelCount);
 let cLevelDialogueText = new Array(levelCount);
 let cLevelDialogueFace = new Array(levelCount);
@@ -90,7 +91,6 @@ function clearVars() {
 }
 function saveGame() {
 	if (playingLevelpack) return;
-	console.log('oopsie');
 	bfdia5b.setItem('gotCoin', gotCoin);
 	bfdia5b.setItem('coins', coins);
 	bfdia5b.setItem('levelProgress', levelProgress);
@@ -2071,7 +2071,7 @@ async function loadingScreen() {
 	levelsString = defaultLevelsString;
 	loadLevels();
 
-	req = await fetch('data/images.json');
+	req = await fetch('data/images2.json');
 	let resourceData = await req.text();
 	resourceData = JSON.parse(resourceData);
 
@@ -2266,7 +2266,8 @@ function logInExplore() {
 }
 
 function menu2Back() {
-	menuScreen = 0;
+	if (playingLevelpack && menuScreen == 2) menuScreen = 7;
+	else menuScreen = 0;
 	cameraX = 0;
 	cameraY = 0;
 }
@@ -2653,8 +2654,29 @@ function drawLevelMap() {
 	ctx.fillStyle = '#000000';
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
-	ctx.font = '40px Helvetica';
-	ctx.fillText('x ' + coins, 477.95, 50.9);
+
+	if (!playingLevelpack) {
+		ctx.font = 'bold 115px Arial';
+		ctx.fillText('5b', 47, 23);
+		ctx.font = '48px Helvetica';
+		ctx.fillText('Level', 211, 30);
+		ctx.fillText('Select', 211, 80);
+
+		ctx.drawImage(svgTiles[12], 398.5, 34.5, 73, 73);
+		ctx.font = '40px Helvetica';
+		ctx.fillText('x ' + coins, 477.95, 50.9);
+	} else {
+		ctx.font = 'bold 48px Helvetica';
+		// ctx.fillText(exploreLevelPageLevel.title, 55, 35);
+		let titleLineCount = wrapText(exploreLevelPageLevel.title, 50, 35, 500, 48).length;
+		ctx.font = 'italic 21px Helvetica';
+		ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 50, 32 + titleLineCount*48);
+
+		ctx.drawImage(svgTiles[12], 568.5, 29.5, 50, 50);
+		ctx.font = '21px Helvetica';
+		ctx.fillText('x ' + coins, 627.95, 45.9);
+	}
+
 	ctx.font = '21px Helvetica';
 	ctx.fillText(toHMS(timer), 767.3, 27.5);
 	ctx.fillText(deathCount.toLocaleString(), 767.3, 55.9);
@@ -2671,9 +2693,9 @@ function drawLevelMap() {
 		ctx.fillText(mdao[levelProgress - 1], 767.3, 85.4);
 		ctx.fillText((deathCount - mdao[levelProgress - 1]).toLocaleString(), 767.3, 116.8);
 	}
-	for (let i = 0; i < 133; i++) {
+	for (let i = 0; i < (playingLevelpack?levelCount:133); i++) {
 		let j = i;
-		if (j >= 100) j += 19;
+		if (!playingLevelpack && j >= 100) j += 19;
 		let color = 1;
 		if (i >= levelCount) color = 1;
 		else if (gotCoin[i]) color = 4;
@@ -2684,7 +2706,7 @@ function drawLevelMap() {
 		// 	else color = 3;
 		// }
 		let text = '';
-		if (i >= 100) text = 'B' + (i - 99).toString().padStart(2, '0');
+		if (!playingLevelpack && i >= 100) text = 'B' + (i - 99).toString().padStart(2, '0');
 		else text = (i + 1).toString().padStart(3, '0');
 		drawLevelButton(text, (j % 8) * 110 + 45, Math.floor(j / 8) * 50 + 160, i, color);
 	}
@@ -2921,7 +2943,7 @@ function resetLevel() {
 		levelWidth = levels[currentLevel][0].length;
 		levelHeight = levels[currentLevel].length;
 
-		if (currentLevel === 0) levels[0][13][29] = levels[0][13][30] = levels[0][13][31] = quirksMode ? 16 : 1; // Adds converyors back to level 1 one quirks mode.
+		if (currentLevel === 0 && !playingLevelpack) levels[0][13][29] = levels[0][13][30] = levels[0][13][31] = quirksMode ? 16 : 1; // Adds converyors back to level 1 one quirks mode.
 
 		copyLevel(levels[currentLevel]);
 		charCount2 = 0;
@@ -7072,7 +7094,7 @@ function draw() {
 					timer += getTimer() - levelTimer2;
 					if (playMode == 0) {
 						currentLevel++;
-						if (!quirksMode) toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
+						if (!quirksMode) toSeeCS = true; // This line was absent in the original source, but without it dialogue doesn't play after level 1 when on a normal playthrough.
 						levelProgress = currentLevel;
 						if (currentLevel < levelCount-1) resetLevel();
 						else exitLevel();
@@ -9026,7 +9048,7 @@ function draw() {
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
-			drawMenu0Button('LOG IN', 500, 15, 16, false, logInExplore);
+			drawMenu0Button('LOG IN', 400, 15, 16, false, logInExplore);
 			break;
 
 		case 7:
