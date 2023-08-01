@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.3'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'beta 5.2.4'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -12,11 +12,7 @@ const cheight = 540;
 let pixelRatio;
 let addedZoom = 1;
 let highQual = true;
-const requestAnimationFrame =
-	window.requestAnimationFrame ||
-	window.mozRequestAnimationFrame ||
-	window.webkitRequestAnimationFrame ||
-	window.msRequestAnimationFrame;
+const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 // offscreen canvases
 let osc1, osctx1;
@@ -46,7 +42,7 @@ let controlOrCommandPress = false;
 
 let defaultLevelsString = '';
 let levelsString = '';
-let levelCount = 133;
+let levelCount = 53;
 let f = 19;
 const levels = new Array(levelCount);
 const startLocations = new Array(levelCount);
@@ -105,7 +101,8 @@ if (bfdia5b.getItem('levelProgress') == undefined) {
 	clearVars();
 } else {
 	levelProgress = parseInt(bfdia5b.getItem('levelProgress'));
-	bonusProgress = parseInt(bfdia5b.getItem('bonusProgress'));
+	// bonusProgress = parseInt(bfdia5b.getItem('bonusProgress'));
+	bonusProgress = 0;
 	deathCount = parseInt(bfdia5b.getItem('deathCount'));
 	timer = parseFloat(bfdia5b.getItem('timer'));
 	gotCoin = new Array(levelCount);
@@ -115,11 +112,12 @@ if (bfdia5b.getItem('levelProgress') == undefined) {
 		gotCoin[i] = gotCoinRaw[i] === 'true';
 		if (gotCoin[i]) coins++;
 	}
-	bonusesCleared = new Array(33);
-	let bonusesClearedRaw = bfdia5b.getItem('bonusesCleared').split(',');
-	for (let i = 0; i < 33; i++) {
-		bonusesCleared[i] = bonusesClearedRaw[i] === 'true';
-	}
+	// bonusesCleared = new Array(33);
+	// let bonusesClearedRaw = bfdia5b.getItem('bonusesCleared').split(',');
+	// for (let i = 0; i < 33; i++) {
+	// 	bonusesCleared[i] = bonusesClearedRaw[i] === 'true';
+	// }
+	bonusesCleared = new Array(33).fill(false);
 }
 
 let white_alpha = 0;
@@ -2407,7 +2405,7 @@ function drawLevelButton(text, x, y, id, color) {
 		}
 		if (!mouseIsDown && levelButtonClicked === id) {
 			levelButtonClicked = -1;
-			if (id <= levelProgress || (id > 99 && id < bonusProgress + 100)) {
+			if (id <= levelProgress) { // || (id > 99 && id < bonusProgress + 100)
 				playLevel(id);
 				white_alpha = 100;
 			}
@@ -2655,13 +2653,14 @@ function drawLevelMap() {
 		let j = i;
 		if (j >= 100) j += 19;
 		let color = 1;
-		if (gotCoin[i]) color = 4;
+		if (i >= levelCount) color = 1;
+		else if (gotCoin[i]) color = 4;
 		else if (levelProgress == i) color = 2;
 		else if (levelProgress > i) color = 3;
-		else if (i > 99 && i < bonusProgress + 100) {
-			if (!bonusesCleared[i - 100]) color = 2;
-			else color = 3;
-		}
+		// else if (i > 99 && i < bonusProgress + 100) {
+		// 	if (!bonusesCleared[i - 100]) color = 2;
+		// 	else color = 3;
+		// }
 		let text = '';
 		if (i >= 100) text = 'B' + (i - 99).toString().padStart(2, '0');
 		else text = (i + 1).toString().padStart(3, '0');
@@ -7046,14 +7045,15 @@ function draw() {
 					if (playMode != 2 && gotThisCoin && !gotCoin[currentLevel]) {
 						gotCoin[currentLevel] = true;
 						coins++;
-						bonusProgress = Math.floor(coins * 0.33);
+						// bonusProgress = Math.floor(coins * 0.33);
 					}
 					timer += getTimer() - levelTimer2;
-					if (playMode == 0 && currentLevel < 99) {
+					if (playMode == 0) {
 						currentLevel++;
 						if (!quirksMode) toSeeCS = true; // this line was absent in the original source, but without it dialog doesn't play after level 1 when on a normal playthrough.
 						levelProgress = currentLevel;
-						resetLevel();
+						if (currentLevel < levelCount-1) resetLevel();
+						else exitLevel();
 					} else {
 						if (playMode == 3) {
 							exitExploreLevel();
@@ -7061,9 +7061,9 @@ function draw() {
 							exitTestLevel();
 						} else {
 							exitLevel();
-							if (currentLevel > 99) {
-								bonusesCleared[currentLevel - 100] = true;
-							}
+							// if (currentLevel > 99) {
+							// 	bonusesCleared[currentLevel - 100] = true;
+							// }
 						}
 					}
 					saveGame();
@@ -7732,9 +7732,11 @@ function draw() {
 		case 5:
 			// menuExitLevelCreator
 
+			ctx.drawImage(osc1, 0, 0, cwidth, cheight);
+			ctx.globalAlpha = 0.5;
 			ctx.fillStyle = '#ffffff';
 			ctx.fillRect(0, 0, 960, 540);
-			ctx.drawImage(osc1, 0, 0, cwidth, cheight);
+			ctx.globalAlpha = 1;
 			ctx.fillStyle = '#aeaeae';
 			ctx.fillRect(0, 480, 660, 60);
 			ctx.fillStyle = '#cccccc';
