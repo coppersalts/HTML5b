@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'beta 5.2.4'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.1.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -44,10 +44,10 @@ let defaultLevelsString = '';
 let levelsString = '';
 let levelCount = 53;
 let f = 19;
-const levels = new Array(levelCount);
-const startLocations = new Array(levelCount);
+let levels = new Array(levelCount);
+let startLocations = new Array(levelCount);
 const locations = new Array(6);
-const bgs = new Array(levelCount);
+let bgs = new Array(levelCount);
 let levelStart = 0;
 let levelWidth = 0;
 let levelHeight = 0;
@@ -59,14 +59,14 @@ let charCount2 = 0;
 let playMode = 0;
 let lineCount = 0;
 let lineLength = 0;
-const dialogueChar = new Array(levelCount);
-const dialogueText = new Array(levelCount);
-const dialogueFace = new Array(levelCount);
+let dialogueChar = new Array(levelCount);
+let dialogueText = new Array(levelCount);
+let dialogueFace = new Array(levelCount);
 let cLevelDialogueChar = new Array(levelCount);
 let cLevelDialogueText = new Array(levelCount);
 let cLevelDialogueFace = new Array(levelCount);
-const levelName = new Array(levelCount);
-const mdao = new Array(levelCount);
+let levelName = new Array(levelCount);
+let mdao = new Array(levelCount);
 let mdao2 = 0;
 let levelProgress;
 let bonusProgress;
@@ -81,6 +81,7 @@ let longMode = false;
 let quirksMode = false;
 let enableExperimentalFeatures = false;
 let levelAlreadySharedToExplore = false;
+let white_alpha = 0;
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -88,6 +89,8 @@ function clearVars() {
 	gotCoin = new Array(levelCount).fill(false);
 }
 function saveGame() {
+	if (playingLevelpack) return;
+	console.log('oopsie');
 	bfdia5b.setItem('gotCoin', gotCoin);
 	bfdia5b.setItem('coins', coins);
 	bfdia5b.setItem('levelProgress', levelProgress);
@@ -97,30 +100,31 @@ function saveGame() {
 	bfdia5b.setItem('timer', timer);
 }
 
-if (bfdia5b.getItem('levelProgress') == undefined) {
-	clearVars();
-} else {
-	levelProgress = parseInt(bfdia5b.getItem('levelProgress'));
-	// bonusProgress = parseInt(bfdia5b.getItem('bonusProgress'));
-	bonusProgress = 0;
-	deathCount = parseInt(bfdia5b.getItem('deathCount'));
-	timer = parseFloat(bfdia5b.getItem('timer'));
-	gotCoin = new Array(levelCount);
-	let gotCoinRaw = bfdia5b.getItem('gotCoin').split(',');
-	coins = 0;
-	for (let i = 0; i < levelCount; i++) {
-		gotCoin[i] = gotCoinRaw[i] === 'true';
-		if (gotCoin[i]) coins++;
+function getSavedGame() {
+	if (bfdia5b.getItem('levelProgress') == undefined) {
+		clearVars();
+	} else {
+		levelProgress = parseInt(bfdia5b.getItem('levelProgress'));
+		// bonusProgress = parseInt(bfdia5b.getItem('bonusProgress'));
+		bonusProgress = 0;
+		deathCount = parseInt(bfdia5b.getItem('deathCount'));
+		timer = parseFloat(bfdia5b.getItem('timer'));
+		gotCoin = new Array(levelCount);
+		let gotCoinRaw = bfdia5b.getItem('gotCoin').split(',');
+		coins = 0;
+		for (let i = 0; i < levelCount; i++) {
+			gotCoin[i] = gotCoinRaw[i] === 'true';
+			if (gotCoin[i]) coins++;
+		}
+		// bonusesCleared = new Array(33);
+		// let bonusesClearedRaw = bfdia5b.getItem('bonusesCleared').split(',');
+		// for (let i = 0; i < 33; i++) {
+		// 	bonusesCleared[i] = bonusesClearedRaw[i] === 'true';
+		// }
+		bonusesCleared = new Array(33).fill(false);
 	}
-	// bonusesCleared = new Array(33);
-	// let bonusesClearedRaw = bfdia5b.getItem('bonusesCleared').split(',');
-	// for (let i = 0; i < 33; i++) {
-	// 	bonusesCleared[i] = bonusesClearedRaw[i] === 'true';
-	// }
-	bonusesCleared = new Array(33).fill(false);
 }
-
-let white_alpha = 0;
+getSavedGame();
 
 function getTimer() {
 	return _frameCount / 0.06;
@@ -144,6 +148,18 @@ function tileAt(j, i, y) {
 
 // Load Level Data
 function loadLevels() {
+	levelCount = 53;
+	levels = new Array(levelCount);
+	startLocations = new Array(levelCount);
+	bgs = new Array(levelCount);
+	dialogueChar = new Array(levelCount);
+	dialogueText = new Array(levelCount);
+	dialogueFace = new Array(levelCount);
+	levelName = new Array(levelCount);
+	mdao = new Array(levelCount);
+	mdao2 = 0;
+	levelStart = 0;
+
 	for (let i = 0; i < levelCount; i++) {
 		levelStart += 2;
 
@@ -232,26 +248,21 @@ function loadLevels() {
 }
 
 function loadLevelpack() {
-	// reinitialise variables here!
-	let lines = levelsString.replace(/\r/gi, '').split('\n');
-	let lvl = 0;
+	levelCount = exploreLevelPageLevel.levels.length;
+	levels = new Array(levelCount);
+	startLocations = new Array(levelCount);
+	bgs = new Array(levelCount);
+	dialogueChar = new Array(levelCount);
+	dialogueText = new Array(levelCount);
+	dialogueFace = new Array(levelCount);
+	levelName = new Array(levelCount);
+	mdao = new Array(levelCount);
+	mdao2 = 0;
 
-	for (let i = 0; i < lines.length; lvl++) {
+	for (let lvl = 0; lvl < levelCount; lvl++) {
+		let i = 0;
+		let lines = exploreLevelPageLevel.levels[lvl].data.replace(/\r/gi, '').split('\n');
 		while (lines[i] === '') i++;
-		if (i >= lines.length) break;
-		// We can't just skip loadedLevels= because someone might have titles their level that.
-		if (lines[i] == 'loadedLevels=') {
-			// If it's followed by a blank line it's definitely not a title.
-			if (lines[i + 1] == '') {
-				i++;
-				while (lines[i] === '') i++;
-				if (i >= lines.length) break;
-			} else {
-				// Otherwise, check to see if the line two lines after it contains commas.
-				// If it does that means it's not just a title and we can skip it.
-				if (lines[i + 2].split(',').length > 1) i++;
-			}
-		}
 
 		// Read Level Name
 		levelName[lvl] = lines[i];
@@ -324,8 +335,8 @@ function loadLevelpack() {
 
 		// Read Necessary Deaths
 		mdao2 += parseInt(lines[i], 10);
-		mdao[i] = mdao2;
-		i++;
+		mdao[lvl] = mdao2;
+		// i++;
 	}
 }
 
@@ -1880,6 +1891,7 @@ let exploreUser;
 let loggedInExploreUser5beamID = -1;
 let exploreLevelTitlesTruncated;
 let exploreLoading = false;
+let playingLevelpack = false; // Whether or not a levelpack from explore is currently loaded.
 let myLevel;
 let myLevelChars;
 let myLevelDialogue;
@@ -2193,7 +2205,8 @@ function menuNewGame2yes() {
 }
 
 function menuContGame() {
-	menuScreen = 2;
+	enterBaseLevelpackLevelSelect();
+	getSavedGame();
 }
 
 function menuLevelCreator() {
@@ -2235,7 +2248,9 @@ function playExploreLevel() {
 		playMode = 3;
 	} else {
 		loadLevelpack();
+		clearVars();
 		menuScreen = 2;
+		playingLevelpack = true;
 		// playMode = 0;
 	}
 }
@@ -2265,9 +2280,16 @@ function menu3Menu() {
 function beginNewGame() {
 	clearVars();
 	saveGame();
-	menuScreen = 2;
+	enterBaseLevelpackLevelSelect();
 	cameraY = 0;
 	cameraX = 0;
+}
+
+function enterBaseLevelpackLevelSelect() {
+	menuScreen = 2;
+	if (playingLevelpack) loadLevels();
+	playingLevelpack = false;
+
 }
 
 function toggleSound() {
@@ -6557,7 +6579,7 @@ function drawExploreLevel(x, y, i) {
 
 function setExplorePage(page) {
 	explorePage = page;
-	getLevelPage(explorePage, exploreTab);
+	getExplorePage(explorePage, exploreTab);
 	// setExploreThumbs();
 }
 
@@ -9004,7 +9026,7 @@ function draw() {
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
-			drawMenu0Button('LOG IN', 300, 15, 16, false, logInExplore);
+			drawMenu0Button('LOG IN', 500, 15, 16, false, logInExplore);
 			break;
 
 		case 7:
@@ -9110,7 +9132,7 @@ function rAF60fps() {
 
 // Explore API Stuff
 
-function getLevelPage(p, t) {
+function getExplorePage(p, t) {
 	exploreLoading = true;
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&type=' + t, {method: 'GET'})
 		.then(response => {
