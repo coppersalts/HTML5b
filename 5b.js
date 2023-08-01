@@ -1888,13 +1888,17 @@ let exploreTab = 0;
 let explorePage = 0;
 let exploreSort = 0;
 let explorePageLevels = [];
+let exploreUserPageLevels = [];
 let exploreLevelPageLevel;
 let exploreUser;
+let exploreUserPage1 = 0;
+let exploreUserPage2 = 0;
 let exploreSortText = ['new','?','old'];
 let exploreSortTextWidth = 150;
 let loggedInExploreUser5beamID = -1;
 let exploreLevelTitlesTruncated;
 let exploreLoading = false;
+let requestsWaiting = 0;
 let playingLevelpack = false; // Whether or not a levelpack from explore is currently loaded.
 let myLevel;
 let myLevelChars;
@@ -2229,13 +2233,13 @@ function menuExplore() {
 }
 
 function gotoExploreLevelPage(locOnPage) {
-	menuScreen = 7;
 	if (exploreTab == 0) {
-		exploreLevelPageLevel = explorePageLevels[locOnPage];
+		exploreLevelPageLevel = menuScreen==8?exploreUserPageLevels[Math.floor(locOnPage/4)][locOnPage%4]:explorePageLevels[locOnPage];
 		drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
-	} else {
+	} else if (exploreTab == 1) {
 		getExploreLevelpack(explorePageLevels[locOnPage].id);
 	}
+	menuScreen = 7;
 	// We already have this data, so we don't need to load it again.
 	// getExploreLevel(explorePageLevels[locOnPage].id);
 }
@@ -2257,6 +2261,21 @@ function playExploreLevel() {
 		playingLevelpack = true;
 		// playMode = 0;
 	}
+}
+
+function exploreMoreFromThisUser() {
+	menuScreen = 8;
+	// getExploreUser(exploreLevelPageLevel.creatorId);
+	exploreUser = exploreLevelPageLevel.creator;
+	setExploreUserPages(0, 0);
+}
+
+function setExploreUserPages(p1, p2) {
+	exploreLevelTitlesTruncated = new Array(8);
+	exploreUserPage1 = p1;
+	exploreUserPage2 = p2;
+	getExploreUserPage(exploreUser.id, exploreUserPage1, 0, 0);
+	getExploreUserPage(exploreUser.id, exploreUserPage2, 1, 0);
 }
 
 function logInExplore() {
@@ -2283,6 +2302,11 @@ function menu3Menu() {
 	timer += getTimer() - levelTimer2;
 	saveGame();
 	exitLevel();
+}
+
+function menu8Menu() {
+	menuScreen = 6;
+	setExplorePage(explorePage);
 }
 
 function beginNewGame() {
@@ -6570,14 +6594,15 @@ function drawRemoveButton(x, y, s, p) {
 	ctx.stroke();
 }
 
-function truncateLevelTitles() {
+function truncateLevelTitles(arr, offset) {
 	ctx.font = '20px Helvetica';
-	exploreLevelTitlesTruncated = new Array(explorePageLevels.length);
-	for (let i = 0; i < exploreLevelTitlesTruncated.length; i++)
-		exploreLevelTitlesTruncated[i] = fitString(ctx, explorePageLevels[i].title, 195.3);
+	// console.log(arr);
+	for (let i = 0; i < arr.length; i++)
+		exploreLevelTitlesTruncated[i+offset] = fitString(ctx, arr[i].title, 195.3);
 }
 
-function drawExploreLevel(x, y, i, type) {
+function drawExploreLevel(x, y, i, type, userPage) {
+	let thisExploreLevel = userPage?exploreUserPageLevels[type][i - type*4]:explorePageLevels[i];
 	if (onRect(_xmouse, _ymouse, x, y, 208, 155)) {
 		onButton = true;
 		ctx.fillStyle = '#404040';
@@ -6601,13 +6626,14 @@ function drawExploreLevel(x, y, i, type) {
 
 	ctx.fillStyle = '#999999';
 	ctx.font = '10px Helvetica';
-	ctx.fillText('by ' + explorePageLevels[i].creator.name, x + 7, y + 138.3);
+	ctx.fillText('by ' + thisExploreLevel.creator.name, x + 7, y + 138.3);
 
 	// explorePageLevels[i]
 }
 
 function setExplorePage(page) {
 	explorePage = page;
+	exploreLevelTitlesTruncated = new Array(8);
 	getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
 }
@@ -6615,6 +6641,12 @@ function setExplorePage(page) {
 function setExploreThumbs() {
 	for (let i = 0; i < explorePageLevels.length; i++) {
 		drawExploreThumb(thumbsctx[i], thumbs[i].width, explorePageLevels[i].data, 0.2);
+	}
+}
+
+function setExploreThumbsUserPage(t) {
+	for (let i = 0; i < exploreUserPageLevels[t].length; i++) {
+		drawExploreThumb(thumbsctx[i+t*4], thumbs[i+t*4].width, exploreUserPageLevels[t][i].data, 0.2);
 	}
 }
 
@@ -9023,7 +9055,7 @@ function draw() {
 				drawExploreLoadingText();
 			} else {
 				for (let i = 0; i < explorePageLevels.length; i++) {
-					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, exploreTab==1?1:0);
+					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, exploreTab==1?1:0, false);
 				}
 			}
 
@@ -9098,9 +9130,35 @@ function draw() {
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
 				drawMenu0Button(exploreTab==0?'PLAY LEVEL':'NEW GAME', 30, 389, 2, false, playExploreLevel);
+
+				if (enableExperimentalFeatures) drawMenu0Button('more from this user', 30, 440, 3, false, exploreMoreFromThisUser);
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
+			break;
+
+		case 8:
+			ctx.drawImage(svgMenu6, 0, 0, cwidth, cheight);
+
+			// Username
+			ctx.textBaseline = 'bottom';
+			ctx.textAlign = 'left';
+			ctx.fillStyle = '#ffffff';
+			ctx.font = 'bold 36px Helvetica';
+			ctx.fillText(exploreUser.name, 10, 60);
+
+			if (exploreLoading) {
+				drawExploreLoadingText();
+			} else {
+				// Levels
+				for (let j = 0; j < 2; j++) {
+					for (let i = 0; i < exploreUserPageLevels[j].length; i++) {
+						drawExploreLevel(232 * (i % 4) + 28, j * 182 + 130, i+j*4, (i+j*4)>=4?1:0, true);
+					}
+				}
+			}
+
+			drawMenu2_3Button(0, 837.5, 486.95, menu8Menu);
 			break;
 	}
 
@@ -9176,63 +9234,98 @@ function rAF60fps() {
 
 // Explore API Stuff
 
-function getExplorePage(p, t, s) {
+function requestAdded() {
 	exploreLoading = true;
+	requestsWaiting++;
+}
+
+function requestResolved() {
+	requestsWaiting--;
+	if (requestsWaiting === 0) exploreLoading = false;
+}
+
+function requestError() {
+	requestsWaiting--;
+}
+
+function getExplorePage(p, t, s) {
+	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&sort=' + s + '&type=' + t, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				explorePageLevels = data;
 				if (exploreTab == 0) setExploreThumbs();
-				truncateLevelTitles();
-				exploreLoading = false;
+				truncateLevelTitles(explorePageLevels,0);
+				requestResolved();
 			});
 		})
 		.catch(err => {
 			console.log(err);
+			requestError();
 		});
 }
 
 function getExploreLevel(id) {
-	exploreLoading = true;
+	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/level?id=' + id, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				exploreLevelPageLevel = data;
 				drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
-				exploreLoading = false;
+				requestResolved();
 			});
 		})
 		.catch(err => {
 			console.log(err);
+			requestError();
 		});
 }
 
 function getExploreLevelpack(id) {
-	exploreLoading = true;
+	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/levelpack?id=' + id, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				exploreLevelPageLevel = data;
 				drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.levels[0].data, 0.4);
-				exploreLoading = false;
+				requestResolved();
 			});
 		})
 		.catch(err => {
 			console.log(err);
+			requestError();
 		});
 }
 
 function getExploreUser(id) {
-	exploreLoading = true;
-	return fetch('https://5beam.zelo.dev/api/user?discordId=' + id, {method: 'GET'})
+	requestAdded();
+	return fetch('https://5beam.zelo.dev/api/user?id=' + id, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				exploreUser = data;
-				exploreLoading = false;
+				requestResolved();
 			});
 		})
 		.catch(err => {
 			console.log(err);
+			requestError();
+		});
+}
+
+function getExploreUserPage(id, p, t, s) {
+	requestAdded();
+	return fetch('https://5beam.zelo.dev/api/user/page?creatorId=' + id + '&page=' + p + '&type=' + t + '&sort=' + s + '&amount=4', {method: 'GET'})
+		.then(response => {
+			response.json().then(data => {
+				exploreUserPageLevels[t] = data;
+				if (t === 0) setExploreThumbsUserPage(t);
+				truncateLevelTitles(exploreUserPageLevels[t],t*4);
+				requestResolved();
+			});
+		})
+		.catch(err => {
+			console.log(err);
+			requestError();
 		});
 }
 
@@ -9250,7 +9343,7 @@ function postExploreLevel(t, desc, data) {
 
 	levelAlreadySharedToExplore = true;
 	// check if token is expired
-	exploreLoading = true;
+	requestAdded();
 	let f = new FormData();
 	f.set('access_token', getCookie('access_token'));
 	f.set('title', t);
@@ -9259,7 +9352,7 @@ function postExploreLevel(t, desc, data) {
 
 	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: f})
 		.then(response => {
-			exploreLoading = false;
+			requestResolved();
 			if (response.status == 200) {
 				setLCMessage('Level successfuly sent to explore!');
 			} else {
@@ -9269,6 +9362,7 @@ function postExploreLevel(t, desc, data) {
 		.catch(err => {
 			console.log(err);
 			setLCMessage('Sorry, there was an error while attempting to send the level.');
+			requestError();
 		});
 }
 
