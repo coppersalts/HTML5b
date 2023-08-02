@@ -80,7 +80,7 @@ let timer;
 let coins;
 let longMode = false;
 let quirksMode = false;
-let enableExperimentalFeatures = false;
+let enableExperimentalFeatures = window.location.hostname==='localhost';
 let screenShake = true;
 let screenFlashes = true;
 let frameRateThrottling = true;
@@ -1894,9 +1894,9 @@ let exploreSort = 0;
 let explorePageLevels = [];
 let exploreUserPageLevels = [];
 let exploreLevelPageLevel;
+let previousMenuExplore = 0;
 let exploreUser;
-let exploreUserPage1 = 0;
-let exploreUserPage2 = 0;
+let exploreUserPageNumbers = [];
 let exploreSortText = ['new','?','old'];
 let exploreSortTextWidth = 150;
 let loggedInExploreUser5beamID = -1;
@@ -2237,15 +2237,21 @@ function menuExplore() {
 }
 
 function gotoExploreLevelPage(locOnPage) {
-	if (exploreTab == 0) {
-		exploreLevelPageLevel = menuScreen==8?exploreUserPageLevels[Math.floor(locOnPage/4)][locOnPage%4]:explorePageLevels[locOnPage];
+	let newExploreLevelPageLevel = menuScreen==8?exploreUserPageLevels[Math.floor(locOnPage/4)][locOnPage%4]:explorePageLevels[locOnPage];
+	if ((menuScreen==6 && exploreTab == 0) || (menuScreen==8 && locOnPage < 4)) {
+		exploreLevelPageLevel = newExploreLevelPageLevel;
 		drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
-	} else if (exploreTab == 1) {
-		getExploreLevelpack(explorePageLevels[locOnPage].id);
+	} else {
+		getExploreLevelpack(newExploreLevelPageLevel.id);
 	}
+	previousMenuExplore = menuScreen;
 	menuScreen = 7;
 	// We already have this data, so we don't need to load it again.
 	// getExploreLevel(explorePageLevels[locOnPage].id);
+}
+
+function menuExploreLevelPageBack() {
+	menuScreen = previousMenuExplore;
 }
 
 function menuExploreBack() {
@@ -2271,15 +2277,14 @@ function exploreMoreFromThisUser() {
 	menuScreen = 8;
 	// getExploreUser(exploreLevelPageLevel.creatorId);
 	exploreUser = exploreLevelPageLevel.creator;
-	setExploreUserPages(0, 0);
+	setExploreUserPage(0, 0);
+	setExploreUserPage(1, 0);
 }
 
-function setExploreUserPages(p1, p2) {
-	exploreLevelTitlesTruncated = new Array(8);
-	exploreUserPage1 = p1;
-	exploreUserPage2 = p2;
-	getExploreUserPage(exploreUser.id, exploreUserPage1, 0, 0);
-	getExploreUserPage(exploreUser.id, exploreUserPage2, 1, 0);
+function setExploreUserPage(type, page) {
+	// exploreLevelTitlesTruncated = new Array(8);
+	exploreUserPageNumbers[type] = page;
+	getExploreUserPage(exploreUser.id, exploreUserPageNumbers[type], type, 0);
 }
 
 function logInExplore() {
@@ -6648,7 +6653,7 @@ function drawExploreLevel(x, y, i, type, userPage) {
 
 function setExplorePage(page) {
 	explorePage = page;
-	exploreLevelTitlesTruncated = new Array(8);
+	exploreLevelTitlesTruncated = new Array(8); // Is this needed?
 	getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
 }
@@ -9044,6 +9049,8 @@ function draw() {
 			break;
 
 		case 6:
+			// Explore main page
+
 			ctx.drawImage(svgMenu6, 0, 0, cwidth, cheight);
 			ctx.fillStyle = '#666666';
 
@@ -9124,6 +9131,8 @@ function draw() {
 			break;
 
 		case 7:
+			// Explore level page
+
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
 			if (exploreLoading) {
@@ -9152,10 +9161,11 @@ function draw() {
 				if (enableExperimentalFeatures) drawMenu0Button('more from this user', 30, 440, 3, false, exploreMoreFromThisUser);
 			}
 
-			drawMenu2_3Button(1, 837.5, 486.95, menuExploreBack);
+			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
 			break;
 
 		case 8:
+			// Explore user page
 			ctx.drawImage(svgMenu6, 0, 0, cwidth, cheight);
 
 			// Username
@@ -9165,13 +9175,41 @@ function draw() {
 			ctx.font = 'bold 36px Helvetica';
 			ctx.fillText(exploreUser.name, 10, 60);
 
+			ctx.font = '21px Helvetica';
+
 			if (exploreLoading) {
 				drawExploreLoadingText();
 			} else {
 				// Levels
 				for (let j = 0; j < 2; j++) {
+					let y = j * 205 + 115;
+
+					ctx.textBaseline = 'bottom';
+					ctx.textAlign = 'left';
+					ctx.fillStyle = '#ffffff';
+					ctx.font = '25px Helvetica';
+					ctx.fillText(j==0?'Levels':'Levelpacks', 55, y-3);
+
+					// Previous page button
+					if (exploreUserPageNumbers[j] <= 0 || exploreLoading) ctx.fillStyle = '#505050';
+					else if (onRect(_xmouse, _ymouse, 15, y + 60, 25, 30)) {
+						ctx.fillStyle = '#cccccc';
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) setExploreUserPage(j, exploreUserPageNumbers[j] - 1);
+					} else ctx.fillStyle = '#999999';
+					drawArrow(15, y + 60, 25, 30, 3);
+
+					// Next page button
+					if (exploreLoading) ctx.fillStyle = '#505050';
+					else if (onRect(_xmouse, _ymouse, 920, y + 60, 25, 30)) {
+						ctx.fillStyle = '#cccccc';
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) setExploreUserPage(j, exploreUserPageNumbers[j] + 1);
+					} else ctx.fillStyle = '#999999';
+					drawArrow(920, y + 60, 25, 30, 1);
+
 					for (let i = 0; i < exploreUserPageLevels[j].length; i++) {
-						drawExploreLevel(232 * (i % 4) + 28, j * 182 + 130, i+j*4, (i+j*4)>=4?1:0, true);
+						drawExploreLevel(214 * i + 55, y, i+j*4, (i+j*4)>=4?1:0, true);
 					}
 				}
 			}
@@ -9180,6 +9218,7 @@ function draw() {
 			break;
 
 		case 9:
+			// Options menu
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
 
