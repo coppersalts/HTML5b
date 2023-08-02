@@ -9420,7 +9420,7 @@ function getSearchPage(searchText, p) {
 		.then(response => {
 			response.json().then(data => {
 				explorePageLevels = data;
-				if (exploreTab == 0) setExploreThumbs();
+				setExploreThumbs();
 				truncateLevelTitles(explorePageLevels,0);
 				requestResolved();
 			});
