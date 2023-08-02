@@ -81,6 +81,10 @@ let coins;
 let longMode = false;
 let quirksMode = false;
 let enableExperimentalFeatures = false;
+let screenShake = true;
+let screenFlashes = true;
+let frameRateThrottling = true;
+let optionText = ['Screen Shake','Screen Flashes','Quirks Mode','Experimental Features','Frame Rate Throttling'];
 let levelAlreadySharedToExplore = false;
 let whiteAlpha = 0;
 let coinAlpha = 0;
@@ -1868,7 +1872,7 @@ let transitionType = 1;
 let char = new Array(1);
 let currentLevel = -1;
 let control = 0;
-let wipeTimer = 30;
+let wipeTimer = 0;
 let cutScene = 0;
 let cutSceneLine = 0;
 let bubWidth = 500;
@@ -2317,6 +2321,14 @@ function beginNewGame() {
 	cameraX = 0;
 }
 
+function menuOptions() {
+	menuScreen = 9;
+}
+
+function menuExitOptions() {
+	menuScreen = 0;
+}
+
 function enterBaseLevelpackLevelSelect() {
 	menuScreen = 2;
 	if (playingLevelpack) loadLevels();
@@ -2633,10 +2645,13 @@ function drawMenu() {
 		linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
 		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
 		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
-	} else drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false, menuNewGame);
+	} else {
+		drawMenu0Button('OPTIONS', 665.55, 259.1, 7, false, menuOptions);
+		drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false, menuNewGame);
+	}
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0, menuContGame);
-	drawMenu0Button('EXPLORE (alpha)', 665.55, 482.5, 4, false, menuExplore);
 	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false, menuLevelCreator);
+	drawMenu0Button('EXPLORE (alpha)', 665.55, 482.5, 4, false, menuExplore);
 
 	// let started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -7086,9 +7101,7 @@ function draw() {
 				'START GAME',
 				(cwidth - menu0ButtonSize.w) / 2,
 				(cheight - menu0ButtonSize.h) / 2,
-				0,
-				false,
-				playGame
+				0, false, playGame
 			);
 			break;
 
@@ -7806,8 +7819,13 @@ function draw() {
 					y += (Math.random() - 0.5) * char[control].temp * 0.2;
 				}
 			}
-			shakeX = x - cameraX;
-			shakeY = y - cameraY;
+			if (screenShake) {
+				shakeX = x - cameraX;
+				shakeY = y - cameraY;
+			} else {
+				shakeX = -cameraX * 2;
+				shakeY = -cameraY * 2;
+			}
 			levelTimer++;
 			break;
 
@@ -9160,6 +9178,69 @@ function draw() {
 
 			drawMenu2_3Button(0, 837.5, 486.95, menu8Menu);
 			break;
+
+		case 9:
+			ctx.fillStyle = '#666666';
+			ctx.fillRect(0, 0, cwidth, cheight);
+
+			ctx.textBaseline = 'top';
+			ctx.font = '26px Helvetica';
+
+			for (var i = 0; i < optionText.length; i++) {
+				let y = i*50 + 150;
+				ctx.fillStyle = '#444444';
+				ctx.fillRect(590, y, 50, 28);
+				ctx.fillStyle = '#ffffff';
+				ctx.textAlign = 'right';
+				ctx.fillText(optionText[i], 580, y+2);
+				ctx.textAlign = 'center';
+				let thisOptionValue;
+				switch (i) {
+					case 0:
+						thisOptionValue = screenShake;
+						break;
+					case 1:
+						thisOptionValue = screenFlashes;
+						break;
+					case 2:
+						thisOptionValue = quirksMode;
+						break;
+					case 3:
+						thisOptionValue = enableExperimentalFeatures;
+						break;
+					case 4:
+						thisOptionValue = frameRateThrottling;
+						break;
+				}
+				ctx.fillStyle = thisOptionValue?'#00ff00':'#ff0000';
+				ctx.fillText(thisOptionValue?'on':'off', 615, y+2);
+
+				if (onRect(_xmouse, _ymouse, 590, y, 50, 28)) {
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) {
+						switch (i) {
+							case 0:
+								screenShake = !screenShake;
+								break;
+							case 1:
+								screenFlashes = !screenFlashes;
+								break;
+							case 2:
+								quirksMode = !quirksMode;
+								break;
+							case 3:
+								enableExperimentalFeatures = !enableExperimentalFeatures;
+								break;
+							case 4:
+								frameRateThrottling = !frameRateThrottling;
+								break;
+						}
+					}
+				}
+			}
+
+			drawMenu2_3Button(1, 837.5, 486.95, menuExitOptions);
+			break;
 	}
 
 	if (levelTimer <= 30 || menuScreen != 3) {
@@ -9186,7 +9267,7 @@ function draw() {
 			shakeY = 0;
 		}
 	}
-	if (whiteAlpha > 0) {
+	if (whiteAlpha > 0 && screenFlashes) {
 		ctx.fillStyle = '#ffffff';
 		ctx.globalAlpha = whiteAlpha / 100;
 		ctx.fillRect(0, 0, cwidth, cheight);
@@ -9220,16 +9301,18 @@ let delta;
 
 function rAF60fps() {
 	requestAnimationFrame(rAF60fps);
-	now = window.performance.now();
-	delta = now - then;
-	if (delta > interval) {
-		then = now - (delta % interval);
-		draw();
-	}
+	if (frameRateThrottling) {
+		now = window.performance.now();
+		delta = now - then;
+		if (delta > interval) {
+			then = now - (delta % interval);
+			draw();
+		}
 
-	// Added this line to fix unnecessary lag sometimes caused by the framerate limiter.
-	if (lastFrameReq - then > interval) then = now;
-	lastFrameReq = now;
+		// Added this line to fix unnecessary lag sometimes caused by the framerate limiter.
+		if (lastFrameReq - then > interval) then = now;
+		lastFrameReq = now;
+	} else draw();
 }
 
 // Explore API Stuff
