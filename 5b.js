@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'v0.1.0'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.1.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -2289,16 +2289,6 @@ function setExploreUserPage(type, page) {
 	// exploreLevelTitlesTruncated = new Array(8);
 	exploreUserPageNumbers[type] = page;
 	getExploreUserPage(exploreUser.id, exploreUserPageNumbers[type], type, 0);
-}
-
-function logInExplore() {
-	loggedInExploreUser5beamID = -1;
-	newWindow = window.open(
-		'https://discord.com/api/oauth2/authorize?client_id=747831622556057693&redirect_uri=https%3A%2F%2F5beam.zelo.dev%2Fapi%2Fauth%2Fcallback%2Fhtml5b&response_type=code&scope=identify',
-		'Window Name',
-		'height=750,width=450'
-	);
-	if (window.focus) newWindow.focus();
 }
 
 function menu2Back() {
@@ -4844,7 +4834,7 @@ function resetLevelCreator() {
 	charCount2 = 0;
 	charCount = 0;
 	myLevelDialogue = [[], [], []];
-	myLevelInfo = {name: 'Untitled', creator: '', desc: ''};
+	myLevelInfo = {name: 'Untitled', desc: ''};
 	// setEndGateLights();
 	LCEndGateX = -1;
 	LCEndGateY = -1;
@@ -7864,8 +7854,7 @@ function draw() {
 					ctx.font = '18px Helvetica';
 					ctx.fillStyle = '#000000';
 					ctx.fillText('Name:', 770, tabWindowY + 10);
-					ctx.fillText('Creator:', 770, tabWindowY + 60);
-					ctx.fillText('Description:', 770, tabWindowY + 110);
+					ctx.fillText('Description:', 770, tabWindowY + 60);
 					myLevelInfo.name = drawTextBox(
 						myLevelInfo.name,
 						785,
@@ -7880,24 +7869,10 @@ function draw() {
 						'#000000',
 						'Helvetica'
 					)[0];
-					myLevelInfo.creator = drawTextBox(
-						myLevelInfo.creator,
-						785,
-						tabWindowY + 60,
-						160,
-						40,
-						18,
-						[5, 2, 2, 2],
-						1,
-						false,
-						'#e0e0e0',
-						'#000000',
-						'Helvetica'
-					)[0];
 					myLevelInfo.desc = drawTextBox(
 						myLevelInfo.desc,
 						785,
-						tabWindowY + 110,
+						tabWindowY + 60,
 						160,
 						220,
 						14,
@@ -7911,6 +7886,55 @@ function draw() {
 					if (mouseIsDown && !pmouseIsDown && !onTextBox) {
 						editingTextBox = -1;
 					}
+
+
+					ctx.fillStyle = '#000000';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'bottom';
+					ctx.font = '21px Helvetica';
+					ctx.fillText('Necessary Deaths:', 660 + (cwidth - 660) / 2, tabWindowY + 317);
+					ctx.font = '25px Helvetica';
+					let necessaryDeathsW = 100;
+					ctx.fillStyle = '#808080';
+					ctx.fillRect(660 + (cwidth - 660 - necessaryDeathsW) / 2, tabWindowY + 320, necessaryDeathsW, 25);
+					// ctx.fillStyle = '#ee3333';
+					drawMinusButton(660 + (cwidth - 660 - necessaryDeathsW) / 2 - 35, tabWindowY + 320, 25, 3);
+					if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + (cwidth - 660 + necessaryDeathsW) / 2 + 10,
+							tabWindowY + 320,
+							25,
+							25
+						) &&
+						myLevelNecessaryDeaths < 999999
+					) {
+						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
+					}
+					// ctx.fillStyle = '#33ee33';
+					drawAddButton(660 + (cwidth - 660 + necessaryDeathsW) / 2 + 10, tabWindowY + 320, 25, 3);
+					if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							660 + (cwidth - 660 - necessaryDeathsW) / 2 - 35,
+							tabWindowY + 320,
+							25,
+							25
+						) &&
+						myLevelNecessaryDeaths > 0
+					) {
+						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
+					}
+
+					ctx.fillStyle = '#ffffff';
+					ctx.textBaseline = 'top';
+					ctx.fillText(
+						myLevelNecessaryDeaths.toString().padStart(6, '0'),
+						660 + (cwidth - 660) / 2,
+						tabWindowY + 320
+					);
 					break;
 
 				case 1:
@@ -8699,53 +8723,6 @@ function draw() {
 						false,
 						shareToExplore
 					);
-					ctx.fillStyle = '#000000';
-					ctx.textAlign = 'center';
-					ctx.textBaseline = 'top';
-					ctx.font = '25px Helvetica';
-					ctx.fillText('Necessary Deaths:', 660 + (cwidth - 660) / 2, tabWindowY + 270);
-					let necessaryDeathsW = 100;
-					ctx.fillStyle = '#808080';
-					ctx.fillRect(660 + (cwidth - 660 - necessaryDeathsW) / 2, tabWindowY + 300, necessaryDeathsW, 25);
-					// ctx.fillStyle = '#ee3333';
-					drawMinusButton(660 + (cwidth - 660 - necessaryDeathsW) / 2 - 35, tabWindowY + 300, 25, 3);
-					if (
-						onRect(
-							_xmouse,
-							_ymouse,
-							660 + (cwidth - 660 + necessaryDeathsW) / 2 + 10,
-							tabWindowY + 300,
-							25,
-							25
-						) &&
-						myLevelNecessaryDeaths < 999999
-					) {
-						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths++;
-					}
-					// ctx.fillStyle = '#33ee33';
-					drawAddButton(660 + (cwidth - 660 + necessaryDeathsW) / 2 + 10, tabWindowY + 300, 25, 3);
-					if (
-						onRect(
-							_xmouse,
-							_ymouse,
-							660 + (cwidth - 660 - necessaryDeathsW) / 2 - 35,
-							tabWindowY + 300,
-							25,
-							25
-						) &&
-						myLevelNecessaryDeaths > 0
-					) {
-						if (mouseIsDown && !pmouseIsDown) myLevelNecessaryDeaths--;
-					}
-
-					ctx.fillStyle = '#ffffff';
-					ctx.textAlign = 'center';
-					ctx.textBaseline = 'top';
-					ctx.fillText(
-						myLevelNecessaryDeaths.toString().padStart(6, '0'),
-						660 + (cwidth - 660) / 2,
-						tabWindowY + 300
-					);
 					break;
 			}
 
@@ -9498,7 +9475,18 @@ function getExploreUserPage(id, p, t, s) {
 		});
 }
 
+function logInExplore() {
+	loggedInExploreUser5beamID = -1;
+	newWindow = window.open(
+		'https://discord.com/api/oauth2/authorize?client_id=747831622556057693&redirect_uri=https%3A%2F%2F5beam.zelo.dev%2Fapi%2Fauth%2Fcallback%2Fhtml5b&response_type=code&scope=identify',
+		'Window Name', // So did I just never set this?
+		'height=750,width=450'
+	);
+	if (window.focus) newWindow.focus();
+}
+
 function postExploreLevel(t, desc, data) {
+	// check if token is expired
 	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000 || getCookie('token_created_at') == '') {
 		setLCMessage(
 			"You are not logged in to explore.\nYour login expires after 10 minutes because\nI haven't yet figured out how to refresh the tokens.\nFor now you can just copy your level, go to the explore menu to log in,\nthen come back here and load your level back."
@@ -9509,10 +9497,8 @@ function postExploreLevel(t, desc, data) {
 		setLCMessage('You already shared that level to explore.');
 		return;
 	}
-
 	levelAlreadySharedToExplore = true;
-	// check if token is expired
-	requestAdded();
+	// requestAdded();
 	let f = new FormData();
 	f.set('access_token', getCookie('access_token'));
 	f.set('title', t);
@@ -9521,7 +9507,7 @@ function postExploreLevel(t, desc, data) {
 
 	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: f})
 		.then(response => {
-			requestResolved();
+			// requestResolved();
 			if (response.status == 200) {
 				setLCMessage('Level successfuly sent to explore!');
 			} else {
@@ -9531,7 +9517,7 @@ function postExploreLevel(t, desc, data) {
 		.catch(err => {
 			console.log(err);
 			setLCMessage('Sorry, there was an error while attempting to send the level.');
-			requestError();
+			// requestError();
 		});
 }
 
