@@ -1848,8 +1848,8 @@ let lcMessageTimer = 0;
 let lcMessageText = '';
 // const exploreTabNames = ['Featured', 'New', 'Top', '🔍'];
 // const exploreTabWidths = [190, 115, 115, 45];
-const exploreTabNames = ['Levels', 'Levelpacks'];
-const exploreTabWidths = [125, 200];
+const exploreTabNames = ['Levels', 'Levelpacks','Search'];
+const exploreTabWidths = [125, 200, 125];
 // const exploreTabNames = ['Levels'];
 // const exploreTabWidths = [125];
 let power = 1;
@@ -1903,6 +1903,7 @@ let loggedInExploreUser5beamID = -1;
 let exploreLevelTitlesTruncated;
 let exploreLoading = false;
 let requestsWaiting = 0;
+let exploreSearchInput = '';
 let playingLevelpack = false; // Whether or not a levelpack from explore is currently loaded.
 let myLevel;
 let myLevelChars;
@@ -2404,10 +2405,10 @@ function exitExploreLevel() {
 	cameraY = 0;
 }
 
-function drawMenu0Button(text, x, y, id, grayed, action) {
+function drawMenu0Button(text, x, y, id, grayed, action, width = menu0ButtonSize.w) {
 	let fill = '#ffffff';
 	if (!grayed) {
-		if (!lcPopUp && onRect(_xmouse, _ymouse, x, y, menu0ButtonSize.w, menu0ButtonSize.h)) {
+		if (!lcPopUp && onRect(_xmouse, _ymouse, x, y, width, menu0ButtonSize.h)) {
 			onButton = true;
 			if (mouseIsDown) {
 				fill = '#b8b8b8';
@@ -2420,13 +2421,13 @@ function drawMenu0Button(text, x, y, id, grayed, action) {
 		}
 	} else fill = '#b8b8b8';
 
-	drawRoundedRect(fill, x, y, menu0ButtonSize.w, menu0ButtonSize.h, menu0ButtonSize.cr);
+	drawRoundedRect(fill, x, y, width, menu0ButtonSize.h, menu0ButtonSize.cr);
 
 	ctx.font = 'bold 30px Helvetica';
 	ctx.fillStyle = '#666666';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillText(text, x + menu0ButtonSize.w / 2, y + (menu0ButtonSize.h * 1.1) / 2);
+	ctx.fillText(text, x + width / 2, y + (menu0ButtonSize.h * 1.1) / 2);
 }
 
 function drawMenu2_3Button(id, x, y, action) {
@@ -6654,7 +6655,8 @@ function drawExploreLevel(x, y, i, type, userPage) {
 function setExplorePage(page) {
 	explorePage = page;
 	exploreLevelTitlesTruncated = new Array(8); // Is this needed?
-	getExplorePage(explorePage, exploreTab, exploreSort);
+	if (exploreTab == 2) getSearchPage(exploreSearchInput, 0); 
+	else getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
 }
 
@@ -9065,6 +9067,7 @@ function draw() {
 					ctx.fillStyle = '#b3b3b3';
 					if (mouseIsDown && !pmouseIsDown) {
 						exploreTab = i;
+						if (exploreTab == 2) exploreSearchInput = '';
 						setExplorePage(0);
 					}
 				} else ctx.fillStyle = '#999999';
@@ -9080,54 +9083,74 @@ function draw() {
 				drawExploreLoadingText();
 			} else {
 				for (let i = 0; i < explorePageLevels.length; i++) {
-					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, exploreTab==1?1:0, false);
+					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + (exploreTab==2?140:130), i, exploreTab==1?1:0, false);
 				}
 			}
 
-			// Sort by
-			if (onRect(_xmouse, _ymouse, 932-exploreSortTextWidth, 85, exploreSortTextWidth, 30)) {
-				ctx.fillStyle = '#404040';
-				onButton = true;
-				if (mouseIsDown && !pmouseIsDown) {
-					// exploreSort = (exploreSort + 1) % exploreSortText.length;
-					exploreSort = exploreSort==0?2:0;
-					setExplorePage(0);
-				}
-			} else ctx.fillStyle = '#333333';
-			ctx.fillRect(932-exploreSortTextWidth, 85, exploreSortTextWidth, 30);
-			ctx.textBaseline = 'top';
-			ctx.textAlign = 'left';
-			ctx.fillStyle = '#ffffff';
-			ctx.font = '24px Helvetica';
-			ctx.fillText('Sort by: ' + exploreSortText[exploreSort], 932-exploreSortTextWidth + 5, 90);
+			if (exploreTab == 2) {
+				exploreSearchInput = drawTextBox(exploreSearchInput, 28, 75, 839, 55, 34, [10,12,10,10], 18, false, '#333333', '#ffffff', 'Helvetica')[0];
 
+				if (onRect(_xmouse, _ymouse, 877, 75, 55, 55)) {
+					ctx.fillStyle = '#404040';
+					onButton = true;
+					if (pmouseIsDown && !mouseIsDown) setExplorePage(0);
+				} else ctx.fillStyle = '#333333';
+				ctx.fillRect(877, 75, 55, 55);
 
-			// Page number
-			ctx.textAlign = 'center';
-			ctx.font = '30px Helvetica';
-			ctx.fillText(explorePage + 1, cwidth / 2, 490);
+				// Magnifying glass
+				ctx.strokeStyle = '#ffffff';
+				ctx.lineWidth = 5;
+				ctx.beginPath();
+				ctx.arc(909, 98, 13, -1.25 * Math.PI, 0.75 * Math.PI);
+				ctx.lineTo(887, 120);
+				ctx.stroke(); 
+			}
 
-			// Previous page button
-			if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse, _ymouse, 227.5, 487, 25, 30)) {
-				ctx.fillStyle = '#cccccc';
-				onButton = true;
-				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage - 1);
-			} else ctx.fillStyle = '#999999';
-			drawArrow(227.5, 487, 25, 30, 3);
+			if (exploreTab != 2) { // Sort and pages aren't supported for search yet
+				// Sort by
+				if (onRect(_xmouse, _ymouse, 932-exploreSortTextWidth, 85, exploreSortTextWidth, 30)) {
+					ctx.fillStyle = '#404040';
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) {
+						// exploreSort = (exploreSort + 1) % exploreSortText.length;
+						exploreSort = exploreSort==0?2:0;
+						setExplorePage(0);
+					}
+				} else ctx.fillStyle = '#333333';
+				ctx.fillRect(932-exploreSortTextWidth, 85, exploreSortTextWidth, 30);
+				ctx.textBaseline = 'top';
+				ctx.textAlign = 'left';
+				ctx.fillStyle = '#ffffff';
+				ctx.font = '24px Helvetica';
+				ctx.fillText('Sort by: ' + exploreSortText[exploreSort], 932-exploreSortTextWidth + 5, 90);
 
-			// Next page button
-			if (exploreLoading) ctx.fillStyle = '#505050';
-			else if (onRect(_xmouse, _ymouse, 707.5, 487, 25, 30)) {
-				ctx.fillStyle = '#cccccc';
-				onButton = true;
-				if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage + 1);
-			} else ctx.fillStyle = '#999999';
-			drawArrow(707.5, 487, 25, 30, 1);
+				// Page number
+				ctx.textAlign = 'center';
+				ctx.font = '30px Helvetica';
+				ctx.fillText(explorePage + 1, cwidth / 2, 490);
+
+				// Previous page button
+				if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
+				else if (onRect(_xmouse, _ymouse, 227.5, 487, 25, 30)) {
+					ctx.fillStyle = '#cccccc';
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage - 1);
+				} else ctx.fillStyle = '#999999';
+				drawArrow(227.5, 487, 25, 30, 3);
+
+				// Next page button
+				if (exploreLoading) ctx.fillStyle = '#505050';
+				else if (onRect(_xmouse, _ymouse, 707.5, 487, 25, 30)) {
+					ctx.fillStyle = '#cccccc';
+					onButton = true;
+					if (mouseIsDown && !pmouseIsDown) setExplorePage(explorePage + 1);
+				} else ctx.fillStyle = '#999999';
+				drawArrow(707.5, 487, 25, 30, 1);
+			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
-			drawMenu0Button('LOG IN', 400, 15, 16, false, logInExplore);
+			drawMenu0Button('LOG IN', 520, 15, 16, false, logInExplore, 120);
 			break;
 
 		case 7:
@@ -9162,7 +9185,7 @@ function draw() {
 
 				drawMenu0Button(exploreTab==0?'PLAY LEVEL':'NEW GAME', 30, 389, 2, false, playExploreLevel);
 
-				drawMenu0Button('more by this user', 30, 440, 3, enableExperimentalFeatures, exploreMoreByThisUser);
+				drawMenu0Button('more by this user', 30, 440, 3, false, exploreMoreByThisUser);
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
@@ -9377,6 +9400,23 @@ function requestError() {
 function getExplorePage(p, t, s) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&sort=' + s + '&type=' + t, {method: 'GET'})
+		.then(response => {
+			response.json().then(data => {
+				explorePageLevels = data;
+				if (exploreTab == 0) setExploreThumbs();
+				truncateLevelTitles(explorePageLevels,0);
+				requestResolved();
+			});
+		})
+		.catch(err => {
+			console.log(err);
+			requestError();
+		});
+}
+
+function getSearchPage(searchText, p) {
+	requestAdded();
+	return fetch('https://5beam.zelo.dev/api/search?text=' + encodeURIComponent(searchText).replace('%20','+') + '&page=' + p + '&amount=8', {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				explorePageLevels = data;
