@@ -86,6 +86,8 @@ let screenFlashes = true;
 let frameRateThrottling = true;
 let optionText = ['Screen Shake','Screen Flashes','Quirks Mode','Experimental Features','Frame Rate Throttling'];
 let levelAlreadySharedToExplore = false;
+let lcSavedLevels;
+let nextLevelId;
 let whiteAlpha = 0;
 let coinAlpha = 0;
 
@@ -130,6 +132,20 @@ function getSavedGame() {
 	}
 }
 getSavedGame();
+
+function saveMyLevels() {
+	bfdia5b.setItem('myLevels', JSON.stringify(lcSavedLevels));
+	bfdia5b.setItem('nextLevelId', nextLevelId);
+}
+
+function getSavedLevels() {
+	if (bfdia5b.getItem('myLevels') == undefined) {
+		bfdia5b.setItem('myLevels', '{}');
+		bfdia5b.setItem('nextLevelId', 0);
+	}
+	lcSavedLevels = JSON.parse(bfdia5b.getItem('myLevels'));
+	nextLevelId = bfdia5b.getItem('nextLevelId');
+}
 
 function getTimer() {
 	return _frameCount / 0.06;
@@ -1906,6 +1922,7 @@ let exploreLoading = false;
 let requestsWaiting = 0;
 let exploreSearchInput = '';
 let playingLevelpack = false; // Whether or not a levelpack from explore is currently loaded.
+let lcCurrentSavedLevel = -1;
 let myLevel;
 let myLevelChars;
 let myLevelDialogue;
@@ -2225,6 +2242,7 @@ function menuContGame() {
 
 function menuLevelCreator() {
 	menuScreen = 5;
+	getSavedLevels();
 	resetLevelCreator();
 }
 
@@ -2236,6 +2254,14 @@ function menuExplore() {
 	menuScreen = 6;
 	exploreTab = 0;
 	setExplorePage(0);
+}
+
+function menuMyLevels() {
+	menuScreen = 10;
+}
+
+function menuMyLevelsBack() {
+	menuScreen = 5;
 }
 
 function gotoExploreLevelPage(locOnPage) {
@@ -4843,6 +4869,7 @@ function resetLevelCreator() {
 	// levelCreator.createEmptyMovieClip("grid",100);
 	// levelCreator.createEmptyMovieClip("tiles",98);
 	// levelCreator.createEmptyMovieClip("rectSelect",99);
+	lcCurrentSavedLevel = -1;
 	levelAlreadySharedToExplore = false;
 	lcPopUp = false;
 	duplicateChar = false;
@@ -6799,6 +6826,15 @@ function shareToExplore() {
 	postExploreLevel(myLevelInfo.name, myLevelInfo.desc, generateLevelString());
 }
 
+function saveLevelCreator() {
+	if (lcCurrentSavedLevel == -1) {
+		lcCurrentSavedLevel = nextLevelId;
+		nextLevelId++;
+	}
+	lcSavedLevels['l' + lcCurrentSavedLevel] = {data:generateLevelString(), description:myLevelInfo.desc, id: lcCurrentSavedLevel};
+	saveMyLevels();
+}
+
 function mousemove(event) {
 	_xmouse = event.pageX*addedZoom - canvas.getBoundingClientRect().left;
 	_ymouse = event.pageY*addedZoom - canvas.getBoundingClientRect().top;
@@ -8752,7 +8788,9 @@ function draw() {
 					drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Load String', openLevelLoader, 815, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Test Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					if (enableExperimentalFeatures) drawSimpleButton('Save Level', saveLevelCreator, 815, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 90, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					if (enableExperimentalFeatures) drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 130, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawMenu0Button('EXIT', 846, cheight - 50, 15, false, menuExitLevelCreator, 100);
 					// drawMenu2_3Button(0, 837.5, 486.95, menuExitLevelCreator);
 					break;
@@ -9318,6 +9356,13 @@ function draw() {
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExitOptions);
+			break;
+
+		case 10:
+			ctx.fillStyle = '#a0a0a0';
+			ctx.fillRect(0, 0, cwidth, cheight);
+
+			drawMenu2_3Button(1, 837.5, 486.95, menuMyLevelsBack);
 			break;
 	}
 
