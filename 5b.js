@@ -7395,7 +7395,7 @@ function draw() {
 				}
 			}
 			if (!gotThisCoin) coinAlpha = 140 - locations[4] * 0.7;
-			if (playMode < 2 && gotCoin[currentLevel]) coinAlpha = Math.max(alph, 30);
+			if (playMode < 2 && gotCoin[currentLevel]) coinAlpha = Math.max(coinAlpha, 30);
 			for (let i = 0; i < charCount; i++) {
 				if (char[i].vy != 0 || char[i].vx != 0 || char[i].x != char[i].px || char[i].py != char[i].y)
 					char[i].justChanged = 2;
