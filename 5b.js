@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'v0.1.0*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.1.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -1894,6 +1894,7 @@ let exploreSort = 0;
 let explorePageLevels = [];
 let exploreUserPageLevels = [];
 let exploreLevelPageLevel;
+let exploreLevelPageType;
 let previousMenuExplore = 0;
 let exploreUser;
 let exploreUserPageNumbers = [];
@@ -2239,10 +2240,12 @@ function menuExplore() {
 
 function gotoExploreLevelPage(locOnPage) {
 	let newExploreLevelPageLevel = menuScreen==8?exploreUserPageLevels[Math.floor(locOnPage/4)][locOnPage%4]:explorePageLevels[locOnPage];
-	if ((menuScreen==6 && exploreTab == 0) || (menuScreen==8 && locOnPage < 4)) {
+	if ((menuScreen==6 && (exploreTab == 0 || exploreTab == 2)) || (menuScreen==8 && locOnPage < 4)) {
+		exploreLevelPageType = 0;
 		exploreLevelPageLevel = newExploreLevelPageLevel;
 		drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
 	} else {
+		exploreLevelPageType = 1;
 		getExploreLevelpack(newExploreLevelPageLevel.id);
 	}
 	previousMenuExplore = menuScreen;
@@ -2261,7 +2264,7 @@ function menuExploreBack() {
 }
 
 function playExploreLevel() {
-	if (exploreTab == 0) {
+	if (exploreLevelPageType == 0) {
 		readExploreLevelString(exploreLevelPageLevel.data);
 		testLevelCreator();
 		playMode = 3;
@@ -9183,7 +9186,7 @@ function draw() {
 				// ctx.fillRect(30, 98, 368, 207);
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				drawMenu0Button(exploreTab==0?'PLAY LEVEL':'NEW GAME', 30, 389, 2, false, playExploreLevel);
+				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 389, 2, false, playExploreLevel);
 
 				drawMenu0Button('more by this user', 30, 440, 3, false, exploreMoreByThisUser);
 			}
