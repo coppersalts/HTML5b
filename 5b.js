@@ -2512,6 +2512,42 @@ function drawNewGame2Button(text, x, y, id, color, action) {
 	ctx.fillText(text, x + size / 2, y + (size * 1.1) / 2);
 }
 
+function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive) {
+	if (onRect(_xmouse, _ymouse, x, y, w, h)) {
+		ctx.fillStyle = bgHover;
+		if (mouseIsDown) ctx.fillStyle = bgActive;
+		else if (pmouseIsDown && onRect(lastClickX, lastClickY, x, y, w, h)) action();
+	} else ctx.fillStyle = bgColor;
+	ctx.fillRect(x, y, w, h);
+
+	ctx.fillStyle = textColor;
+	ctx.textBaseline = 'bottom';
+	ctx.textAlign = 'center';
+	ctx.fillText(text, x + w/2.0, y + h - bottomPad);
+	// let fill = '#ffffff';
+	// if (!grayed) {
+	// 	if (!lcPopUp && onRect(_xmouse, _ymouse, x, y, width, menu0ButtonSize.h)) {
+	// 		onButton = true;
+	// 		if (mouseIsDown) {
+	// 			fill = '#b8b8b8';
+	// 			menu0ButtonClicked = id;
+	// 		} else fill = '#d4d4d4';
+	// 	}
+	// 	if (!mouseIsDown && menu0ButtonClicked === id) {
+	// 		menu0ButtonClicked = -1;
+	// 		action();
+	// 	}
+	// } else fill = '#b8b8b8';
+
+	// drawRoundedRect(fill, x, y, width, menu0ButtonSize.h, menu0ButtonSize.cr);
+
+	// ctx.font = 'bold 30px Helvetica';
+	// ctx.fillStyle = '#666666';
+	// ctx.textAlign = 'center';
+	// ctx.textBaseline = 'middle';
+	// ctx.fillText(text, x + width / 2, y + (menu0ButtonSize.h * 1.1) / 2);
+}
+
 function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, c2, font) {
 	ctx.fillStyle = c1;
 	ctx.fillRect(x, y, w, h);
@@ -8711,18 +8747,14 @@ function draw() {
 
 				case 5:
 					// Options
-					drawMenu0Button('COPY LEVEL', 673, tabWindowY + 10, 11, false, copyLevelString);
-					drawMenu0Button('LOAD LEVEL', 673, tabWindowY + 60, 14, false, openLevelLoader);
-					drawMenu0Button('TEST LEVEL', 673, tabWindowY + 110, 10, false, testLevelCreator);
-					drawMenu0Button('EXIT', 673, tabWindowY + 160, 15, false, menuExitLevelCreator);
-					drawMenu0Button(
-						'SHARE TO EXPLORE',
-						673,
-						tabWindowY + 210,
-						16,
-						false,
-						shareToExplore
-					);
+					// drawMenu0Button('COPY LEVEL', 673, tabWindowY + 10, 11, false, copyLevelString);
+					ctx.font = '23px Helvetica';
+					drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					drawSimpleButton('Load String', openLevelLoader, 815, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					drawSimpleButton('Test Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 90, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					drawMenu0Button('EXIT', 846, cheight - 50, 15, false, menuExitLevelCreator, 100);
+					// drawMenu2_3Button(0, 837.5, 486.95, menuExitLevelCreator);
 					break;
 			}
 
