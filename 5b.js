@@ -2273,7 +2273,7 @@ function playExploreLevel() {
 	}
 }
 
-function exploreMoreFromThisUser() {
+function exploreMoreByThisUser() {
 	menuScreen = 8;
 	// getExploreUser(exploreLevelPageLevel.creatorId);
 	exploreUser = exploreLevelPageLevel.creator;
@@ -9144,21 +9144,25 @@ function draw() {
 				ctx.font = '38px Helvetica';
 				ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
 
-				ctx.fillStyle = '#999999';
+				ctx.fillStyle = '#b0b0b0';
 				ctx.font = '18px Helvetica';
 				ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 31.85, 66.1);
+
+				ctx.font = 'italic 18px Helvetica';
+				ctx.fillText('created on ' + exploreLevelPageLevel.createdAt.slice(0,10), 31.85, 325);
+
 
 				ctx.fillStyle = '#ffffff';
 				ctx.font = '20px Helvetica';
 				wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
 
-				ctx.fillStyle = '#cccccc';
+				// ctx.fillStyle = '#cccccc';
 				// ctx.fillRect(30, 98, 368, 207);
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
 				drawMenu0Button(exploreTab==0?'PLAY LEVEL':'NEW GAME', 30, 389, 2, false, playExploreLevel);
 
-				if (enableExperimentalFeatures) drawMenu0Button('more from this user', 30, 440, 3, false, exploreMoreFromThisUser);
+				drawMenu0Button('more by this user', 30, 440, 3, enableExperimentalFeatures, exploreMoreByThisUser);
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
