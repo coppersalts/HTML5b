@@ -147,6 +147,11 @@ function getSavedLevels() {
 	nextLevelId = bfdia5b.getItem('nextLevelId');
 }
 
+function deleteSavedLevel(id) {
+	delete lcSavedLevels[id];
+	saveMyLevels();
+}
+
 function getTimer() {
 	return _frameCount / 0.06;
 }
@@ -1846,6 +1851,7 @@ let charDropdownType;
 let diaDropdown = -1;
 let diaDropdownType;
 let lcPopUp = false;
+let lcPopUpNextFrame = false;
 let lcPopUpType = 0;
 let tabHeight = 30;
 let tileTabScrollBar = 0;
@@ -1926,6 +1932,8 @@ let lcCurrentSavedLevel = -1;
 let lcChangesMade;
 let myLevelsPage = 0;
 let myLevelsPageCount;
+let deletingMyLevels = false;
+let levelToDelete;
 let myLevel;
 let myLevelChars;
 let myLevelDialogue;
@@ -2261,7 +2269,8 @@ function menuExplore() {
 
 function menuMyLevels() {
 	menuScreen = 10;
-	myLevelsPageCount = Math.ceil(Object.keys(lcSavedLevels).length / 8.0) ;
+	deletingMyLevels = false;
+	lcPopUp = false;
 	loadMyLevelsPage(0);
 }
 
@@ -2543,9 +2552,10 @@ function drawNewGame2Button(text, x, y, id, color, action) {
 	ctx.fillText(text, x + size / 2, y + (size * 1.1) / 2);
 }
 
-function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive, enabled = true) {
+function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive, enabled = true, isOnPopUp = false) {
 	if (enabled) {
-		if (onRect(_xmouse, _ymouse, x, y, w, h)) {
+		if (onRect(_xmouse, _ymouse, x, y, w, h) && (!lcPopUp || isOnPopUp)) {
+			onButton = true;
 			ctx.fillStyle = bgHover;
 			if (mouseIsDown) ctx.fillStyle = bgActive;
 			else if (pmouseIsDown && onRect(lastClickX, lastClickY, x, y, w, h)) action();
@@ -2719,7 +2729,7 @@ function drawMenu() {
 	}
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0, menuContGame);
 	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false, menuLevelCreator);
-	drawMenu0Button('EXPLORE (beta)', 665.55, 482.5, 4, false, menuExplore);
+	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, false, menuExplore);
 
 	// let started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -4886,7 +4896,7 @@ function resetLevelCreator() {
 	reorderDiaUp = false;
 	reorderDiaDown = false;
 	menuScreen = 5;
-	selectedTab = 0;
+	selectedTab = 5;
 	selectedBg = 0;
 	levelWidth = 32;
 	tool = 0;
@@ -6137,7 +6147,7 @@ function generateLevelString() {
 }
 
 function openLevelLoader() {
-	lcPopUp = true;
+	lcPopUpNextFrame = true;
 	lcPopUpType = 0;
 	levelLoadString = '';
 	canvas.setAttribute('contenteditable', true);
@@ -6704,12 +6714,15 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 	// 1 - explore user page
 	// 2 - local saved levels page
 	let thisExploreLevel = (pageType==1)?exploreUserPageLevels[levelType][i - levelType*4]:explorePageLevels[i];
-	if (onRect(_xmouse, _ymouse, x, y, 208, 155)) {
+	if (onRect(_xmouse, _ymouse, x, y, 208, 155) && !lcPopUp) {
 		onButton = true;
-		ctx.fillStyle = '#404040';
-		if (mouseIsDown && !pmouseIsDown) {
-			if (menuScreen == 10) loadSavedLevelIntoLevelCreator(i);
-			else gotoExploreLevelPage(i);
+		if (pageType == 2 && deletingMyLevels) ctx.fillStyle = '#800000';
+		else ctx.fillStyle = '#404040';
+		if (!mouseIsDown && pmouseIsDown) {
+			if (pageType == 2) {
+				if (deletingMyLevels) openLevelDeletePopUp(i);
+				else loadSavedLevelIntoLevelCreator(i);
+			} else gotoExploreLevelPage(i);
 		}
 	} else {
 		ctx.fillStyle = '#333333';
@@ -6748,6 +6761,7 @@ function loadMyLevelsPage(page) {
 	myLevelsPage = page;
 	let keys = Object.keys(lcSavedLevels);
 	let offset = myLevelsPage*8;
+	myLevelsPageCount = Math.ceil(keys.length / 8.0);
 	explorePageLevels = [];
 	for (let i = 0; i + offset < keys.length && i < 8; i++) {
 		explorePageLevels.push(lcSavedLevels[keys[i + offset]]);
@@ -6884,6 +6898,27 @@ function saveLevelCreatorCopy() {
 	saveLevelCreator();
 	lcCurrentSavedLevel = oldSavedLevel;
 	lcChangesMade = oldChangesMade; // There might be a better way to do this.
+}
+
+function toggleMyLevelDeleting() {
+	deletingMyLevels = !deletingMyLevels;
+}
+
+function openLevelDeletePopUp(locOnPage) {
+	lcPopUpNextFrame = true;
+	levelToDelete = 'l' + explorePageLevels[locOnPage].id;
+}
+
+function confirmDeleteLevel() {
+	lcPopUp = false;
+	deletingMyLevels = false;
+	deleteSavedLevel(levelToDelete);
+	loadMyLevelsPage(myLevelsPage);
+}
+
+function cancelDeleteLevel() {
+	lcPopUp = false;
+	deletingMyLevels = false;
 }
 
 function mousemove(event) {
@@ -7954,6 +7989,7 @@ function draw() {
 
 		case 5:
 			// menuExitLevelCreator
+			lcPopUpNextFrame = false;
 
 			ctx.drawImage(osc1, 0, 0, cwidth, cheight);
 			ctx.globalAlpha = 0.5;
@@ -9022,7 +9058,7 @@ function draw() {
 			// 	}
 			// }
 
-			if (lcPopUp) {
+			if (lcPopUp && !lcPopUpNextFrame) {
 				if (lcPopUpType == 0) {
 					ctx.globalAlpha = 0.2;
 					ctx.fillStyle = '#000000';
@@ -9157,6 +9193,8 @@ function draw() {
 			}
 
 			levelTimer++;
+			if (lcPopUpNextFrame) lcPopUp = true;
+			lcPopUpNextFrame = false;
 			break;
 
 		case 6:
@@ -9418,15 +9456,21 @@ function draw() {
 			break;
 
 		case 10:
+			lcPopUpNextFrame = false;
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
 
+			// delete button
+			ctx.fillStyle = '#ffffff';
+			ctx.font = '23px Helvetica';
+			drawSimpleButton(deletingMyLevels?'Exit Scary Delete Mode':'Delete Levels', toggleMyLevelDeleting, 28, 28, deletingMyLevels?280:150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
 
 			for (let i = 0; i < explorePageLevels.length; i++) {
 				drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, 0, 2);
 			}
 
 			// Page number
+			ctx.fillStyle = '#ffffff';
 			ctx.textAlign = 'center';
 			ctx.font = '30px Helvetica';
 			ctx.fillText((myLevelsPage + 1) + ' / ' + myLevelsPageCount, cwidth / 2, 490);
@@ -9441,7 +9485,7 @@ function draw() {
 			drawArrow(227.5, 487, 25, 30, 3);
 
 			// Next page button
-			if (myLevelsPage >= myLevelsPageCount - 1) ctx.fillStyle = '#505050'; // Remember to write an actual check for the final page
+			if (myLevelsPage >= myLevelsPageCount - 1) ctx.fillStyle = '#505050';
 			else if (onRect(_xmouse, _ymouse, 707.5, 487, 25, 30)) {
 				ctx.fillStyle = '#cccccc';
 				onButton = true;
@@ -9449,8 +9493,31 @@ function draw() {
 			} else ctx.fillStyle = '#999999';
 			drawArrow(707.5, 487, 25, 30, 1);
 
+			if (lcPopUp && !lcPopUpNextFrame) {
+				ctx.globalAlpha = 0.2;
+				ctx.fillStyle = '#000000';
+				ctx.fillRect(0, 0, cwidth, cheight);
+				ctx.globalAlpha = 1;
+				let lcPopUpW = 350;
+				let lcPopUpH = 150;
+				ctx.fillStyle = '#eaeaea';
+				ctx.fillRect((cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH);
+				if (!mouseIsDown && pmouseIsDown && !onRect(_xmouse, _ymouse, (cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH) ) cancelDeleteLevel();
+
+				ctx.fillStyle = '#000000';
+				ctx.font = '20px Helvetica';
+				ctx.textBaseline = 'top';
+				ctx.textAlign = 'left';
+				wrapText('Are you sure you want to delete the level "' + lcSavedLevels[levelToDelete].title + '"? This action can not be undone.', (cwidth - lcPopUpW) / 2 + 10, (cheight - lcPopUpH) / 2 + 5, lcPopUpW - 20, 22);
+
+				drawSimpleButton('Cancel', cancelDeleteLevel, cwidth/2 - 125, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#a0a0a0', '#c0c0c0', '#c0c0c0', true, true);
+				drawSimpleButton('Delete', confirmDeleteLevel, cwidth/2 + 25, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#ff0000', '#ff8080', '#ffa0a0', true, true);
+			}
+
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuMyLevelsBack);
+			if (lcPopUpNextFrame) lcPopUp = true; // Why did I decide to do it like this
+			lcPopUpNextFrame = false;
 			break;
 	}
 
