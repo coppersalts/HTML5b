@@ -1917,12 +1917,15 @@ let exploreUserPageNumbers = [];
 let exploreSortText = ['new','?','old'];
 let exploreSortTextWidth = 150;
 let loggedInExploreUser5beamID = -1;
-let exploreLevelTitlesTruncated;
+let exploreLevelTitlesTruncated = new Array(8);
 let exploreLoading = false;
 let requestsWaiting = 0;
 let exploreSearchInput = '';
 let playingLevelpack = false; // Whether or not a levelpack from explore is currently loaded.
 let lcCurrentSavedLevel = -1;
+let lcChangesMade;
+let myLevelsPage = 0;
+let myLevelsPageCount;
 let myLevel;
 let myLevelChars;
 let myLevelDialogue;
@@ -2258,6 +2261,8 @@ function menuExplore() {
 
 function menuMyLevels() {
 	menuScreen = 10;
+	myLevelsPageCount = Math.ceil(Object.keys(lcSavedLevels).length / 8.0) ;
+	loadMyLevelsPage(0);
 }
 
 function menuMyLevelsBack() {
@@ -2538,12 +2543,14 @@ function drawNewGame2Button(text, x, y, id, color, action) {
 	ctx.fillText(text, x + size / 2, y + (size * 1.1) / 2);
 }
 
-function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive) {
-	if (onRect(_xmouse, _ymouse, x, y, w, h)) {
-		ctx.fillStyle = bgHover;
-		if (mouseIsDown) ctx.fillStyle = bgActive;
-		else if (pmouseIsDown && onRect(lastClickX, lastClickY, x, y, w, h)) action();
-	} else ctx.fillStyle = bgColor;
+function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive, enabled = true) {
+	if (enabled) {
+		if (onRect(_xmouse, _ymouse, x, y, w, h)) {
+			ctx.fillStyle = bgHover;
+			if (mouseIsDown) ctx.fillStyle = bgActive;
+			else if (pmouseIsDown && onRect(lastClickX, lastClickY, x, y, w, h)) action();
+		} else ctx.fillStyle = bgColor;
+	} else ctx.fillStyle = bgHover;
 	ctx.fillRect(x, y, w, h);
 
 	ctx.fillStyle = textColor;
@@ -2712,7 +2719,7 @@ function drawMenu() {
 	}
 	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0, menuContGame);
 	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false, menuLevelCreator);
-	drawMenu0Button('EXPLORE (alpha)', 665.55, 482.5, 4, false, menuExplore);
+	drawMenu0Button('EXPLORE (beta)', 665.55, 482.5, 4, false, menuExplore);
 
 	// let started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -4870,6 +4877,7 @@ function resetLevelCreator() {
 	// levelCreator.createEmptyMovieClip("tiles",98);
 	// levelCreator.createEmptyMovieClip("rectSelect",99);
 	lcCurrentSavedLevel = -1;
+	lcChangesMade = false;
 	levelAlreadySharedToExplore = false;
 	lcPopUp = false;
 	duplicateChar = false;
@@ -4914,6 +4922,16 @@ function resetLevelCreator() {
 	// }
 	// levelCreator.tools.tool9.gotoAndStop(1);
 	resetLCOSC();
+}
+
+function loadSavedLevelIntoLevelCreator(locOnPage) {
+	menuScreen = 5;
+	resetLevelCreator();
+	myLevelInfo.name = explorePageLevels[locOnPage].title;
+	myLevelInfo.desc = explorePageLevels[locOnPage].description;
+	readLevelString(explorePageLevels[locOnPage].data);
+	lcCurrentSavedLevel = explorePageLevels[locOnPage].id;
+	lcChangesMade = false;
 }
 
 function resetLCOSC() {
@@ -5105,6 +5123,7 @@ function fillTile(x, y, after, before) {
 
 function setUndo() {
 	levelAlreadySharedToExplore = false;
+	lcChangesMade = true;
 	LCSwapLevelData(1, 0);
 	undid = false;
 	// levelCreator.tools.tool9.gotoAndStop(1);
@@ -5112,6 +5131,7 @@ function setUndo() {
 
 function undo() {
 	levelAlreadySharedToExplore = false;
+	lcChangesMade = true;
 	LCSwapLevelData(1, 2);
 	LCSwapLevelData(0, 1);
 	LCSwapLevelData(2, 0);
@@ -6678,12 +6698,19 @@ function truncateLevelTitles(arr, offset) {
 		exploreLevelTitlesTruncated[i+offset] = fitString(ctx, arr[i].title, 195.3);
 }
 
-function drawExploreLevel(x, y, i, type, userPage) {
-	let thisExploreLevel = userPage?exploreUserPageLevels[type][i - type*4]:explorePageLevels[i];
+function drawExploreLevel(x, y, i, levelType, pageType) {
+	// page types:
+	// 0 - main explore page
+	// 1 - explore user page
+	// 2 - local saved levels page
+	let thisExploreLevel = (pageType==1)?exploreUserPageLevels[levelType][i - levelType*4]:explorePageLevels[i];
 	if (onRect(_xmouse, _ymouse, x, y, 208, 155)) {
 		onButton = true;
 		ctx.fillStyle = '#404040';
-		if (mouseIsDown && !pmouseIsDown) gotoExploreLevelPage(i);
+		if (mouseIsDown && !pmouseIsDown) {
+			if (menuScreen == 10) loadSavedLevelIntoLevelCreator(i);
+			else gotoExploreLevelPage(i);
+		}
 	} else {
 		ctx.fillStyle = '#333333';
 	}
@@ -6691,7 +6718,7 @@ function drawExploreLevel(x, y, i, type, userPage) {
 	ctx.fillRect(x, y, 208, 155);
 	// ctx.fillStyle = '#cccccc';
 	// ctx.fillRect(x+8, y+8, 192, 108);
-	if (type == 0) ctx.drawImage(thumbs[i], x + 8, y + 8, 192, 108);
+	if (levelType == 0) ctx.drawImage(thumbs[i], x + 8, y + 8, 192, 108);
 
 	ctx.fillStyle = '#ffffff';
 	ctx.textBaseline = 'top';
@@ -6701,9 +6728,11 @@ function drawExploreLevel(x, y, i, type, userPage) {
 	// ctx.fillText(fitString(ctx, explorePageLevels[i].title, 195.3), x+6.35, y+119.4);
 	// fitString(ctx, explorePageLevels[i].title, 142.3);
 
-	ctx.fillStyle = '#999999';
-	ctx.font = '10px Helvetica';
-	ctx.fillText('by ' + thisExploreLevel.creator.name, x + 7, y + 138.3);
+	if (pageType != 2) {
+		ctx.fillStyle = '#999999';
+		ctx.font = '10px Helvetica';
+		ctx.fillText('by ' + thisExploreLevel.creator.name, x + 7, y + 138.3);
+	}
 
 	// explorePageLevels[i]
 }
@@ -6714,6 +6743,17 @@ function setExplorePage(page) {
 	if (exploreTab == 2) getSearchPage(exploreSearchInput, 0); 
 	else getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
+}
+function loadMyLevelsPage(page) {
+	myLevelsPage = page;
+	let keys = Object.keys(lcSavedLevels);
+	let offset = myLevelsPage*8;
+	explorePageLevels = [];
+	for (let i = 0; i + offset < keys.length && i < 8; i++) {
+		explorePageLevels.push(lcSavedLevels[keys[i + offset]]);
+	}
+	truncateLevelTitles(explorePageLevels, 0);
+	setExploreThumbs();
 }
 
 function setExploreThumbs() {
@@ -6831,8 +6871,19 @@ function saveLevelCreator() {
 		lcCurrentSavedLevel = nextLevelId;
 		nextLevelId++;
 	}
-	lcSavedLevels['l' + lcCurrentSavedLevel] = {data:generateLevelString(), description:myLevelInfo.desc, id: lcCurrentSavedLevel};
+	lcSavedLevels['l' + lcCurrentSavedLevel] = {data:generateLevelString(), description: myLevelInfo.desc, id: lcCurrentSavedLevel, title: myLevelInfo.name};
 	saveMyLevels();
+	lcChangesMade = false;
+}
+
+function saveLevelCreatorCopy() {
+	// Say that the level we're editing is not saved, save that, then switch back to editing the saved level from before.
+	let oldSavedLevel = lcCurrentSavedLevel;
+	let oldChangesMade = lcChangesMade;
+	lcCurrentSavedLevel = -1;
+	saveLevelCreator();
+	lcCurrentSavedLevel = oldSavedLevel;
+	lcChangesMade = oldChangesMade; // There might be a better way to do this.
 }
 
 function mousemove(event) {
@@ -8788,9 +8839,17 @@ function draw() {
 					drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Load String', openLevelLoader, 815, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Test Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
-					if (enableExperimentalFeatures) drawSimpleButton('Save Level', saveLevelCreator, 815, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
-					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 90, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
-					if (enableExperimentalFeatures) drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 130, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					if (enableExperimentalFeatures) {
+						let isNew = lcCurrentSavedLevel==-1;
+						if (!isNew) ctx.font = '18px Helvetica';
+						drawSimpleButton(isNew?'Save Level':'Save Changes', saveLevelCreator, 815, tabWindowY + 50, 130, 30, isNew?3:5, '#ffffff', '#404040', '#666666', '#555555', lcChangesMade);
+						ctx.font = '23px Helvetica';
+						drawSimpleButton('Save Copy', saveLevelCreatorCopy, 675, tabWindowY + 90, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555', !isNew);
+						drawSimpleButton('New Blank Level', resetLevelCreator, 675, tabWindowY + 130, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+						drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 170, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					}
+
+					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 210, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555', loggedInExploreUser5beamID!=-1);
 					drawMenu0Button('EXIT', 846, cheight - 50, 15, false, menuExitLevelCreator, 100);
 					// drawMenu2_3Button(0, 837.5, 486.95, menuExitLevelCreator);
 					break;
@@ -9133,7 +9192,7 @@ function draw() {
 				drawExploreLoadingText();
 			} else {
 				for (let i = 0; i < explorePageLevels.length; i++) {
-					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + (exploreTab==2?140:130), i, exploreTab==1?1:0, false);
+					drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + (exploreTab==2?140:130), i, exploreTab==1?1:0, 0);
 				}
 			}
 
@@ -9286,7 +9345,7 @@ function draw() {
 					drawArrow(920, y + 60, 25, 30, 1);
 
 					for (let i = 0; i < exploreUserPageLevels[j].length; i++) {
-						drawExploreLevel(214 * i + 55, y, i+j*4, (i+j*4)>=4?1:0, true);
+						drawExploreLevel(214 * i + 55, y, i+j*4, (i+j*4)>=4?1:0, 1);
 					}
 				}
 			}
@@ -9359,8 +9418,37 @@ function draw() {
 			break;
 
 		case 10:
-			ctx.fillStyle = '#a0a0a0';
+			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
+
+
+			for (let i = 0; i < explorePageLevels.length; i++) {
+				drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, 0, 2);
+			}
+
+			// Page number
+			ctx.textAlign = 'center';
+			ctx.font = '30px Helvetica';
+			ctx.fillText((myLevelsPage + 1) + ' / ' + myLevelsPageCount, cwidth / 2, 490);
+
+			// Previous page button
+			if (myLevelsPage <= 0) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse, _ymouse, 227.5, 487, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) loadMyLevelsPage(myLevelsPage - 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(227.5, 487, 25, 30, 3);
+
+			// Next page button
+			if (myLevelsPage >= myLevelsPageCount - 1) ctx.fillStyle = '#505050'; // Remember to write an actual check for the final page
+			else if (onRect(_xmouse, _ymouse, 707.5, 487, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) loadMyLevelsPage(myLevelsPage + 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(707.5, 487, 25, 30, 1);
+
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuMyLevelsBack);
 			break;
