@@ -1875,7 +1875,7 @@ let tileTabScrollBar = 0;
 let charsTabScrollBar = 0;
 let diaTabScrollBar = 0;
 let bgsTabScrollBar = 0;
-let draggingScrollBar = false;
+let draggingScrollbar = false;
 let addButtonPressed = false;
 let duplicateChar = false;
 let reorderCharUp = false;
@@ -1961,6 +1961,7 @@ let tool = 0;
 let selectedTile = 0;
 let mouseIsDown = false;
 let pmouseIsDown = false;
+let mousePressedLastFrame;
 let LCEndGateX = 0;
 let LCEndGateY = 0;
 let LCCoinX = 0;
@@ -2059,7 +2060,9 @@ let levelButtonSize = {w: 100, h: 40};
 let menu0ButtonClicked = -1; // TODO: refactor this thing out of the code entirely if possible.
 let onButton = false;
 let onTextBox = false;
-let editingTextBox = -1;
+let onScrollbar = false;
+let textBoxes = [];
+let editingTextBox = false;
 let textBoxCursorLoc = 0;
 let currentTextBoxAllowsLineBreaks = false;
 let mouseOnTabWindow = false;
@@ -2274,6 +2277,12 @@ function menuLevelCreator() {
 	resetLevelCreator();
 }
 
+function lcTextBoxes() {
+	textBoxes = [];
+	textBoxes.push(new TextBox(myLevelInfo.name, 785, 10, 150, 40, '#e0e0e0', '#000000', '#a0a0a0', 18, 18, 'Helvetica', false, [5, 2, 2, 2], 0, 10, false));
+	textBoxes.push(new TextBox(myLevelInfo.desc, 785, 60, 150, 230, '#e0e0e0', '#000000', '#a0a0a0', 14, 14, 'Helvetica', true, [5, 2, 2, 2], 0, 10, false));
+}
+
 function menuExitLevelCreator() {
 	menuScreen = 0;
 }
@@ -2294,6 +2303,7 @@ function menuMyLevels() {
 
 function menuMyLevelsBack() {
 	menuScreen = 5;
+	lcTextBoxes();
 	lcPopUp = false;
 }
 
@@ -2445,7 +2455,7 @@ function testLevelCreator() {
 		}
 		playMode = 2;
 		currentLevel = -1;
-		editingTextBox = -1;
+		editingTextBox = false;
 		wipeTimer = 30;
 		menuScreen = 3;
 		toSeeCS = true;
@@ -2456,6 +2466,7 @@ function testLevelCreator() {
 
 function exitTestLevel() {
 	menuScreen = 5;
+	lcTextBoxes();
 	cameraX = 0;
 	cameraY = 0;
 	resetLevel();
@@ -2619,102 +2630,6 @@ function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColo
 	// ctx.textAlign = 'center';
 	// ctx.textBaseline = 'middle';
 	// ctx.fillText(text, x + width / 2, y + (menu0ButtonSize.h * 1.1) / 2);
-}
-
-function drawTextBox(text, x, y, w, h, textSize, pad, id, allowsLineBreaks, c1, c2, font) {
-	ctx.fillStyle = c1;
-	ctx.fillRect(x, y, w, h);
-
-	ctx.fillStyle = c2;
-	ctx.font = textSize + 'px ' + font;
-	ctx.textAlign = 'left';
-	ctx.textBaseline = 'top';
-	let lines = wrapText(text, x + pad[0], y + pad[1], w - pad[0] - pad[2], textSize);
-
-	if (onRect(_xmouse, _ymouse, x, y, w, h)) {
-		onTextBox = true;
-		if (mouseIsDown && !pmouseIsDown) {
-			editingTextBox = id;
-			if (menuScreen == 5 && selectedTab == 4 && !lcPopUp) {
-				// && diaDropdown == id && diaDropdownType == 2
-				setUndo();
-			}
-			currentTextBoxAllowsLineBreaks = allowsLineBreaks;
-			let textBoxCursorLine = Math.max(Math.floor((_ymouse - y - pad[1]) / textSize), 0);
-			if (textBoxCursorLine >= lines.length) {
-				textBoxCursorLoc = text.length;
-			} else {
-				let textBoxCursorLoc = 0;
-				for (let i = 0; i < textBoxCursorLine; i++) {
-					textBoxCursorLoc += lines[i].length;
-				}
-				for (var i = 0; i < lines[textBoxCursorLine].length; i++) {
-					if (ctx.measureText(lines[textBoxCursorLine].slice(0, i)).width >= _xmouse - x - pad[0]) break;
-				}
-				textBoxCursorLoc += i - 1;
-			}
-			inputText = text.slice(0, textBoxCursorLoc);
-			textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
-		}
-	}
-	if (editingTextBox == id) {
-		textBoxCursorLoc = inputText.length;
-		if (_keysDown[39]) {
-			if (!rightPress) {
-				textBoxCursorLoc = Math.max(inputText.length + 1, 0);
-				inputText = text.slice(0, textBoxCursorLoc);
-				textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
-				rightPress = true;
-			}
-		} else rightPress = false;
-		if (_keysDown[37]) {
-			if (!leftPress) {
-				textBoxCursorLoc = Math.max(inputText.length - 1, 0);
-				inputText = text.slice(0, textBoxCursorLoc);
-				textAfterCursorAtClick = text.slice(textBoxCursorLoc, text.length);
-				leftPress = true;
-			}
-		} else leftPress = false;
-		if (_keysDown[38]) {
-			if (!upPress) {
-				textBoxCursorLoc = 0;
-				inputText = '';
-				textAfterCursorAtClick = text;
-				upPress = true;
-			}
-		} else upPress = false;
-		if (_keysDown[40]) {
-			if (!downPress) {
-				textBoxCursorLoc = text.length;
-				inputText = text;
-				textAfterCursorAtClick = '';
-				downPress = true;
-			}
-		} else downPress = false;
-		text = inputText + textAfterCursorAtClick;
-		if (_frameCount % 60 < 30) {
-			ctx.strokeStyle = c2;
-			ctx.lineWidth = 2;
-			let blinkyLineY = 0;
-			let lineLengthBeforeCursor = 0;
-			while (blinkyLineY < lines.length) {
-				let newlen = lineLengthBeforeCursor + lines[blinkyLineY].length;
-				if (newlen > textBoxCursorLoc || (newlen == textBoxCursorLoc && blinkyLineY == lines.length - 1)) break;
-				lineLengthBeforeCursor = newlen;
-				blinkyLineY++;
-			}
-			if (blinkyLineY >= lines.length) blinkyLineY--;
-			let blinkyLineX = ctx.measureText(text.slice(lineLengthBeforeCursor, textBoxCursorLoc)).width + x + pad[0];
-			ctx.beginPath();
-			ctx.moveTo(blinkyLineX, y + pad[1] + textSize * blinkyLineY);
-			ctx.lineTo(blinkyLineX, y + pad[1] + textSize * (blinkyLineY + 1));
-			ctx.stroke();
-		}
-
-		if (_keysDown[13] && !_keysDown[16]) editingTextBox = -1;
-	}
-
-	return [text, lines];
 }
 
 function drawRoundedRect(fill, x, y, w, h, cr) {
@@ -4962,6 +4877,7 @@ function resetLevelCreator() {
 	// }
 	// levelCreator.tools.tool9.gotoAndStop(1);
 	resetLCOSC();
+	lcTextBoxes();
 }
 
 function loadSavedLevelIntoLevelCreator(locOnPage) {
@@ -5761,20 +5677,20 @@ function drawLCDiaInfo(i, y) {
 		ctx.textBaseline = 'top';
 		ctx.fillText('lever switch', 665 + diaInfoHeight * 3 + 5, y);
 	} else {
-		var diaTextBox = drawTextBox(
-			myLevelDialogue[1][i].text,
-			665 + diaInfoHeight * 3,
-			y,
-			240 - diaInfoHeight * 3,
-			diaInfoHeight * myLevelDialogue[1][i].linecount,
-			20,
-			[5, 0, 0, 0],
-			i,
-			false,
-			'#626262',
-			'#ffffff',
-			'Helvetica'
-		);
+		// var diaTextBox = drawTextBox(
+		// 	myLevelDialogue[1][i].text,
+		// 	665 + diaInfoHeight * 3,
+		// 	y,
+		// 	240 - diaInfoHeight * 3,
+		// 	diaInfoHeight * myLevelDialogue[1][i].linecount,
+		// 	20,
+		// 	[5, 0, 0, 0],
+		// 	i,
+		// 	false,
+		// 	'#626262',
+		// 	'#ffffff',
+		// 	'Helvetica'
+		// );
 	}
 	myLevelDialogue[1][i].text = diaTextBox[0];
 	myLevelDialogue[1][i].linecount = diaTextBox[1].length;
@@ -5800,7 +5716,7 @@ function drawLCDiaInfo(i, y) {
 					];
 				}
 				reorderDiaDown = false;
-				editingTextBox = -1;
+				editingTextBox = false;
 			}
 		} else if (reorderDiaUp) {
 			if (mouseIsDown && !pmouseIsDown) {
@@ -5812,7 +5728,7 @@ function drawLCDiaInfo(i, y) {
 					];
 				}
 				reorderDiaUp = false;
-				editingTextBox = -1;
+				editingTextBox = false;
 			}
 		} else {
 			ctx.fillStyle = '#ee3333';
@@ -5833,7 +5749,7 @@ function drawLCDiaInfo(i, y) {
 				if (mouseIsDown && !pmouseIsDown) {
 					diaDropdown = -i - 3;
 					diaDropdownType = 1;
-					editingTextBox = -1;
+					editingTextBox = false;
 				}
 			} else if (
 				onRect(
@@ -5850,7 +5766,7 @@ function drawLCDiaInfo(i, y) {
 				if (mouseIsDown && !pmouseIsDown) {
 					diaDropdown = -i - 3;
 					diaDropdownType = 0;
-					editingTextBox = -1;
+					editingTextBox = false;
 				}
 			} else if (_xmouse < 665 + 240 && _xmouse > 665 + diaInfoHeight * 3) {
 				if (mouseIsDown && !pmouseIsDown) {
@@ -5871,7 +5787,7 @@ function drawLCDiaInfo(i, y) {
 				if (mouseIsDown && !pmouseIsDown) {
 					setUndo();
 					myLevelDialogue[1].splice(i, 1);
-					editingTextBox = -1;
+					editingTextBox = false;
 				}
 			}
 		}
@@ -7179,28 +7095,21 @@ function mouseup(event) {
 
 function keydown(event) {
 	_keysDown[event.keyCode || event.charCode] = true;
-	if (editingTextBox >= 0 && event.keyCode) {
+
+	if (editingTextBox && event.key) {
 		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
-			navigator.clipboard
-				.readText()
-				.then(clipText => {
-					inputText += clipText;
-				})
-				.catch(err => console.log(err));
+			navigator.clipboard.readText().then(clipText => {inputText += clipText;}).catch(err => console.log(err));
 		} else if (event.key.length == 1) {
 			inputText += event.key;
 		} else if (event.key == 'Backspace') {
 			inputText = inputText.slice(0, -1);
-		} else if (
-			currentTextBoxAllowsLineBreaks &&
-			(event.key == 'Enter' || event.key == 'Return') &&
-			event.shiftKey
-		) {
+		} else if (currentTextBoxAllowsLineBreaks && (event.key == 'Enter' || event.key == 'Return') && event.shiftKey) {
 			inputText += '\n';
 		}
 	}
+
 	if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
-	if (menuScreen == 5 && !lcPopUp && editingTextBox == -1) {
+	if (menuScreen == 5 && !lcPopUp && !editingTextBox) {
 		// tool shortcuts
 		if (_xmouse < 660 && selectedTab == 2) {
 			if (event.key == '1' || event.key == 'p' || event.key == 'd') setTool(0);
@@ -7238,7 +7147,7 @@ function handlePaste(e) {
 		pastedData = clipboardData.getData('Text');
 
 		// Do whatever with pasteddata
-		if (editingTextBox >= 0 && currentTextBoxAllowsLineBreaks) {
+		if (editingTextBox && currentTextBoxAllowsLineBreaks) {
 			inputText += pastedData;
 		}
 	}
@@ -7293,6 +7202,8 @@ function draw() {
 	onButton = false;
 	hoverText = '';
 	onTextBox = false;
+	onScrollbar = false;
+	mousePressedLastFrame = pmouseIsDown && !mouseIsDown;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX + shakeX), Math.floor(cameraY + shakeY));
 	switch (menuScreen) {
@@ -8057,36 +7968,43 @@ function draw() {
 					ctx.fillStyle = '#000000';
 					ctx.fillText('Name:', 770, tabWindowY + 10);
 					ctx.fillText('Description:', 770, tabWindowY + 60);
-					myLevelInfo.name = drawTextBox(
-						myLevelInfo.name,
-						785,
-						tabWindowY + 10,
-						160,
-						40,
-						18,
-						[5, 2, 2, 2],
-						0,
-						false,
-						'#e0e0e0',
-						'#000000',
-						'Helvetica'
-					)[0];
-					myLevelInfo.desc = drawTextBox(
-						myLevelInfo.desc,
-						785,
-						tabWindowY + 60,
-						160,
-						220,
-						14,
-						[5, 2, 2, 2],
-						2,
-						true,
-						'#e0e0e0',
-						'#000000',
-						'Helvetica'
-					)[0];
+
+					textBoxes[0].y = tabWindowY + 10;
+					textBoxes[1].y = tabWindowY + 60;
+					textBoxes[0].draw();
+					textBoxes[1].draw();
+					myLevelInfo.name = textBoxes[0].text;
+					myLevelInfo.desc = textBoxes[1].text;
+					// myLevelInfo.name = drawTextBox(
+					// 	myLevelInfo.name,
+					// 	785,
+					// 	tabWindowY + 10,
+					// 	160,
+					// 	40,
+					// 	18,
+					// 	[5, 2, 2, 2],
+					// 	0,
+					// 	false,
+					// 	'#e0e0e0',
+					// 	'#000000',
+					// 	'Helvetica'
+					// )[0];
+					// myLevelInfo.desc = drawTextBox(
+					// 	myLevelInfo.desc,
+					// 	785,
+					// 	tabWindowY + 60,
+					// 	160,
+					// 	220,
+					// 	14,
+					// 	[5, 2, 2, 2],
+					// 	2,
+					// 	true,
+					// 	'#e0e0e0',
+					// 	'#000000',
+					// 	'Helvetica'
+					// )[0];
 					if (mouseIsDown && !pmouseIsDown && !onTextBox) {
-						editingTextBox = -1;
+						editingTextBox = false;
 					}
 
 
@@ -8160,18 +8078,18 @@ function draw() {
 						(charsTabScrollBar / (tabContentsHeight == tabWindowH ? 1 : tabContentsHeight - tabWindowH)) *
 							(tabWindowH - scrollBarH);
 					if (
-						!draggingScrollBar &&
+						!draggingScrollbar &&
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
-							draggingScrollBar = true;
+							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
 					} else ctx.fillStyle = '#dddddd';
-					if (draggingScrollBar) {
+					if (draggingScrollbar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						charsTabScrollBar = Math.floor(
@@ -8184,7 +8102,7 @@ function draw() {
 								0
 							)
 						);
-						if (!mouseIsDown) draggingScrollBar = false;
+						if (!mouseIsDown) draggingScrollbar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 					ctx.save();
@@ -8615,18 +8533,18 @@ function draw() {
 					var scrollBarY =
 						tabWindowY + (tileTabScrollBar / (tabContentsHeight - tabWindowH)) * (tabWindowH - scrollBarH);
 					if (
-						!draggingScrollBar &&
+						!draggingScrollbar &&
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
-							draggingScrollBar = true;
+							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
 					} else ctx.fillStyle = '#dddddd';
-					if (draggingScrollBar) {
+					if (draggingScrollbar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						tileTabScrollBar = Math.floor(
@@ -8639,7 +8557,7 @@ function draw() {
 								0
 							)
 						);
-						if (!mouseIsDown) draggingScrollBar = false;
+						if (!mouseIsDown) draggingScrollbar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 					break;
@@ -8705,18 +8623,18 @@ function draw() {
 						(selectedTab + 1) * tabHeight +
 						(bgsTabScrollBar / (tabContentsHeight - tabWindowH)) * (tabWindowH - scrollBarH);
 					if (
-						!draggingScrollBar &&
+						!draggingScrollbar &&
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
-							draggingScrollBar = true;
+							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
 					} else ctx.fillStyle = '#dddddd';
-					if (draggingScrollBar) {
+					if (draggingScrollbar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						bgsTabScrollBar = Math.floor(
@@ -8729,7 +8647,7 @@ function draw() {
 								0
 							)
 						);
-						if (!mouseIsDown) draggingScrollBar = false;
+						if (!mouseIsDown) draggingScrollbar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 					break;
@@ -8746,18 +8664,18 @@ function draw() {
 						(diaTabScrollBar / (tabContentsHeight == tabWindowH ? 1 : tabContentsHeight - tabWindowH)) *
 							(tabWindowH - scrollBarH);
 					if (
-						!draggingScrollBar &&
+						!draggingScrollbar &&
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
 						onButton = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
-							draggingScrollBar = true;
+							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
 					} else ctx.fillStyle = '#dddddd';
-					if (draggingScrollBar) {
+					if (draggingScrollbar) {
 						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						diaTabScrollBar = Math.floor(
@@ -8770,7 +8688,7 @@ function draw() {
 								0
 							)
 						);
-						if (!mouseIsDown) draggingScrollBar = false;
+						if (!mouseIsDown) draggingScrollbar = false;
 					}
 					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
 					// ctx.save();
@@ -8818,7 +8736,7 @@ function draw() {
 						if (mouseIsDown && !pmouseIsDown) {
 							reorderDiaDown = false;
 							reorderDiaUp = false;
-							editingTextBox = -1;
+							editingTextBox = false;
 							setUndo();
 							myLevelDialogue[1].push({char: 99, face: 2, text: 'Enter text', linecount: 1});
 						}
@@ -8841,7 +8759,7 @@ function draw() {
 							if (mouseIsDown && !pmouseIsDown) {
 								reorderDiaDown = false;
 								reorderDiaUp = true;
-								editingTextBox = -1;
+								editingTextBox = false;
 							}
 						}
 						addButtonPressed = true;
@@ -8864,7 +8782,7 @@ function draw() {
 							if (mouseIsDown && !pmouseIsDown) {
 								reorderDiaUp = false;
 								reorderDiaDown = true;
-								editingTextBox = -1;
+								editingTextBox = false;
 							}
 						}
 						addButtonPressed = true;
@@ -8950,13 +8868,13 @@ function draw() {
 					onButton = true;
 					if (mouseIsDown && !pmouseIsDown) {
 						selectedTab = i;
-						draggingScrollBar = false;
+						draggingScrollbar = false;
 						duplicateChar = false;
 						reorderCharUp = false;
 						reorderCharDown = false;
 						reorderDiaUp = false;
 						reorderDiaDown = false;
-						editingTextBox = -1;
+						editingTextBox = false;
 					}
 				}
 			}
@@ -9117,7 +9035,7 @@ function draw() {
 						!onRect(_xmouse, _ymouse, (cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH)
 					) {
 						lcPopUp = false;
-						editingTextBox = -1;
+						editingTextBox = false;
 						levelLoadString = '';
 						canvas.setAttribute('contenteditable', false);
 					}
@@ -9130,20 +9048,20 @@ function draw() {
 						(cwidth - lcPopUpW) / 2 + 10,
 						(cheight - lcPopUpH) / 2 + 5
 					);
-					levelLoadString = drawTextBox(
-						levelLoadString,
-						(cwidth - lcPopUpW) / 2 + 10,
-						(cheight - lcPopUpH) / 2 + 30,
-						lcPopUpW - 20,
-						lcPopUpH - 80,
-						8,
-						[5, 5, 5, 5],
-						2,
-						true,
-						'#ffffff',
-						'#000000',
-						'monospace'
-					)[0];
+					// levelLoadString = drawTextBox(
+					// 	levelLoadString,
+					// 	(cwidth - lcPopUpW) / 2 + 10,
+					// 	(cheight - lcPopUpH) / 2 + 30,
+					// 	lcPopUpW - 20,
+					// 	lcPopUpH - 80,
+					// 	8,
+					// 	[5, 5, 5, 5],
+					// 	2,
+					// 	true,
+					// 	'#ffffff',
+					// 	'#000000',
+					// 	'monospace'
+					// )[0];
 
 					ctx.font = '18px Helvetica';
 					ctx.textAlign = 'center';
@@ -9186,7 +9104,7 @@ function draw() {
 						onButton = true;
 						if (mouseIsDown && !pmouseIsDown) {
 							lcPopUp = false;
-							editingTextBox = -1;
+							editingTextBox = false;
 							levelLoadString = '';
 							canvas.setAttribute('contenteditable', false);
 						}
@@ -9204,7 +9122,7 @@ function draw() {
 						if (mouseIsDown && !pmouseIsDown) {
 							readLevelString(levelLoadString);
 							lcPopUp = false;
-							editingTextBox = -1;
+							editingTextBox = false;
 							levelLoadString = '';
 							canvas.setAttribute('contenteditable', false);
 						}
@@ -9278,7 +9196,7 @@ function draw() {
 			}
 
 			if (exploreTab == 2) {
-				exploreSearchInput = drawTextBox(exploreSearchInput, 28, 75, 839, 55, 34, [10,12,10,10], 18, false, '#333333', '#ffffff', 'Helvetica')[0];
+				// exploreSearchInput = drawTextBox(exploreSearchInput, 28, 75, 839, 55, 34, [10,12,10,10], 18, false, '#333333', '#ffffff', 'Helvetica')[0];
 
 				if (onRect(_xmouse, _ymouse, 877, 75, 55, 55)) {
 					ctx.fillStyle = '#404040';
@@ -9601,7 +9519,7 @@ function draw() {
 
 			let currentLevelpackObj = lcSavedLevelpacks['l' + lcCurrentSavedLevelpack];
 
-			currentLevelpackObj.title = drawTextBox(currentLevelpackObj.title, 28, 28, 839, 55, 34, [10,12,10,10], 18, false, '#333333', '#ffffff', 'Helvetica')[0];
+			// currentLevelpackObj.title = drawTextBox(currentLevelpackObj.title, 28, 28, 839, 55, 34, [10,12,10,10], 18, false, '#333333', '#ffffff', 'Helvetica')[0];
 
 
 			if (lcPopUpNextFrame) lcPopUp = true;
@@ -9641,13 +9559,11 @@ function draw() {
 		ctx.globalAlpha = 1;
 	}
 
-	if (onButton) {
-		setCursor('pointer');
-	} else if (onTextBox) {
-		setCursor('text');
-	} else {
-		setCursor('auto');
-	}
+	if (draggingScrollbar) setCursor('grabbing');
+	else if (onScrollbar) setCursor('grab');
+	else if (onButton) setCursor('pointer');
+	else if (onTextBox) setCursor('text');
+	else setCursor('auto');
 	setHoverText();
 	_frameCount++;
 	pmouseIsDown = mouseIsDown;
@@ -9971,5 +9887,251 @@ class Character {
 			this.frame = newFrame;
 			if (cutScene == 3 && this.expr != this.dExpr) this.expr = this.dExpr;
 		}
+	}
+}
+
+class TextBox {
+	constructor(startingText, x, y, w, h, bgColor, textColor, scrollbarColor, lineHeight, textSize, font, allowsLineBreaks, pad, scrollbarAxis, scrollbarSize, resize) {
+		this.text = startingText;
+		this.textAfterCursor = '';
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.bgColor = bgColor;
+		this.textColor = textColor;
+		this.lineHeight = lineHeight;
+		this.textSize = textSize;
+		this.font = font;
+		this.allowsLineBreaks = allowsLineBreaks;
+		this.beingEdited = false;
+		this.pad = pad;
+		this.lines = [];
+		this.cursorPosition; // Where in the text the cursor lies.
+		this.scrollbarSize = scrollbarSize;
+		this.scrollbarLength = 0;
+		this.scrollbarPos = 0;
+		this.scrollbarAxis = scrollbarAxis;
+		this.scrollbarColor = scrollbarColor;
+		this.draggingScrollbar = false;
+		this.lineWidth = 0; // Only used for horizontal scrollbars.
+		this.resize = resize;
+		if (this.resize) this.h = this.lines.length * this.lineHeight + this.pad[1] + this.pad[3];
+	}
+
+	setCursorPosition(newPosition) {
+		this.cursorPosition = newPosition;
+		this.textAfterCursor = this.text.slice(this.cursorPosition);
+		inputText = this.text.slice(0, this.cursorPosition);
+	}
+
+	draw() {
+		// Draw the background.
+		ctx.fillStyle = this.bgColor;
+		if (this.resize)
+			ctx.fillRect(this.x, this.y, this.w, this.h);
+		else if (this.scrollbarAxis === 0)
+			ctx.fillRect(this.x, this.y, this.w + this.scrollbarSize, this.h);
+		else if (this.scrollbarAxis === 1)
+			ctx.fillRect(this.x, this.y, this.w, this.h + this.scrollbarSize);
+
+		// Set text attributes early for measuring width.
+		ctx.font = this.textSize + 'px ' + this.font;
+		ctx.textBaseline = 'top';
+		ctx.textAlign = 'left';
+
+		// Check if the mouse is currently hovered over the scrollbar.
+		if ((this.scrollbarAxis === 0 && onRect(_xmouse, _ymouse, this.x + this.w, this.y + this.scrollbarPos, this.scrollbarSize, this.scrollbarLength) || (this.scrollbarAxis === 1 && onRect(_xmouse, _ymouse, this.x + this.scrollbarPos, this.y + this.h, this.scrollbarLength, this.scrollbarSize))) || this.draggingScrollbar) {
+			onScrollbar = true;
+			// If we just clicked on it, start dragging.
+			if (mouseIsDown && !pmouseIsDown) {
+				this.draggingScrollbar = true;
+				draggingScrollbar = true;
+				valueAtClick = this.scrollbarPos;
+				deselectAllTextBoxes();
+			}
+		}
+		// Check if the mouse is currently hovered over the text box.
+		if (onRect(_xmouse, _ymouse, this.x, this.y, this.w, this.h)) {
+			onTextBox = true;
+			// If the mouse is released over the text box and when the mouse was first pressed it was over the text box, process the click.
+			if (mousePressedLastFrame && onRect(lastClickX, lastClickY, this.x, this.y, this.w, this.h)) {
+				this.setCursorPosition(this.coordinatesToTextPosition(_xmouse, _ymouse, true));
+				// If we weren't already editing the text box, start editing it.
+				if (!this.beingEdited) {
+					deselectAllTextBoxes();
+					this.beingEdited = true;
+					editingTextBox = true;
+					currentTextBoxAllowsLineBreaks = this.allowsLineBreaks;
+				}
+			}
+		}
+		// If we clicked anywhere off the text box, stop editing it.
+		if (mousePressedLastFrame && this.beingEdited && !((this.scrollbarAxis === 0 && onRect(lastClickX, lastClickY, this.x, this.y, this.w + this.scrollbarSize, this.h)) || (this.scrollbarAxis === 1 && onRect(lastClickX, lastClickY, this.x, this.y, this.w, this.h + this.scrollbarSize)))) {
+			this.beingEdited = false;
+		}
+
+		// Handle scrollbar.
+		if (this.draggingScrollbar) {
+			if (mousePressedLastFrame) {
+				// Letting go of the scrollbar.
+				this.draggingScrollbar = false;
+				draggingScrollbar = false;
+			} else {
+				// Dragging the scrollbar.
+				if (this.scrollbarAxis === 0)
+					this.scrollbarPos = Math.max(Math.min((_ymouse - lastClickY) + valueAtClick, this.h - this.scrollbarLength), 0);
+				else if (this.scrollbarAxis === 1)
+					this.scrollbarPos = Math.max(Math.min((_xmouse - lastClickX) + valueAtClick, this.w - this.scrollbarLength), 0);
+			}
+		}
+
+		// Handle text editing.
+		if (this.beingEdited) {
+			this.text = inputText + this.textAfterCursor;
+			this.setCursorPosition(inputText.length);
+
+			// Move cursor with arrow keys.
+			if (_keysDown[37]) {
+				if (!leftPress) {
+					this.setCursorPosition(Math.max(this.cursorPosition - 1, 0));
+					leftPress = true;
+				}
+			} else leftPress = false;
+			if (_keysDown[39]) {
+				if (!rightPress) {
+					this.setCursorPosition(Math.min(this.cursorPosition + 1, this.text.length));
+					rightPress = true;
+				}
+			} else rightPress = false;
+			if (_keysDown[38]) {
+				if (!upPress) {
+					let textCursorCoordinates = this.getTextCursorCoordinates();
+					this.setCursorPosition(this.coordinatesToTextPosition(textCursorCoordinates[0], textCursorCoordinates[1] - this.lineHeight, false));
+					upPress = true;
+				}
+			} else upPress = false;
+			if (_keysDown[40]) {
+				if (!downPress) {
+					let textCursorCoordinates = this.getTextCursorCoordinates();
+					this.setCursorPosition(this.coordinatesToTextPosition(textCursorCoordinates[0], textCursorCoordinates[1] + this.lineHeight, false));
+					downPress = true;
+				}
+			} else downPress = false;
+
+			inputText = this.text.slice(0, this.cursorPosition);
+
+			if (!this.resize) {
+				// Calculate scrollbar length.
+				if (this.scrollbarAxis === 0) {
+					this.scrollbarLength = this.h / (this.lines.length * this.lineHeight + this.pad[1] + this.pad[3]) * this.h;
+					if (this.scrollbarLength >= this.h) {
+						this.scrollbarLength = 0;
+						this.scrollbarPos = 0;
+					} else if (this.scrollbarPos + this.scrollbarLength > this.h) {
+						this.scrollbarPos = this.h - this.scrollbarLength;
+					}
+				} else if (this.scrollbarAxis === 1) {
+					this.lineWidth = ctx.measureText(this.text).width;
+
+					this.scrollbarLength = this.w / (this.lineWidth + this.pad[0] + this.pad[2]) * this.w;
+					if (this.scrollbarLength >= this.w) {
+						this.scrollbarLength = 0;
+						this.scrollbarPos = 0;
+					} else if (this.scrollbarPos + this.scrollbarLength > this.w) {
+						this.scrollbarPos = this.w - this.scrollbarLength;
+					}
+				}
+			}
+
+			// If the enter key is pressed, stop editing the text box.
+			if (_keysDown[13] && !_keysDown[16]) this.beingEdited = false;
+		}
+
+		// Draw scrollbar.
+		ctx.fillStyle = this.scrollbarColor;
+		if (this.scrollbarAxis === 0)
+			ctx.fillRect(this.x + this.w, this.y + this.scrollbarPos, this.scrollbarSize, this.scrollbarLength);
+		else if (this.scrollbarAxis === 1)
+			ctx.fillRect(this.x + this.scrollbarPos, this.y + this.h, this.scrollbarLength, this.scrollbarSize);
+
+		// Draw text.
+		let scrollAmount = (this.scrollbarAxis === 0)
+			?this.scrollbarPos * ((this.lines.length * this.lineHeight + this.pad[1] + this.pad[3]) / this.h)
+			:this.scrollbarPos * ((this.lineWidth + this.pad[0] + this.pad[2]) / this.w);
+		ctx.fillStyle = this.textColor;
+		// Set text clipping region
+		ctx.save();
+		ctx.beginPath();
+		ctx.rect(this.x, this.y, this.w, this.h);
+		ctx.clip();
+		if (this.scrollbarAxis === 0) {
+			this.lines = wrapText(this.text, this.x + this.pad[0], this.y + this.pad[1] - scrollAmount, this.w - this.pad[0] - this.pad[1], this.lineHeight);
+			if (this.resize) this.h = this.lines.length * this.lineHeight + this.pad[1] + this.pad[3];
+		} else if (this.scrollbarAxis === 1) {
+			this.lines = [this.text];
+			ctx.fillText(this.text, this.x + this.pad[0] - scrollAmount, this.y + this.pad[1]);
+		}
+
+		// Draw text cursor.
+		if (this.beingEdited) {
+			if (_frameCount % 60 < 30) {
+				ctx.strokeStyle = this.textColor;
+				ctx.lineWidth = 2;
+				ctx.beginPath();
+				let textCursorCoordinates = this.getTextCursorCoordinates();
+				if (this.scrollbarAxis === 0) textCursorCoordinates[1] -= scrollAmount;
+				if (this.scrollbarAxis === 1) textCursorCoordinates[0] -= scrollAmount;
+				ctx.moveTo(textCursorCoordinates[0], textCursorCoordinates[1]);
+				ctx.lineTo(textCursorCoordinates[0], textCursorCoordinates[1] + this.textSize);
+				ctx.stroke();
+			}
+		}
+		ctx.restore();
+	}
+
+	getTextCursorCoordinates() {
+		let textCursorY = 0;
+		let lineLengthBeforeCursor = 0;
+		while (textCursorY < this.lines.length) {
+			let newlen = lineLengthBeforeCursor + this.lines[textCursorY].length;
+			if (newlen > this.cursorPosition || (newlen == this.cursorPosition && textCursorY == this.lines.length - 1)) break;
+			lineLengthBeforeCursor = newlen;
+			textCursorY++;
+		}
+		if (textCursorY >= this.lines.length) textCursorY--;
+		let textCursorX = ctx.measureText(this.text.slice(lineLengthBeforeCursor, this.cursorPosition)).width + this.x + this.pad[0];
+		return [textCursorX, this.y + this.pad[1] + this.lineHeight * textCursorY];
+	}
+
+	coordinatesToTextPosition(x, y, useScroll) {
+		let lineNumber = Math.floor(mapRange(
+			y - (this.y + this.pad[1] - ((useScroll && this.scrollbarAxis === 0)?(this.scrollbarPos * ((this.lines.length * this.lineHeight + this.pad[1] + this.pad[3]) / this.h)):0)),
+			0, Math.max(this.lines.length,1) * this.lineHeight,
+			0, this.lines.length
+		));
+		if (lineNumber < 0) return 0;
+		if (lineNumber >= this.lines.length) return this.text.length;
+		let textPositionOut = 0;
+		for (let i = 0; i < lineNumber; i++) {
+			textPositionOut += this.lines[i].length;
+		}
+		let offsetX = x - this.x - this.pad[0] + ((useScroll && this.scrollbarAxis === 1)?(this.scrollbarPos * ((this.lineWidth + this.pad[0] + this.pad[2]) / this.w)):0);
+		if (offsetX <= 0) textPositionOut += 0;
+		else if (ctx.measureText(this.lines[lineNumber]).width <= offsetX) textPositionOut += this.lines[lineNumber].length-((this.scrollbarAxis === 1)?0:1);
+		else textPositionOut += binarySearch({
+			max: this.lines[lineNumber].length,
+			getValue: guess => ctx.measureText(this.lines[lineNumber].substring(0, guess)).width,
+			match: offsetX
+		});
+
+		return textPositionOut;
+	}
+}
+
+function deselectAllTextBoxes() {
+	editingTextBox = false;
+	for (let i = textBoxes.length - 1; i >= 0; i--) {
+		textBoxes[i].beingEdited = false;
 	}
 }
