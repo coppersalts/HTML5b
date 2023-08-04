@@ -2278,9 +2278,28 @@ function menuLevelCreator() {
 }
 
 function lcTextBoxes() {
-	textBoxes = [];
-	textBoxes.push(new TextBox(myLevelInfo.name, 785, 10, 150, 40, '#e0e0e0', '#000000', '#a0a0a0', 18, 18, 'Helvetica', false, [5, 2, 2, 2], 0, 10, false));
-	textBoxes.push(new TextBox(myLevelInfo.desc, 785, 60, 150, 230, '#e0e0e0', '#000000', '#a0a0a0', 14, 14, 'Helvetica', true, [5, 2, 2, 2], 0, 10, false));
+	textBoxes = [[],[]];
+	textBoxes[0].push(new TextBox(myLevelInfo.name, 785, 10, 150, 40, '#e0e0e0', '#000000', '#a0a0a0', 18, 18, 'Helvetica', false, [5, 2, 2, 2], 0, 10, false));
+	textBoxes[0].push(new TextBox(myLevelInfo.desc, 785, 60, 150, 230, '#e0e0e0', '#000000', '#a0a0a0', 14, 14, 'Helvetica', true, [5, 2, 2, 2], 0, 10, false));
+	textBoxes[0].push(new TextBox('', 0, 0, 100, 100, '#ffffff', '#000000', '#a0a0a0', 10, 10, 'monospace', true, [5, 5, 5, 5], 0, 10, false));
+	generateDialogueTextBoxes();
+}
+
+function generateDialogueTextBoxes() {
+	textBoxes[1] = [];
+	for (var i = 0; i < myLevelDialogue[1].length; i++) {
+		textBoxes[1].push(new TextBox(myLevelDialogue[1][i].text, 665 + diaInfoHeight * 3, 0, 240 - diaInfoHeight * 3, 0, '#626262', '#ffffff', '#000000', 20, 20, 'Helvetica', false, [5, 0, 0, 0], 0, 10, true));
+	}
+}
+
+function exploreTextBoxes() {
+	textBoxes = [[],[]];
+	textBoxes[0].push(new TextBox('', 28, 75, 839, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
+}
+
+function mylevelsTextBoxes() {
+	textBoxes = [[],[]];
+	textBoxes[0].push(new TextBox(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 28, 28, 839, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
 }
 
 function menuExitLevelCreator() {
@@ -2289,6 +2308,7 @@ function menuExitLevelCreator() {
 
 function menuExplore() {
 	menuScreen = 6;
+	exploreTextBoxes();
 	exploreTab = 0;
 	setExplorePage(0);
 }
@@ -2315,7 +2335,7 @@ function menuLevelpackCreatorBack() {
 function openMyLevelpack(id) {
 	menuScreen = 11;
 	lcCurrentSavedLevelpack = id;
-	//
+	mylevelsTextBoxes();
 }
 
 function gotoExploreLevelPage(locOnPage) {
@@ -2340,6 +2360,7 @@ function menuExploreLevelPageBack() {
 
 function menuExploreBack() {
 	menuScreen = 6;
+	exploreTextBoxes();
 	// setExplorePage(0);
 }
 
@@ -2389,6 +2410,7 @@ function menu3Menu() {
 
 function menu8Menu() {
 	menuScreen = 6;
+	exploreTextBoxes();
 	setExplorePage(explorePage);
 }
 
@@ -2456,6 +2478,7 @@ function testLevelCreator() {
 		playMode = 2;
 		currentLevel = -1;
 		editingTextBox = false;
+		deselectAllTextBoxes();
 		wipeTimer = 30;
 		menuScreen = 3;
 		toSeeCS = true;
@@ -2798,7 +2821,7 @@ function linebreakText(text, x, y, lineheight) {
 	}
 }
 
-function wrapText(text, x, y, maxWidth, lineHeight) {
+function wrapText(text, x, y, maxWidth, lineHeight, drawText = true) {
 	let words = text.split(' ');
 	let lines = [''];
 	for (let i = 0; i < words.length; i++) {
@@ -2838,8 +2861,10 @@ function wrapText(text, x, y, maxWidth, lineHeight) {
 			}
 		}
 	}
-	for (let i = 0; i < lines.length; i++) {
-		ctx.fillText(lines[i], x, y + lineHeight * i);
+	if (drawText) {
+		for (let i = 0; i < lines.length; i++) {
+			ctx.fillText(lines[i], x, y + lineHeight * i);
+		}
 	}
 	return lines;
 }
@@ -5677,20 +5702,9 @@ function drawLCDiaInfo(i, y) {
 		ctx.textBaseline = 'top';
 		ctx.fillText('lever switch', 665 + diaInfoHeight * 3 + 5, y);
 	} else {
-		// var diaTextBox = drawTextBox(
-		// 	myLevelDialogue[1][i].text,
-		// 	665 + diaInfoHeight * 3,
-		// 	y,
-		// 	240 - diaInfoHeight * 3,
-		// 	diaInfoHeight * myLevelDialogue[1][i].linecount,
-		// 	20,
-		// 	[5, 0, 0, 0],
-		// 	i,
-		// 	false,
-		// 	'#626262',
-		// 	'#ffffff',
-		// 	'Helvetica'
-		// );
+		textBoxes[1][i].y = y;
+		textBoxes[1][i].draw();
+		var diaTextBox = [textBoxes[1][i].text, textBoxes[1][i].lines];
 	}
 	myLevelDialogue[1][i].text = diaTextBox[0];
 	myLevelDialogue[1][i].linecount = diaTextBox[1].length;
@@ -5714,9 +5728,11 @@ function drawLCDiaInfo(i, y) {
 						myLevelDialogue[1][i + 1],
 						myLevelDialogue[1][i]
 					];
+					generateDialogueTextBoxes();
 				}
 				reorderDiaDown = false;
 				editingTextBox = false;
+				deselectAllTextBoxes();
 			}
 		} else if (reorderDiaUp) {
 			if (mouseIsDown && !pmouseIsDown) {
@@ -5726,9 +5742,11 @@ function drawLCDiaInfo(i, y) {
 						myLevelDialogue[1][i - 1],
 						myLevelDialogue[1][i]
 					];
+					generateDialogueTextBoxes();
 				}
 				reorderDiaUp = false;
 				editingTextBox = false;
+				deselectAllTextBoxes();
 			}
 		} else {
 			ctx.fillStyle = '#ee3333';
@@ -5750,6 +5768,7 @@ function drawLCDiaInfo(i, y) {
 					diaDropdown = -i - 3;
 					diaDropdownType = 1;
 					editingTextBox = false;
+					deselectAllTextBoxes();
 				}
 			} else if (
 				onRect(
@@ -5767,6 +5786,7 @@ function drawLCDiaInfo(i, y) {
 					diaDropdown = -i - 3;
 					diaDropdownType = 0;
 					editingTextBox = false;
+					deselectAllTextBoxes();
 				}
 			} else if (_xmouse < 665 + 240 && _xmouse > 665 + diaInfoHeight * 3) {
 				if (mouseIsDown && !pmouseIsDown) {
@@ -5787,7 +5807,9 @@ function drawLCDiaInfo(i, y) {
 				if (mouseIsDown && !pmouseIsDown) {
 					setUndo();
 					myLevelDialogue[1].splice(i, 1);
+					generateDialogueTextBoxes();
 					editingTextBox = false;
+					deselectAllTextBoxes();
 				}
 			}
 		}
@@ -6096,6 +6118,7 @@ function openLevelLoader() {
 	lcPopUpNextFrame = true;
 	lcPopUpType = 0;
 	levelLoadString = '';
+	textBoxes[0][2].text = '';
 	canvas.setAttribute('contenteditable', true);
 }
 
@@ -6664,7 +6687,7 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 		onButton = true;
 		if (pageType == 2 && deletingMyLevels) ctx.fillStyle = '#800000';
 		else ctx.fillStyle = '#404040';
-		if (!mouseIsDown && pmouseIsDown) {
+		if (mousePressedLastFrame && onRect(lastClickX, lastClickY, x, y, 208, 155)) {
 			if (pageType == 2) {
 				if (deletingMyLevels) openLevelDeletePopUp(i);
 				else {
@@ -7969,42 +7992,15 @@ function draw() {
 					ctx.fillText('Name:', 770, tabWindowY + 10);
 					ctx.fillText('Description:', 770, tabWindowY + 60);
 
-					textBoxes[0].y = tabWindowY + 10;
-					textBoxes[1].y = tabWindowY + 60;
-					textBoxes[0].draw();
-					textBoxes[1].draw();
-					myLevelInfo.name = textBoxes[0].text;
-					myLevelInfo.desc = textBoxes[1].text;
-					// myLevelInfo.name = drawTextBox(
-					// 	myLevelInfo.name,
-					// 	785,
-					// 	tabWindowY + 10,
-					// 	160,
-					// 	40,
-					// 	18,
-					// 	[5, 2, 2, 2],
-					// 	0,
-					// 	false,
-					// 	'#e0e0e0',
-					// 	'#000000',
-					// 	'Helvetica'
-					// )[0];
-					// myLevelInfo.desc = drawTextBox(
-					// 	myLevelInfo.desc,
-					// 	785,
-					// 	tabWindowY + 60,
-					// 	160,
-					// 	220,
-					// 	14,
-					// 	[5, 2, 2, 2],
-					// 	2,
-					// 	true,
-					// 	'#e0e0e0',
-					// 	'#000000',
-					// 	'Helvetica'
-					// )[0];
+					textBoxes[0][0].y = tabWindowY + 10;
+					textBoxes[0][1].y = tabWindowY + 60;
+					textBoxes[0][0].draw();
+					textBoxes[0][1].draw();
+					myLevelInfo.name = textBoxes[0][0].text;
+					myLevelInfo.desc = textBoxes[0][1].text;
 					if (mouseIsDown && !pmouseIsDown && !onTextBox) {
 						editingTextBox = false;
+						deselectAllTextBoxes();
 					}
 
 
@@ -8737,8 +8733,10 @@ function draw() {
 							reorderDiaDown = false;
 							reorderDiaUp = false;
 							editingTextBox = false;
+							deselectAllTextBoxes();
 							setUndo();
 							myLevelDialogue[1].push({char: 99, face: 2, text: 'Enter text', linecount: 1});
+							generateDialogueTextBoxes();
 						}
 						addButtonPressed = true;
 					}
@@ -8760,6 +8758,7 @@ function draw() {
 								reorderDiaDown = false;
 								reorderDiaUp = true;
 								editingTextBox = false;
+								deselectAllTextBoxes();
 							}
 						}
 						addButtonPressed = true;
@@ -8783,6 +8782,7 @@ function draw() {
 								reorderDiaUp = false;
 								reorderDiaDown = true;
 								editingTextBox = false;
+								deselectAllTextBoxes();
 							}
 						}
 						addButtonPressed = true;
@@ -8875,6 +8875,7 @@ function draw() {
 						reorderDiaUp = false;
 						reorderDiaDown = false;
 						editingTextBox = false;
+						deselectAllTextBoxes();
 					}
 				}
 			}
@@ -9036,6 +9037,7 @@ function draw() {
 					) {
 						lcPopUp = false;
 						editingTextBox = false;
+						deselectAllTextBoxes();
 						levelLoadString = '';
 						canvas.setAttribute('contenteditable', false);
 					}
@@ -9048,20 +9050,12 @@ function draw() {
 						(cwidth - lcPopUpW) / 2 + 10,
 						(cheight - lcPopUpH) / 2 + 5
 					);
-					// levelLoadString = drawTextBox(
-					// 	levelLoadString,
-					// 	(cwidth - lcPopUpW) / 2 + 10,
-					// 	(cheight - lcPopUpH) / 2 + 30,
-					// 	lcPopUpW - 20,
-					// 	lcPopUpH - 80,
-					// 	8,
-					// 	[5, 5, 5, 5],
-					// 	2,
-					// 	true,
-					// 	'#ffffff',
-					// 	'#000000',
-					// 	'monospace'
-					// )[0];
+					textBoxes[0][2].x = (cwidth - lcPopUpW) / 2 + 10;
+					textBoxes[0][2].y = (cheight - lcPopUpH) / 2 + 30;
+					textBoxes[0][2].w = lcPopUpW - 30;
+					textBoxes[0][2].h = lcPopUpH - 80;
+					textBoxes[0][2].draw();
+					levelLoadString = textBoxes[0][2].text;
 
 					ctx.font = '18px Helvetica';
 					ctx.textAlign = 'center';
@@ -9105,6 +9099,7 @@ function draw() {
 						if (mouseIsDown && !pmouseIsDown) {
 							lcPopUp = false;
 							editingTextBox = false;
+							deselectAllTextBoxes();
 							levelLoadString = '';
 							canvas.setAttribute('contenteditable', false);
 						}
@@ -9123,6 +9118,7 @@ function draw() {
 							readLevelString(levelLoadString);
 							lcPopUp = false;
 							editingTextBox = false;
+							deselectAllTextBoxes();
 							levelLoadString = '';
 							canvas.setAttribute('contenteditable', false);
 						}
@@ -9196,7 +9192,8 @@ function draw() {
 			}
 
 			if (exploreTab == 2) {
-				// exploreSearchInput = drawTextBox(exploreSearchInput, 28, 75, 839, 55, 34, [10,12,10,10], 18, false, '#333333', '#ffffff', 'Helvetica')[0];
+				textBoxes[0][0].draw();
+				exploreSearchInput = textBoxes[0][0].text;
 
 				if (onRect(_xmouse, _ymouse, 877, 75, 55, 55)) {
 					ctx.fillStyle = '#404040';
@@ -9519,8 +9516,10 @@ function draw() {
 
 			let currentLevelpackObj = lcSavedLevelpacks['l' + lcCurrentSavedLevelpack];
 
-			// currentLevelpackObj.title = drawTextBox(currentLevelpackObj.title, 28, 28, 839, 55, 34, [10,12,10,10], 18, false, '#333333', '#ffffff', 'Helvetica')[0];
-
+			let wasEditingBefore = editingTextBox;
+			textBoxes[0][0].draw();
+			currentLevelpackObj.title = textBoxes[0][0].text;
+			if (wasEditingBefore && !editingTextBox) saveMyLevelpacks();
 
 			if (lcPopUpNextFrame) lcPopUp = true;
 			lcPopUpNextFrame = false;
@@ -9906,7 +9905,7 @@ class TextBox {
 		this.allowsLineBreaks = allowsLineBreaks;
 		this.beingEdited = false;
 		this.pad = pad;
-		this.lines = [];
+		this.lines = [''];
 		this.cursorPosition; // Where in the text the cursor lies.
 		this.scrollbarSize = scrollbarSize;
 		this.scrollbarLength = 0;
@@ -9916,7 +9915,12 @@ class TextBox {
 		this.draggingScrollbar = false;
 		this.lineWidth = 0; // Only used for horizontal scrollbars.
 		this.resize = resize;
-		if (this.resize) this.h = this.lines.length * this.lineHeight + this.pad[1] + this.pad[3];
+
+		if (this.resize) {
+			ctx.font = this.textSize + 'px ' + this.font;
+			this.lines = wrapText(this.text, 0, 0, this.w - this.pad[0] - this.pad[1], this.lineHeight, false);
+			this.h = this.lines.length * this.lineHeight + this.pad[1] + this.pad[3];
+		}
 	}
 
 	setCursorPosition(newPosition) {
@@ -9968,7 +9972,7 @@ class TextBox {
 		}
 		// If we clicked anywhere off the text box, stop editing it.
 		if (mousePressedLastFrame && this.beingEdited && !((this.scrollbarAxis === 0 && onRect(lastClickX, lastClickY, this.x, this.y, this.w + this.scrollbarSize, this.h)) || (this.scrollbarAxis === 1 && onRect(lastClickX, lastClickY, this.x, this.y, this.w, this.h + this.scrollbarSize)))) {
-			this.beingEdited = false;
+			deselectAllTextBoxes();
 		}
 
 		// Handle scrollbar.
@@ -10045,7 +10049,7 @@ class TextBox {
 			}
 
 			// If the enter key is pressed, stop editing the text box.
-			if (_keysDown[13] && !_keysDown[16]) this.beingEdited = false;
+			if (_keysDown[13] && !_keysDown[16]) deselectAllTextBoxes();
 		}
 
 		// Draw scrollbar.
@@ -10132,6 +10136,8 @@ class TextBox {
 function deselectAllTextBoxes() {
 	editingTextBox = false;
 	for (let i = textBoxes.length - 1; i >= 0; i--) {
-		textBoxes[i].beingEdited = false;
+		for (let j = textBoxes[i].length - 1; j >= 0; j--) {
+			textBoxes[i][j].beingEdited = false;
+		}
 	}
 }
