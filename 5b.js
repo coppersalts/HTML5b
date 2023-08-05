@@ -290,8 +290,8 @@ function loadLevels() {
 	}
 }
 
-function loadLevelpack() {
-	levelCount = exploreLevelPageLevel.levels.length;
+function loadLevelpack(levelData) {
+	levelCount = levelData.length;
 	levels = new Array(levelCount);
 	startLocations = new Array(levelCount);
 	bgs = new Array(levelCount);
@@ -304,7 +304,7 @@ function loadLevelpack() {
 
 	for (let lvl = 0; lvl < levelCount; lvl++) {
 		let i = 0;
-		let lines = exploreLevelPageLevel.levels[lvl].data.replace(/\r/gi, '').split('\n');
+		let lines = levelData[lvl].data.replace(/\r/gi, '').split('\n');
 		while (lines[i] === '') i++;
 
 		// Read Level Name
@@ -1942,7 +1942,8 @@ let exploreLevelTitlesTruncated = new Array(8);
 let exploreLoading = false;
 let requestsWaiting = 0;
 let exploreSearchInput = '';
-let playingLevelpack = false; // Whether or not a levelpack from explore is currently loaded.
+let playingLevelpack = false; // Whether or not a custom levelpack is currently loaded.
+let levelpackType; // 0 - from explore, 1 - from local saved levelpacks
 let lcCurrentSavedLevel = -1;
 let lcCurrentSavedLevelpack;
 let lcChangesMade;
@@ -2397,12 +2398,28 @@ function playExploreLevel() {
 		testLevelCreator();
 		playMode = 3;
 	} else {
-		loadLevelpack();
+		loadLevelpack(exploreLevelPageLevel.levels);
 		clearVars();
 		menuScreen = 2;
 		playingLevelpack = true;
+		levelpackType = 0;
 		// playMode = 0;
 	}
+}
+
+function playSavedLevelpack() {
+	// It probably would've been better to modify the levelpack loader than to accommodate it like this.
+	let formattedLevelData = [];
+	let levelIds = lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].levels;
+	for (var i = 0; i < levelIds.length; i++) {
+		formattedLevelData.push(lcSavedLevels['l' + levelIds[i]]);
+	}
+
+	loadLevelpack(formattedLevelData);
+	clearVars();
+	menuScreen = 2;
+	playingLevelpack = true;
+	levelpackType = 1;
 }
 
 function exploreMoreByThisUser() {
@@ -2420,11 +2437,13 @@ function setExploreUserPage(type, page) {
 }
 
 function menu2Back() {
-	if (playingLevelpack && menuScreen == 2) menuScreen = 7;
-	else {
+	if (playingLevelpack && menuScreen == 2) {
+		if (levelpackType === 0) menuScreen = 7;
+		if (levelpackType === 1) menuScreen = 11;
+	} else {
 		menuScreen = 0;
-		getSavedGame();
 	}
+	getSavedGame();
 	cameraX = 0;
 	cameraY = 0;
 }
@@ -2787,9 +2806,11 @@ function drawLevelMap() {
 	} else {
 		ctx.font = 'bold 48px Helvetica';
 		// ctx.fillText(exploreLevelPageLevel.title, 55, 35);
-		let titleLineCount = wrapText(exploreLevelPageLevel.title, 50, 35, 500, 48).length;
-		ctx.font = 'italic 21px Helvetica';
-		ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 50, 32 + titleLineCount*48);
+		let titleLineCount = wrapText((levelpackType === 0)?exploreLevelPageLevel.title:lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 50, 35, 500, 48).length;
+		if (levelpackType === 0) {
+			ctx.font = 'italic 21px Helvetica';
+			ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 50, 32 + titleLineCount*48);
+		}
 
 		ctx.drawImage(svgTiles[12], 568.5, 29.5, 50, 50);
 		ctx.font = '21px Helvetica';
@@ -6950,7 +6971,7 @@ function removeLevelpackLevel(locOnPage) {
 	setLevelpackCreatorPage(levelpackCreatorPage);
 }
 
-function createNewLevelPack() {
+function createNewLevelpack() {
 	lcCurrentSavedLevelpack = nextLevelpackId;
 	nextLevelpackId++;
 	lcSavedLevelpacks['l' + lcCurrentSavedLevelpack] = {levels:[], description: '', id: lcCurrentSavedLevelpack, title: 'My Levelpack ' + lcCurrentSavedLevelpack};
@@ -9504,7 +9525,7 @@ function draw() {
 				} else {
 					// temporary create levelpack button
 					ctx.font = '23px Helvetica';
-					drawSimpleButton('Create New', createNewLevelPack, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+					drawSimpleButton('Create New', createNewLevelpack, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
 				}
 			}
 
@@ -9585,6 +9606,10 @@ function draw() {
 			// temporary remove levels button
 			ctx.font = '23px Helvetica';
 			drawSimpleButton(levelpackCreatorRemovingLevels?'Exit Remove Levels Mode':'Remove Levels', toggleLevelpackCreatorRemovingLevels, 428, 85, levelpackCreatorRemovingLevels?280:150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+
+			// temporary play levelpack button
+			ctx.font = '23px Helvetica';
+			drawSimpleButton('Play Levelpack', playSavedLevelpack, 728, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
 
 
 			// The levels themselves
