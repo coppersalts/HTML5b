@@ -1,8 +1,3 @@
-// TODO: go through all the todo's I've put throughout this file.
-// TODO: rename some functions
-// TODO: precalculate some of the stuff in the draw functions when the level is reset.
-// TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
-
 const version = 'v0.2.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
@@ -163,7 +158,6 @@ function deleteSavedLevel(id) {
 		lcSavedLevelpacks[keys[i]].levels = levelpackLevelsRemoved;
 	}
 	saveMyLevelpacks();
-	// TODO: remove deleted levels from levelpacks
 }
 
 function deleteSavedLevelpack(id) {
@@ -913,7 +907,6 @@ const legFrames = [
 // 12 - recover2 left
 // 13 - recover2 right
 
-// TODO: load this externally?
 const charModels = [
 	{
 		// Ruby
@@ -2078,7 +2071,7 @@ let menu2_3Buttons = [
 let menu0ButtonSize = {w: 273.0, h: 36.9, cr: 6.65};
 let menu2_3ButtonSize = {w: 104.5, h: 37.3};
 let levelButtonSize = {w: 100, h: 40};
-let menu0ButtonClicked = -1; // TODO: refactor this thing out of the code entirely if possible.
+let menu0ButtonClicked = -1;
 let onButton = false;
 let onTextBox = false;
 let onScrollbar = false;
@@ -3012,7 +3005,6 @@ function resetLevel() {
 				char[i].expr = 1;
 				char[i].dire = 2;
 				char[i].frame = 1;
-				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
 			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
@@ -3070,7 +3062,6 @@ function resetLevel() {
 				char[i].expr = 1;
 				char[i].dire = 2;
 				char[i].frame = 1;
-				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
 			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
@@ -3128,7 +3119,6 @@ function resetLevel() {
 				char[i].expr = 1;
 				char[i].dire = 2;
 				char[i].frame = 1;
-				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
 			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
@@ -3378,12 +3368,12 @@ function drawCharacters() {
 			} else {
 				let model = charModels[char[i].id];
 
-				// If we're not bubble dying, draw the legs
+				// If we're not bubble dying, draw the legs.
 				if (!(char[i].id == 5 && Math.floor(char[i].frame / 2) == 4)) {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
 					// ... or just make them one variable instead of two. whichever one I feel like doing at the time ig.
-					let legdire = char[i].legdire > 0 ? 1 : -1;
+					let legdire = char[i].dire > 2 ? 1 : -1;
 					let legmat = [
 						{
 							a: 0.3648529052734375,
@@ -3680,7 +3670,6 @@ function setBody(i) {
 
 	let legX;
 	let skew = [0, 0];
-	char[i].legdire = char[i].dire / 2 - 1;
 	if (ifCarried(i) && cornerHangTimer == 0) {
 		offSetLegs(i, 60, 3);
 		char[i].leg1frame = 3;
@@ -7443,7 +7432,6 @@ function draw() {
 								char[recover2].frame = 3;
 								char[recover2].leg1frame = 1;
 								char[recover2].leg2frame = 1;
-								char[recover2].legdire = 1;
 								HPRCBubbleFrame = 0;
 								goal = Math.round((char[HPRC1] ? char[HPRC1].x : 0) / 30) * 30;
 							} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
@@ -9961,7 +9949,6 @@ class Character {
 		this.poseTimer = 0;
 		this.leg1frame = 0;
 		this.leg2frame = 0;
-		this.legdire = 1;
 		this.leg1skew = 0;
 		this.leg2skew = 0;
 		this.legAnimationFrame = [0, 0]; // Animation offset.
