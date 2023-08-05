@@ -6712,7 +6712,7 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 	let thisExploreLevel = (pageType==1)?exploreUserPageLevels[levelType][i - levelType*4]:explorePageLevels[i];
 	if (onRect(_xmouse, _ymouse, x, y, 208, 155) && !lcPopUp) {
 		onButton = true;
-		if (pageType == 2 && deletingMyLevels) ctx.fillStyle = '#800000';
+		if (pageType == 2 && deletingMyLevels || pageType == 3 && levelpackCreatorRemovingLevels) ctx.fillStyle = '#800000';
 		else ctx.fillStyle = '#404040';
 		if (mousePressedLastFrame && onRect(lastClickX, lastClickY, x, y, 208, 155)) {
 			if (pageType == 2) {
@@ -6722,8 +6722,10 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 					if (levelType == 0) loadSavedLevelIntoLevelCreator(i);
 					else openMyLevelpack(explorePageLevels[i].id);
 				}
-			} else if (pageType == 3) loadSavedLevelIntoLevelCreator(i);
-			else gotoExploreLevelPage(i);
+			} else if (pageType == 3) {
+				if (levelpackCreatorRemovingLevels) removeLevelpackLevel(i);
+				else loadSavedLevelIntoLevelCreator(i);
+			} else gotoExploreLevelPage(i);
 		}
 	} else {
 		ctx.fillStyle = '#333333';
@@ -6920,6 +6922,10 @@ function toggleMyLevelDeleting() {
 	deletingMyLevels = !deletingMyLevels;
 }
 
+function toggleLevelpackCreatorRemovingLevels() {
+	levelpackCreatorRemovingLevels = !levelpackCreatorRemovingLevels;
+}
+
 function openLevelDeletePopUp(locOnPage) {
 	lcPopUpNextFrame = true;
 	levelToDelete = 'l' + explorePageLevels[locOnPage].id;
@@ -6935,6 +6941,13 @@ function confirmDeleteLevel() {
 function cancelDeleteLevel() {
 	lcPopUp = false;
 	deletingMyLevels = false;
+}
+
+function removeLevelpackLevel(locOnPage) {
+	levelpackCreatorRemovingLevels = false;
+	lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].levels.splice(levelpackCreatorPage * 8 + locOnPage, 1);
+	saveMyLevelpacks();
+	setLevelpackCreatorPage(levelpackCreatorPage);
 }
 
 function createNewLevelPack() {
@@ -9568,6 +9581,10 @@ function draw() {
 			// temporary add level button
 			ctx.font = '23px Helvetica';
 			drawSimpleButton('Add Level', openAddLevelsToLevelpackScreen, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+
+			// temporary remove levels button
+			ctx.font = '23px Helvetica';
+			drawSimpleButton(levelpackCreatorRemovingLevels?'Exit Remove Levels Mode':'Remove Levels', toggleLevelpackCreatorRemovingLevels, 428, 85, levelpackCreatorRemovingLevels?280:150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
 
 
 			// The levels themselves
