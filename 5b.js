@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'v0.1.1*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.2.0*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -1951,6 +1951,10 @@ let myLevelsPage = 0;
 let myLevelsPageCount;
 let deletingMyLevels = false;
 let levelToDelete;
+let levelpackAddScreen = false;
+let levelpackCreatorPage = 0;
+let levelpackCreatorPageCount;
+let levelpackCreatorRemovingLevels = false;
 let myLevel;
 let myLevelChars;
 let myLevelDialogue;
@@ -2063,7 +2067,6 @@ let onTextBox = false;
 let onScrollbar = false;
 let textBoxes = [];
 let editingTextBox = false;
-let textBoxCursorLoc = 0;
 let currentTextBoxAllowsLineBreaks = false;
 let mouseOnTabWindow = false;
 let menu2_3ButtonClicked = -1;
@@ -2315,6 +2318,7 @@ function menuExplore() {
 
 function menuMyLevels() {
 	menuScreen = 10;
+	levelpackAddScreen = false;
 	deletingMyLevels = false;
 	lcPopUp = false;
 	getSavedLevelpacks();
@@ -2329,13 +2333,36 @@ function menuMyLevelsBack() {
 
 function menuLevelpackCreatorBack() {
 	menuScreen = 10;
+	levelpackAddScreen = false;
+	setMyLevelsPage(myLevelsPage);
 	lcPopUp = false;
+}
+
+function menuLevelpackAddScreenBack() {
+	menuScreen = 11;
+	levelpackCreatorRemovingLevels = false;
+	levelpackAddScreen = false;
 }
 
 function openMyLevelpack(id) {
 	menuScreen = 11;
+	levelpackCreatorRemovingLevels = false;
 	lcCurrentSavedLevelpack = id;
+	setLevelpackCreatorPage(0);
 	mylevelsTextBoxes();
+}
+
+function openAddLevelsToLevelpackScreen() {
+	menuScreen = 10;
+	levelpackAddScreen = true;
+	myLevelsTab = 0;
+	setMyLevelsPage(0);
+}
+
+function addLevelToLevelpack(id) {
+	lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].levels.push(id);
+	saveMyLevelpacks();
+	openMyLevelpack(lcCurrentSavedLevelpack);
 }
 
 function gotoExploreLevelPage(locOnPage) {
@@ -6689,12 +6716,14 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 		else ctx.fillStyle = '#404040';
 		if (mousePressedLastFrame && onRect(lastClickX, lastClickY, x, y, 208, 155)) {
 			if (pageType == 2) {
-				if (deletingMyLevels) openLevelDeletePopUp(i);
+				if (levelpackAddScreen) addLevelToLevelpack(explorePageLevels[i].id);
+				else if (deletingMyLevels) openLevelDeletePopUp(i);
 				else {
-					if (levelType==0) loadSavedLevelIntoLevelCreator(i);
+					if (levelType == 0) loadSavedLevelIntoLevelCreator(i);
 					else openMyLevelpack(explorePageLevels[i].id);
 				}
-			} else gotoExploreLevelPage(i);
+			} else if (pageType == 3) loadSavedLevelIntoLevelCreator(i);
+			else gotoExploreLevelPage(i);
 		}
 	} else {
 		ctx.fillStyle = '#333333';
@@ -6713,7 +6742,7 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 	// ctx.fillText(fitString(ctx, explorePageLevels[i].title, 195.3), x+6.35, y+119.4);
 	// fitString(ctx, explorePageLevels[i].title, 142.3);
 
-	if (pageType != 2) {
+	if (pageType < 2) {
 		ctx.fillStyle = '#999999';
 		ctx.font = '10px Helvetica';
 		ctx.fillText('by ' + thisExploreLevel.creator.name, x + 7, y + 138.3);
@@ -6729,6 +6758,7 @@ function setExplorePage(page) {
 	else getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
 }
+
 function setMyLevelsPage(page) {
 	myLevelsPage = page;
 	let keys = Object.keys(myLevelsTab==0?lcSavedLevels:lcSavedLevelpacks);
@@ -6738,10 +6768,22 @@ function setMyLevelsPage(page) {
 	for (let i = 0; i + offset < keys.length && i < 8; i++) {
 		let key = keys[i + offset];
 		explorePageLevels.push(myLevelsTab==0?lcSavedLevels[key]:lcSavedLevelpacks[key]);
-		//saveMyLevelpacks
 	}
 	truncateLevelTitles(explorePageLevels, 0);
 	if (myLevelsTab==0) setExploreThumbs();
+}
+
+function setLevelpackCreatorPage(page) {
+	levelpackCreatorPage = page;
+	let thisLevelpackLevels = lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].levels;
+	let offset = levelpackCreatorPage*8;
+	levelpackCreatorPageCount = Math.ceil(thisLevelpackLevels.length / 8.0);
+	explorePageLevels = [];
+	for (let i = 0; i + offset < thisLevelpackLevels.length && i < 8; i++) {
+		explorePageLevels.push(lcSavedLevels['l' + thisLevelpackLevels[i + offset]]);
+	}
+	truncateLevelTitles(explorePageLevels, 0);
+	setExploreThumbs();
 }
 
 function setExploreThumbs() {
@@ -8078,7 +8120,7 @@ function draw() {
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
-						onButton = true;
+						onScrollbar = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
@@ -8086,7 +8128,6 @@ function draw() {
 						}
 					} else ctx.fillStyle = '#dddddd';
 					if (draggingScrollbar) {
-						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						charsTabScrollBar = Math.floor(
 							Math.max(
@@ -8533,7 +8574,7 @@ function draw() {
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
-						onButton = true;
+						onScrollbar = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
@@ -8541,7 +8582,6 @@ function draw() {
 						}
 					} else ctx.fillStyle = '#dddddd';
 					if (draggingScrollbar) {
-						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						tileTabScrollBar = Math.floor(
 							Math.max(
@@ -8623,7 +8663,7 @@ function draw() {
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
-						onButton = true;
+						onScrollbar = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
@@ -8631,7 +8671,6 @@ function draw() {
 						}
 					} else ctx.fillStyle = '#dddddd';
 					if (draggingScrollbar) {
-						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						bgsTabScrollBar = Math.floor(
 							Math.max(
@@ -8664,7 +8703,7 @@ function draw() {
 						!lcPopUp &&
 						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
 					) {
-						onButton = true;
+						onScrollbar = true;
 						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
@@ -8672,7 +8711,6 @@ function draw() {
 						}
 					} else ctx.fillStyle = '#dddddd';
 					if (draggingScrollbar) {
-						onButton = false;
 						ctx.fillStyle = '#a0a0a0';
 						diaTabScrollBar = Math.floor(
 							Math.max(
@@ -9419,39 +9457,45 @@ function draw() {
 			ctx.fillRect(0, 0, cwidth, cheight);
 
 			// Tabs
-			ctx.font = 'bold 35px Helvetica';
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-			let tabx2 = 28; // had to give this a different name from the variable used in the menu 6 case.
-			for (let i = 0; i < 2; i++) {
-				if (i == myLevelsTab) ctx.fillStyle = '#666666';
-				else if (onRect(_xmouse, _ymouse, tabx2, 20, exploreTabWidths[i], 45)) {
-					ctx.fillStyle = '#b3b3b3';
-					if (mouseIsDown && !pmouseIsDown) {
-						myLevelsTab = i;
-						setMyLevelsPage(0);
-					}
-				} else ctx.fillStyle = '#999999';
-				ctx.fillRect(tabx2, 20, exploreTabWidths[i], 45);
+			if (levelpackAddScreen) {
+				ctx.font = 'bold 35px Helvetica';
+				ctx.textAlign = 'left';
+				ctx.textBaseline = 'top';
 				ctx.fillStyle = '#ffffff';
-				ctx.fillText(exploreTabNames[i], tabx2 + exploreTabWidths[i] / 2, 45);
-				// exploreTabNames[i];
-				tabx2 += exploreTabWidths[i] + 5;
-			}
-
-			if (myLevelsTab == 0) {
-				// delete button
-				ctx.fillStyle = '#ffffff';
-				ctx.font = '23px Helvetica';
-				drawSimpleButton(deletingMyLevels?'Exit Scary Delete Mode':'Delete Levels', toggleMyLevelDeleting, 28, 85, deletingMyLevels?280:150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+				ctx.fillText('Select a level to add', 28, 45);
 			} else {
-				// temporary create levelpack button
-				ctx.fillStyle = '#ffffff';
-				ctx.font = '23px Helvetica';
-				drawSimpleButton('Create New', createNewLevelPack, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+				ctx.font = 'bold 35px Helvetica';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				let tabx2 = 28; // had to give this a different name from the variable used in the menu 6 case.
+				for (let i = 0; i < 2; i++) {
+					if (i == myLevelsTab) ctx.fillStyle = '#666666';
+					else if (onRect(_xmouse, _ymouse, tabx2, 20, exploreTabWidths[i], 45)) {
+						ctx.fillStyle = '#b3b3b3';
+						if (mouseIsDown && !pmouseIsDown) {
+							myLevelsTab = i;
+							setMyLevelsPage(0);
+						}
+					} else ctx.fillStyle = '#999999';
+					ctx.fillRect(tabx2, 20, exploreTabWidths[i], 45);
+					ctx.fillStyle = '#ffffff';
+					ctx.fillText(exploreTabNames[i], tabx2 + exploreTabWidths[i] / 2, 45);
+					// exploreTabNames[i];
+					tabx2 += exploreTabWidths[i] + 5;
+				}
+
+				if (myLevelsTab == 0) {
+					// delete button
+					ctx.font = '23px Helvetica';
+					drawSimpleButton(deletingMyLevels?'Exit Scary Delete Mode':'Delete Levels', toggleMyLevelDeleting, 28, 85, deletingMyLevels?280:150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+				} else {
+					// temporary create levelpack button
+					ctx.font = '23px Helvetica';
+					drawSimpleButton('Create New', createNewLevelPack, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+				}
 			}
 
-
+			// The levels themselves
 			for (let i = 0; i < explorePageLevels.length; i++) {
 				drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, myLevelsTab, 2);
 			}
@@ -9505,7 +9549,7 @@ function draw() {
 
 			if (lcPopUpNextFrame) lcPopUp = true; // Why did I decide to do it like this
 			lcPopUpNextFrame = false;
-			drawMenu2_3Button(1, 837.5, 486.95, menuMyLevelsBack);
+			drawMenu2_3Button(1, 837.5, 486.95, levelpackAddScreen?menuLevelpackAddScreenBack:menuMyLevelsBack);
 			break;
 
 		case 11:
@@ -9520,6 +9564,42 @@ function draw() {
 			textBoxes[0][0].draw();
 			currentLevelpackObj.title = textBoxes[0][0].text;
 			if (wasEditingBefore && !editingTextBox) saveMyLevelpacks();
+
+			// temporary add level button
+			ctx.font = '23px Helvetica';
+			drawSimpleButton('Add Level', openAddLevelsToLevelpackScreen, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+
+
+			// The levels themselves
+			for (let i = 0; i < explorePageLevels.length; i++) {
+				drawExploreLevel(232 * (i % 4) + 28, Math.floor(i / 4) * 182 + 130, i, 0, 3);
+			}
+
+			// Maybe I should put these in a function so I don't have to keep copy-pasteing them.
+			// Page number
+			ctx.fillStyle = '#ffffff';
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'top';
+			ctx.font = '30px Helvetica';
+			ctx.fillText((levelpackCreatorPage + 1) + ' / ' + levelpackCreatorPageCount, cwidth / 2, 490);
+
+			// Previous page button
+			if (levelpackCreatorPage <= 0) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse, _ymouse, 227.5, 487, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setLevelpackCreatorPage(levelpackCreatorPage - 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(227.5, 487, 25, 30, 3);
+
+			// Next page button
+			if (levelpackCreatorPage >= levelpackCreatorPageCount - 1) ctx.fillStyle = '#505050';
+			else if (onRect(_xmouse, _ymouse, 707.5, 487, 25, 30)) {
+				ctx.fillStyle = '#cccccc';
+				onButton = true;
+				if (mouseIsDown && !pmouseIsDown) setLevelpackCreatorPage(levelpackCreatorPage + 1);
+			} else ctx.fillStyle = '#999999';
+			drawArrow(707.5, 487, 25, 30, 1);
 
 			if (lcPopUpNextFrame) lcPopUp = true;
 			lcPopUpNextFrame = false;
