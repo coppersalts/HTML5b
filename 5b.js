@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'v0.2.0*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.2.0'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -152,7 +152,22 @@ function getSavedLevels() {
 function deleteSavedLevel(id) {
 	delete lcSavedLevels[id];
 	saveMyLevels();
+	let keys = Object.keys(lcSavedLevelpacks);
+	for (let i = 0; i < keys.length; i++) {
+		let levelpackLevels = lcSavedLevelpacks[keys[i]].levels;
+		let levelpackLevelsRemoved = [];
+		for (let j = 0; j < levelpackLevels.length; j++) {
+			if ('l' + levelpackLevels[j] != id) levelpackLevelsRemoved.push(levelpackLevels[j]);
+		}
+		lcSavedLevelpacks[keys[i]].levels = levelpackLevelsRemoved;
+	}
+	saveMyLevelpacks();
 	// TODO: remove deleted levels from levelpacks
+}
+
+function deleteSavedLevelpack(id) {
+	delete lcSavedLevelpacks[id];
+	saveMyLevelpacks();
 }
 
 function saveMyLevelpacks() {
@@ -2301,9 +2316,9 @@ function exploreTextBoxes() {
 	textBoxes[0].push(new TextBox('', 28, 75, 839, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
 }
 
-function mylevelsTextBoxes() {
+function myLevelsTextBoxes() {
 	textBoxes = [[],[]];
-	textBoxes[0].push(new TextBox(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 28, 28, 839, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
+	textBoxes[0].push(new TextBox(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 28, 15, 839, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
 }
 
 function menuExitLevelCreator() {
@@ -2335,6 +2350,7 @@ function menuMyLevelsBack() {
 function menuLevelpackCreatorBack() {
 	menuScreen = 10;
 	levelpackAddScreen = false;
+	myLevelsTab = 1;
 	setMyLevelsPage(myLevelsPage);
 	lcPopUp = false;
 }
@@ -2350,7 +2366,7 @@ function openMyLevelpack(id) {
 	levelpackCreatorRemovingLevels = false;
 	lcCurrentSavedLevelpack = id;
 	setLevelpackCreatorPage(0);
-	mylevelsTextBoxes();
+	myLevelsTextBoxes();
 }
 
 function openAddLevelsToLevelpackScreen() {
@@ -2440,9 +2456,7 @@ function menu2Back() {
 	if (playingLevelpack && menuScreen == 2) {
 		if (levelpackType === 0) menuScreen = 7;
 		if (levelpackType === 1) menuScreen = 11;
-	} else {
-		menuScreen = 0;
-	}
+	} else menuScreen = 0;
 	getSavedGame();
 	cameraX = 0;
 	cameraY = 0;
@@ -4958,6 +4972,7 @@ function loadSavedLevelIntoLevelCreator(locOnPage) {
 	resetLevelCreator();
 	myLevelInfo.name = explorePageLevels[locOnPage].title;
 	myLevelInfo.desc = explorePageLevels[locOnPage].description;
+	lcTextBoxes();
 	readLevelString(explorePageLevels[locOnPage].data);
 	lcCurrentSavedLevel = explorePageLevels[locOnPage].id;
 	lcChangesMade = false;
@@ -6787,13 +6802,14 @@ function setMyLevelsPage(page) {
 	let keys = Object.keys(myLevelsTab==0?lcSavedLevels:lcSavedLevelpacks);
 	let offset = myLevelsPage*8;
 	myLevelsPageCount = Math.ceil(keys.length / 8.0);
+	if (myLevelsPage >= myLevelsPageCount) myLevelsPage = myLevelsPageCount - 1;
 	explorePageLevels = [];
 	for (let i = 0; i + offset < keys.length && i < 8; i++) {
 		let key = keys[i + offset];
-		explorePageLevels.push(myLevelsTab==0?lcSavedLevels[key]:lcSavedLevelpacks[key]);
+		explorePageLevels.push(myLevelsTab===0?lcSavedLevels[key]:lcSavedLevelpacks[key]);
 	}
 	truncateLevelTitles(explorePageLevels, 0);
-	if (myLevelsTab==0) setExploreThumbs();
+	if (myLevelsTab === 0) setExploreThumbs();
 }
 
 function setLevelpackCreatorPage(page) {
@@ -6802,6 +6818,7 @@ function setLevelpackCreatorPage(page) {
 	let offset = levelpackCreatorPage*8;
 	levelpackCreatorPageCount = Math.ceil(thisLevelpackLevels.length / 8.0);
 	explorePageLevels = [];
+	if (levelpackCreatorPage >= levelpackCreatorPageCount) levelpackCreatorPage = levelpackCreatorPageCount - 1;
 	for (let i = 0; i + offset < thisLevelpackLevels.length && i < 8; i++) {
 		explorePageLevels.push(lcSavedLevels['l' + thisLevelpackLevels[i + offset]]);
 	}
@@ -6955,7 +6972,8 @@ function openLevelDeletePopUp(locOnPage) {
 function confirmDeleteLevel() {
 	lcPopUp = false;
 	deletingMyLevels = false;
-	deleteSavedLevel(levelToDelete);
+	if (myLevelsTab === 0) deleteSavedLevel(levelToDelete);
+	else deleteSavedLevelpack(levelToDelete);
 	setMyLevelsPage(myLevelsPage);
 }
 
@@ -8908,15 +8926,15 @@ function draw() {
 					drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Load String', openLevelLoader, 815, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Play Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
-					if (enableExperimentalFeatures) {
-						let isNew = lcCurrentSavedLevel==-1;
-						if (!isNew) ctx.font = '18px Helvetica';
-						drawSimpleButton(isNew?'Save Level':'Save Changes', saveLevelCreator, 675, tabWindowY + 90, 130, 30, isNew?3:5, '#ffffff', '#404040', '#666666', '#555555', lcChangesMade);
-						ctx.font = '23px Helvetica';
-						drawSimpleButton('Save Copy', saveLevelCreatorCopy, 815, tabWindowY + 90, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555', !isNew);
-						drawSimpleButton('New Blank Level', resetLevelCreator, 675, tabWindowY + 130, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
-						drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 170, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
-					}
+					// if (enableExperimentalFeatures) {
+					let isNew = lcCurrentSavedLevel==-1;
+					if (!isNew) ctx.font = '18px Helvetica';
+					drawSimpleButton(isNew?'Save Level':'Save Changes', saveLevelCreator, 675, tabWindowY + 90, 130, 30, isNew?3:5, '#ffffff', '#404040', '#666666', '#555555', lcChangesMade);
+					ctx.font = '23px Helvetica';
+					drawSimpleButton('Save Copy', saveLevelCreatorCopy, 815, tabWindowY + 90, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555', !isNew);
+					drawSimpleButton('New Blank Level', resetLevelCreator, 675, tabWindowY + 130, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 170, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					// }
 
 					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 210, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555', loggedInExploreUser5beamID!=-1);
 					drawMenu0Button('EXIT', 846, cheight - 50, 15, false, menuExitLevelCreator, 100);
@@ -9489,15 +9507,23 @@ function draw() {
 			lcPopUpNextFrame = false;
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
+			ctx.fillStyle = '#808080';
+			ctx.fillRect(0, 0, cwidth, 65);
 
-			// Tabs
 			if (levelpackAddScreen) {
 				ctx.font = 'bold 35px Helvetica';
 				ctx.textAlign = 'left';
-				ctx.textBaseline = 'top';
+				ctx.textBaseline = 'bottom';
 				ctx.fillStyle = '#ffffff';
-				ctx.fillText('Select a level to add', 28, 45);
+				ctx.fillText('Select a level to add', 28, 55);
 			} else {
+				ctx.font = '26px Helvetica';
+				ctx.textAlign = 'right';
+				ctx.textBaseline = 'bottom';
+				ctx.fillStyle = '#ffffff';
+				ctx.fillText('click on a level or levelpack to edit it', cwidth-28, 60);
+
+				// Tabs
 				ctx.font = 'bold 35px Helvetica';
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
@@ -9518,14 +9544,13 @@ function draw() {
 					tabx2 += exploreTabWidths[i] + 5;
 				}
 
-				if (myLevelsTab == 0) {
-					// delete button
-					ctx.font = '23px Helvetica';
-					drawSimpleButton(deletingMyLevels?'Exit Scary Delete Mode':'Delete Levels', toggleMyLevelDeleting, 28, 85, deletingMyLevels?280:150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
-				} else {
+				// delete button
+				ctx.font = '23px Helvetica';
+				drawSimpleButton(deletingMyLevels?'Exit Scary Delete Mode':((myLevelsTab===0)?'Delete Levels':'Delete Levelpacks'), toggleMyLevelDeleting, 28, 85, deletingMyLevels?280:((myLevelsTab===0)?150:200), 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+				if (myLevelsTab === 1) {
 					// temporary create levelpack button
 					ctx.font = '23px Helvetica';
-					drawSimpleButton('Create New', createNewLevelpack, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+					drawSimpleButton('Create New', createNewLevelpack, 328, 85, 150, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
 				}
 			}
 
@@ -9574,7 +9599,7 @@ function draw() {
 				ctx.font = '20px Helvetica';
 				ctx.textBaseline = 'top';
 				ctx.textAlign = 'left';
-				wrapText('Are you sure you want to delete the level "' + lcSavedLevels[levelToDelete].title + '"? This action can not be undone.', (cwidth - lcPopUpW) / 2 + 10, (cheight - lcPopUpH) / 2 + 5, lcPopUpW - 20, 22);
+				wrapText((myLevelsTab===0)?('Are you sure you want to delete the level "' + lcSavedLevels[levelToDelete].title):('Are you sure you want to delete the levelpack "' + lcSavedLevelpacks[levelToDelete].title) + '"? This action can not be undone.', (cwidth - lcPopUpW) / 2 + 10, (cheight - lcPopUpH) / 2 + 5, lcPopUpW - 20, 22);
 
 				drawSimpleButton('Cancel', cancelDeleteLevel, cwidth/2 - 125, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#a0a0a0', '#c0c0c0', '#c0c0c0', true, true);
 				drawSimpleButton('Delete', confirmDeleteLevel, cwidth/2 + 25, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#ff0000', '#ff8080', '#ffa0a0', true, true);
@@ -9592,24 +9617,22 @@ function draw() {
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
 
-			let currentLevelpackObj = lcSavedLevelpacks['l' + lcCurrentSavedLevelpack];
-
 			let wasEditingBefore = editingTextBox;
 			textBoxes[0][0].draw();
-			currentLevelpackObj.title = textBoxes[0][0].text;
+			lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title = textBoxes[0][0].text;
 			if (wasEditingBefore && !editingTextBox) saveMyLevelpacks();
 
 			// temporary add level button
 			ctx.font = '23px Helvetica';
-			drawSimpleButton('Add Level', openAddLevelsToLevelpackScreen, 28, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+			drawSimpleButton('Add A Level', openAddLevelsToLevelpackScreen, 328, 85, 150, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
 
 			// temporary remove levels button
 			ctx.font = '23px Helvetica';
-			drawSimpleButton(levelpackCreatorRemovingLevels?'Exit Remove Levels Mode':'Remove Levels', toggleLevelpackCreatorRemovingLevels, 428, 85, levelpackCreatorRemovingLevels?280:150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+			drawSimpleButton(levelpackCreatorRemovingLevels?'Exit Remove Levels Mode':'Remove Levels', toggleLevelpackCreatorRemovingLevels, 28, 85, levelpackCreatorRemovingLevels?280:170, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
 
 			// temporary play levelpack button
 			ctx.font = '23px Helvetica';
-			drawSimpleButton('Play Levelpack', playSavedLevelpack, 728, 85, 150, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+			drawSimpleButton('Play Levelpack', playSavedLevelpack, 498, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
 
 
 			// The levels themselves
