@@ -3643,7 +3643,7 @@ function getTintedCanvasImage(img, a, color) {
 	osctx3.fillStyle = color;
 	osctx3.globalAlpha = a;
 	osctx3.fillRect(0, 0, osc3.width, osc3.height);
-	osctx3.globalCompositeOperation = 'destination-atop';
+	osctx3.globalCompositeOperation = 'destination-in';
 	osctx3.globalAlpha = 1;
 	osctx3.drawImage(img, 0, 0);
 	osctx3.restore();
@@ -3651,6 +3651,7 @@ function getTintedCanvasImage(img, a, color) {
 }
 
 function drawPossiblyTintedImage(img, x, y, temp) {
+	ctx.drawImage(img, x, y);
 	if (temp > 0 && temp < 50) {
 		ctx.drawImage(
 			getTintedCanvasImage(img, temp / 70, 'rgb(255,' + (100 - temp) + ',' + (100 - temp) + ')'),
@@ -3659,8 +3660,6 @@ function drawPossiblyTintedImage(img, x, y, temp) {
 			img.width,
 			img.height
 		);
-	} else {
-		ctx.drawImage(img, x, y);
 	}
 }
 
