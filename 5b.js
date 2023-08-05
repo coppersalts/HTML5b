@@ -4538,19 +4538,17 @@ function startDeath(i) {
 function endDeath(i) {
 	putDown(i);
 	char[i].temp = 0;
-	char[i].heated = 0;
+	if (!quirksMode) char[i].heated = 0;
 	char[i].charState = 1;
 	// OG bug fix
-	if (char[i].atEnd && !quirksMode) {
+	if (!quirksMode && char[i].atEnd) {
 		doorLightFadeDire[charsAtEnd - 1] = -1;
 		charsAtEnd--;
 		char[i].atEnd = false;
 	}
 	deathCount++;
 	saveGame();
-	if (i == control) {
-		changeControl();
-	}
+	if (i == control) changeControl();
 }
 
 function bounce(i) {
