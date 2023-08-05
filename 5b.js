@@ -3,7 +3,7 @@
 // TODO: precalculate some of the stuff in the draw functions when the level is reset.
 // TODO: for explore thumbnails and the lc; load smaller versions of the backgrounds.
 
-const version = 'v0.2.0'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.2.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
 let canvas;
 let ctx;
@@ -13,6 +13,7 @@ let pixelRatio;
 let addedZoom = 1;
 let highQual = true;
 const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+const browserPasteSolution = typeof navigator.clipboard.readText === "function";
 
 // offscreen canvases
 let osc1, osctx1;
@@ -6182,7 +6183,6 @@ function openLevelLoader() {
 	lcPopUpType = 0;
 	levelLoadString = '';
 	textBoxes[0][2].text = '';
-	canvas.setAttribute('contenteditable', true);
 }
 
 function readLevelString(str) {
@@ -7215,7 +7215,7 @@ function keydown(event) {
 
 	if (editingTextBox && event.key) {
 		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
-			navigator.clipboard.readText().then(clipText => {inputText += clipText;}).catch(err => console.log(err));
+			if (browserPasteSolution) navigator.clipboard.readText().then(clipText => {inputText += clipText;}).catch(err => console.log(err));
 		} else if (event.key.length == 1) {
 			inputText += event.key;
 		} else if (event.key == 'Backspace') {
@@ -9129,7 +9129,6 @@ function draw() {
 						editingTextBox = false;
 						deselectAllTextBoxes();
 						levelLoadString = '';
-						canvas.setAttribute('contenteditable', false);
 					}
 					ctx.fillStyle = '#000000';
 					ctx.font = '20px Helvetica';
@@ -9191,7 +9190,6 @@ function draw() {
 							editingTextBox = false;
 							deselectAllTextBoxes();
 							levelLoadString = '';
-							canvas.setAttribute('contenteditable', false);
 						}
 					} else if (
 						onRect(
@@ -9210,7 +9208,6 @@ function draw() {
 							editingTextBox = false;
 							deselectAllTextBoxes();
 							levelLoadString = '';
-							canvas.setAttribute('contenteditable', false);
 						}
 					}
 				}
@@ -10112,6 +10109,8 @@ class TextBox {
 					this.beingEdited = true;
 					editingTextBox = true;
 					currentTextBoxAllowsLineBreaks = this.allowsLineBreaks;
+					// If the browser doesn't support randomly reading from the clipboard (i.e. it's not Chromium based), make the canvas element a thing you can paste into. The only reason I'm using the different solution for Chrome is because my css that hides the blue border doesn't hide it all the way on Chrome.
+					if (!browserPasteSolution) canvas.setAttribute('contenteditable', true);
 				}
 			}
 		}
@@ -10285,4 +10284,5 @@ function deselectAllTextBoxes() {
 			textBoxes[i][j].beingEdited = false;
 		}
 	}
+	canvas.setAttribute('contenteditable', false);
 }

@@ -48,3 +48,9 @@ p{
 	-ms-user-select: none;
 	user-select: none;
 }
+#hide-contenteditable {
+	width: 960px;
+	height: 540px;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
