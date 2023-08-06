@@ -2071,7 +2071,6 @@ let menu2_3Buttons = [
 let menu0ButtonSize = {w: 273.0, h: 36.9, cr: 6.65};
 let menu2_3ButtonSize = {w: 104.5, h: 37.3};
 let levelButtonSize = {w: 100, h: 40};
-let menu0ButtonClicked = -1;
 let onButton = false;
 let onTextBox = false;
 let onScrollbar = false;
@@ -2556,19 +2555,16 @@ function exitExploreLevel() {
 	cameraY = 0;
 }
 
-function drawMenu0Button(text, x, y, id, grayed, action, width = menu0ButtonSize.w) {
+function drawMenu0Button(text, x, y, grayed, action, width = menu0ButtonSize.w) {
 	let fill = '#ffffff';
 	if (!grayed) {
 		if (!lcPopUp && onRect(_xmouse, _ymouse, x, y, width, menu0ButtonSize.h)) {
 			onButton = true;
-			if (mouseIsDown) {
-				fill = '#b8b8b8';
-				menu0ButtonClicked = id;
-			} else fill = '#d4d4d4';
-		}
-		if (!mouseIsDown && menu0ButtonClicked === id) {
-			menu0ButtonClicked = -1;
-			action();
+			if (!mouseIsDown) fill = '#d4d4d4';
+			if (onRect(lastClickX, lastClickY, x, y, width, menu0ButtonSize.h)) {
+				if (mouseIsDown) fill = '#b8b8b8';
+				else if (mousePressedLastFrame) action();
+			}
 		}
 	} else fill = '#b8b8b8';
 
@@ -2648,17 +2644,11 @@ function drawLevelButton(text, x, y, id, color) {
 	ctx.fillText(text, x + levelButtonSize.w / 2, y + (levelButtonSize.h * 1.1) / 2);
 }
 
-function drawNewGame2Button(text, x, y, id, color, action) {
+function drawNewGame2Button(text, x, y, color, action) {
 	let size = 107.5;
 	if (onRect(_xmouse, _ymouse, x, y, size, size)) {
 		onButton = true;
-		if (mouseIsDown) {
-			menu0ButtonClicked = id;
-		}
-	}
-	if (!mouseIsDown && menu0ButtonClicked === id) {
-		menu0ButtonClicked = -1;
-		action();
+		if (mousePressedLastFrame && onRect(lastClickX, lastClickY, x, y, size, size)) action();
 	}
 
 	drawRoundedRect(color, x, y, size, size, 10);
@@ -2685,28 +2675,6 @@ function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColo
 	ctx.textBaseline = 'bottom';
 	ctx.textAlign = 'center';
 	ctx.fillText(text, x + w/2.0, y + h - bottomPad);
-	// let fill = '#ffffff';
-	// if (!grayed) {
-	// 	if (!lcPopUp && onRect(_xmouse, _ymouse, x, y, width, menu0ButtonSize.h)) {
-	// 		onButton = true;
-	// 		if (mouseIsDown) {
-	// 			fill = '#b8b8b8';
-	// 			menu0ButtonClicked = id;
-	// 		} else fill = '#d4d4d4';
-	// 	}
-	// 	if (!mouseIsDown && menu0ButtonClicked === id) {
-	// 		menu0ButtonClicked = -1;
-	// 		action();
-	// 	}
-	// } else fill = '#b8b8b8';
-
-	// drawRoundedRect(fill, x, y, width, menu0ButtonSize.h, menu0ButtonSize.cr);
-
-	// ctx.font = 'bold 30px Helvetica';
-	// ctx.fillStyle = '#666666';
-	// ctx.textAlign = 'center';
-	// ctx.textBaseline = 'middle';
-	// ctx.fillText(text, x + width / 2, y + (menu0ButtonSize.h * 1.1) / 2);
 }
 
 function drawRoundedRect(fill, x, y, w, h, cr) {
@@ -2734,8 +2702,8 @@ function drawMenu() {
 	ctx.font = '20px Helvetica';
 	ctx.fillText(version, 5, cheight);
 
-	if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 303.75, 0, false, menuWatchC);
-	else drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, 0, false, menuWatchA);
+	if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 303.75, false, menuWatchC);
+	else drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, false, menuWatchA);
 	if (showingNewGame2) {
 		drawRoundedRect('#ffffff', 665.5, 81, 273, 72.95, 15);
 		ctx.font = '20px Helvetica';
@@ -2743,15 +2711,15 @@ function drawMenu() {
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
 		linebreakText('Are you sure you want to\nerase your saved progress\nand start a new game?', 802, 84.3, 22);
-		drawNewGame2Button('YES', 680.4, 169.75, 5, '#993333', menuNewGame2yes);
-		drawNewGame2Button('NO', 815.9, 169.75, 6, '#1a4d1a', menuNewGame2no);
+		drawNewGame2Button('YES', 680.4, 169.75, '#993333', menuNewGame2yes);
+		drawNewGame2Button('NO', 815.9, 169.75, '#1a4d1a', menuNewGame2no);
 	} else {
-		drawMenu0Button('OPTIONS', 665.55, 259.1, 7, false, menuOptions);
-		drawMenu0Button('NEW GAME', 665.55, 348.4, 1, false, menuNewGame);
+		drawMenu0Button('OPTIONS', 665.55, 259.1, false, menuOptions);
+		drawMenu0Button('NEW GAME', 665.55, 348.4, false, menuNewGame);
 	}
-	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, 2, levelProgress == 0, menuContGame);
-	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, 3, false, menuLevelCreator);
-	drawMenu0Button('EXPLORE', 665.55, 482.5, 4, false, menuExplore);
+	drawMenu0Button('CONTINUE GAME', 665.55, 393.05, levelProgress == 0, menuContGame);
+	drawMenu0Button('LEVEL CREATOR', 665.55, 437.7, false, menuLevelCreator);
+	drawMenu0Button('EXPLORE', 665.55, 482.5, false, menuExplore);
 
 	// let started = true;
 	// if (bfdia5b.data.levelProgress == undefined || bfdia5b.data.levelProgress == 0) {
@@ -7312,12 +7280,7 @@ function draw() {
 	switch (menuScreen) {
 		case -1:
 			ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
-			drawMenu0Button(
-				'START GAME',
-				(cwidth - menu0ButtonSize.w) / 2,
-				(cheight - menu0ButtonSize.h) / 2,
-				0, false, playGame
-			);
+			drawMenu0Button('START GAME', (cwidth - menu0ButtonSize.w) / 2, (cheight - menu0ButtonSize.h) / 2, false, playGame);
 			break;
 
 		case 0:
@@ -7346,7 +7309,7 @@ function draw() {
 			// );
 			ctx.drawImage(
 				osc4,
-				-Math.floor(-cameraX + shakeX) + Math.floor( -(cameraX+shakeX)/3),
+				-Math.floor(-cameraX + shakeX) + Math.floor( (-cameraX+shakeX)/3),
 				-Math.floor(-cameraY + shakeY) + Math.floor( Math.max( -cameraY/3 - ((bgXScale>bgYScale)?Math.max(0,(bgXScale*5.4-540)/2):0), 540 - osc4.height / pixelRatio) + shakeY/3),
 				osc4.width / pixelRatio,
 				osc4.height / pixelRatio
@@ -8925,7 +8888,7 @@ function draw() {
 					// }
 
 					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 210, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555', loggedInExploreUser5beamID!=-1);
-					drawMenu0Button('EXIT', 846, cheight - 50, 15, false, menuExitLevelCreator, 100);
+					drawMenu0Button('EXIT', 846, cheight - 50, false, menuExitLevelCreator, 100);
 					// drawMenu2_3Button(0, 837.5, 486.95, menuExitLevelCreator);
 					break;
 			}
@@ -9330,7 +9293,7 @@ function draw() {
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
-			drawMenu0Button('LOG IN', 520, 15, 16, false, logInExplore, 120);
+			drawMenu0Button('LOG IN', 520, 15, false, logInExplore, 120);
 			break;
 
 		case 7:
@@ -9363,9 +9326,9 @@ function draw() {
 				// ctx.fillRect(30, 98, 368, 207);
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 389, 2, false, playExploreLevel);
+				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 389, false, playExploreLevel);
 
-				drawMenu0Button('more by this user', 30, 440, 3, false, exploreMoreByThisUser);
+				drawMenu0Button('more by this user', 30, 440, false, exploreMoreByThisUser);
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
