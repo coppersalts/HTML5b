@@ -2611,7 +2611,7 @@ function drawLevelButton(text, x, y, id, color) {
 	else if (color == 4) fill = '#00cc00';
 	if (color > 1) {
 		if (
-			onRect(_xmouse, _ymouse - cameraY, x, y, levelButtonSize.w, levelButtonSize.h) &&
+			onRect(_xmouse, _ymouse + cameraY, x, y, levelButtonSize.w, levelButtonSize.h) &&
 			(_xmouse < 587 || _ymouse < 469)
 		) {
 			onButton = true;
@@ -7308,7 +7308,7 @@ function draw() {
 	onScrollbar = false;
 	mousePressedLastFrame = pmouseIsDown && !mouseIsDown;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(cameraX + shakeX), Math.floor(cameraY + shakeY));
+	if (menuScreen == 2 || menuScreen == 3) ctx.translate(Math.floor(-cameraX + shakeX), Math.floor(-cameraY + shakeY));
 	switch (menuScreen) {
 		case -1:
 			ctx.drawImage(preMenuBG, 0, 0, cwidth, cheight);
@@ -7328,19 +7328,26 @@ function draw() {
 			drawLevelMap();
 			if (_xmouse < 587 || _ymouse < 469) {
 				if (_ymouse <= 180) {
-					cameraY = Math.min(Math.max(cameraY + (180 - _ymouse) * 0.1, -1080), 0);
+					cameraY = Math.min(Math.max(cameraY - (180 - _ymouse) * 0.1, 0), 1080);
 				} else if (_ymouse >= 360) {
-					cameraY = Math.min(Math.max(cameraY - (_ymouse - 360) * 0.1, -1080), 0);
+					cameraY = Math.min(Math.max(cameraY + (_ymouse - 360) * 0.1, ), 1080);
 				}
 			}
 			break;
 
 		case 3:
 			// TODO: Look into if it would be more accurate to the Flash version if this were moved to after the game logic.
+			// ctx.drawImage(
+			// 	osc4,
+			// 	-Math.floor((Math.max(cameraX, 0) + shakeX) / 1.5 + (cameraX < 0 ? cameraX / 3 : 0)),
+			// 	-Math.floor((Math.max(cameraY, 0) + shakeY) / 1.5 + (cameraY < 0 ? cameraY / 3 : 0)),
+			// 	osc4.width / pixelRatio,
+			// 	osc4.height / pixelRatio
+			// );
 			ctx.drawImage(
 				osc4,
-				-Math.floor((Math.max(cameraX, 0) + shakeX) / 1.5 + (cameraX < 0 ? cameraX / 3 : 0)),
-				-Math.floor((Math.max(cameraY, 0) + shakeY) / 1.5 + (cameraY < 0 ? cameraY / 3 : 0)),
+				-Math.floor(-cameraX + shakeX) + Math.floor( -(cameraX+shakeX)/3),
+				-Math.floor(-cameraY + shakeY) + Math.floor( Math.max( -cameraY/3 - ((bgXScale>bgYScale)?Math.max(0,(bgXScale*5.4-540)/2):0), 540 - osc4.height / pixelRatio) + shakeY/3),
 				osc4.width / pixelRatio,
 				osc4.height / pixelRatio
 			);
@@ -8034,11 +8041,11 @@ function draw() {
 				}
 			}
 			if (screenShake) {
-				shakeX = x - cameraX;
-				shakeY = y - cameraY;
+				shakeX = x + cameraX;
+				shakeY = y + cameraY;
 			} else {
-				shakeX = -cameraX * 2;
-				shakeY = -cameraY * 2;
+				shakeX = 0;
+				shakeY = 0;
 			}
 			levelTimer++;
 			break;
