@@ -1861,7 +1861,7 @@ const charModels = [
 		charimgmat: {a:0.1,b:0,c:0,d:0.1,tx:0,ty:0},
 	},
 ];
-const names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune','','','','','','','','','','','','','','','','','','','','','','','','','','','HPRC 1','HPRC 2','Crate','Metal Box','Platform','Spike Ball','Package','Companian Cube','Rusty Apparatuses','Purple Face','Saw Blade','Spike Ball Jr.','Pillar','Large Platform','Blue Spike Ball','Not Gelatin','Acid Platform','Large Acid Platform','Green Block','Blue Block','Spike Wall'];
+const names = ['Ruby','Book','Ice Cube','Match','Pencil','Bubble','Lego Brick','Waffle','Tune','','','','','','','','','','','','','','','','','','','','','','','','','','','HPRC 1','HPRC 2','Crate','Metal Box','Platform','Spike Ball','Package','Companian Cube','Rusty Apparatuses','Purple Thing','Saw Blade','Spike Ball Jr.','Pillar','Large Platform','Blue Spike Ball','Green Things','Acid Platform','Large Acid Platform','Green Block','Blue Block','Spike Wall'];
 let selectedTab = 0;
 let selectedBg = 0;
 const tabNames = ['Level Info', 'Characters / Objects', 'Tiles', 'Background', 'Dialogue', 'Options'];
@@ -3538,7 +3538,7 @@ function drawCharacters() {
 			ctx.fillStyle = '#00ff00';
 			ctx.textAlign = 'center';
 			ctx.font = '6px Helvetica';
-			ctx.fillText(HPRCText, char[i].x + 12.65, char[i].y - 39.6);
+			ctx.fillText(HPRCText, char[i].x + 12.65, char[i].y - 39.6, 30);
 			let radius = svgHPRCCrank.height / 2;
 			ctx.save();
 			ctx.translate(char[i].x + hprcCrankPos.x, char[i].y + hprcCrankPos.y);
