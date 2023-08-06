@@ -1,5 +1,19 @@
 const version = 'v0.2.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
+// For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
+// performanceTest(()=>{
+// });
+let performanceTestTimes = [];
+function performanceTest(action) {
+	let performanceTestValue = performance.now();
+	action();
+	performanceTestTimes.push(performance.now() - performanceTestValue);
+	if (performanceTestTimes.length >= 100) {
+		console.log(performanceTestTimes.reduce((a, b) => a + b) / performanceTestTimes.length);
+		performanceTestTimes = [];
+	}
+}
+
 let canvas;
 let ctx;
 const cwidth = 960;
@@ -2239,6 +2253,10 @@ function onRect(mx, my, x, y, w, h) {
 	return mx > x && mx < x + w && my > y && my < y + h;
 }
 
+function boundingBoxCheck(x1, y1, w1, h1, x2, y2, w2, h2) {
+	return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > h2;
+}
+
 function setCursor(newCursor) {
 	if (_cursor != newCursor) {
 		_cursor = newCursor;
@@ -3822,7 +3840,9 @@ function addTileMovieClip(x, y, context) {
 			}
 			// context.fillStyle = '#00ffcc';
 			// context.fillRect(x*30, y*30, 30, 30);
-			context.drawImage(svgTiles[t][frame], x * 30 + svgTilesVB[t][frame][0], y * 30 + svgTilesVB[t][frame][1]);
+			if (boundingBoxCheck(cameraX, cameraY, 960, 540, x * 30 + svgTilesVB[t][frame][0], y * 30 + svgTilesVB[t][frame][1], svgTilesVB[t][frame][2], svgTilesVB[t][frame][3])) {
+				context.drawImage(svgTiles[t][frame], x * 30 + svgTilesVB[t][frame][0], y * 30 + svgTilesVB[t][frame][1]);
+			}
 			// context.drawImage(svgTiles[t][0], x*30, y*30);
 		}
 	} else if (t == 6) {
