@@ -8015,7 +8015,7 @@ function draw() {
 			// This is an easter egg I added for The Wiki Camp 2. You can ignore it.
 			if (currentLevel == 52 && onRect(_xmouse, _ymouse, 674, 142, 30, 30)) {
 				onButton = true;
-				if (!mouseIsDown && pmouseIsDown) {
+				if (mousePressedLastFrame) {
 					window.open('https://camp2.rectangle.zone/index.php?title=5b_Challenge_Crystal');
 				}
 			}
@@ -8155,17 +8155,15 @@ function draw() {
 					if (
 						!draggingScrollbar &&
 						!lcPopUp &&
-						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+						onRect(_xmouse, _ymouse, cwidth - 10, scrollBarY, 10, scrollBarH)
 					) {
 						onScrollbar = true;
-						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
-					} else ctx.fillStyle = '#dddddd';
+					}
 					if (draggingScrollbar) {
-						ctx.fillStyle = '#a0a0a0';
 						charsTabScrollBar = Math.floor(
 							Math.max(
 								Math.min(
@@ -8178,7 +8176,8 @@ function draw() {
 						);
 						if (!mouseIsDown) draggingScrollbar = false;
 					}
-					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect(cwidth - 10, scrollBarY, 10, scrollBarH);
 					ctx.save();
 					ctx.translate(0, -charsTabScrollBar);
 					ctx.textAlign = 'left';
@@ -8428,7 +8427,7 @@ function draw() {
 							myLevelChars[1][charDropdown][4] = char[charDropdown].speed;
 							levelTimer = 0;
 							resetCharPositions();
-							if (!mouseIsDown && pmouseIsDown) {
+							if (mousePressedLastFrame) {
 								char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
 								charDropdown = -2;
 							}
@@ -8445,7 +8444,7 @@ function draw() {
 							myLevelChars[1][charDropdown][5][charDropdownMS][1] = Math.floor(
 								Math.max(Math.min(valueAtClick + (lastClickY - _ymouse) * 0.3, 32), 1)
 							);
-							if (!mouseIsDown && pmouseIsDown) {
+							if (mousePressedLastFrame) {
 								char[charDropdown].motionString = generateMS(myLevelChars[1][charDropdown]);
 								levelTimer = 0;
 								resetCharPositions();
@@ -8609,17 +8608,15 @@ function draw() {
 					if (
 						!draggingScrollbar &&
 						!lcPopUp &&
-						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+						onRect(_xmouse, _ymouse, cwidth - 10, scrollBarY, 10, scrollBarH)
 					) {
 						onScrollbar = true;
-						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
-					} else ctx.fillStyle = '#dddddd';
+					}
 					if (draggingScrollbar) {
-						ctx.fillStyle = '#a0a0a0';
 						tileTabScrollBar = Math.floor(
 							Math.max(
 								Math.min(
@@ -8632,7 +8629,8 @@ function draw() {
 						);
 						if (!mouseIsDown) draggingScrollbar = false;
 					}
-					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect(cwidth - 10, scrollBarY, 10, scrollBarH);
 					break;
 
 				case 3:
@@ -8698,17 +8696,15 @@ function draw() {
 					if (
 						!draggingScrollbar &&
 						!lcPopUp &&
-						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+						onRect(_xmouse, _ymouse, cwidth - 10, scrollBarY, 10, scrollBarH)
 					) {
 						onScrollbar = true;
-						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
-					} else ctx.fillStyle = '#dddddd';
+					}
 					if (draggingScrollbar) {
-						ctx.fillStyle = '#a0a0a0';
 						bgsTabScrollBar = Math.floor(
 							Math.max(
 								Math.min(
@@ -8721,7 +8717,8 @@ function draw() {
 						);
 						if (!mouseIsDown) draggingScrollbar = false;
 					}
-					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect(cwidth - 10, scrollBarY, 10, scrollBarH);
 					break;
 
 				case 4:
@@ -8738,17 +8735,15 @@ function draw() {
 					if (
 						!draggingScrollbar &&
 						!lcPopUp &&
-						onRect(_xmouse, _ymouse, cwidth - 20, scrollBarY, 10, scrollBarH)
+						onRect(_xmouse, _ymouse, cwidth - 10, scrollBarY, 10, scrollBarH)
 					) {
 						onScrollbar = true;
-						ctx.fillStyle = '#e8e8e8';
 						if (mouseIsDown && !pmouseIsDown) {
 							draggingScrollbar = true;
 							valueAtClick = _ymouse - scrollBarY;
 						}
-					} else ctx.fillStyle = '#dddddd';
+					}
 					if (draggingScrollbar) {
-						ctx.fillStyle = '#a0a0a0';
 						diaTabScrollBar = Math.floor(
 							Math.max(
 								Math.min(
@@ -8761,7 +8756,8 @@ function draw() {
 						);
 						if (!mouseIsDown) draggingScrollbar = false;
 					}
-					ctx.fillRect(cwidth - 20, scrollBarY, 10, scrollBarH);
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect(cwidth - 10, scrollBarY, 10, scrollBarH);
 					// ctx.save();
 					// ctx.translate(0, -diaTabScrollBar);
 					// ctx.textAlign = 'left';
@@ -9270,7 +9266,7 @@ function draw() {
 				if (onRect(_xmouse, _ymouse, 877, 75, 55, 55)) {
 					ctx.fillStyle = '#404040';
 					onButton = true;
-					if (pmouseIsDown && !mouseIsDown) setExplorePage(0);
+					if (mousePressedLastFrame) setExplorePage(0);
 				} else ctx.fillStyle = '#333333';
 				ctx.fillRect(877, 75, 55, 55);
 
@@ -9575,7 +9571,7 @@ function draw() {
 				let lcPopUpH = 150;
 				ctx.fillStyle = '#eaeaea';
 				ctx.fillRect((cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH);
-				if (!mouseIsDown && pmouseIsDown && !onRect(_xmouse, _ymouse, (cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH) ) cancelDeleteLevel();
+				if (mousePressedLastFrame && !onRect(_xmouse, _ymouse, (cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH) ) cancelDeleteLevel();
 
 				ctx.fillStyle = '#000000';
 				ctx.font = '20px Helvetica';
