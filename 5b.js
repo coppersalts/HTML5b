@@ -1,18 +1,18 @@
 const version = 'v0.2.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
-// For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
-// performanceTest(()=>{
-// });
-let performanceTestTimes = [];
-function performanceTest(action) {
-	let performanceTestValue = performance.now();
-	action();
-	performanceTestTimes.push(performance.now() - performanceTestValue);
-	if (performanceTestTimes.length >= 100) {
-		console.log(performanceTestTimes.reduce((a, b) => a + b) / performanceTestTimes.length);
-		performanceTestTimes = [];
-	}
-}
+/* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
+performanceTest(()=>{
+}); */
+// let performanceTestTimes = [];
+// function performanceTest(action) {
+// 	let performanceTestValue = performance.now();
+// 	action();
+// 	performanceTestTimes.push(performance.now() - performanceTestValue);
+// 	if (performanceTestTimes.length >= 100) {
+// 		console.log(performanceTestTimes.reduce((a, b) => a + b) / performanceTestTimes.length);
+// 		performanceTestTimes = [];
+// 	}
+// }
 
 let canvas;
 let ctx;
@@ -23,6 +23,8 @@ let addedZoom = 1;
 let highQual = true;
 const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 const browserPasteSolution = typeof navigator.clipboard.readText === "function";
+const browserCopySolution = typeof navigator.clipboard.write === "function";
+let copyButton = false; // Hack to make copying work on Safari.
 
 // offscreen canvases
 let osc1, osctx1;
@@ -2679,9 +2681,11 @@ function drawNewGame2Button(text, x, y, color, action) {
 }
 
 function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive, enabled = true, isOnPopUp = false) {
+	let onThisButton = false; // Part of the hack for making copy work on Safari.
 	if (enabled) {
 		if (onRect(_xmouse, _ymouse, x, y, w, h) && (!lcPopUp || isOnPopUp)) {
 			onButton = true;
+			onThisButton = true;
 			ctx.fillStyle = bgHover;
 			if (mouseIsDown) ctx.fillStyle = bgActive;
 			else if (pmouseIsDown && onRect(lastClickX, lastClickY, x, y, w, h)) action();
@@ -2693,6 +2697,7 @@ function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColo
 	ctx.textBaseline = 'bottom';
 	ctx.textAlign = 'center';
 	ctx.fillText(text, x + w/2.0, y + h - bottomPad);
+	return {hover:onThisButton};
 }
 
 function drawRoundedRect(fill, x, y, w, h, cr) {
@@ -6069,17 +6074,35 @@ function generateCharFromInfo(info) {
 
 function copyLevelString() {
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-	navigator.clipboard.writeText(generateLevelString()).then(
-		function () {
-			lcMessageTimer = 1;
-			lcMessageText = 'Level string successfuly copied to clipboard!';
-		},
-		function (err) {
-			lcMessageTimer = 1;
-			lcMessageText = 'There was an error while copying the level string.';
-			console.error('Could not copy text: ', err);
-		}
-	);
+	const text = generateLevelString();
+	if (!browserCopySolution) {
+		navigator.clipboard.writeText(text).then(
+			function () {
+				lcMessageTimer = 1;
+				lcMessageText = 'Level string successfuly copied to clipboard!';
+			},
+			function (err) {
+				lcMessageTimer = 1;
+				lcMessageText = 'There was an error while copying the level string.';
+				console.error('Could not copy text: ', err);
+			}
+		);
+	} else if (copyButton) {
+		// Handles copying on Safari
+		const data = [new ClipboardItem({ 'text/plain': new Blob([text], { type: 'text/plain' }) })];
+		navigator.clipboard.write(data).then(
+			function () {
+				lcMessageTimer = 1;
+				lcMessageText = 'Level string successfuly copied to clipboard!';
+			},
+			function (err) {
+				lcMessageTimer = 1;
+				lcMessageText = 'There was an error while copying the level string.';
+				console.error('Could not copy text: ', err);
+			}
+		);
+	}
+	copyButton = false;
 }
 
 function generateLevelString() {
@@ -7164,6 +7187,12 @@ function mousedown(event) {
 
 function mouseup(event) {
 	mouseIsDown = false;
+
+	// Makes copying possible on Safari.
+	if (copyButton) {
+		if (browserCopySolution) copyLevelString();
+		copyButton = false;
+	}
 	if (menuScreen == 5) {
 		if (!blockProperties[selectedTile][9]) {
 			if (tool == 2 && LCRect[0] != -1) {
@@ -8892,9 +8921,8 @@ function draw() {
 
 				case 5:
 					// Options
-					// drawMenu0Button('COPY LEVEL', 673, tabWindowY + 10, 11, false, copyLevelString);
 					ctx.font = '23px Helvetica';
-					drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					if (drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555').hover) copyButton = true;
 					drawSimpleButton('Load String', openLevelLoader, 815, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Play Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					// if (enableExperimentalFeatures) {
@@ -10079,7 +10107,7 @@ class TextBox {
 					this.beingEdited = true;
 					editingTextBox = true;
 					currentTextBoxAllowsLineBreaks = this.allowsLineBreaks;
-					// If the browser doesn't support randomly reading from the clipboard (i.e. it's not Chromium based), make the canvas element a thing you can paste into. The only reason I'm using the different solution for Chrome is because my css that hides the blue border doesn't hide it all the way on Chrome.
+					// If the browser doesn't support randomly reading from the clipboard (i.e. is Firefox), make the canvas element a thing you can paste into.
 					if (!browserPasteSolution) canvas.setAttribute('contenteditable', true);
 				}
 			}
