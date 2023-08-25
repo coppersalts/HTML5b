@@ -104,6 +104,8 @@ let lcSavedLevelpacks;
 let nextLevelpackId;
 let whiteAlpha = 0;
 let coinAlpha = 0;
+let searchParams = new URLSearchParams(window.location.href);
+let [levelId, levelpackId] = [searchParams.get("level"), searchParams.get("levelpack")]
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -7315,7 +7317,37 @@ function setup() {
 	window.addEventListener('keyup', keyup);
 	canvas.addEventListener('paste', handlePaste);
 
-	rAF60fps();
+	if (levelId) {
+		// If the level ID is specified in the URL, load that level.
+		menuScreen = 0
+		exploreLevelPageType = 0
+		fetch('https://5beam.zelo.dev/api/level?id=' + levelId, {method: 'GET'})
+			.then(async (res) => {
+				exploreLevelPageLevel = await res.json()
+				playExploreLevel()
+				rAF60fps()
+			})
+			.catch((e) => {
+				alert("Unable to find level!", e)
+				console.error(e)
+			})
+	} else if (levelpackId) {
+		// If the levelpack ID is specified in the URL, load that levelpack.
+		menuScreen = 1
+		exploreLevelPageType = 1
+		fetch('https://5beam.zelo.dev/api/levelpack?id=' + levelpackId, {method: 'GET'})
+			.then(async (res) => {
+				exploreLevelPageLevel = await res.json()
+				playExploreLevel()
+				rAF60fps()
+			})
+			.catch((e) => {
+				alert("Unable to find levelpack!", e)
+				console.error(e)
+			})
+	} else {
+		rAF60fps();
+	}
 }
 
 function draw() {
