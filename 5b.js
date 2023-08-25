@@ -2455,7 +2455,7 @@ function playSavedLevelpack() {
 
 function exploreMoreByThisUser() {
 	menuScreen = 8;
-	// getExploreUser(exploreLevelPageLevel.creatorId);
+	// getExploreUser(exploreLevelPageLevel.creator.id);
 	exploreUser = exploreLevelPageLevel.creator;
 	setExploreUserPage(0, 0);
 	setExploreUserPage(1, 0);
@@ -2810,7 +2810,7 @@ function drawLevelMap() {
 		let titleLineCount = wrapText((levelpackType === 0)?exploreLevelPageLevel.title:lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 50, 35, 500, 48).length;
 		if (levelpackType === 0) {
 			ctx.font = 'italic 21px Helvetica';
-			ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 50, 32 + titleLineCount*48);
+			ctx.fillText('by ' + exploreLevelPageLevel.creator.username, 50, 32 + titleLineCount*48);
 		}
 
 		ctx.drawImage(svgTiles[12], 568.5, 29.5, 50, 50);
@@ -6782,7 +6782,7 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 	if (pageType < 2) {
 		ctx.fillStyle = '#999999';
 		ctx.font = '10px Helvetica';
-		ctx.fillText('by ' + thisExploreLevel.creator.name, x + 7, y + 138.3);
+		ctx.fillText('by ' + thisExploreLevel.creator.username, x + 7, y + 138.3);
 	}
 
 	// explorePageLevels[i]
@@ -6791,7 +6791,7 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 function setExplorePage(page) {
 	explorePage = page;
 	exploreLevelTitlesTruncated = new Array(8); // Is this needed?
-	if (exploreTab == 2) getSearchPage(exploreSearchInput, 0); 
+	if (exploreTab == 2) getSearchPage(exploreSearchInput, 0);
 	else getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
 }
@@ -9326,7 +9326,7 @@ function draw() {
 				ctx.beginPath();
 				ctx.arc(909, 98, 13, -1.25 * Math.PI, 0.75 * Math.PI);
 				ctx.lineTo(887, 120);
-				ctx.stroke(); 
+				ctx.stroke();
 			}
 
 			if (exploreTab != 2) { // Sort and pages aren't supported for search yet
@@ -9392,10 +9392,10 @@ function draw() {
 
 				ctx.fillStyle = '#b0b0b0';
 				ctx.font = '18px Helvetica';
-				ctx.fillText('by ' + exploreLevelPageLevel.creator.name, 31.85, 66.1);
+				ctx.fillText('by ' + exploreLevelPageLevel.creator.username, 31.85, 66.1);
 
 				ctx.font = 'italic 18px Helvetica';
-				ctx.fillText('created on ' + exploreLevelPageLevel.createdAt.slice(0,10), 31.85, 325);
+				ctx.fillText('created on ' + exploreLevelPageLevel.created.slice(0,10), 31.85, 325);
 
 
 				ctx.fillStyle = '#ffffff';
@@ -9423,7 +9423,7 @@ function draw() {
 			ctx.textAlign = 'left';
 			ctx.fillStyle = '#ffffff';
 			ctx.font = 'bold 36px Helvetica';
-			ctx.fillText(exploreUser.name, 10, 60);
+			ctx.fillText(exploreUser.username, 10, 60);
 
 			ctx.font = '21px Helvetica';
 
@@ -9788,7 +9788,7 @@ function requestError() {
 
 function getExplorePage(p, t, s) {
 	requestAdded();
-	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&amount=8&sort=' + s + '&type=' + t, {method: 'GET'})
+	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&sort=' + s + '&type=' + t, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				explorePageLevels = data;
@@ -9805,7 +9805,7 @@ function getExplorePage(p, t, s) {
 
 function getSearchPage(searchText, p) {
 	requestAdded();
-	return fetch('https://5beam.zelo.dev/api/search?text=' + encodeURIComponent(searchText).replace('%20','+') + '&page=' + p + '&amount=8', {method: 'GET'})
+	return fetch('https://5beam.zelo.dev/api/search?text=' + encodeURIComponent(searchText).replace('%20','+') + '&page=' + p, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				explorePageLevels = data;
@@ -9869,7 +9869,7 @@ function getExploreUser(id) {
 
 function getExploreUserPage(id, p, t, s) {
 	requestAdded();
-	return fetch('https://5beam.zelo.dev/api/user/page?creatorId=' + id + '&page=' + p + '&type=' + t + '&sort=' + s + '&amount=4', {method: 'GET'})
+	return fetch('https://5beam.zelo.dev/api/user/page?id=' + id + '&page=' + p + '&type=' + t + '&sort=' + s, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				exploreUserPageLevels[t] = data;
@@ -9897,6 +9897,7 @@ function logInExplore() {
 function postExploreLevel(t, desc, data) {
 	// check if token is expired
 	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000 || getCookie('token_created_at') == '') {
+		// TODO: Use /api/auth/refresh to refresh the token
 		setLCMessage(
 			"You are not logged in to explore.\nYour login expires after 10 minutes because\nI haven't yet figured out how to refresh the tokens.\nFor now you can just copy your level, go to the explore menu to log in,\nthen come back here and load your level back."
 		);
