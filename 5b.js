@@ -335,6 +335,9 @@ function loadLevelpack(levelData) {
 		let lines = levelData[lvl].data.replace(/\r/gi, '').split('\n');
 		while (lines[i] === '') i++;
 
+		// 5beam allows these in levels
+		if (lines[0] === "loadedLevels=") lines.shift()
+
 		// Read Level Name
 		levelName[lvl] = lines[i];
 		i++;
@@ -7335,7 +7338,7 @@ function setup() {
 		// If the levelpack ID is specified in the URL, load that levelpack.
 		menuScreen = 1
 		exploreLevelPageType = 1
-		fetch('https://5beam.zelo.dev/api/levelpack?id=' + levelpackId, {method: 'GET'})
+		fetch('https://5beam.zelo.dev/api/levelpack?levels=1&id=' + levelpackId, {method: 'GET'})
 			.then(async (res) => {
 				exploreLevelPageLevel = await res.json()
 				playExploreLevel()
@@ -9838,7 +9841,7 @@ function getExploreLevel(id) {
 
 function getExploreLevelpack(id) {
 	requestAdded();
-	return fetch('https://5beam.zelo.dev/api/levelpack?id=' + id, {method: 'GET'})
+	return fetch('https://5beam.zelo.dev/api/levelpack?levels=1&id=' + id, {method: 'GET'})
 		.then(response => {
 			response.json().then(data => {
 				exploreLevelPageLevel = data;
