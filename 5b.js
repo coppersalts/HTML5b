@@ -52,7 +52,6 @@ let inputText = '';
 let textAfterCursorAtClick = '';
 let controlOrCommandPress = false;
 
-let defaultLevelsString = '';
 let levelsString = '';
 let levelCount = 53;
 let f = 19;
@@ -2161,14 +2160,11 @@ async function loadingScreen() {
 	ctx.fillText('Loading...', cwidth / 2, cheight / 2);
 
 	let req = await fetch('data/levels.txt');
-	let text = await req.text();
-	defaultLevelsString = text;
-	levelsString = defaultLevelsString;
+	levelsString = await req.text();
 	loadLevels();
 
 	req = await fetch('data/images2.json');
-	let resourceData = await req.text();
-	resourceData = JSON.parse(resourceData);
+	let resourceData = await req.json();
 
 	svgCSBubble = createImage(resourceData['ui/csbubble/dia.svg']);
 	svgHPRCCrank = createImage(resourceData['entities/e0035crank.svg']);
@@ -9792,13 +9788,11 @@ function requestError() {
 function getExplorePage(p, t, s) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&sort=' + s + '&type=' + t, {method: 'GET'})
-		.then(response => {
-			response.json().then(data => {
-				explorePageLevels = data;
-				if (exploreTab == 0) setExploreThumbs();
-				truncateLevelTitles(explorePageLevels,0);
-				requestResolved();
-			});
+		.then(async response => {
+			explorePageLevels = await response.json();
+			if (exploreTab == 0) setExploreThumbs();
+			truncateLevelTitles(explorePageLevels,0);
+			requestResolved();
 		})
 		.catch(err => {
 			console.log(err);
@@ -9809,13 +9803,11 @@ function getExplorePage(p, t, s) {
 function getSearchPage(searchText, p) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/search?text=' + encodeURIComponent(searchText).replace('%20','+') + '&page=' + p, {method: 'GET'})
-		.then(response => {
-			response.json().then(data => {
-				explorePageLevels = data;
-				setExploreThumbs();
-				truncateLevelTitles(explorePageLevels,0);
-				requestResolved();
-			});
+		.then(async response => {
+			explorePageLevels = await response.json();
+			setExploreThumbs();
+			truncateLevelTitles(explorePageLevels,0);
+			requestResolved();
 		})
 		.catch(err => {
 			console.log(err);
@@ -9826,12 +9818,10 @@ function getSearchPage(searchText, p) {
 function getExploreLevel(id) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/level?id=' + id, {method: 'GET'})
-		.then(response => {
-			response.json().then(data => {
-				exploreLevelPageLevel = data;
-				drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
-				requestResolved();
-			});
+		.then(async response => {
+			exploreLevelPageLevel = await response.json();
+			drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.data, 0.4);
+			requestResolved();
 		})
 		.catch(err => {
 			console.log(err);
@@ -9842,12 +9832,10 @@ function getExploreLevel(id) {
 function getExploreLevelpack(id) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/levelpack?levels=1&id=' + id, {method: 'GET'})
-		.then(response => {
-			response.json().then(data => {
-				exploreLevelPageLevel = data;
-				drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.levels[0].data, 0.4);
-				requestResolved();
-			});
+		.then(async response => {
+			exploreLevelPageLevel = await response.json();
+			drawExploreThumb(thumbBigctx, thumbBig.width, exploreLevelPageLevel.levels[0].data, 0.4);
+			requestResolved();
 		})
 		.catch(err => {
 			console.log(err);
@@ -9858,11 +9846,9 @@ function getExploreLevelpack(id) {
 function getExploreUser(id) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/user?id=' + id, {method: 'GET'})
-		.then(response => {
-			response.json().then(data => {
-				exploreUser = data;
-				requestResolved();
-			});
+		.then(async response => {
+			exploreUser = await response.json();
+			requestResolved();
 		})
 		.catch(err => {
 			console.log(err);
@@ -9873,13 +9859,11 @@ function getExploreUser(id) {
 function getExploreUserPage(id, p, t, s) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/user/page?id=' + id + '&page=' + p + '&type=' + t + '&sort=' + s, {method: 'GET'})
-		.then(response => {
-			response.json().then(data => {
-				exploreUserPageLevels[t] = data;
-				if (t === 0) setExploreThumbsUserPage(t);
-				truncateLevelTitles(exploreUserPageLevels[t],t*4);
-				requestResolved();
-			});
+		.then(async response => {
+			exploreUserPageLevels[t] = await response.json();
+			if (t === 0) setExploreThumbsUserPage(t);
+			truncateLevelTitles(exploreUserPageLevels[t],t*4);
+			requestResolved();
 		})
 		.catch(err => {
 			console.log(err);
