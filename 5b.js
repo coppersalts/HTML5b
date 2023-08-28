@@ -105,6 +105,16 @@ let whiteAlpha = 0;
 let coinAlpha = 0;
 let searchParams = new URLSearchParams(window.location.href);
 let [levelId, levelpackId] = [searchParams.get("level"), searchParams.get("levelpack")]
+const difficultyMap = [
+	["Unknown", "#e6e6e6"],
+	["Easy", "#85ff85"],
+	["Normal", "#ffff00"],
+	["Difficult", "#ffab1a"],
+	["Hard", "#ff7070"],
+	["Extreme", "#ff66d6"],
+	["Insane", "#eca2de"],
+	["Impossible", "#3d0000"],
+];
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -2423,6 +2433,9 @@ function menuExploreBack() {
 }
 
 function playExploreLevel() {
+	// increment play counter
+	getExplorePlay(exploreLevelPageLevel.id);
+
 	if (exploreLevelPageType == 0) {
 		readExploreLevelString(exploreLevelPageLevel.data);
 		testLevelCreator();
@@ -6782,6 +6795,20 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 		ctx.fillStyle = '#999999';
 		ctx.font = '10px Helvetica';
 		ctx.fillText('by ' + thisExploreLevel.creator.username, x + 7, y + 138.3);
+
+
+		// Views icon & counter
+		ctx.fillStyle = '#47cb46';
+		ctx.beginPath();
+		ctx.moveTo(x + 194, y + 137.3);
+		ctx.lineTo(x + 189, y + 146.3);
+		ctx.lineTo(x + 199, y + 146.3);
+		ctx.closePath();
+		ctx.fill();
+
+		ctx.textAlign = "right";
+		ctx.fillText(thisExploreLevel.plays, x + 186, y + 138.3);
+		ctx.textAlign = "left";
 	}
 
 	// explorePageLevels[i]
@@ -9401,8 +9428,24 @@ function draw() {
 				ctx.font = '20px Helvetica';
 				wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
 
-				// ctx.fillStyle = '#cccccc';
-				// ctx.fillRect(30, 98, 368, 207);
+				// Views icon & counter
+				ctx.fillStyle = '#47cb46';
+				ctx.font = 'bold 18px Helvetica';
+				ctx.textAlign = "right";
+
+				let pluralViewText = exploreLevelPageLevel.plays === 1
+				ctx.fillText(exploreLevelPageLevel.plays + (pluralViewText ? ' play' : ' plays'), 410, 325);
+				ctx.textAlign = "left";
+
+				// difficulty circle
+				ctx.beginPath()
+				ctx.arc(40, 360, 8, 0, 2 * Math.PI)
+				ctx.fillStyle = difficultyMap[exploreLevelPageLevel.difficulty][1]
+				ctx.closePath()
+				ctx.fill()
+
+				ctx.fillText(difficultyMap[exploreLevelPageLevel.difficulty][0], 54, 352);
+
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
 				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 389, false, playExploreLevel);
@@ -9841,6 +9884,11 @@ function getExploreLevelpack(id) {
 			console.log(err);
 			requestError();
 		});
+}
+
+function getExplorePlay(id) {
+	// we dont care if this errors; it probably will most of the time due to ratelimits
+	return fetch(`https://5beam.zelo.dev/api/play?type=${exploreLevelPageType}&id=${id}`)
 }
 
 function getExploreUser(id) {
