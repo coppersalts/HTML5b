@@ -1965,7 +1965,7 @@ let shakeY = 0;
 let menuScreen = -1;
 let pmenuScreen = -1;
 let exploreTab = 0;
-let explorePage = 0;
+let explorePage = 1; // 5beam pages start at 1 now
 let exploreSort = 0;
 let explorePageLevels = [];
 let exploreUserPageLevels = [];
@@ -1974,8 +1974,8 @@ let exploreLevelPageType;
 let previousMenuExplore = 0;
 let exploreUser;
 let exploreUserPageNumbers = [];
-let exploreSortText = ['new','?','old'];
-let exploreSortTextWidth = 150;
+let exploreSortText = ['new','old','plays'];
+let exploreSortTextWidth = 160;
 let loggedInExploreUser5beamID = -1;
 let exploreLevelTitlesTruncated = new Array(8);
 let exploreLoading = false;
@@ -2353,7 +2353,7 @@ function menuExplore() {
 	menuScreen = 6;
 	exploreTextBoxes();
 	exploreTab = 0;
-	setExplorePage(0);
+	setExplorePage(1);
 }
 
 function menuMyLevels() {
@@ -2429,7 +2429,7 @@ function menuExploreLevelPageBack() {
 function menuExploreBack() {
 	menuScreen = 6;
 	exploreTextBoxes();
-	// setExplorePage(0);
+	// setExplorePage(1);
 }
 
 function playExploreLevel() {
@@ -2469,14 +2469,13 @@ function exploreMoreByThisUser() {
 	menuScreen = 8;
 	// getExploreUser(exploreLevelPageLevel.creator.id);
 	exploreUser = exploreLevelPageLevel.creator;
-	setExploreUserPage(0, 0);
-	setExploreUserPage(1, 0);
+	setExploreUserPage(0, 1).then(() => setExploreUserPage(1, 1))
 }
 
 function setExploreUserPage(type, page) {
 	// exploreLevelTitlesTruncated = new Array(8);
 	exploreUserPageNumbers[type] = page;
-	getExploreUserPage(exploreUser.id, exploreUserPageNumbers[type], type, 0);
+	return getExploreUserPage(exploreUser.id, exploreUserPageNumbers[type], type, 0);
 }
 
 function menu2Back() {
@@ -9316,7 +9315,7 @@ function draw() {
 					if (mouseIsDown && !pmouseIsDown) {
 						exploreTab = i;
 						if (exploreTab == 2) exploreSearchInput = '';
-						setExplorePage(0);
+						setExplorePage(1);
 					}
 				} else ctx.fillStyle = '#999999';
 				ctx.fillRect(tabx, 20, exploreTabWidths[i], 45);
@@ -9342,7 +9341,7 @@ function draw() {
 				if (onRect(_xmouse, _ymouse, 877, 75, 55, 55)) {
 					ctx.fillStyle = '#404040';
 					onButton = true;
-					if (mousePressedLastFrame) setExplorePage(0);
+					if (mousePressedLastFrame) setExplorePage(1);
 				} else ctx.fillStyle = '#333333';
 				ctx.fillRect(877, 75, 55, 55);
 
@@ -9361,9 +9360,8 @@ function draw() {
 					ctx.fillStyle = '#404040';
 					onButton = true;
 					if (mouseIsDown && !pmouseIsDown) {
-						// exploreSort = (exploreSort + 1) % exploreSortText.length;
-						exploreSort = exploreSort==0?2:0;
-						setExplorePage(0);
+						exploreSort = (exploreSort + 1) % exploreSortText.length;
+						setExplorePage(1);
 					}
 				} else ctx.fillStyle = '#333333';
 				ctx.fillRect(932-exploreSortTextWidth, 85, exploreSortTextWidth, 30);
@@ -9371,15 +9369,15 @@ function draw() {
 				ctx.textAlign = 'left';
 				ctx.fillStyle = '#ffffff';
 				ctx.font = '24px Helvetica';
-				ctx.fillText('Sort by: ' + exploreSortText[exploreSort], 932-exploreSortTextWidth + 5, 90);
+				ctx.fillText('Sort by: ' + exploreSortText[exploreSort], 932-exploreSortTextWidth + 5, 88);
 
 				// Page number
 				ctx.textAlign = 'center';
 				ctx.font = '30px Helvetica';
-				ctx.fillText(explorePage + 1, cwidth / 2, 490);
+				ctx.fillText(explorePage, cwidth / 2, 490);
 
 				// Previous page button
-				if (explorePage <= 0 || exploreLoading) ctx.fillStyle = '#505050';
+				if (explorePage <= 1 || exploreLoading) ctx.fillStyle = '#505050';
 				else if (onRect(_xmouse, _ymouse, 227.5, 487, 25, 30)) {
 					ctx.fillStyle = '#cccccc';
 					onButton = true;
@@ -9437,14 +9435,17 @@ function draw() {
 				ctx.fillText(exploreLevelPageLevel.plays + (pluralViewText ? ' play' : ' plays'), 410, 325);
 				ctx.textAlign = "left";
 
-				// difficulty circle
-				ctx.beginPath()
-				ctx.arc(40, 360, 8, 0, 2 * Math.PI)
-				ctx.fillStyle = difficultyMap[exploreLevelPageLevel.difficulty][1]
-				ctx.closePath()
-				ctx.fill()
+				// Difficulty in levelpacks arent supported yet
+				if (exploreLevelPageType === 0) {
+					// difficulty circle
+					ctx.beginPath()
+					ctx.arc(40, 360, 8, 0, 2 * Math.PI)
+					ctx.fillStyle = difficultyMap[exploreLevelPageLevel.difficulty][1]
+					ctx.closePath()
+					ctx.fill()
 
-				ctx.fillText(difficultyMap[exploreLevelPageLevel.difficulty][0], 54, 352);
+					ctx.fillText(difficultyMap[exploreLevelPageLevel.difficulty][0], 54, 352);
+				}
 
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
@@ -9483,7 +9484,7 @@ function draw() {
 					ctx.fillText(j==0?'Levels':'Levelpacks', 55, y-3);
 
 					// Previous page button
-					if (exploreUserPageNumbers[j] <= 0 || exploreLoading) ctx.fillStyle = '#505050';
+					if (exploreUserPageNumbers[j] <= 1 || exploreLoading) ctx.fillStyle = '#505050';
 					else if (onRect(_xmouse, _ymouse, 15, y + 60, 25, 30)) {
 						ctx.fillStyle = '#cccccc';
 						onButton = true;
