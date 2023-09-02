@@ -76,6 +76,10 @@ p{
 	font-size: 30pt;
 	border-radius: 20px;
 }
-.no-scroll {
+body.mobile {
 	overflow: hidden;
+}
+body.mobile #center {
+	top: 0;
+	margin-top: 0;
 }

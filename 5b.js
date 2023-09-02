@@ -18,6 +18,7 @@ let canvas;
 let ctx;
 const cwidth = 960;
 const cheight = 540;
+let mobileScale = 1;
 let pixelRatio;
 let addedZoom = 1;
 let highQual = true;
@@ -2140,8 +2141,12 @@ async function loadingScreen() {
 	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
 	ctx = canvas.getContext('2d');
-	canvas.style.width = cwidth + 'px';
-	canvas.style.height = cheight + 'px';
+	if (isMobile && window.innerHeight < cheight) {
+		mobileScale = Math.floor(window.innerHeight/cheight*8)/8;
+		pixelRatio *= mobileScale;
+	}
+	canvas.style.width = cwidth * mobileScale + 'px';
+	canvas.style.height = cheight * mobileScale + 'px';
 	// Account for Pixel Density
 	canvas.width = Math.floor(cwidth * pixelRatio);
 	canvas.height = Math.floor(cheight * pixelRatio);
@@ -2252,7 +2257,7 @@ async function loadingScreen() {
 window.onload = function () {
 	if (isMobile) {
 		addMobileControls();
-		document.body.classList.add('no-scroll');
+		document.body.classList.add('mobile');
 	}
 	loadingScreen();
 };
@@ -7037,32 +7042,34 @@ function createNewLevelpack() {
 // }
 
 function touchstart(event) {
-	// event.preventDefault();
+	event.preventDefault();
 	touchCount++;
 	mousemove(event.changedTouches[0]);
 	mousedown(event);
 }
 
 function touchend(event) {
-	// event.preventDefault();
+	event.preventDefault();
 	touchCount--;
 	if (touchCount == 0) mouseup(event);
 }
 
 function touchcancel(event) {
-	// event.preventDefault();
+	event.preventDefault();
 	touchCount--;
 	if (touchCount == 0) mouseIsDown = false;
 }
 
 function touchmove(event) {
-	// event.preventDefault();
+	event.preventDefault();
 	mousemove(event.changedTouches[0]);
 }
 
 function mousemove(event) {
-	_xmouse = event.pageX*addedZoom - canvas.getBoundingClientRect().left;
-	_ymouse = event.pageY*addedZoom - canvas.getBoundingClientRect().top;
+	// _xmouse = event.pageX*addedZoom - canvas.getBoundingClientRect().left;
+	// _ymouse = event.pageY*addedZoom - canvas.getBoundingClientRect().top;
+	_xmouse = (event.pageX*addedZoom - canvas.getBoundingClientRect().left)*(1/mobileScale);
+	_ymouse = (event.pageY*addedZoom - canvas.getBoundingClientRect().top)*(1/mobileScale);
 }
 
 function mousedown(event) {
