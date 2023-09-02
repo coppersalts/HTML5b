@@ -24,6 +24,7 @@ let highQual = true;
 const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 const browserPasteSolution = typeof navigator.clipboard.readText === "function";
 const browserCopySolution = typeof navigator.clipboard.write === "function";
+const isMobile = isTouchDevice();
 let copyButton = false; // Hack to make copying work on Safari.
 
 // offscreen canvases
@@ -44,6 +45,7 @@ let lastClickX = 0;
 let lastClickY = 0;
 let valueAtClick = 0;
 let _cursor = 'default';
+let touchCount = 0;
 let hoverText = '';
 const _keysDown = new Array(222).fill(false);
 let _frameCount = 0;
@@ -2248,8 +2250,24 @@ async function loadingScreen() {
 }
 
 window.onload = function () {
+	if (isMobile) {
+		addMobileControls();
+		document.body.classList.add('no-scroll');
+	}
 	loadingScreen();
 };
+
+// https://stackoverflow.com/a/4819886/22438094
+function isTouchDevice() {
+	return (('ontouchstart' in window) ||
+		(navigator.maxTouchPoints > 0) ||
+		(navigator.msMaxTouchPoints > 0));
+}
+
+function addMobileControls() {
+	// body...
+}
+
 
 function onRect(mx, my, x, y, w, h) {
 	return mx > x && mx < x + w && my > y && my < y + h;
@@ -6994,6 +7012,54 @@ function createNewLevelpack() {
 	saveMyLevelpacks();
 }
 
+// function touchstartKey(event) {
+// 	// event.preventDefault();
+// 	_keysDown[parseInt(event.target.getAttribute('data-keycode'))] = true;
+// }
+
+// function touchendKey(event) {
+// 	// event.preventDefault();
+// 	_keysDown[parseInt(event.target.getAttribute('data-keycode'))] = false;
+// }
+
+// function touchcancelKey(event) {
+// 	// event.preventDefault();
+// }
+
+// function touchmoveKey(event) {
+// 	// event.preventDefault();
+// 	const touch = event.changedTouches[0];
+// 	const touchElement = document.elementFromPoint(touch.pageX, touch.pageY);
+// 	if (touchElement !== event.target) {
+// 		touchendKey(event);
+// 		_keysDown[parseInt(touchElement.getAttribute('data-keycode'))] = true;
+// 	}
+// }
+
+function touchstart(event) {
+	// event.preventDefault();
+	touchCount++;
+	mousemove(event.changedTouches[0]);
+	mousedown(event);
+}
+
+function touchend(event) {
+	// event.preventDefault();
+	touchCount--;
+	if (touchCount == 0) mouseup(event);
+}
+
+function touchcancel(event) {
+	// event.preventDefault();
+	touchCount--;
+	if (touchCount == 0) mouseIsDown = false;
+}
+
+function touchmove(event) {
+	// event.preventDefault();
+	mousemove(event.changedTouches[0]);
+}
+
 function mousemove(event) {
 	_xmouse = event.pageX*addedZoom - canvas.getBoundingClientRect().left;
 	_ymouse = event.pageY*addedZoom - canvas.getBoundingClientRect().top;
@@ -7313,6 +7379,19 @@ function setup() {
 	window.addEventListener('pointerup', mouseup);
 	window.addEventListener('keydown', keydown);
 	window.addEventListener('keyup', keyup);
+	if (isMobile) {
+		window.addEventListener('touchstart', touchstart);
+		window.addEventListener('touchend', touchend);
+		window.addEventListener('touchcancel', touchcancel);
+		window.addEventListener('touchmove', touchmove);
+
+		// Array.from(document.getElementsByClassName('mobile-key')).forEach(element => {
+		// 	element.addEventListener('touchstart', touchstartKey);
+		// 	element.addEventListener('touchend', touchendKey);
+		// 	element.addEventListener('touchcancel', touchcancelKey);
+		// 	element.addEventListener('touchmove', touchmoveKey);
+		// });
+	}
 	canvas.addEventListener('paste', handlePaste);
 
 	rAF60fps();

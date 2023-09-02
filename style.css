@@ -54,3 +54,28 @@ p{
 	overflow: hidden;
 	margin-bottom: 10px;
 }
+
+@media (orientation: portrait) {
+	#center {
+		top: 0;
+		margin-top: 0;
+	}
+}
+#mobile-controls {
+	margin: 0 auto;
+	width: fit-content;
+}
+#mobile-controls table {
+	border-spacing: 30px;
+}
+#mobile-controls td {
+	width: 200px;
+	height: 200px;
+	background-color: gray;
+	color: white;
+	font-size: 30pt;
+	border-radius: 20px;
+}
+.no-scroll {
+	overflow: hidden;
+}
