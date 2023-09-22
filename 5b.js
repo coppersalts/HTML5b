@@ -238,6 +238,9 @@ function loadLevels() {
 			levelName[i] += charAt2(lineLength);
 		}
 
+		// Temporary crash fix for chrome devices on version 117+
+		console.log(levelsString);
+
 		// Read Level Metadata
 		levelStart += lineLength;
 		levelWidth = 10 * charAt(2) + charAt(3);
@@ -6789,7 +6792,7 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 function setExplorePage(page) {
 	explorePage = page;
 	exploreLevelTitlesTruncated = new Array(8); // Is this needed?
-	if (exploreTab == 2) getSearchPage(exploreSearchInput, 0); 
+	if (exploreTab == 2) getSearchPage(exploreSearchInput, 0);
 	else getExplorePage(explorePage, exploreTab, exploreSort);
 	// setExploreThumbs();
 }
@@ -9294,7 +9297,7 @@ function draw() {
 				ctx.beginPath();
 				ctx.arc(909, 98, 13, -1.25 * Math.PI, 0.75 * Math.PI);
 				ctx.lineTo(887, 120);
-				ctx.stroke(); 
+				ctx.stroke();
 			}
 
 			if (exploreTab != 2) { // Sort and pages aren't supported for search yet
