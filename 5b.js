@@ -96,7 +96,8 @@ let enableExperimentalFeatures = window.location.hostname==='localhost';
 let screenShake = true;
 let screenFlashes = true;
 let frameRateThrottling = true;
-let optionText = ['Screen Shake','Screen Flashes','Quirks Mode','Experimental Features','Frame Rate Throttling'];
+let slowTintsEnabled = true;
+let optionText = ['Screen Shake','Screen Flashes','Quirks Mode','Experimental Features','Frame Rate Throttling', 'Slow Tints'];
 let levelAlreadySharedToExplore = false;
 let lcSavedLevels;
 let nextLevelId;
@@ -3528,6 +3529,13 @@ function drawCharacters() {
 				// ctx.strokeRect(char[i].x-char[i].w, char[i].y-char[i].h, char[i].w*2, char[i].h);
 				ctx.restore();
 			}
+			if (!slowTintsEnabled && char[i].temp > 0 && char[i].temp < 50) {
+				ctx.save();
+				ctx.globalAlpha = char[i].temp / 70;
+				ctx.fillStyle = 'rgb(255,' + (100 - char[i].temp) + ',' + (100 - char[i].temp) + ')';
+				ctx.fillRect(char[i].x - char[i].w, char[i].y - char[i].h, char[i].w * 2, char[i].h);
+				ctx.restore();
+			}
 			ctx.restore();
 		}
 
@@ -3649,7 +3657,7 @@ function getTintedCanvasImage(img, a, color) {
 
 function drawPossiblyTintedImage(img, x, y, temp) {
 	ctx.drawImage(img, x, y);
-	if (temp > 0 && temp < 50) {
+	if (slowTintsEnabled && temp > 0 && temp < 50) {
 		ctx.drawImage(
 			getTintedCanvasImage(img, temp / 70, 'rgb(255,' + (100 - temp) + ',' + (100 - temp) + ')'),
 			x,
@@ -6038,7 +6046,6 @@ function cloneChar(charObj) {
 }
 
 function cloneCharInfo(info, unplace) {
-	// console.log(info);
 	let clone = [info[0], unplace ? -1 : info[1], unplace ? -1 : info[2], info[3]];
 	if (info.length == 6) {
 		clone.push(info[4]);
@@ -6739,7 +6746,6 @@ function drawRemoveButton(x, y, s, p) {
 
 function truncateLevelTitles(arr, offset) {
 	ctx.font = '20px Helvetica';
-	// console.log(arr);
 	for (let i = 0; i < arr.length; i++)
 		exploreLevelTitlesTruncated[i+offset] = fitString(ctx, arr[i].title, 195.3);
 }
@@ -9476,6 +9482,8 @@ function draw() {
 					case 4:
 						thisOptionValue = frameRateThrottling;
 						break;
+					case 5:
+						thisOptionValue = slowTintsEnabled;
 				}
 				ctx.fillStyle = thisOptionValue?'#00ff00':'#ff0000';
 				ctx.fillText(thisOptionValue?'on':'off', 615, y+2);
@@ -9498,6 +9506,9 @@ function draw() {
 								break;
 							case 4:
 								frameRateThrottling = !frameRateThrottling;
+								break;
+							case 5:
+								slowTintsEnabled = !slowTintsEnabled;
 								break;
 						}
 					}
