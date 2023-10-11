@@ -1,4 +1,4 @@
-const version = 'v0.2.1*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.2.2'; // putting this up here so I can edit the text on the title screen more easily.
 
 /* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
 performanceTest(()=>{
@@ -2999,6 +2999,7 @@ function resetLevel() {
 				char[i].expr = 1;
 				char[i].dire = 2;
 				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
 			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
@@ -3056,6 +3057,7 @@ function resetLevel() {
 				char[i].expr = 1;
 				char[i].dire = 2;
 				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
 			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
@@ -3113,6 +3115,7 @@ function resetLevel() {
 				char[i].expr = 1;
 				char[i].dire = 2;
 				char[i].frame = 1;
+				char[i].legdire = 0;
 				char[i].diaMouthFrame = 0;
 			} else {
 				char[i].expr = charModels[char[i].id].defaultExpr;
@@ -3367,7 +3370,7 @@ function drawCharacters() {
 					// TODO: remove hard-coded numbers
 					// TODO: make the character's leg frames an array and loop through them here...
 					// ... or just make them one variable instead of two. whichever one I feel like doing at the time ig.
-					let legdire = char[i].dire > 2 ? 1 : -1;
+					let legdire = char[i].legdire > 0 ? 1 : -1;
 					let legmat = [
 						{
 							a: 0.3648529052734375,
@@ -3663,6 +3666,7 @@ function setBody(i) {
 
 	let legX;
 	let skew = [0, 0];
+	char[i].legdire = char[i].dire / 2 - 1;
 	if (ifCarried(i) && cornerHangTimer == 0) {
 		offSetLegs(i, 60, 3);
 		char[i].leg1frame = 3;
@@ -7451,6 +7455,7 @@ function draw() {
 								char[recover2].frame = 3;
 								char[recover2].leg1frame = 1;
 								char[recover2].leg2frame = 1;
+								char[recover2].legdire = 1;
 								HPRCBubbleFrame = 0;
 								goal = Math.round((char[HPRC1] ? char[HPRC1].x : 0) / 30) * 30;
 							} else if (char[control].hasArms && !recover && char[control].deathTimer >= 30) {
@@ -9965,6 +9970,7 @@ class Character {
 		this.leg2frame = 0;
 		this.leg1skew = 0;
 		this.leg2skew = 0;
+		this.legdire = 1;
 		this.legAnimationFrame = [0, 0]; // Animation offset.
 		this.burstFrame = -1;
 		this.diaMouthFrame = 0;
