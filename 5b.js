@@ -3278,7 +3278,7 @@ function drawCharacters(context) {
 			context.save();
 			if (char[i].charState >= 3) {
 				if (qTimer > 0 || char[i].justChanged >= 1) {
-					let littleJump = 0;
+					var littleJump = 0;
 					if (i == control && qTimer > 0) {
 						littleJump = 9 - Math.pow(qTimer - 4, 2);
 					}
@@ -3546,7 +3546,7 @@ function drawCharacters(context) {
 			context.fillText(HPRCText, char[i].x + 12.65, char[i].y - 39.6, 30);
 			let radius = svgHPRCCrank.height / 2;
 			context.save();
-			context.translate(char[i].x + hprcCrankPos.x, char[i].y + hprcCrankPos.y);
+			context.translate(char[i].x + hprcCrankPos.x, char[i].y + hprcCrankPos.y - littleJump);
 			context.rotate(HPRCCrankRot);
 			context.drawImage(svgHPRCCrank, -radius, -radius);
 			context.restore();
