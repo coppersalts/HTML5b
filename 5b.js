@@ -1,4 +1,4 @@
-const version = 'v0.2.2'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.2.2*'; // putting this up here so I can edit the text on the title screen more easily.
 
 /* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
 performanceTest(()=>{
@@ -3228,28 +3228,28 @@ function drawLevelBG() {
 	);
 }
 
-function drawLevel() {
+function drawLevel(context) {
 	// Draw Static tiles
-	ctx.drawImage(osc1, 0, 0, osc1.width / pixelRatio, osc1.height / pixelRatio);
+	context.drawImage(osc1, 0, 0, osc1.width / pixelRatio, osc1.height / pixelRatio);
 	// Draw Normal Animated Tiles
 	for (let j = 0; j < tileDepths[1].length; j++) {
-		addTileMovieClip(tileDepths[1][j].x, tileDepths[1][j].y, ctx);
+		addTileMovieClip(tileDepths[1][j].x, tileDepths[1][j].y, context);
 	}
 	// Draw Borders and Shadows
-	ctx.drawImage(osc2, 0, 0, osc2.width / pixelRatio, osc2.height / pixelRatio);
+	context.drawImage(osc2, 0, 0, osc2.width / pixelRatio, osc2.height / pixelRatio);
 	// Draw Active2 Switches & Buttons
 	for (let j = 0; j < tileDepths[2].length; j++) {
-		addTileMovieClip(tileDepths[2][j].x, tileDepths[2][j].y, ctx);
+		addTileMovieClip(tileDepths[2][j].x, tileDepths[2][j].y, context);
 	}
 	// We draw the characters in here so we can layer liquids above them.
-	drawCharacters();
+	drawCharacters(context);
 	// Draw Liquids
 	for (let j = 0; j < tileDepths[3].length; j++) {
-		addTileMovieClip(tileDepths[3][j].x, tileDepths[3][j].y, ctx);
+		addTileMovieClip(tileDepths[3][j].x, tileDepths[3][j].y, context);
 	}
 }
 
-function drawCharacters() {
+function drawCharacters(context) {
 	for (let d = 0; d < (charCount + 1) * 2; d++) {
 		let i = charDepths[d];
 		if (i < 0) continue;
@@ -3257,10 +3257,10 @@ function drawCharacters() {
 		if (char[i].charState > 1 && typeof svgChars[currCharID] !== 'undefined') {
 			// Draw Burst
 			if (char[i].burstFrame >= 0) {
-				ctx.save();
+				context.save();
 				let burstImg = svgBurst[char[i].burstFrame];
 				let burstmat = charModels[char[i].id].burstmat;
-				ctx.transform(
+				context.transform(
 					burstmat.a,
 					burstmat.b,
 					burstmat.c,
@@ -3268,21 +3268,21 @@ function drawCharacters() {
 					burstmat.tx + char[i].x,
 					burstmat.ty + char[i].y
 				);
-				ctx.drawImage(burstImg, -burstImg.width / 2, -burstImg.height / 2);
-				ctx.restore();
+				context.drawImage(burstImg, -burstImg.width / 2, -burstImg.height / 2);
+				context.restore();
 
 				char[i].burstFrame++;
 				if (char[i].burstFrame > svgBurst.length - 1) char[i].burstFrame = -1;
 			}
 
-			ctx.save();
+			context.save();
 			if (char[i].charState >= 3) {
 				if (qTimer > 0 || char[i].justChanged >= 1) {
 					let littleJump = 0;
 					if (i == control && qTimer > 0) {
 						littleJump = 9 - Math.pow(qTimer - 4, 2);
 					}
-					ctx.translate(0, -littleJump);
+					context.translate(0, -littleJump);
 					// levelChar["char" + i]._x = char[i].x;
 					// levelChar["char" + i]._y = char[i].y - littleJump;
 					// if (i == HPRC2) {
@@ -3296,17 +3296,17 @@ function drawCharacters() {
 
 			if (char[i].charState == 2) {
 				let amt = (60 - recoverTimer) / 60;
-				ctx.transform(1, 0, 0, amt, 0, (1 - amt) * char[i].y);
+				context.transform(1, 0, 0, amt, 0, (1 - amt) * char[i].y);
 			}
 
-			if (char[i].deathTimer < 30 && char[i].deathTimer % 6 <= 2 && char[i].charState > 2) ctx.globalAlpha = 0.3;
+			if (char[i].deathTimer < 30 && char[i].deathTimer % 6 <= 2 && char[i].charState > 2) context.globalAlpha = 0.3;
 			if (currCharID > 34) {
 				if (charD[currCharID][7] == 1) {
 					drawPossiblyTintedImage(
 						svgChars[currCharID],
 						char[i].x + svgCharsVB[currCharID][0],
 						char[i].y + svgCharsVB[currCharID][1],
-						char[i].temp
+						char[i].temp, context
 					);
 				} else {
 					let currCharFrame = _frameCount % charD[currCharID][7];
@@ -3314,13 +3314,13 @@ function drawCharacters() {
 						svgChars[currCharID][currCharFrame],
 						char[i].x + svgCharsVB[currCharID][currCharFrame][0],
 						char[i].y + svgCharsVB[currCharID][currCharFrame][1],
-						char[i].temp
+						char[i].temp, context
 					);
 				}
 
 				if (currCharID == 50) {
 					if (char[i].acidDropTimer[0] < 9)
-						ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 17.7, char[i].y - 1.5);
+						context.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 17.7, char[i].y - 1.5);
 					char[i].acidDropTimer[0]++;
 					if (char[i].acidDropTimer[0] > 28) {
 						if (Math.random() < 0.8) {
@@ -3331,7 +3331,7 @@ function drawCharacters() {
 					}
 				} else if (currCharID == 51) {
 					if (char[i].acidDropTimer[0] < 9)
-						ctx.drawImage(
+						context.drawImage(
 							svgAcidDrop[char[i].acidDropTimer[0]],
 							char[i].x - 25.75,
 							char[i].y + 1.6,
@@ -3409,8 +3409,8 @@ function drawCharacters() {
 							];
 						}
 					}
-					ctx.save();
-					ctx.transform(
+					context.save();
+					context.transform(
 						legdire * legmat[0].a,
 						legmat[0].b,
 						legdire * legmat[0].c,
@@ -3419,10 +3419,10 @@ function drawCharacters() {
 						char[i].y + model.legy[0] + legmat[0].ty
 					);
 					let leg1img = svgBodyParts[f[0]];
-					drawPossiblyTintedImage(leg1img, -leg1img.width / 2, -leg1img.height / 2, char[i].temp);
-					ctx.restore();
-					ctx.save();
-					ctx.transform(
+					drawPossiblyTintedImage(leg1img, -leg1img.width / 2, -leg1img.height / 2, char[i].temp, context);
+					context.restore();
+					context.save();
+					context.transform(
 						legdire * legmat[1].a,
 						legmat[1].b,
 						legdire * legmat[1].c,
@@ -3431,17 +3431,17 @@ function drawCharacters() {
 						char[i].y + model.legy[1] + legmat[1].ty
 					);
 					let leg2img = svgBodyParts[f[1]];
-					drawPossiblyTintedImage(leg2img, -leg2img.width / 2, -leg2img.height / 2, char[i].temp);
-					ctx.restore();
+					drawPossiblyTintedImage(leg2img, -leg2img.width / 2, -leg2img.height / 2, char[i].temp, context);
+					context.restore();
 				}
 
 				let modelFrame = model.frames[char[i].frame];
-				ctx.save();
+				context.save();
 				let runbob =
 					char[i].frame == 0 || char[i].frame == 2
 						? bounceY(4 / charModels[char[i].id].torsomat.a, 13, char[i].poseTimer)
 						: 0;
-				ctx.transform(
+				context.transform(
 					charModels[char[i].id].torsomat.a,
 					charModels[char[i].id].torsomat.b,
 					charModels[char[i].id].torsomat.c,
@@ -3462,24 +3462,24 @@ function drawCharacters() {
 							(char[HPRC2].y - char[i].y) +
 							hprcCrankPos.y +
 							handOff * Math.sin((Math.PI * recoverTimer) / 15 - 0.2);
-						ctx.strokeStyle = '#000000';
-						ctx.lineWidth = 1.5;
-						ctx.beginPath();
-						ctx.moveTo(modelFrame[j].pos.x, modelFrame[j].pos.y);
-						ctx.lineTo(handX, handY);
-						ctx.stroke();
+						context.strokeStyle = '#000000';
+						context.lineWidth = 1.5;
+						context.beginPath();
+						context.moveTo(modelFrame[j].pos.x, modelFrame[j].pos.y);
+						context.lineTo(handX, handY);
+						context.stroke();
 
-						ctx.fillStyle = '#000000';
-						ctx.beginPath();
-						ctx.arc(handX, handY, 2.5, 0, 2 * Math.PI, false);
-						ctx.fill();
+						context.fillStyle = '#000000';
+						context.beginPath();
+						context.arc(handX, handY, 2.5, 0, 2 * Math.PI, false);
+						context.fill();
 						continue;
 					}
 					let img = svgBodyParts[modelFrame[j].bodypart];
 					if (modelFrame[j].type == 'body') img = svgChars[char[i].id];
 
-					ctx.save();
-					ctx.transform(
+					context.save();
+					context.transform(
 						modelFrame[j].mat.a,
 						modelFrame[j].mat.b,
 						modelFrame[j].mat.c,
@@ -3497,7 +3497,7 @@ function drawCharacters() {
 									bodyPartAnimations[modelFrame[j].anim].frames.length - 1
 							  );
 						let mat = bodyPartAnimations[modelFrame[j].anim].frames[bpanimframe];
-						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+						context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					} else if (modelFrame[j].type == 'dia') {
 						let dmf = 0;
 						if (cutScene == 1) {
@@ -3514,12 +3514,12 @@ function drawCharacters() {
 								];
 						}
 						let mat = diaMouths[model.defaultExpr].frames[dmf].mat;
-						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+						context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					}
-					drawPossiblyTintedImage(img, -img.width / 2, -img.height / 2, char[i].temp);
-					ctx.restore();
+					drawPossiblyTintedImage(img, -img.width / 2, -img.height / 2, char[i].temp, context);
+					context.restore();
 				}
-				ctx.restore();
+				context.restore();
 				char[i].poseTimer++;
 
 				// Hitboxes
@@ -3527,40 +3527,40 @@ function drawCharacters() {
 				// ctx.strokeStyle = '#ff0000';
 				// ctx.lineWidth = 1;
 				// ctx.strokeRect(char[i].x-char[i].w, char[i].y-char[i].h, char[i].w*2, char[i].h);
-				ctx.restore();
+				context.restore();
 			}
 			if (!slowTintsEnabled && char[i].temp > 0 && char[i].temp < 50) {
-				ctx.save();
-				ctx.globalAlpha = char[i].temp / 70;
-				ctx.fillStyle = 'rgb(255,' + (100 - char[i].temp) + ',' + (100 - char[i].temp) + ')';
-				ctx.fillRect(char[i].x - char[i].w, char[i].y - char[i].h, char[i].w * 2, char[i].h);
-				ctx.restore();
+				context.save();
+				context.globalAlpha = char[i].temp / 70;
+				context.fillStyle = 'rgb(255,' + (100 - char[i].temp) + ',' + (100 - char[i].temp) + ')';
+				context.fillRect(char[i].x - char[i].w, char[i].y - char[i].h, char[i].w * 2, char[i].h);
+				context.restore();
 			}
-			ctx.restore();
+			context.restore();
 		}
 
 		if (i == HPRC2) {
-			ctx.fillStyle = '#00ff00';
-			ctx.textAlign = 'center';
-			ctx.font = '6px Helvetica';
-			ctx.fillText(HPRCText, char[i].x + 12.65, char[i].y - 39.6, 30);
+			context.fillStyle = '#00ff00';
+			context.textAlign = 'center';
+			context.font = '6px Helvetica';
+			context.fillText(HPRCText, char[i].x + 12.65, char[i].y - 39.6, 30);
 			let radius = svgHPRCCrank.height / 2;
-			ctx.save();
-			ctx.translate(char[i].x + hprcCrankPos.x, char[i].y + hprcCrankPos.y);
-			ctx.rotate(HPRCCrankRot);
-			ctx.drawImage(svgHPRCCrank, -radius, -radius);
-			ctx.restore();
+			context.save();
+			context.translate(char[i].x + hprcCrankPos.x, char[i].y + hprcCrankPos.y);
+			context.rotate(HPRCCrankRot);
+			context.drawImage(svgHPRCCrank, -radius, -radius);
+			context.restore();
 		}
 
 		if (char[i].temp >= 50 && char[i].id != 5) {
-			ctx.save();
+			context.save();
 			let fireImg = svgFire[_frameCount % svgFire.length];
 			if (char[i].id == 2) fireImg = svgIceCubeMelt;
-			else ctx.globalAlpha = 0.57;
+			else context.globalAlpha = 0.57;
 			let firemat = charModels[char[i].id].firemat;
-			ctx.transform(firemat.a, firemat.b, firemat.c, firemat.d, firemat.tx + char[i].x, firemat.ty + char[i].y);
-			ctx.drawImage(fireImg, -fireImg.width / 2, -fireImg.height / 2);
-			ctx.restore();
+			context.transform(firemat.a, firemat.b, firemat.c, firemat.d, firemat.tx + char[i].x, firemat.ty + char[i].y);
+			context.drawImage(fireImg, -fireImg.width / 2, -fireImg.height / 2);
+			context.restore();
 		}
 	}
 }
@@ -3655,10 +3655,10 @@ function getTintedCanvasImage(img, a, color) {
 	return osc3;
 }
 
-function drawPossiblyTintedImage(img, x, y, temp) {
-	ctx.drawImage(img, x, y);
+function drawPossiblyTintedImage(img, x, y, temp, context) {
+	context.drawImage(img, x, y);
 	if (slowTintsEnabled && temp > 0 && temp < 50) {
-		ctx.drawImage(
+		context.drawImage(
 			getTintedCanvasImage(img, temp / 70, 'rgb(255,' + (100 - temp) + ',' + (100 - temp) + ')'),
 			x,
 			y,
@@ -6850,43 +6850,54 @@ function setExploreThumbsUserPage(t) {
 
 function drawExploreThumb(context, size, data, scale) {
 	try {
-		// size is the width
-		if (exploreTab == 1 && menuScreen == 6) return;
-		context.clearRect(0, 0, (size * pixelRatio) / scale, (size * 0.5625 * pixelRatio) / scale);
+		// // size is the width
+		// if (exploreTab == 1 && menuScreen == 6) return;
+		// context.clearRect(0, 0, (size * pixelRatio) / scale, (size * 0.5625 * pixelRatio) / scale);
 
-		let lines = data.split('\r\n');
-		if (lines.length == 1) lines = data.split('\n');
-		// skip past any blank lines at the start
-		let j = 0;
-		while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
-		lines = lines.splice(j);
-		let thumbLevelHead = lines[1].split(',');
-		let thumbLevelW = parseInt(thumbLevelHead[0]);
-		let thumbLevelH = parseInt(thumbLevelHead[1]);
-		context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
+		// let lines = data.split('\r\n');
+		// if (lines.length == 1) lines = data.split('\n');
+		// // skip past any blank lines at the start
+		// let j = 0;
+		// while (j < lines.length && (lines[j] == '' || lines[j] == 'loadedLevels=')) j++;
+		// lines = lines.splice(j);
+		// let thumbLevelHead = lines[1].split(',');
+		// let thumbLevelW = parseInt(thumbLevelHead[0]);
+		// let thumbLevelH = parseInt(thumbLevelHead[1]);
+		// context.drawImage(imgBgs[parseInt(thumbLevelHead[3])], 0, 0, cwidth, cheight);
 
-		if (thumbLevelHead[4] == 'H') {
-			for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
-				for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-					exploreDrawThumbTile(
-						context,
-						x,
-						y,
-						111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
-						tileIDFromChar(lines[y + 2].charCodeAt(x * 2 + 1)),
-						scale
-					);
-				}
-			}
-		} else {
-			for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
-				for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-					exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
-				}
-			}
-		}
+		// if (thumbLevelHead[4] == 'H') {
+		// 	for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+		// 		for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
+		// 			exploreDrawThumbTile(
+		// 				context,
+		// 				x,
+		// 				y,
+		// 				111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
+		// 				tileIDFromChar(lines[y + 2].charCodeAt(x * 2 + 1)),
+		// 				scale
+		// 			);
+		// 		}
+		// 	}
+		// } else {
+		// 	for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
+		// 		for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
+		// 			exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
+		// 		}
+		// 	}
+		// }
+		readExploreLevelString(data);
+		testLevelCreator();
+		// Reset a few things that were set by testLevelCreator() that we don't want.
+		menuScreen = pmenuScreen;
+		wipeTimer = 0;
+		context.drawImage(imgBgs[selectedBg], 0, 0, cwidth, cheight);
+		setCamera();
+		context.save();
+		context.translate(-cameraX, -cameraY);
+		drawLevel(context);
+		context.restore();
 	} catch(e) {
-		console.warn(e)
+		console.warn(e);
 	}
 }
 
@@ -7376,7 +7387,7 @@ function draw() {
 				osc4.width / pixelRatio,
 				osc4.height / pixelRatio
 			);
-			drawLevel();
+			drawLevel(ctx);
 
 			if (wipeTimer == 30) {
 				if (transitionType == 0) {
@@ -9291,7 +9302,14 @@ function draw() {
 				}
 			}
 
-			if (exploreTab == 2) {
+
+			if (exploreTab == 1) {
+				ctx.textBaseline = 'top';
+				ctx.textAlign = 'left';
+				ctx.fillStyle = '#ffffff';
+				ctx.font = '20px Helvetica';
+				ctx.fillText('Note: levelpacks are currently broken in 5beam and many only have one level.', 10, 90);
+			} else if (exploreTab == 2) {
 				textBoxes[0][0].draw();
 				exploreSearchInput = textBoxes[0][0].text;
 
