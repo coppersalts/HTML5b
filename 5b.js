@@ -250,7 +250,7 @@ function loadLevels() {
 		}
 
 		// Temporary crash fix for chrome devices on version 117+
-		console.log(levelsString)
+		console.log(levelsString);
 
 		// Read Level Metadata
 		levelStart += lineLength;
