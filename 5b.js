@@ -249,6 +249,8 @@ function loadLevels() {
 			levelName[i] += charAt2(lineLength);
 		}
 
+		console.log(levelsString)
+
 		// Read Level Metadata
 		levelStart += lineLength;
 		levelWidth = 10 * charAt(2) + charAt(3);
@@ -9920,6 +9922,26 @@ function getExploreUserPage(id, p, t, s) {
 		});
 }
 
+async function refreshToken() {
+	const token_body = JSON.stringify({
+		refresh_token: getCookie("refresh_token")
+	})
+
+	const response = await fetch('https://5beam.zelo.dev/api/auth/refresh', {method: 'POST', body: token_body})
+	const data = await response.json()
+	switch (response.status) {
+		case 200:
+			document.cookie = 'access_token=' + data.access_token + ';max-age=' + data.expires_in + ';path=/';
+			document.cookie = 'refresh_token=' + data.refresh_token + ';path=/';
+			break;
+		case 400:
+		default:
+			console.error(data)
+			setLCMessage("Your session has expired. You need to sign in again!")
+	}
+	return response
+}
+
 function logInExplore() {
 	loggedInExploreUser5beamID = -1;
 	newWindow = window.open(
@@ -9928,30 +9950,29 @@ function logInExplore() {
 		'height=750,width=450'
 	);
 	if (window.focus) newWindow.focus();
+
+	// Get access_token once finished
+	newWindow.addEventListener("close", refreshToken)
 }
 
-function postExploreLevel(t, desc, data) {
+async function postExploreLevel(t, desc, data) {
 	// check if token is expired
-	if (Date.now() - parseInt(getCookie('token_created_at')) > 600000 || getCookie('token_created_at') == '') {
-		// TODO: Use /api/auth/refresh to refresh the token
-		setLCMessage(
-			"You are not logged in to explore.\nYour login expires after 10 minutes because\nI haven't yet figured out how to refresh the tokens.\nFor now you can just copy your level, go to the explore menu to log in,\nthen come back here and load your level back."
-		);
-		return;
-	}
 	if (levelAlreadySharedToExplore) {
 		setLCMessage('You already shared that level to explore.');
 		return;
 	}
 	levelAlreadySharedToExplore = true;
 	// requestAdded();
-	let f = new FormData();
-	f.set('access_token', getCookie('access_token'));
-	f.set('title', t);
-	f.set('description', desc);
-	f.set('file', new File([data], 'file.txt'));
 
-	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: f})
+	const body = {
+		access_token: getCookie('access_token'),
+		title: t,
+		description: desc,
+		file: data,
+		modded: ""
+	}
+
+	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: JSON.stringify(body)})
 		.then(response => {
 			// requestResolved();
 			if (response.status == 200) {
@@ -10352,4 +10373,9 @@ function deselectAllTextBoxes() {
 		}
 	}
 	canvas.setAttribute('contenteditable', false);
+}
+
+// Refresh token if we can
+if (getCookie('refresh_token') !== "") {
+	if (getCookie('access_token') === "") refreshToken()
 }
