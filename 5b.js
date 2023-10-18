@@ -249,6 +249,7 @@ function loadLevels() {
 			levelName[i] += charAt2(lineLength);
 		}
 
+		// Temporary crash fix for chrome devices on version 117+
 		console.log(levelsString)
 
 		// Read Level Metadata
@@ -9924,7 +9925,7 @@ function getExploreUserPage(id, p, t, s) {
 
 async function refreshToken() {
 	const token_body = JSON.stringify({
-		refresh_token: getCookie("refresh_token")
+		refresh_token: getCookie('refresh_token')
 	})
 
 	const response = await fetch('https://5beam.zelo.dev/api/auth/refresh', {method: 'POST', body: token_body})
@@ -9937,7 +9938,7 @@ async function refreshToken() {
 		case 400:
 		default:
 			console.error(data)
-			setLCMessage("Your session has expired. You need to sign in again!")
+			setLCMessage('Your session has expired. You need to sign in again!')
 	}
 	return response
 }
@@ -9969,7 +9970,7 @@ async function postExploreLevel(t, desc, data) {
 		title: t,
 		description: desc,
 		file: data,
-		modded: ""
+		modded: ''
 	}
 
 	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: JSON.stringify(body)})
@@ -10376,6 +10377,6 @@ function deselectAllTextBoxes() {
 }
 
 // Refresh token if we can
-if (getCookie('refresh_token') !== "") {
-	if (getCookie('access_token') === "") refreshToken()
+if (getCookie('refresh_token') !== '') {
+	if (getCookie('access_token') === '') refreshToken()
 }
