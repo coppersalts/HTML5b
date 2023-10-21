@@ -105,7 +105,7 @@ let nextLevelpackId;
 let whiteAlpha = 0;
 let coinAlpha = 0;
 let searchParams = new URLSearchParams(window.location.href);
-let [levelId, levelpackId] = [searchParams.get("level"), searchParams.get("levelpack")]
+let [levelId, levelpackId] = [searchParams.get("https://coppersalts.github.io/HTML5b/?level"), searchParams.get("https://coppersalts.github.io/HTML5b/?levelpack")]
 const difficultyMap = [
 	["Unknown", "#e6e6e6"],
 	["Easy", "#85ff85"],
