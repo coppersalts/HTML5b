@@ -2873,7 +2873,7 @@ function drawLevelButtons() {
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'top';
 	ctx.font = 'bold 32px Helvetica';
-	ctx.fillText(currentLevelDisplayName, 12.85, 489.45);
+	ctx.fillText(currentLevelDisplayName, 12.85, 495.45);
 	drawMenu2_3Button(0, 837.5, 486.95, playMode == 3 ? exitExploreLevel : playMode == 2 ? exitTestLevel : menu3Menu);
 }
 
@@ -9449,7 +9449,7 @@ function draw() {
 				ctx.fillText('by ' + exploreLevelPageLevel.creator.username, 31.85, 66.1);
 
 				ctx.font = 'italic 18px Helvetica';
-				ctx.fillText('created on ' + exploreLevelPageLevel.created.slice(0,10), 31.85, 325);
+				ctx.fillText('created ' + exploreLevelPageLevel.created.slice(0,10), 31.85, 325);
 
 
 				ctx.fillStyle = '#ffffff';
