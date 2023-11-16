@@ -7467,7 +7467,7 @@ function draw() {
 						currentLevel++;
 						if (!quirksMode) toSeeCS = true; // This line was absent in the original source, but without it dialogue doesn't play after level 1 when on a normal playthrough.
 						levelProgress = currentLevel;
-						if (currentLevel < levelCount-1) resetLevel();
+						if (currentLevel < levelCount) resetLevel();
 						else exitLevel();
 					} else {
 						if (playMode == 3) {
