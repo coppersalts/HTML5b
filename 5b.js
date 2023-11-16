@@ -50,7 +50,7 @@ let _frameCount = 0;
 let qTimer = 0;
 let inputText = '';
 let textAfterCursorAtClick = '';
-let controlOrCommandPress = false;
+// let controlOrCommandPress = false;
 
 let levelsString = '';
 let levelCount = 53;
@@ -7272,7 +7272,7 @@ function keydown(event) {
 	_keysDown[event.keyCode || event.charCode] = true;
 
 	if (editingTextBox && event.key) {
-		if (currentTextBoxAllowsLineBreaks && controlOrCommandPress && event.key == 'v') {
+		if (currentTextBoxAllowsLineBreaks && event.key == 'v' && (event.metaKey || event.ctrlKey)) {
 			if (browserPasteSolution) navigator.clipboard.readText().then(clipText => {inputText += clipText;}).catch(err => console.log(err));
 		} else if (event.key.length == 1) {
 			inputText += event.key;
@@ -7283,7 +7283,7 @@ function keydown(event) {
 		}
 	}
 
-	if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
+	// if (event.metaKey || event.ctrlKey) controlOrCommandPress = true;
 	if (menuScreen == 5 && !lcPopUp && !editingTextBox) {
 		// tool shortcuts
 		if (_xmouse < 660 && selectedTab == 2) {
@@ -7297,7 +7297,7 @@ function keydown(event) {
 			else if (event.key == '8' || event.key == 'j') setTool(7);
 		}
 		// undo shortcut
-		if (event.key == 'z' && controlOrCommandPress) {
+		if (event.key == 'z' && (event.metaKey || event.ctrlKey)) {
 			undo();
 		}
 	}
@@ -7305,7 +7305,7 @@ function keydown(event) {
 
 function keyup(event) {
 	_keysDown[event.keyCode || event.charCode] = false;
-	if (event.metaKey || event.ctrlKey) controlOrCommandPress = false;
+	// if (event.metaKey || event.ctrlKey) controlOrCommandPress = false;
 }
 
 // https://stackoverflow.com/questions/2176861/javascript-get-clipboard-data-on-paste-event-cross-browser
