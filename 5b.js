@@ -158,6 +158,25 @@ function getSavedGame() {
 	}
 }
 getSavedGame();
+getSavedSettings();
+
+function saveSettings() {
+	bfdia5b.setItem('settings', JSON.stringify([screenShake, screenFlashes, quirksMode, enableExperimentalFeatures, frameRateThrottling, slowTintsEnabled]));
+}
+
+function getSavedSettings() {
+	if (bfdia5b.getItem('settings') == undefined) {
+		saveSettings();
+	} else {
+		let settingsArray = JSON.parse(bfdia5b.getItem('settings'));
+		screenShake = settingsArray[0];
+		screenFlashes = settingsArray[1];
+		quirksMode = settingsArray[2];
+		enableExperimentalFeatures = settingsArray[3];
+		frameRateThrottling = settingsArray[4];
+		slowTintsEnabled = settingsArray[5];
+	}
+}
 
 function saveMyLevels() {
 	bfdia5b.setItem('myLevels', JSON.stringify(lcSavedLevels));
@@ -2518,6 +2537,7 @@ function menuOptions() {
 
 function menuExitOptions() {
 	menuScreen = 0;
+	saveSettings();
 }
 
 function enterBaseLevelpackLevelSelect() {
@@ -9010,7 +9030,7 @@ function draw() {
 					ctx.font = '23px Helvetica';
 					if (drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555').hover) copyButton = true;
 					drawSimpleButton('Load String', openLevelLoader, 815, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
-					drawSimpleButton('Play Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					drawSimpleButton('Test Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					// if (enableExperimentalFeatures) {
 					let isNew = lcCurrentSavedLevel==-1;
 					if (!isNew) ctx.font = '18px Helvetica';
