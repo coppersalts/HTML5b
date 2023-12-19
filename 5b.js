@@ -127,6 +127,8 @@ function saveGame() {
 	if (playingLevelpack) {
 		levelpackProgress[exploreLevelPageLevel.id].levelProgress = levelProgress;
 		levelpackProgress[exploreLevelPageLevel.id].coins = gotCoin;
+		levelpackProgress[exploreLevelPageLevel.id].deaths = deathCount;
+		levelpackProgress[exploreLevelPageLevel.id].timer = timer;
 		saveLevelpackProgress();
 		return;
 	}
@@ -2487,10 +2489,23 @@ function playExploreLevel(continueGame=false) {
 		if (continueGame) {
 			levelProgress = levelpackProgress[exploreLevelPageLevel.id].levelProgress;
 			gotCoin = levelpackProgress[exploreLevelPageLevel.id].coins;
+			coins = 0;
+			levelpackProgress[exploreLevelPageLevel.id].coins.forEach(e => {
+				if (e) coins++;
+			});
+			if (typeof levelpackProgress[exploreLevelPageLevel.id].deaths === 'undefined') {
+				deathCount = 0;
+				timer = 0;
+			} else {
+				deathCount = levelpackProgress[exploreLevelPageLevel.id].deaths;
+				timer = levelpackProgress[exploreLevelPageLevel.id].timer;
+			}
 		} else {
 			levelpackProgress[exploreLevelPageLevel.id] = {
 				levelProgress: 0,
-				coins: [false]
+				coins: [false],
+				deaths: 0,
+				timer: 0
 			};
 			saveLevelpackProgress();
 		}
