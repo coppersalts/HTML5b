@@ -85,6 +85,7 @@ let bonusProgress;
 let bonusesCleared;
 let gotCoin;
 let gotThisCoin = false;
+let levelpackProgress = {};
 const bfdia5b = window.localStorage;
 let deathCount;
 let timer;
@@ -123,7 +124,12 @@ function clearVars() {
 	gotCoin = new Array(levelCount).fill(false);
 }
 function saveGame() {
-	if (playingLevelpack) return;
+	if (playingLevelpack) {
+		levelpackProgress[exploreLevelPageLevel.id].levelProgress = levelProgress;
+		levelpackProgress[exploreLevelPageLevel.id].coins = gotCoin;
+		saveLevelpackProgress();
+		return;
+	}
 	bfdia5b.setItem('gotCoin', gotCoin);
 	bfdia5b.setItem('coins', coins);
 	bfdia5b.setItem('levelProgress', levelProgress);
@@ -225,6 +231,18 @@ function getSavedLevelpacks() {
 	lcSavedLevelpacks = JSON.parse(bfdia5b.getItem('myLevelpacks'));
 	nextLevelpackId = bfdia5b.getItem('nextLevelpackId');
 }
+
+function saveLevelpackProgress() {
+	bfdia5b.setItem('levelpackProgress', JSON.stringify(levelpackProgress));
+}
+
+function getSavedLevelpackProgress() {
+	if (bfdia5b.getItem('levelpackProgress') == undefined) {
+		bfdia5b.setItem('levelpackProgress', '{}');
+	}
+	levelpackProgress = JSON.parse(bfdia5b.getItem('levelpackProgress'));
+}
+getSavedLevelpackProgress();
 
 function getTimer() {
 	return _frameCount / 0.06;
@@ -2455,7 +2473,7 @@ function menuExploreBack() {
 	// setExplorePage(1);
 }
 
-function playExploreLevel() {
+function playExploreLevel(continueGame=false) {
 	// increment play counter
 	getExplorePlay(exploreLevelPageLevel.id);
 
@@ -2466,12 +2484,41 @@ function playExploreLevel() {
 	} else {
 		loadLevelpack(exploreLevelPageLevel.levels);
 		clearVars();
+		if (continueGame) {
+			levelProgress = levelpackProgress[exploreLevelPageLevel.id].levelProgress;
+			gotCoin = levelpackProgress[exploreLevelPageLevel.id].coins;
+		} else {
+			levelpackProgress[exploreLevelPageLevel.id] = {
+				levelProgress: 0,
+				coins: [false]
+			};
+			saveLevelpackProgress();
+		}
 		menuScreen = 2;
 		playingLevelpack = true;
 		levelpackType = 0;
 		// playMode = 0;
 	}
 }
+
+function continueExploreLevelpack() {
+	playExploreLevel(true);
+}
+
+// function decodeCoinBin(coinBin) {
+// 	gotCoin = new Array(levelCount);
+// 	for (let i = 0; i < levelCount; i++) {
+// 		gotCoin[i] = (coinBin >> i) & 1 == 1;
+// 	}
+// }
+
+// function encodeCoinBin() {
+// 	let coinBin = 0;
+// 	for (let i = 0; i < gotCoin.length; i++) {
+// 		if (gotCoin[i]) coinBin += 1 << i;
+// 	}
+// 	return coinBin;
+// }
 
 function playSavedLevelpack() {
 	// It probably would've been better to modify the levelpack loader than to accommodate it like this.
@@ -9499,9 +9546,13 @@ function draw() {
 
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 389, false, playExploreLevel);
+				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 369, false, playExploreLevel);
 
-				drawMenu0Button('more by this user', 30, 440, false, exploreMoreByThisUser);
+				if (exploreLevelPageType != 0) {
+					drawMenu0Button('CONTINUE GAME', 30, 420, typeof levelpackProgress[exploreLevelPageLevel.id] === 'undefined', continueExploreLevelpack);
+				}
+
+				drawMenu0Button('more by this user', 30, exploreLevelPageType==0?420:471, false, exploreMoreByThisUser);
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
