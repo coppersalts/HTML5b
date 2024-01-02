@@ -2483,6 +2483,7 @@ function playExploreLevel(continueGame=false) {
 	if (exploreLevelPageType == 0) {
 		readExploreLevelString(exploreLevelPageLevel.data);
 		testLevelCreator();
+		playingLevelpack = false;
 		playMode = 3;
 	} else {
 		loadLevelpack(exploreLevelPageLevel.levels);
@@ -9525,13 +9526,13 @@ function draw() {
 
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 369, false, playExploreLevel);
+				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 379, false, playExploreLevel);
 
 				if (exploreLevelPageType != 0) {
-					drawMenu0Button('CONTINUE GAME', 30, 420, typeof levelpackProgress[exploreLevelPageLevel.id] === 'undefined', continueExploreLevelpack);
+					drawMenu0Button('CONTINUE GAME', 30, 430, typeof levelpackProgress[exploreLevelPageLevel.id] === 'undefined', continueExploreLevelpack);
 				}
 
-				drawMenu0Button('more by this user', 30, exploreLevelPageType==0?420:471, false, exploreMoreByThisUser);
+				drawMenu0Button('more by this user', 30, exploreLevelPageType==0?430:481, false, exploreMoreByThisUser);
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
