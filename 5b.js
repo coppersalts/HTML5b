@@ -5871,7 +5871,7 @@ function drawLCDiaInfo(i, y) {
 		!lcPopUp &&
 		diaDropdown == -1 &&
 		!addButtonPressed &&
-		onRect(_xmouse, _ymouse - diaTabScrollBar, 665, y, 260, diaInfoHeight * myLevelDialogue[1][i].linecount)
+		onRect(_xmouse, _ymouse, 665, y, 260, diaInfoHeight * myLevelDialogue[1][i].linecount)
 	) {
 		if (reorderDiaDown) {
 			if (mouseIsDown && !pmouseIsDown) {
@@ -5908,7 +5908,7 @@ function drawLCDiaInfo(i, y) {
 			if (
 				onRect(
 					_xmouse,
-					_ymouse - diaTabScrollBar,
+					_ymouse,
 					665,
 					y,
 					diaInfoHeight * 2,
@@ -5926,7 +5926,7 @@ function drawLCDiaInfo(i, y) {
 			} else if (
 				onRect(
 					_xmouse,
-					_ymouse - diaTabScrollBar,
+					_ymouse,
 					665 + diaInfoHeight * 2,
 					y,
 					diaInfoHeight,
@@ -5949,7 +5949,7 @@ function drawLCDiaInfo(i, y) {
 			} else if (
 				onRect(
 					_xmouse,
-					_ymouse - diaTabScrollBar,
+					_ymouse,
 					665 + 240,
 					y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10,
 					20,
