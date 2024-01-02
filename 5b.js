@@ -2043,6 +2043,7 @@ let myLevelChars;
 let myLevelDialogue;
 let myLevelInfo;
 let myLevelNecessaryDeaths;
+let dialogueTabCharHover = [-1,0];
 let scale = 20;
 let tool = 0;
 let selectedTile = 0;
@@ -5905,36 +5906,19 @@ function drawLCDiaInfo(i, y) {
 			ctx.fillStyle = '#ee3333';
 			drawRemoveButton(665 + 240, y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10, 20, 3);
 			// ctx.fillRect(665+240, y + (diaInfoHeight*myLevelDialogue[1][i].linecount)/2 - 10, 20, 20);
-			if (
-				onRect(
-					_xmouse,
-					_ymouse,
-					665,
-					y,
-					diaInfoHeight * 2,
-					diaInfoHeight * myLevelDialogue[1][i].linecount
-				)
-			) {
+			if (onRect(_xmouse,_ymouse,665,y,diaInfoHeight * 2,diaInfoHeight * myLevelDialogue[1][i].linecount)) {
 				onButton = true;
 				hoverText = 'Character';
+				dialogueTabCharHover = [i,y];
 				if (mouseIsDown && !pmouseIsDown) {
 					diaDropdown = -i - 3;
 					diaDropdownType = 1;
 					editingTextBox = false;
 					deselectAllTextBoxes();
 				}
-			} else if (
-				onRect(
-					_xmouse,
-					_ymouse,
-					665 + diaInfoHeight * 2,
-					y,
-					diaInfoHeight,
-					diaInfoHeight * myLevelDialogue[1][i].linecount
-				)
-			) {
+			} else if (onRect(_xmouse,_ymouse,665 + diaInfoHeight * 2,y,diaInfoHeight,diaInfoHeight * myLevelDialogue[1][i].linecount)) {
 				onButton = true;
-				hoverText = 'Face';
+				hoverText = myLevelDialogue[1][i].face==2?'Happy':'Sad';
 				if (mouseIsDown && !pmouseIsDown) {
 					diaDropdown = -i - 3;
 					diaDropdownType = 0;
@@ -5946,16 +5930,7 @@ function drawLCDiaInfo(i, y) {
 					diaDropdown = -i - 3;
 					diaDropdownType = 2;
 				}
-			} else if (
-				onRect(
-					_xmouse,
-					_ymouse,
-					665 + 240,
-					y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10,
-					20,
-					20
-				)
-			) {
+			} else if (onRect(_xmouse,_ymouse,665 + 240,y + (diaInfoHeight * myLevelDialogue[1][i].linecount) / 2 - 10,20,20)) {
 				onButton = true;
 				if (mouseIsDown && !pmouseIsDown) {
 					setUndo();
@@ -8951,19 +8926,10 @@ function draw() {
 					// ctx.textBaseline = 'middle';
 					// ctx.font = '20px Helvetica';
 					//myLevelDialogue[1][i].linecount
+					dialogueTabCharHover = [-1,0];
 					let diaInfoY = (selectedTab + 1) * tabHeight + 5 - diaTabScrollBar;
 					for (let i = 0; i < myLevelDialogue[1].length; i++) {
-						if (
-							(reorderDiaUp || reorderDiaDown) &&
-							onRect(
-								_xmouse,
-								_ymouse - diaTabScrollBar,
-								665,
-								diaInfoY,
-								260,
-								diaInfoHeight * myLevelDialogue[1][i].linecount
-							)
-						) {
+						if ((reorderDiaUp || reorderDiaDown) && onRect(_xmouse,_ymouse - diaTabScrollBar,665,diaInfoY,260,diaInfoHeight * myLevelDialogue[1][i].linecount)) {
 							ctx.fillStyle = '#e8e8e8';
 							ctx.fillRect(660, diaInfoY - 5, 270, diaInfoHeight * myLevelDialogue[1][i].linecount + 10);
 						}
@@ -8974,17 +8940,7 @@ function draw() {
 						// ctx.fillText(myLevelChars[1][i], 660, 60+i*20);
 					}
 					addButtonPressed = false;
-					if (
-						!lcPopUp &&
-						onRect(
-							_xmouse,
-							_ymouse,
-							660 + 5,
-							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
-							15,
-							15
-						)
-					) {
+					if (!lcPopUp && onRect(_xmouse,_ymouse,660 + 5,cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,15,15)) {
 						onButton = true;
 						hoverText = 'Add New Dialogue Line';
 						if (mouseIsDown && !pmouseIsDown) {
@@ -8998,17 +8954,7 @@ function draw() {
 						}
 						addButtonPressed = true;
 					}
-					if (
-						!lcPopUp &&
-						onRect(
-							_xmouse,
-							_ymouse,
-							660 + 25,
-							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
-							15,
-							15
-						)
-					) {
+					if (!lcPopUp && onRect(_xmouse,_ymouse,660 + 25,cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,15,15)) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Move Dialogue Line Up';
@@ -9022,17 +8968,7 @@ function draw() {
 						addButtonPressed = true;
 					}
 					if (reorderDiaUp && !addButtonPressed && mouseIsDown && !pmouseIsDown) reorderDiaUp = false;
-					if (
-						!lcPopUp &&
-						onRect(
-							_xmouse,
-							_ymouse,
-							660 + 45,
-							cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,
-							15,
-							15
-						)
-					) {
+					if (!lcPopUp && onRect(_xmouse,_ymouse,660 + 45,cheight - (tabNames.length - selectedTab - 1) * tabHeight - 20,15,15)) {
 						if (myLevelChars[1].length < 50) {
 							onButton = true;
 							hoverText = 'Move Dialogue Line Down';
@@ -9170,6 +9106,32 @@ function draw() {
 			drawLCTiles();
 			drawLCGrid();
 			drawLCChars();
+
+			// Dialogue tab mini character popup
+			if (selectedTab == 4 && dialogueTabCharHover[0] != -1 && myLevelDialogue[1][dialogueTabCharHover[0]].char < 50) {
+				let dialogueTabCharHoverChar = myLevelDialogue[1][dialogueTabCharHover[0]].char;
+				ctx.fillStyle = '#666666';
+				drawArrow(660 + diaInfoHeight - 5, dialogueTabCharHover[1] - 10, 10, 10, 2);
+				ctx.fillRect(660 + diaInfoHeight - charInfoHeight/2, dialogueTabCharHover[1] - 10 - charInfoHeight, charInfoHeight, charInfoHeight);
+
+				let charimgmat = charModels[dialogueTabCharHover[0]].charimgmat;
+				if (typeof charimgmat !== 'undefined') {
+					let charimg = svgChars[dialogueTabCharHover[0]];
+					if (Array.isArray(charimg)) charimg = charimg[0];
+					let sc = charInfoHeight / 32;
+					ctx.save();
+					ctx.transform(
+						charimgmat.a * sc,
+						charimgmat.b,
+						charimgmat.c,
+						charimgmat.d * sc,
+						(charimgmat.tx * sc) / 2 + 660 + diaInfoHeight,
+						(charimgmat.ty * sc) / 2 + dialogueTabCharHover[1] - 10 - charInfoHeight/2
+					);
+					ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
+					ctx.restore();
+				}
+			}
 
 			let shiftedXMouse = _xmouse;
 			let shiftedYMouse = _ymouse;
