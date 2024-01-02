@@ -1,4 +1,4 @@
-const version = 'v0.3.0*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.3.1*'; // putting this up here so I can edit the text on the title screen more easily.
 
 /* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
 performanceTest(()=>{
@@ -124,6 +124,7 @@ function clearVars() {
 	gotCoin = new Array(levelCount).fill(false);
 }
 function saveGame() {
+	if (levelpackType === 0) return;
 	if (playingLevelpack) {
 		levelpackProgress[exploreLevelPageLevel.id].levelProgress = levelProgress;
 		levelpackProgress[exploreLevelPageLevel.id].coins = gotCoin;
@@ -2554,6 +2555,16 @@ function playSavedLevelpack() {
 	menuScreen = 2;
 	playingLevelpack = true;
 	levelpackType = 1;
+}
+
+function copySavedLevelpackString() {
+	let stringOut = '';
+	let levelIds = lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].levels;
+	for (var i = 0; i < levelIds.length; i++) {
+		stringOut += lcSavedLevels['l' + levelIds[i]].data;
+	}
+	console.log(stringOut);
+	copyText(stringOut);
 }
 
 function exploreMoreByThisUser() {
@@ -6162,8 +6173,12 @@ function generateCharFromInfo(info) {
 }
 
 function copyLevelString() {
+	copyText(generateLevelString());
+}
+
+function copyText(textIn) {
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
-	const text = generateLevelString();
+	const text = textIn;
 	if (!browserCopySolution) {
 		navigator.clipboard.writeText(text).then(
 			function () {
@@ -7307,8 +7322,11 @@ function mouseup(event) {
 	mouseIsDown = false;
 
 	// Makes copying possible on Safari.
-	if (copyButton) {
-		if (browserCopySolution) copyLevelString();
+	if (copyButton != false) {
+		if (browserCopySolution) {
+			if (copyButton == 1) copyLevelString();
+			else if (copyButton == 2) copySavedLevelpackString();
+		}
 		copyButton = false;
 	}
 	if (menuScreen == 5) {
@@ -8214,6 +8232,7 @@ function draw() {
 		case 5:
 			// menuExitLevelCreator
 			lcPopUpNextFrame = false;
+			copyButton = false;
 
 			ctx.drawImage(osc1, 0, 0, cwidth, cheight);
 			ctx.globalAlpha = 0.5;
@@ -9033,7 +9052,7 @@ function draw() {
 				case 5:
 					// Options
 					ctx.font = '23px Helvetica';
-					if (drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555').hover) copyButton = true;
+					if (drawSimpleButton('Copy String', copyLevelString, 675, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555').hover) copyButton = 1;
 					drawSimpleButton('Load String', openLevelLoader, 815, tabWindowY + 10, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('Test Level', testLevelCreator, 675, tabWindowY + 50, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					// if (enableExperimentalFeatures) {
@@ -9775,6 +9794,7 @@ function draw() {
 		case 11:
 			// Levelpack Creator
 			lcPopUpNextFrame = false;
+			copyButton = false;
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
 
@@ -9794,6 +9814,10 @@ function draw() {
 			// temporary play levelpack button
 			ctx.font = '23px Helvetica';
 			drawSimpleButton('Play Levelpack', playSavedLevelpack, 498, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
+
+			// temporary copy string button
+			ctx.font = '23px Helvetica';
+			if (drawSimpleButton('Copy String', copySavedLevelpackString, 688, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff').hover) copyButton = 2;
 
 
 			// The levels themselves
