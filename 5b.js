@@ -8995,7 +8995,8 @@ function draw() {
 							setUndo();
 							let allowedDiaCharIndices = [99, 55, 52, 51, 50];
 							for (let i = myLevelChars[1].length - 1; i >= 0; i--)
-								if (myLevelChars[1][i][3] > 6) allowedDiaCharIndices.push(i);
+								// if (myLevelChars[1][i][3] > 6)
+									allowedDiaCharIndices.push(i);
 							let ourCurrentIndex = allowedDiaCharIndices.indexOf(myLevelDialogue[1][diaDropdown].char);
 							if (_keysDown[16]) {
 								ourCurrentIndex++;
@@ -9110,14 +9111,14 @@ function draw() {
 
 			// Dialogue tab mini character popup
 			if (selectedTab == 4 && dialogueTabCharHover[0] != -1 && myLevelDialogue[1][dialogueTabCharHover[0]].char < 50) {
-				let dialogueTabCharHoverChar = myLevelDialogue[1][dialogueTabCharHover[0]].char;
+				let dialogueTabCharHoverChar = myLevelChars[1][myLevelDialogue[1][dialogueTabCharHover[0]].char][0];
 				ctx.fillStyle = '#666666';
 				drawArrow(660 + diaInfoHeight - 5, dialogueTabCharHover[1] - 10, 10, 10, 2);
 				ctx.fillRect(660 + diaInfoHeight - charInfoHeight/2, dialogueTabCharHover[1] - 10 - charInfoHeight, charInfoHeight, charInfoHeight);
 
-				let charimgmat = charModels[dialogueTabCharHover[0]].charimgmat;
+				let charimgmat = charModels[dialogueTabCharHoverChar].charimgmat;
 				if (typeof charimgmat !== 'undefined') {
-					let charimg = svgChars[dialogueTabCharHover[0]];
+					let charimg = svgChars[dialogueTabCharHoverChar];
 					if (Array.isArray(charimg)) charimg = charimg[0];
 					let sc = charInfoHeight / 32;
 					ctx.save();
