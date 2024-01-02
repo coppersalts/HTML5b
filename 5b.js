@@ -198,6 +198,10 @@ function getSavedLevels() {
 	}
 	lcSavedLevels = JSON.parse(bfdia5b.getItem('myLevels'));
 	nextLevelId = bfdia5b.getItem('nextLevelId');
+	if (nextLevelId == "NaN") {
+		nextLevelId = 0;
+		bfdia5b.setItem('nextLevelId', nextLevelId);
+	}
 }
 
 function deleteSavedLevel(id) {
