@@ -6447,6 +6447,7 @@ function readLevelString(str) {
 		myLevelDialogue[1][d].text = lines[i + d].substring(4);
 	}
 	i += myLevelDialogue[1].length;
+	generateDialogueTextBoxes();
 	if (i >= lines.length) {
 		setLCMessage(
 			"Error while loading from string:\nnecessary deaths was not provided.\n(but everything else loaded so it's probably fine)"
