@@ -125,7 +125,7 @@ function clearVars() {
 }
 function saveGame() {
 	if (playingLevelpack) {
-		if (levelpackType === 0) return;
+		if (levelpackType === 1) return;
 		levelpackProgress[exploreLevelPageLevel.id].levelProgress = levelProgress;
 		levelpackProgress[exploreLevelPageLevel.id].coins = gotCoin;
 		levelpackProgress[exploreLevelPageLevel.id].deaths = deathCount;
