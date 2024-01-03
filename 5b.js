@@ -2024,7 +2024,7 @@ let exploreUser;
 let exploreUserPageNumbers = [];
 let exploreSortText = ['new','old','plays'];
 let exploreSortTextWidth = 160;
-let loggedInExploreUser5beamID = -1;
+let loggedInExploreUser5beamID = -1; // Temporarily just being used for checking if the user is logged in.
 let exploreLevelTitlesTruncated = new Array(8);
 let exploreLoading = false;
 let requestsWaiting = 0;
@@ -10064,7 +10064,8 @@ function logInExplore() {
 	if (window.focus) newWindow.focus();
 
 	// Get access_token once finished
-	newWindow.addEventListener("close", refreshToken)
+	newWindow.addEventListener('close', refreshToken);
+	loggedInExploreUser5beamID = 0;
 }
 
 async function postExploreLevel(t, desc, data) {
