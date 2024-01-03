@@ -2417,6 +2417,7 @@ function menuMyLevels() {
 function menuMyLevelsBack() {
 	menuScreen = 5;
 	lcTextBoxes();
+	resetLCOSC();
 	lcPopUp = false;
 }
 
@@ -2557,14 +2558,17 @@ function playSavedLevelpack() {
 	levelpackType = 1;
 }
 
-function copySavedLevelpackString() {
+function getCurrentLevelpackString() {
 	let stringOut = '';
 	let levelIds = lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].levels;
 	for (var i = 0; i < levelIds.length; i++) {
 		stringOut += lcSavedLevels['l' + levelIds[i]].data;
 	}
-	console.log(stringOut);
-	copyText(stringOut);
+	return stringOut;
+}
+
+function copySavedLevelpackString() {
+	copyText(getCurrentLevelpackString());
 }
 
 function exploreMoreByThisUser() {
@@ -5959,7 +5963,6 @@ function drawLCDiaInfo(i, y) {
 		}
 	}
 }
-
 function drawLCChars() {
 	ctx.save();
 	let scale2 = scale / 30;
@@ -7062,8 +7065,12 @@ function drawArrow(x, y, w, h, dir) {
 }
 
 function shareToExplore() {
-	// Currently there are no checks to see if the access token is still valid or if the user has even logged in, but this is just in the testing phase, so.
-	postExploreLevel(myLevelInfo.name, myLevelInfo.desc, generateLevelString());
+	postExploreLevelOrPack(myLevelInfo.name, myLevelInfo.desc, generateLevelString(), false);
+}
+
+function sharePackToExplore() {
+	if (!enableExperimentalFeatures) return;
+	postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 'Testing levelpack uploading directly from HTML5b.', getCurrentLevelpackString(), true);
 }
 
 function saveLevelCreator() {
@@ -9819,6 +9826,12 @@ function draw() {
 			ctx.font = '23px Helvetica';
 			if (drawSimpleButton('Copy String', copySavedLevelpackString, 688, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff').hover) copyButton = 2;
 
+			if (enableExperimentalFeatures) {
+				// temporary share to explore button
+				ctx.font = '23px Helvetica';
+				drawSimpleButton('Share To Explore', sharePackToExplore, 868, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
+			}
+
 
 			// The levels themselves
 			for (let i = 0; i < explorePageLevels.length; i++) {
@@ -10068,8 +10081,7 @@ function logInExplore() {
 	loggedInExploreUser5beamID = 0;
 }
 
-async function postExploreLevel(t, desc, data) {
-	// check if token is expired
+async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 	if (levelAlreadySharedToExplore) {
 		setLCMessage('You already shared that level to explore.');
 		return;
@@ -10079,13 +10091,13 @@ async function postExploreLevel(t, desc, data) {
 
 	const body = {
 		access_token: getCookie('access_token'),
-		title: t,
+		title: title,
 		description: desc,
 		file: data,
 		modded: ''
 	}
 
-	return fetch('https://5beam.zelo.dev/api/create/level', {method: 'POST', body: JSON.stringify(body)})
+	return fetch('https://5beam.zelo.dev/api/create/' + isLevelpack?'levelpack':'level', {method: 'POST', body: JSON.stringify(body)})
 		.then(response => {
 			// requestResolved();
 			if (response.status == 200) {
