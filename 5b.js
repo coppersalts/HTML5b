@@ -10097,7 +10097,7 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 		modded: ''
 	}
 
-	return fetch('https://5beam.zelo.dev/api/create/' + isLevelpack?'levelpack':'level', {method: 'POST', body: JSON.stringify(body)})
+	return fetch('https://5beam.zelo.dev/api/create/' + (isLevelpack?'levelpack':'level'), {method: 'POST', body: JSON.stringify(body)})
 		.then(response => {
 			// requestResolved();
 			if (response.status == 200) {
