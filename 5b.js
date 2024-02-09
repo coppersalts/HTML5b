@@ -31,6 +31,7 @@ let osc1, osctx1;
 let osc2, osctx2;
 let osc3, osctx3;
 let osc4, osctx4;
+let osc5, osctx5;
 // explore level thumbnails
 const thumbs = new Array(8);
 const thumbsctx = new Array(8);
@@ -1972,6 +1973,9 @@ let reorderDiaDown = false;
 let levelLoadString = '';
 let lcMessageTimer = 0;
 let lcMessageText = '';
+const lcZoomFactor = 2;
+let lcZoom = lcZoomFactor;
+let lcPan = [0,0];
 // const exploreTabNames = ['Featured', 'New', 'Top', '🔍'];
 // const exploreTabWidths = [190, 115, 115, 45];
 const exploreTabNames = ['Levels', 'Levelpacks','Search'];
@@ -5017,10 +5021,11 @@ function outOfRange(x, y) {
 
 function mouseOnGrid() {
 	return (
-		_xmouse >= 330 - (scale * levelWidth) / 2 &&
-		_xmouse <= 330 + (scale * levelWidth) / 2 &&
-		_ymouse >= 240 - (scale * levelHeight) / 2 &&
-		_ymouse <= 240 + (scale * levelHeight) / 2
+		_xmouse - lcPan[0] > 330 - (scale * levelWidth) / 2 &&
+		_xmouse - lcPan[0] < 330 + (scale * levelWidth) / 2 &&
+		_ymouse - lcPan[1] > 240 - (scale * levelHeight) / 2 &&
+		_ymouse - lcPan[1] < 240 + (scale * levelHeight) / 2 &&
+		_xmouse < 660 && _ymouse < 480
 	);
 }
 
@@ -5066,6 +5071,9 @@ function resetLevelCreator() {
 	LCCoinY = -1;
 	char = [];
 	levelTimer = 0;
+
+	lcSetZoom(0);
+	lcPan = [0,0];
 	// levelCreator.sideBar.tab1.gotoAndStop(1);
 	// let i = 0;
 	// while(i < 10)
@@ -5115,6 +5123,10 @@ function resetLCOSC() {
 	osc3.width = Math.floor(cwidth * pixelRatio);
 	osc3.height = Math.floor(cheight * pixelRatio);
 	osctx3.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+	osc5.width = Math.floor(660 * pixelRatio);
+	osc5.height = Math.floor(480 * pixelRatio);
+	osctx5.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	updateLCtiles();
 }
 
@@ -5123,28 +5135,35 @@ function setLCBG() {
 }
 
 function drawLCGrid() {
-	scale = Math.min(640 / levelWidth, 460 / levelHeight);
+	// scale = getLCGridScale();
 	// levelCreator.grid.lineStyle(scale / 9,0,50);
-	ctx.lineWidth = scale / 9;
-	ctx.strokeStyle = '#000000';
-	ctx.globalAlpha = 0.5;
-	ctx.beginPath();
+	osctx5.lineWidth = scale / 9;
+	osctx5.strokeStyle = '#000000';
+	osctx5.globalAlpha = 0.5;
+	osctx5.beginPath();
 	for (let i = 0; i <= levelWidth; i++) {
-		ctx.moveTo(330 - (scale * levelWidth) / 2 + i * scale, 240 - (scale * levelHeight) / 2);
-		ctx.lineTo(330 - (scale * levelWidth) / 2 + i * scale, 240 + (scale * levelHeight) / 2);
+		osctx5.moveTo(330 - (scale * levelWidth) / 2 + i * scale, 240 - (scale * levelHeight) / 2);
+		osctx5.lineTo(330 - (scale * levelWidth) / 2 + i * scale, 240 + (scale * levelHeight) / 2);
 	}
 	for (let i = 0; i <= levelHeight; i++) {
-		ctx.moveTo(330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + i * scale);
-		ctx.lineTo(330 + (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + i * scale);
+		osctx5.moveTo(330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + i * scale);
+		osctx5.lineTo(330 + (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + i * scale);
 	}
-	ctx.stroke();
-	ctx.globalAlpha = 1;
+	osctx5.stroke();
+	osctx5.globalAlpha = 1;
 	// addLCTiles();
 	// updateLCTiles();
 }
 
+function lcSetZoom(newValue) {
+	lcZoom = newValue;
+	if (lcZoom < lcZoomFactor) lcZoom = lcZoomFactor;
+	scale = Math.min(640 / levelWidth, 460 / levelHeight) * (lcZoom/lcZoomFactor);
+	updateLCtiles();
+}
+
 function drawLCTiles() {
-	ctx.drawImage(osc3, 0, 0, cwidth, cheight);
+	osctx5.drawImage(osc3, -lcPan[0], -lcPan[1], cwidth, cheight);
 
 	// animated tiles are drawn here.
 	let tlx = 330 - (scale * levelWidth) / 2;
@@ -5152,11 +5171,11 @@ function drawLCTiles() {
 	for (let x = 0; x < levelWidth; x++) {
 		for (let y = 0; y < levelHeight; y++) {
 			let tile = myLevel[1][y][x];
-			ctx.globalAlpha = 1;
+			osctx5.globalAlpha = 1;
 			let showTile = blockProperties[tile][16] > 1;
 			if (tool == 5 && copied && mouseOnGrid()) {
-				let mouseGridX = Math.floor((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
-				let mouseGridY = Math.floor((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
+				let mouseGridX = Math.floor((_xmouse - lcPan[0] - (330 - (scale * levelWidth) / 2)) / scale);
+				let mouseGridY = Math.floor((_ymouse - lcPan[1] - (240 - (scale * levelHeight) / 2)) / scale);
 				if (
 					x >= mouseGridX &&
 					x < mouseGridX + tileClipboard[0].length &&
@@ -5166,7 +5185,7 @@ function drawLCTiles() {
 					clipboardTileCandidate = tileClipboard[y - mouseGridY][x - mouseGridX];
 					if (!(_keysDown[18] && tile != 0) && clipboardTileCandidate != 0) {
 						tile = clipboardTileCandidate;
-						ctx.globalAlpha = 0.5;
+						osctx5.globalAlpha = 0.5;
 						showTile = true;
 					}
 				}
@@ -5188,7 +5207,7 @@ function drawLCTiles() {
 					blockProperties[tile][16] > 1
 						? svgTilesVB[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
 						: svgTilesVB[tile];
-				ctx.drawImage(
+				osctx5.drawImage(
 					img,
 					tlx + x * scale + (scale * vb[0]) / 30,
 					tly + y * scale + (scale * vb[1]) / 30,
@@ -5213,18 +5232,18 @@ function drawLCTiles() {
 function drawLCRect(x1, y1, x2, y2) {
 	// levelCreator.rectSelect.lineStyle(1,0,0);
 	// ctx.beginFill(16776960,50);
-	ctx.fillStyle = '#ffff00';
-	ctx.globalAlpha = 0.5;
-	ctx.moveTo(x1 * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
-	ctx.lineTo((x2 + 1) * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
-	ctx.lineTo(
+	osctx5.fillStyle = '#ffff00';
+	osctx5.globalAlpha = 0.5;
+	osctx5.moveTo(x1 * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
+	osctx5.lineTo((x2 + 1) * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
+	osctx5.lineTo(
 		(x2 + 1) * scale + (330 - (scale * levelWidth) / 2),
 		(y2 + 1) * scale + (240 - (scale * levelHeight) / 2)
 	);
-	ctx.lineTo(x1 * scale + (330 - (scale * levelWidth) / 2), (y2 + 1) * scale + (240 - (scale * levelHeight) / 2));
-	ctx.lineTo(x1 * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
-	ctx.fill();
-	ctx.globalAlpha = 1;
+	osctx5.lineTo(x1 * scale + (330 - (scale * levelWidth) / 2), (y2 + 1) * scale + (240 - (scale * levelHeight) / 2));
+	osctx5.lineTo(x1 * scale + (330 - (scale * levelWidth) / 2), y1 * scale + (240 - (scale * levelHeight) / 2));
+	osctx5.fill();
+	osctx5.globalAlpha = 1;
 }
 
 function clearMyWholeLevel() {
@@ -5399,7 +5418,7 @@ function removeLCTiles() {
 
 function updateLCtiles() {
 	// console.log('updateLCtiles');
-	scale = Math.min(640 / levelWidth, 460 / levelHeight);
+	// scale = getLCGridScale();
 	osctx3.clearRect(0, 0, osc3.width, osc3.height);
 	// let y = 0;
 	// while (y < levelHeight) {
@@ -5429,8 +5448,8 @@ function updateLCtiles() {
 		'#0066ff'
 	];
 
-	let tlx = 330 - (scale * levelWidth) / 2;
-	let tly = 240 - (scale * levelHeight) / 2;
+	let tlx = 330 - (scale * levelWidth) / 2 + lcPan[0];
+	let tly = 240 - (scale * levelHeight) / 2 + lcPan[1];
 	for (let x = 0; x < levelWidth; x++) {
 		for (let y = 0; y < levelHeight; y++) {
 			let tile = myLevel[1][y][x];
@@ -5468,7 +5487,7 @@ function updateLCtiles() {
 					);
 				}
 			} else if (tile == 6) {
-				osctx3.fillStyle = selectedBg == 9 || selectedBg == 10 ? '#999999' : '#505050';
+				osctx3.fillStyle = '#505050';
 				osctx3.fillRect(tlx + (x - 1) * scale, tly + (y - 3) * scale, scale * 2, scale * 4);
 			} else if (blockProperties[tile][15] && tile > 0) {
 				let img = svgTiles[tile];
@@ -5964,20 +5983,20 @@ function drawLCDiaInfo(i, y) {
 	}
 }
 function drawLCChars() {
-	ctx.save();
+	osctx5.save();
 	let scale2 = scale / 30;
-	ctx.transform(scale2, 0, 0, scale2, 330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2);
+	osctx5.transform(scale2, 0, 0, scale2, 330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2);
 	for (let i = char.length - 1; i >= 0; i--) {
 		if (char[i].placed || (charDropdown == i && charDropdownType == 2)) {
-			if (!char[i].placed) ctx.globalAlpha = 0.5;
+			if (!char[i].placed) osctx5.globalAlpha = 0.5;
 			if (char[i].id < 35) {
 				let model = charModels[char[i].id];
 				let dire = char[i].charState == 9 ? -1 : 1;
 
 				let legf = legFrames[0];
 				let f = [legf.bodypart, legf.bodypart];
-				ctx.save();
-				ctx.transform(
+				osctx5.save();
+				osctx5.transform(
 					0.3648529052734375 * dire,
 					0,
 					0,
@@ -5986,10 +6005,10 @@ function drawLCChars() {
 					char[i].y + model.legy[0] - 0.35
 				);
 				let leg1img = svgBodyParts[f[0]];
-				ctx.drawImage(leg1img, -leg1img.width / 2, -leg1img.height / 2);
-				ctx.restore();
-				ctx.save();
-				ctx.transform(
+				osctx5.drawImage(leg1img, -leg1img.width / 2, -leg1img.height / 2);
+				osctx5.restore();
+				osctx5.save();
+				osctx5.transform(
 					0.3648529052734375 * dire,
 					0,
 					0,
@@ -5998,12 +6017,12 @@ function drawLCChars() {
 					char[i].y + model.legy[1] - 0.35
 				);
 				let leg2img = svgBodyParts[f[1]];
-				ctx.drawImage(leg2img, -leg2img.width / 2, -leg2img.height / 2);
-				ctx.restore();
+				osctx5.drawImage(leg2img, -leg2img.width / 2, -leg2img.height / 2);
+				osctx5.restore();
 
 				let modelFrame = model.frames[dire == 1 ? 3 : 1];
-				ctx.save();
-				ctx.transform(
+				osctx5.save();
+				osctx5.transform(
 					charModels[char[i].id].torsomat.a,
 					charModels[char[i].id].torsomat.b,
 					charModels[char[i].id].torsomat.c,
@@ -6015,8 +6034,8 @@ function drawLCChars() {
 					let img = svgBodyParts[modelFrame[j].bodypart];
 					if (modelFrame[j].type == 'body') img = svgChars[char[i].id];
 
-					ctx.save();
-					ctx.transform(
+					osctx5.save();
+					osctx5.transform(
 						modelFrame[j].mat.a,
 						modelFrame[j].mat.b,
 						modelFrame[j].mat.c,
@@ -6030,7 +6049,7 @@ function drawLCChars() {
 							? _frameCount % bodyPartAnimations[modelFrame[j].anim].frames.length
 							: 0;
 						let mat = bodyPartAnimations[modelFrame[j].anim].frames[bpanimframe];
-						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+						osctx5.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					} else if (modelFrame[j].type == 'dia') {
 						img =
 							svgBodyParts[
@@ -6039,12 +6058,12 @@ function drawLCChars() {
 								].frames[0].bodypart
 							];
 						let mat = diaMouths[model.defaultExpr].frames[0].mat;
-						ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+						osctx5.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					}
-					ctx.drawImage(img, -img.width / 2, -img.height / 2);
-					ctx.restore();
+					osctx5.drawImage(img, -img.width / 2, -img.height / 2);
+					osctx5.restore();
 				}
-				ctx.restore();
+				osctx5.restore();
 			} else {
 				if (charD[char[i].id][7] == 1) {
 					var vb = svgCharsVB[char[i].id];
@@ -6054,9 +6073,9 @@ function drawLCChars() {
 					var vb = svgCharsVB[char[i].id][f];
 					var img = svgChars[char[i].id][f];
 				}
-				ctx.drawImage(img, char[i].x + vb[0], char[i].y + vb[1], vb[2], vb[3]);
+				osctx5.drawImage(img, char[i].x + vb[0], char[i].y + vb[1], vb[2], vb[3]);
 			}
-			ctx.globalAlpha = 1;
+			osctx5.globalAlpha = 1;
 		}
 		if (char[i].placed && (char[i].charState == 3 || char[i].charState == 4)) {
 			let section = Math.floor(levelTimer / char[i].speed) % (char[i].motionString.length - 2);
@@ -6067,7 +6086,7 @@ function drawLCChars() {
 			char[i].charMove();
 		}
 	}
-	ctx.restore();
+	osctx5.restore();
 }
 
 function resetLCChar(i) {
@@ -7203,12 +7222,12 @@ function mousedown(event) {
 			// 	}
 			// }
 		} else {
-			if (selectedTab == 2) {
+			if (selectedTab == 2 && !_keysDown[32]) {
 				if (tool != 4) {
 					setUndo();
 				}
-				let x = Math.floor((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
-				let y = Math.floor((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
+				let x = Math.floor((_xmouse - lcPan[0] - (330 - (scale * levelWidth) / 2)) / scale);
+				let y = Math.floor((_ymouse - lcPan[1] - (240 - (scale * levelHeight) / 2)) / scale);
 				if (mouseOnScreen()) {
 					if (tool == 2 || (tool == 5 && !copied)) {
 						LCRect[0] = LCRect[2] = Math.min(Math.max(x, 0), levelWidth - 1);
@@ -7388,6 +7407,19 @@ function keydown(event) {
 		if (event.key == 'z' && (event.metaKey || event.ctrlKey)) {
 			undo();
 		}
+		// zoom
+		if (event.key == '=' || event.key == '+') {
+			// zoom in
+			lcSetZoom(lcZoom+1);
+		} else if (event.key == '-' || event.key == '_') {
+			// zoom out
+			lcSetZoom(lcZoom-1);
+		} else if (event.key == '0') {
+			// reset zoom
+			lcSetZoom(0);
+			lcPan = [0,0]
+			updateLCtiles();
+		}
 	}
 }
 
@@ -7437,6 +7469,11 @@ function setup() {
 	osc4.width = cwidth;
 	osc4.height = cheight;
 	osctx4 = osc4.getContext('2d');
+
+	osc5 = document.createElement('canvas');
+	osc5.width = cwidth;
+	osc5.height = cheight;
+	osctx5 = osc5.getContext('2d');
 
 	for (let i = 0; i < thumbs.length; i++) {
 		thumbs[i] = document.createElement('canvas');
@@ -9136,6 +9173,15 @@ function draw() {
 				}
 			}
 
+			if (mouseIsDown && _keysDown[32]) {
+				lcPan[0] += _xmouse - _pxmouse;
+				lcPan[1] += _ymouse - _pymouse;
+				updateLCtiles();
+			}
+
+			osctx5.clearRect(0, 0, osc5.width, osc5.height);
+			osctx5.save();
+			osctx5.translate(lcPan[0], lcPan[1]);
 			drawLCTiles();
 			drawLCGrid();
 			drawLCChars();
@@ -9166,15 +9212,15 @@ function draw() {
 				}
 			}
 
-			let shiftedXMouse = _xmouse;
-			let shiftedYMouse = _ymouse;
+			let shiftedXMouse = _xmouse - lcPan[0];
+			let shiftedYMouse = _ymouse - lcPan[1];
 			if (_keysDown[16]) {
-				if (Math.abs(_ymouse - lastClickY) > Math.abs(_xmouse - lastClickX)) shiftedXMouse = lastClickX;
+				if (Math.abs(shiftedYMouse - lastClickY) > Math.abs(shiftedXMouse - lastClickX)) shiftedXMouse = lastClickX;
 				else shiftedYMouse = lastClickY;
 			}
 			x = Math.floor((shiftedXMouse - (330 - (scale * levelWidth) / 2)) / scale);
 			y = Math.floor((shiftedYMouse - (240 - (scale * levelHeight) / 2)) / scale);
-			if (mouseIsDown) {
+			if (mouseIsDown && !_keysDown[32]) {
 				if (selectedTab == 2) {
 					if (tool <= 1 && mouseOnGrid()) {
 						if (tool == 1) i = 0;
@@ -9222,40 +9268,42 @@ function draw() {
 					// levelCreator.rectSelect.clear();
 					let y2;
 					let y3;
-					ctx.lineWidth = (2 * scale) / 9;
+					osctx5.lineWidth = (2 * scale) / 9;
 					if (closeToEdgeY()) {
-						ctx.strokeStyle = '#008000';
-						y2 = Math.round((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
+						osctx5.strokeStyle = '#008000';
+						y2 = Math.round((_ymouse - lcPan[1] - (240 - (scale * levelHeight) / 2)) / scale);
 						y3 = 0;
 					} else {
-						ctx.strokeStyle = '#800000';
-						y2 = Math.floor((_ymouse - (240 - (scale * levelHeight) / 2)) / scale);
+						osctx5.strokeStyle = '#800000';
+						y2 = Math.floor((_ymouse - lcPan[1] - (240 - (scale * levelHeight) / 2)) / scale);
 						y3 = 0.5;
 					}
-					ctx.beginPath();
-					ctx.moveTo(330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + scale * (y2 + y3));
-					ctx.lineTo(330 + (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + scale * (y2 + y3));
-					ctx.stroke();
+					osctx5.beginPath();
+					osctx5.moveTo(330 - (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + scale * (y2 + y3));
+					osctx5.lineTo(330 + (scale * levelWidth) / 2, 240 - (scale * levelHeight) / 2 + scale * (y2 + y3));
+					osctx5.stroke();
 				} else if (tool == 7) {
 					// levelCreator.rectSelect.clear();
 					let x2;
 					let x3;
-					ctx.lineWidth = (2 * scale) / 9;
+					osctx5.lineWidth = (2 * scale) / 9;
 					if (closeToEdgeX()) {
-						ctx.strokeStyle = '#008000';
-						x2 = Math.round((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
+						osctx5.strokeStyle = '#008000';
+						x2 = Math.round((_xmouse - lcPan[0] - (330 - (scale * levelWidth) / 2)) / scale);
 						x3 = 0;
 					} else {
-						ctx.strokeStyle = '#800000';
-						x2 = Math.floor((_xmouse - (330 - (scale * levelWidth) / 2)) / scale);
+						osctx5.strokeStyle = '#800000';
+						x2 = Math.floor((_xmouse - lcPan[0] - (330 - (scale * levelWidth) / 2)) / scale);
 						x3 = 0.5;
 					}
-					ctx.beginPath();
-					ctx.moveTo(330 - (scale * levelWidth) / 2 + scale * (x2 + x3), 240 - (scale * levelHeight) / 2);
-					ctx.lineTo(330 - (scale * levelWidth) / 2 + scale * (x2 + x3), 240 + (scale * levelHeight) / 2);
-					ctx.stroke();
+					osctx5.beginPath();
+					osctx5.moveTo(330 - (scale * levelWidth) / 2 + scale * (x2 + x3), 240 - (scale * levelHeight) / 2);
+					osctx5.lineTo(330 - (scale * levelWidth) / 2 + scale * (x2 + x3), 240 + (scale * levelHeight) / 2);
+					osctx5.stroke();
 				}
 			}
+			ctx.drawImage(osc5, 0, 0, 660, 480);
+			osctx5.restore();
 			// else if (tool == 6 || tool == 7) {
 			// 	levelCreator.rectSelect.clear();
 			// }
@@ -10058,11 +10106,12 @@ async function refreshToken() {
 		case 200:
 			document.cookie = 'access_token=' + data.access_token + ';max-age=' + data.expires_in + ';path=/';
 			document.cookie = 'refresh_token=' + data.refresh_token + ';path=/';
+			loggedInExploreUser5beamID = 0;
 			break;
 		case 400:
 		default:
 			console.error(data)
-			setLCMessage('Your session has expired. You need to sign in again!')
+			setLCMessage('Your session has expired. You need to sign in again!');
 	}
 	return response
 }
@@ -10503,5 +10552,5 @@ function deselectAllTextBoxes() {
 
 // Refresh token if we can
 if (getCookie('refresh_token') !== '') {
-	if (getCookie('access_token') === '') refreshToken()
+	if (getCookie('access_token') === '') refreshToken();
 }
