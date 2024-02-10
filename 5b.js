@@ -7417,7 +7417,7 @@ function keydown(event) {
 		} else if (event.key == '0') {
 			// reset zoom
 			lcSetZoom(0);
-			lcPan = [0,0]
+			lcPan = [0,0];
 			updateLCtiles();
 		}
 	}
@@ -8622,11 +8622,11 @@ function draw() {
 							}
 						} else if (charDropdownType == 2) {
 							let xmouseConstrained = Math.min(
-								Math.max(_xmouse - (330 - (scale * levelWidth) / 2), 0),
+								Math.max(_xmouse - lcPan[0] - (330 - (scale * levelWidth) / 2), 0),
 								levelWidth * scale
 							);
 							let ymouseConstrained = Math.min(
-								Math.max(_ymouse - (240 - (scale * levelHeight) / 2), 0),
+								Math.max(_ymouse - lcPan[1] - (240 - (scale * levelHeight) / 2), 0),
 								levelHeight * scale
 							);
 							myLevelChars[1][charDropdown][1] = mapRange(

@@ -54,3 +54,12 @@ p{
 	overflow: hidden;
 	margin-bottom: 10px;
 }
+
+.crisp-edges {
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -o-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+	-ms-interpolation-mode: nearest-neighbor;
+}
