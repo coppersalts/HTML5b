@@ -5158,11 +5158,16 @@ function drawLCGrid() {
 function lcSetZoom(newValue) {
 	lcZoom = newValue;
 	if (lcZoom < lcZoomFactor) lcZoom = lcZoomFactor;
-	scale = Math.min(640 / levelWidth, 460 / levelHeight) * (lcZoom/lcZoomFactor);
+	scale = getLCScale();
 	updateLCtiles();
 }
 
+function getLCScale() {
+	return Math.min(640 / levelWidth, 460 / levelHeight) * (lcZoom/lcZoomFactor);
+}
+
 function drawLCTiles() {
+	scale = getLCScale();
 	osctx5.drawImage(osc3, -lcPan[0], -lcPan[1], cwidth, cheight);
 
 	// animated tiles are drawn here.
