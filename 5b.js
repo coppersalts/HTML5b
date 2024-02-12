@@ -1,4 +1,4 @@
-const version = 'v0.3.1*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.3.2*'; // putting this up here so I can edit the text on the title screen more easily.
 
 /* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
 performanceTest(()=>{
@@ -5072,8 +5072,6 @@ function resetLevelCreator() {
 	char = [];
 	levelTimer = 0;
 
-	lcSetZoom(0);
-	lcPan = [0,0];
 	// levelCreator.sideBar.tab1.gotoAndStop(1);
 	// let i = 0;
 	// while(i < 10)
@@ -5084,6 +5082,9 @@ function resetLevelCreator() {
 	// levelCreator.tools.tool9.gotoAndStop(1);
 	resetLCOSC();
 	lcTextBoxes();
+
+	lcSetZoom(0);
+	lcPan = [0,0];
 }
 
 function loadSavedLevelIntoLevelCreator(locOnPage) {
@@ -5093,6 +5094,7 @@ function loadSavedLevelIntoLevelCreator(locOnPage) {
 	myLevelInfo.desc = explorePageLevels[locOnPage].description;
 	lcTextBoxes();
 	readLevelString(explorePageLevels[locOnPage].data);
+	lcSetZoom(0);
 	lcCurrentSavedLevel = explorePageLevels[locOnPage].id;
 	lcChangesMade = false;
 }
@@ -7089,12 +7091,21 @@ function drawArrow(x, y, w, h, dir) {
 }
 
 function shareToExplore() {
+	if (loggedInExploreUser5beamID != -1) {
+		logInExplore();
+	} else {
 	postExploreLevelOrPack(myLevelInfo.name, myLevelInfo.desc, generateLevelString(), false);
+	}
 }
 
 function sharePackToExplore() {
 	if (!enableExperimentalFeatures) return;
-	postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 'Testing levelpack uploading directly from HTML5b.', getCurrentLevelpackString(), true);
+
+	if (loggedInExploreUser5beamID != -1) {
+		logInExplore();
+	} else {
+		postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 'Experimental levelpack upload directly from HTML5b.', getCurrentLevelpackString(), true);
+	}
 }
 
 function saveLevelCreator() {
@@ -7302,6 +7313,7 @@ function mousedown(event) {
 								}
 							}
 							setCoinAndDoorPos();
+							scale = getLCScale();
 							updateLCtiles();
 							// drawLCGrid();
 						}
@@ -7339,6 +7351,7 @@ function mousedown(event) {
 								}
 							}
 							setCoinAndDoorPos();
+							scale = getLCScale();
 							updateLCtiles();
 							// drawLCGrid();
 						}
@@ -9114,7 +9127,7 @@ function draw() {
 					drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 170, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					// }
 
-					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 210, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555', loggedInExploreUser5beamID!=-1);
+					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 210, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawMenu0Button('EXIT', 846, cheight - 50, false, menuExitLevelCreator, 100);
 					// drawMenu2_3Button(0, 837.5, 486.95, menuExitLevelCreator);
 					break;
@@ -10100,7 +10113,12 @@ function getExploreUserPage(id, p, t, s) {
 		});
 }
 
+const tokenLifespan = 600000; // milliseconds in 10 minutes
+
 async function refreshToken() {
+	// Checks if we need to refresh.
+	if (Date.now() - parseInt(getCookie('token_created_at')) > tokenLifespan) return;
+
 	const token_body = JSON.stringify({
 		refresh_token: getCookie('refresh_token')
 	})
@@ -10557,5 +10575,5 @@ function deselectAllTextBoxes() {
 
 // Refresh token if we can
 if (getCookie('refresh_token') !== '') {
-	if (getCookie('access_token') === '') refreshToken();
+	refreshToken();
 }
