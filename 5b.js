@@ -7515,32 +7515,33 @@ function setup() {
 
 	if (levelId) {
 		// If the level ID is specified in the URL, load that level.
-		menuScreen = 0
-		exploreLevelPageType = 0
+		menuScreen = 0;
+		exploreLevelPageType = 0;
 		fetch('https://5beam.zelo.dev/api/level?id=' + levelId, {method: 'GET'})
 			.then(async (res) => {
 				exploreLevelPageLevel = await res.json()
-				playExploreLevel()
-				rAF60fps()
+				playExploreLevel();
+				rAF60fps();
 			})
 			.catch((e) => {
-				alert("Unable to find level!", e)
-				console.error(e)
-			})
+				alert("Unable to find level!", e);
+				console.error(e);
+			});
 	} else if (levelpackId) {
 		// If the levelpack ID is specified in the URL, load that levelpack.
-		menuScreen = 1
-		exploreLevelPageType = 1
+		menuScreen = 1;
+		exploreLevelPageType = 1;
 		fetch('https://5beam.zelo.dev/api/levelpack?levels=1&id=' + levelpackId, {method: 'GET'})
 			.then(async (res) => {
 				exploreLevelPageLevel = await res.json()
-				playExploreLevel()
-				rAF60fps()
+				if (levelpackProgress[exploreLevelPageLevel.id] === 'undefined') playExploreLevel();
+				else continueExploreLevelpack();
+				rAF60fps();
 			})
 			.catch((e) => {
-				alert("Unable to find levelpack!", e)
-				console.error(e)
-			})
+				alert("Unable to find levelpack!", e);
+				console.error(e);
+			});
 	} else {
 		rAF60fps();
 	}
