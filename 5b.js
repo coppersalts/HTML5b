@@ -2310,8 +2310,8 @@ async function loadingScreen() {
 		svgTools[i] = createImage(resourceData['lc/tool' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgMyLevelsIcons.length; i++) {
-		svgMyLevelsIcons[i] = await createImage(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
-		console.log(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
+		svgMyLevelsIcons[i] = createImage(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
+		// console.log(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	setup();
 }
@@ -9588,7 +9588,11 @@ function draw() {
 
 			drawMenu2_3Button(1, 837.5, 486.95, menu2Back);
 			// if (enableExperimentalFeatures) drawMenu2_3Button(2, 10, 486.95, logInExplore);
-			drawMenu0Button('LOG IN', 520, 15, false, logInExplore, 120);
+			if (loggedInExploreUser5beamID === -1) {
+				drawMenu0Button('LOG IN', 540, 20, false, logInExplore, 120);
+			} else {
+				drawMenu0Button('LOG OUT', 520, 20, false, logOutExplore, 150);
+			}
 			break;
 
 		case 7:
@@ -10208,6 +10212,14 @@ function logInExplore() {
 	loggedInExploreUser5beamID = 0;
 }
 
+function logOutExplore() {
+	loggedInExploreUser5beamID = -1;
+	deleteCookie('access_token');
+	deleteCookie('refresh_token');
+	deleteCookie('token_created_at');
+
+}
+
 async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 	if (levelAlreadySharedToExplore) {
 		setLCMessage('You already shared that level to explore.');
@@ -10255,6 +10267,10 @@ function getCookie(cname) {
 		}
 	}
 	return '';
+}
+//https://stackoverflow.com/questions/2144386/how-to-delete-a-cookie
+function deleteCookie(name) {
+	document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.hostname;
 }
 
 
