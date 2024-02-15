@@ -2145,6 +2145,7 @@ let svgMenu2border;
 let svgMenu2borderimg;
 let preMenuBG;
 let svgTools = new Array(12);
+let svgMyLevelsIcons = new Array(5);
 let menu2_3Buttons = [
 	new Path2D('M 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nM 98.75 7.6\nL 98.75 21.65\nQ 98.75 26.2 96.2 28.45 93.65 30.7 89.15 30.7 84.55 30.7 82.05 28.45 79.55 26.25 79.55 21.65\nL 79.55 7.6 84.5 7.6 84.5 21.65\nQ 84.5 22.55 84.65 23.45 84.8 24.35 85.3 25\nL 86.7 26.1 89.15 26.55\nQ 91.75 26.55 92.8 25.35 93.8 24.15 93.8 21.65\nL 93.8 7.6 98.75 7.6\nM 70.55 7.6\nL 75.2 7.6 75.2 30.15 70.25 30.15 60.85 15.05 60.8 15.05 60.8 30.15 56.15 30.15 56.15 7.6 61.1 7.6 70.5 22.75 70.55 22.75 70.55 7.6\nM 40.75 16.6\nL 51.65 16.6 51.65 20.45 40.75 20.45 40.75 26 52.85 26 52.85 30.15 35.75 30.15 35.75 7.6 52.6 7.6 52.6 11.8 40.75 11.8 40.75 16.6\nM 24.4 7.6\nL 31.4 7.6 31.4 30.15 26.75 30.15 26.75 14.2 26.7 14.2 21.15 30.15 17.35 30.15 11.8 14.35 11.75 14.35 11.75 30.15 7.1 30.15 7.1 7.6 14.1 7.6 19.35 23.15 19.45 23.15 24.4 7.6 Z'),
 	new Path2D('M 94.5 37.3\nQ 104.5 37.3 104.5 27.3\nL 104.5 10.05\nQ 104.5 0 94.5 0\nL 10 0\nQ 0 0 0 10.05\nL 0 27.3\nQ 0 37.3 10 37.3\nL 94.5 37.3\nM 92.9 6.5\nL 99.6 6.5 90.05 16.15 100.55 30.9 93.8 30.9 86.45 19.95 83.4 23.05 83.4 30.9 78 30.9 78 6.5 83.4 6.5 83.4 16.6 92.9 6.5\nM 67.15 11.65\nQ 66.45 11.05 65.55 10.75\nL 63.65 10.4\nQ 61.85 10.4 60.6 11.1 59.3 11.85 58.55 13 57.75 14.2 57.4 15.7 57.05 17.2 57.05 18.8 57.05 20.35 57.4 21.8 57.75 23.25 58.55 24.4 59.3 25.6 60.6 26.3 61.85 27 63.65 27 66.1 27 67.5 25.45 68.9 23.95 69.2 21.5\nL 74.4 21.5\nQ 74.2 23.8 73.35 25.65 72.45 27.5 71.05 28.8 69.65 30.1 67.8 30.8\nL 63.65 31.5\nQ 60.8 31.5 58.6 30.5 56.35 29.5 54.8 27.8 53.3 26.1 52.45 23.75 51.65 21.45 51.65 18.8 51.65 16.1 52.45 13.75 53.3 11.4 54.8 9.65 56.35 7.9 58.6 6.9 60.8 5.9 63.65 5.9 65.65 5.9 67.45 6.5 69.25 7.1 70.65 8.2 72.1 9.3 73 10.95 73.95 12.6 74.15 14.7\nL 68.95 14.7\nQ 68.85 13.8 68.35 13\nL 67.15 11.65\nM 50.6 30.9\nL 45 30.9 43.15 25.5 34.05 25.5 32.15 30.9 26.7 30.9 35.95 6.5 41.45 6.5 50.6 30.9\nM 22.35 7.8\nQ 23.35 8.5 23.9 9.65 24.5 10.85 24.5 12.55 24.5 14.35 23.65 15.6 22.8 16.85 21.15 17.65 23.45 18.3 24.55 19.9 25.65 21.55 25.65 23.8 25.65 25.7 24.95 27.05 24.2 28.4 23 29.25 21.8 30.1 20.2 30.5\nL 17.05 30.9 5.2 30.9 5.2 6.5 16.7 6.5 19.85 6.8\nQ 21.3 7.1 22.35 7.8\nM 19.2 20.85\nQ 18.15 20.05 16.4 20.05\nL 10.6 20.05 10.6 26.75 16.3 26.75 17.8 26.6 19.05 26.05 19.95 25.1 20.25 23.5\nQ 20.25 21.65 19.2 20.85\nM 19 12.1\nQ 18.65 11.5 18.15 11.2\nL 17 10.8 15.6 10.65 10.6 10.65 10.6 16.4 16 16.4\nQ 17.45 16.4 18.35 15.7 19.3 15 19.3 13.5\nL 19 12.1\nM 38.7 12.5\nL 38.65 12.5 35.45 21.45 41.75 21.45 38.7 12.5 Z'),
@@ -2226,7 +2227,7 @@ async function loadingScreen() {
 	levelsString = await req.text();
 	loadLevels();
 
-	req = await fetch('data/images2.json');
+	req = await fetch('data/images6.json');
 	let resourceData = await req.json();
 
 	svgCSBubble = createImage(resourceData['ui/csbubble/dia.svg']);
@@ -2307,6 +2308,10 @@ async function loadingScreen() {
 	preMenuBG = createImage(resourceData['premenubg.png']);
 	for (let i = 0; i < svgTools.length; i++) {
 		svgTools[i] = createImage(resourceData['lc/tool' + i.toString().padStart(4, '0') + '.svg']);
+	}
+	for (let i = 0; i < svgMyLevelsIcons.length; i++) {
+		svgMyLevelsIcons[i] = await createImage(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
+		console.log(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	setup();
 }
@@ -2396,6 +2401,7 @@ function exploreTextBoxes() {
 function myLevelsTextBoxes() {
 	textBoxes = [[],[]];
 	textBoxes[0].push(new TextBox(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 28, 15, 839, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
+	textBoxes[0].push(new TextBox('', 0, 0, 100, 100, '#ffffff', '#000000', '#a0a0a0', 14, 14, 'Helvetica', true, [5, 5, 5, 5], 0, 10, false));
 }
 
 function menuExitLevelCreator() {
@@ -2804,13 +2810,14 @@ function drawNewGame2Button(text, x, y, color, action) {
 	ctx.fillText(text, x + size / 2, y + (size * 1.1) / 2);
 }
 
-function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive, enabled = true, isOnPopUp = false) {
+function drawSimpleButton(text, action, x, y, w, h, bottomPad, textColor, bgColor, bgHover, bgActive, kwargs={}) {
 	let onThisButton = false; // Part of the hack for making copy work on Safari.
-	if (enabled) {
-		if (onRect(_xmouse, _ymouse, x, y, w, h) && (!lcPopUp || isOnPopUp)) {
+	if (kwargs.enabled !== false) {
+		if (onRect(_xmouse, _ymouse, x, y, w, h) && (!lcPopUp || kwargs.isOnPopUp === true)) {
 			onButton = true;
 			onThisButton = true;
 			ctx.fillStyle = bgHover;
+			if (kwargs.alt) hoverText = kwargs.alt;
 			if (mouseIsDown) ctx.fillStyle = bgActive;
 			else if (pmouseIsDown && onRect(lastClickX, lastClickY, x, y, w, h)) action();
 		} else ctx.fillStyle = bgColor;
@@ -7099,12 +7106,14 @@ function shareToExplore() {
 }
 
 function sharePackToExplore() {
-	if (!enableExperimentalFeatures) return;
-
 	if (loggedInExploreUser5beamID != -1) {
 		logInExplore();
 	} else {
-		postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 'Experimental levelpack upload directly from HTML5b.', getCurrentLevelpackString(), true);
+		if (loggedInExploreUser5beamID != -1) {
+			logInExplore();
+		} else {
+			postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].description, getCurrentLevelpackString(), true);
+		}
 	}
 }
 
@@ -7152,6 +7161,14 @@ function confirmDeleteLevel() {
 function cancelDeleteLevel() {
 	lcPopUp = false;
 	deletingMyLevels = false;
+}
+
+function openEditLevelpackDescriptionDialog() {
+	lcPopUpNextFrame = true;
+}
+
+function closeLevelpackDescriptionDialog() {
+	lcPopUp = false;
 }
 
 function removeLevelpackLevel(locOnPage) {
@@ -7519,7 +7536,7 @@ function setup() {
 		exploreLevelPageType = 0;
 		fetch('https://5beam.zelo.dev/api/level?id=' + levelId, {method: 'GET'})
 			.then(async (res) => {
-				exploreLevelPageLevel = await res.json()
+				exploreLevelPageLevel = await res.json();
 				playExploreLevel();
 				rAF60fps();
 			})
@@ -7533,7 +7550,7 @@ function setup() {
 		exploreLevelPageType = 1;
 		fetch('https://5beam.zelo.dev/api/levelpack?levels=1&id=' + levelpackId, {method: 'GET'})
 			.then(async (res) => {
-				exploreLevelPageLevel = await res.json()
+				exploreLevelPageLevel = await res.json();
 				if (levelpackProgress[exploreLevelPageLevel.id] === 'undefined') playExploreLevel();
 				else continueExploreLevelpack();
 				rAF60fps();
@@ -9121,9 +9138,9 @@ function draw() {
 					// if (enableExperimentalFeatures) {
 					let isNew = lcCurrentSavedLevel==-1;
 					if (!isNew) ctx.font = '18px Helvetica';
-					drawSimpleButton(isNew?'Save Level':'Save Changes', saveLevelCreator, 675, tabWindowY + 90, 130, 30, isNew?3:5, '#ffffff', '#404040', '#666666', '#555555', lcChangesMade);
+					drawSimpleButton(isNew?'Save Level':'Save Changes', saveLevelCreator, 675, tabWindowY + 90, 130, 30, isNew?3:5, '#ffffff', '#404040', '#666666', '#555555', {enabled:lcChangesMade});
 					ctx.font = '23px Helvetica';
-					drawSimpleButton('Save Copy', saveLevelCreatorCopy, 815, tabWindowY + 90, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555', !isNew);
+					drawSimpleButton('Save Copy', saveLevelCreatorCopy, 815, tabWindowY + 90, 130, 30, 3, '#ffffff', '#404040', '#666666', '#555555', {enabled:!isNew});
 					drawSimpleButton('New Blank Level', resetLevelCreator, 675, tabWindowY + 130, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 170, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					// }
@@ -9775,7 +9792,7 @@ function draw() {
 				ctx.textAlign = 'right';
 				ctx.textBaseline = 'bottom';
 				ctx.fillStyle = '#ffffff';
-				ctx.fillText('click on a level or levelpack to edit it', cwidth-28, 60);
+				ctx.fillText(deletingMyLevels?'click the trash can to exit delete mode':'click on a level or levelpack to edit it', cwidth-28, 60);
 
 				// Tabs
 				ctx.font = 'bold 35px Helvetica';
@@ -9800,11 +9817,13 @@ function draw() {
 
 				// delete button
 				ctx.font = '23px Helvetica';
-				drawSimpleButton(deletingMyLevels?'Exit Scary Delete Mode':((myLevelsTab===0)?'Delete Levels':'Delete Levelpacks'), toggleMyLevelDeleting, 28, 85, deletingMyLevels?280:((myLevelsTab===0)?150:200), 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
+				drawSimpleButton('', toggleMyLevelDeleting, 28, 85, 30, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040', {alt:myLevelsTab===0?'Delete levels':'Delete levelpacks'});
+				ctx.drawImage(svgMyLevelsIcons[0], 28, 85);
 				if (myLevelsTab === 1) {
-					// temporary create levelpack button
+					// create levelpack button
 					ctx.font = '23px Helvetica';
-					drawSimpleButton('Create New', createNewLevelpack, 328, 85, 150, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
+					drawSimpleButton('', createNewLevelpack, 68, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Create new levelpack'});
+					ctx.drawImage(svgMyLevelsIcons[1], 68, 85);
 				}
 			}
 
@@ -9855,8 +9874,8 @@ function draw() {
 				ctx.textAlign = 'left';
 				wrapText((myLevelsTab===0)?('Are you sure you want to delete the level "' + lcSavedLevels[levelToDelete].title):('Are you sure you want to delete the levelpack "' + lcSavedLevelpacks[levelToDelete].title) + '"? This action can not be undone.', (cwidth - lcPopUpW) / 2 + 10, (cheight - lcPopUpH) / 2 + 5, lcPopUpW - 20, 22);
 
-				drawSimpleButton('Cancel', cancelDeleteLevel, cwidth/2 - 125, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#a0a0a0', '#c0c0c0', '#c0c0c0', true, true);
-				drawSimpleButton('Delete', confirmDeleteLevel, cwidth/2 + 25, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#ff0000', '#ff8080', '#ffa0a0', true, true);
+				drawSimpleButton('Cancel', cancelDeleteLevel, cwidth/2 - 125, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#a0a0a0', '#c0c0c0', '#c0c0c0', {isOnPopUp:true});
+				drawSimpleButton('Delete', confirmDeleteLevel, cwidth/2 + 25, (cheight + lcPopUpH) / 2 - 40, 100, 30, 3, '#ffffff', '#ff0000', '#ff8080', '#ffa0a0', {isOnPopUp:true});
 			}
 
 
@@ -9876,27 +9895,32 @@ function draw() {
 			textBoxes[0][0].draw();
 			lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title = textBoxes[0][0].text;
 			if (wasEditingBefore && !editingTextBox) saveMyLevelpacks();
+			drawSimpleButton('', openEditLevelpackDescriptionDialog, 877, 15, 55, 55, 3, '#ffffff', '#333333', '#404040', '#404040', {alt:'Remove levels'});
+			ctx.drawImage(svgMyLevelsIcons[1], 877, 15, 55, 55);
 
-			// temporary add level button
+
+			drawSimpleButton('', toggleLevelpackCreatorRemovingLevels, 28, 85, 30, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040', {alt:'Remove levels'});
+			ctx.drawImage(svgMyLevelsIcons[0], 28, 85);
+
+			drawSimpleButton('', openAddLevelsToLevelpackScreen, 68, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Add levels'});
+			ctx.drawImage(svgMyLevelsIcons[1], 68, 85);
+
+			if (drawSimpleButton('', copySavedLevelpackString, 108, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Copy levelpack string'}).hover) copyButton = 2;
+			ctx.drawImage(svgMyLevelsIcons[2], 108, 85);
+
+			drawSimpleButton('', playSavedLevelpack, 148, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Play levelpack'});
+			ctx.drawImage(svgMyLevelsIcons[4], 148, 85);
+
 			ctx.font = '23px Helvetica';
-			drawSimpleButton('Add A Level', openAddLevelsToLevelpackScreen, 328, 85, 150, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
+			drawSimpleButton('Share to Explore', sharePackToExplore, 188, 85, 200, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Share levelpack to exlore'});
+			// ctx.drawImage(svgMyLevelsIcons[3], 188, 85);
 
-			// temporary remove levels button
-			ctx.font = '23px Helvetica';
-			drawSimpleButton(levelpackCreatorRemovingLevels?'Exit Remove Levels Mode':'Remove Levels', toggleLevelpackCreatorRemovingLevels, 28, 85, levelpackCreatorRemovingLevels?280:170, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040');
-
-			// temporary play levelpack button
-			ctx.font = '23px Helvetica';
-			drawSimpleButton('Play Levelpack', playSavedLevelpack, 498, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
-
-			// temporary copy string button
-			ctx.font = '23px Helvetica';
-			if (drawSimpleButton('Copy String', copySavedLevelpackString, 688, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff').hover) copyButton = 2;
-
-			if (enableExperimentalFeatures) {
-				// temporary share to explore button
-				ctx.font = '23px Helvetica';
-				drawSimpleButton('Share To Explore', sharePackToExplore, 868, 85, 170, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff');
+			if (levelpackCreatorRemovingLevels) {
+				ctx.font = '26px Helvetica';
+				ctx.textAlign = 'right';
+				ctx.textBaseline = 'top';
+				ctx.fillStyle = '#ffffff';
+				ctx.fillText('click the trash can to exit delete mode', cwidth-28, 85);
 			}
 
 
@@ -9931,9 +9955,39 @@ function draw() {
 			} else ctx.fillStyle = '#999999';
 			drawArrow(707.5, 487, 25, 30, 1);
 
+			drawMenu2_3Button(1, 837.5, 486.95, menuLevelpackCreatorBack);
+
+			if (lcPopUp && !lcPopUpNextFrame) {
+				ctx.globalAlpha = 0.2;
+				ctx.fillStyle = '#000000';
+				ctx.fillRect(0, 0, cwidth, cheight);
+				ctx.globalAlpha = 1;
+				let lcPopUpW = 750;
+				let lcPopUpH = 500;
+
+				ctx.fillStyle = '#eaeaea';
+				ctx.fillRect((cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH);
+				if (mousePressedLastFrame && !onRect(_xmouse, _ymouse, (cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH) ) closeLevelpackDescriptionDialog();
+
+				
+				ctx.fillStyle = '#000000';
+				ctx.font = '20px Helvetica';
+				ctx.textBaseline = 'top';
+				ctx.textAlign = 'left';
+				ctx.fillText("Levelpack description:", (cwidth - lcPopUpW) / 2 + 10, (cheight - lcPopUpH) / 2 + 5);
+				textBoxes[0][1].x = (cwidth - lcPopUpW) / 2 + 10;
+				textBoxes[0][1].y = (cheight - lcPopUpH) / 2 + 30;
+				textBoxes[0][1].w = lcPopUpW - 30;
+				textBoxes[0][1].h = lcPopUpH - 80;
+				textBoxes[0][1].draw();
+				lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].description = textBoxes[0][1].text;
+
+				ctx.font = '18px Helvetica';
+				drawSimpleButton('Done', closeLevelpackDescriptionDialog, (cwidth - lcPopUpW) / 2 + 10, (cheight + lcPopUpH) / 2 - 40, 60, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {isOnPopUp:true});
+			}
+
 			if (lcPopUpNextFrame) lcPopUp = true;
 			lcPopUpNextFrame = false;
-			drawMenu2_3Button(1, 837.5, 486.95, menuLevelpackCreatorBack);
 			break;
 	}
 

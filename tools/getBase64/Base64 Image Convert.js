@@ -1110,6 +1110,11 @@ const filePaths = [
 	'ui/hprcbubble/hprcbubble0002.svg',
 	'ui/hprcbubble/hprcbubble0003.svg',
 	'ui/hprcbubble/hprcbubble0004.svg',
+	'ui/mylevels/icon0000.svg',
+	'ui/mylevels/icon0001.svg',
+	'ui/mylevels/icon0002.svg',
+	'ui/mylevels/icon0003.svg',
+	'ui/mylevels/icon0004.svg',
 ];
 const base64out = {};
 
