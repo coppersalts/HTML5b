@@ -24,7 +24,7 @@ let highQual = true;
 const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 const browserPasteSolution = typeof navigator.clipboard.readText === "function";
 const browserCopySolution = typeof navigator.clipboard.write === "function";
-let copyButton = false; // Hack to make copying work on Safari.
+let copyButton = 0; // Hack to make copying work on Safari.
 
 // offscreen canvases
 let osc1, osctx1;
@@ -6212,6 +6212,10 @@ function copyLevelString() {
 	copyText(generateLevelString());
 }
 
+function exploreCopyPermalink() {
+	copyText('https://coppersalts.github.io/HTML5b/?' + (exploreLevelPageType===0?'level=':'levelpack=') + exploreLevelPageLevel.id);
+}
+
 function copyText(textIn) {
 	// https://stackoverflow.com/questions/400212/how-do-i-copy-to-the-clipboard-in-javascript
 	const text = textIn;
@@ -6242,7 +6246,7 @@ function copyText(textIn) {
 			}
 		);
 	}
-	copyButton = false;
+	copyButton = 0;
 }
 
 function generateLevelString() {
@@ -7098,7 +7102,7 @@ function drawArrow(x, y, w, h, dir) {
 }
 
 function shareToExplore() {
-	if (loggedInExploreUser5beamID != -1) {
+	if (loggedInExploreUser5beamID !== -1) {
 		logInExplore();
 	} else {
 	postExploreLevelOrPack(myLevelInfo.name, myLevelInfo.desc, generateLevelString(), false);
@@ -7106,10 +7110,10 @@ function shareToExplore() {
 }
 
 function sharePackToExplore() {
-	if (loggedInExploreUser5beamID != -1) {
+	if (loggedInExploreUser5beamID !== -1) {
 		logInExplore();
 	} else {
-		if (loggedInExploreUser5beamID != -1) {
+		if (loggedInExploreUser5beamID !== -1) {
 			logInExplore();
 		} else {
 			postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].description, getCurrentLevelpackString(), true);
@@ -7383,12 +7387,13 @@ function mouseup(event) {
 	mouseIsDown = false;
 
 	// Makes copying possible on Safari.
-	if (copyButton != false) {
+	if (copyButton != 0) {
 		if (browserCopySolution) {
 			if (copyButton == 1) copyLevelString();
 			else if (copyButton == 2) copySavedLevelpackString();
+			else if (copyButton == 3) exploreCopyPermalink();
 		}
-		copyButton = false;
+		copyButton = 0;
 	}
 	if (menuScreen == 5) {
 		if (!blockProperties[selectedTile][9]) {
@@ -9644,14 +9649,19 @@ function draw() {
 
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				ctx.font = 'bold 30px Helvetica';
-				drawSimpleButton(exploreLevelPageType===0?'PLAY LEVEL':'NEW GAME', playExploreLevel, 30, 379, 384, 43, 3, '#ffffff', '#404040', '#808080', '#808080');
+				ctx.font = '18px Helvetica';
+				drawSimpleButton(exploreLevelPageType===0?'Play Level':'New Game', playExploreLevel, 30, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
 
 				if (exploreLevelPageType != 0) {
-					drawSimpleButton('CONTINUE GAME', continueExploreLevelpack, 30, 430, 384, 43, 3, '#ffffff', '#404040', '#808080', '#808080', {enabled:typeof levelpackProgress[exploreLevelPageLevel.id] !== 'undefined'});
+					drawSimpleButton('Continue Game', continueExploreLevelpack, 30, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080', {enabled:typeof levelpackProgress[exploreLevelPageLevel.id] !== 'undefined'});
 				}
 
-				drawSimpleButton('MORE BY THIS USER', exploreMoreByThisUser, 30, exploreLevelPageType==0?430:481, 384, 43, 3, '#ffffff', '#404040', '#808080', '#808080');
+				if (drawSimpleButton('Copy Permalink', exploreCopyPermalink, 226, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080').hover) copyButton = 3;
+				drawSimpleButton('More By This User', exploreMoreByThisUser, 226, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+
+				if (exploreLevelPageType != 1 && loggedInExploreUser5beamID === exploreLevelPageLevel) {
+					drawSimpleButton('Exit', editExploreLevel, 30, 455, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+				}
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
@@ -9892,7 +9902,7 @@ function draw() {
 		case 11:
 			// Levelpack Creator
 			lcPopUpNextFrame = false;
-			copyButton = false;
+			copyButton = 0;
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
 
