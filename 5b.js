@@ -10158,6 +10158,20 @@ function getExploreUser(id) {
 		});
 }
 
+function getCurrentExploreUserID() {
+	return fetch('https://discord.com/api/v10/users/@me', {
+		method: 'GET',
+		headers: {'Authorization': 'Bearer ' + getCookie('access_token')}
+	}).then(async indentity => {
+		const discordId = (await indentity.json()).id;
+		fetch('https://5beam.zelo.dev/api/user?discordId=' + discordId, {method: 'GET'})
+			.then(async response => {
+				loggedInExploreUser5beamID = (await response.json()).id;
+			document.cookie = '5beam_id=' + loggedInExploreUser5beamID + '; path=/';
+			}).catch(err => {console.log(err);});
+	}).catch(err => {console.log(err)});
+}
+
 function getExploreUserPage(id, p, t, s) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/user/page?id=' + id + '&page=' + p + '&type=' + t + '&sort=' + s, {method: 'GET'})
@@ -10189,14 +10203,14 @@ async function refreshToken() {
 		case 200:
 			document.cookie = 'access_token=' + data.access_token + ';max-age=' + data.expires_in + ';path=/';
 			document.cookie = 'refresh_token=' + data.refresh_token + ';path=/';
-			loggedInExploreUser5beamID = 0;
+			if (!getCookie('5beam_id')) getCurrentExploreUserID();
 			break;
 		case 400:
 		default:
 			console.error(data)
 			setLCMessage('Your session has expired. You need to sign in again!');
 	}
-	return response
+	return response;
 }
 
 function logInExplore() {
@@ -10210,7 +10224,7 @@ function logInExplore() {
 
 	// Get access_token once finished
 	newWindow.addEventListener('close', refreshToken);
-	loggedInExploreUser5beamID = 0;
+	getCurrentExploreUserID();
 }
 
 function logOutExplore() {
@@ -10218,9 +10232,9 @@ function logOutExplore() {
 	deleteCookie('access_token');
 	deleteCookie('refresh_token');
 	deleteCookie('token_created_at');
+	deleteCookie('5beam_id');
 
 }
-
 async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 	if (levelAlreadySharedToExplore) {
 		setLCMessage('You already shared that level to explore.');
