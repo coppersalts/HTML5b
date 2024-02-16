@@ -2165,6 +2165,7 @@ let mouseOnTabWindow = false;
 let menu2_3ButtonClicked = -1;
 let levelButtonClicked = -1;
 let showingNewGame2 = false;
+let showingExploreNewGame2 = false;
 
 let musicSound = new Audio('data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
@@ -2367,6 +2368,20 @@ function menuNewGame2yes() {
 	beginNewGame();
 }
 
+function openExploreNewGame2() {
+	if (typeof levelpackProgress[exploreLevelPageLevel.id] !== 'undefined') showingExploreNewGame2 = true;
+	else playExploreLevel();
+}
+
+function exploreNewGame2no() {
+	showingExploreNewGame2 = false;
+}
+
+function exploreNewGame2yes() {
+	showingExploreNewGame2 = false;
+	playExploreLevel();
+}
+
 function menuContGame() {
 	enterBaseLevelpackLevelSelect();
 	getSavedGame();
@@ -2484,6 +2499,7 @@ function gotoExploreLevelPage(locOnPage) {
 
 function menuExploreLevelPageBack() {
 	menuScreen = previousMenuExplore;
+	showingExploreNewGame2 = false;
 }
 
 function menuExploreBack() {
@@ -7120,6 +7136,9 @@ function sharePackToExplore() {
 		}
 	}
 }
+function editExploreLevel() {
+	//
+}
 
 function saveLevelCreator() {
 	if (lcCurrentSavedLevel == -1) {
@@ -9649,11 +9668,19 @@ function draw() {
 
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				ctx.font = '18px Helvetica';
-				drawSimpleButton(exploreLevelPageType===0?'Play Level':'New Game', playExploreLevel, 30, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+				ctx.font = '20px Helvetica';
+				if (!showingExploreNewGame2) {
+					drawSimpleButton(exploreLevelPageType===0?'Play Level':'New Game', playExploreLevel===0?playExploreLevel:openExploreNewGame2, 30, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
 
-				if (exploreLevelPageType != 0) {
-					drawSimpleButton('Continue Game', continueExploreLevelpack, 30, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080', {enabled:typeof levelpackProgress[exploreLevelPageLevel.id] !== 'undefined'});
+					if (exploreLevelPageType != 0) {
+						drawSimpleButton('Continue Game', continueExploreLevelpack, 30, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080', {enabled:typeof levelpackProgress[exploreLevelPageLevel.id] !== 'undefined'});
+					}
+				} else {
+					drawSimpleButton('Yes', exploreNewGame2yes, 30, 417, 90, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+					drawSimpleButton('No', exploreNewGame2no, 128, 417, 90, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+					ctx.fillStyle ='#ffffff';
+					ctx.textBaseline = 'middle';
+					ctx.fillText('Are you sure?', 124, 396);
 				}
 
 				if (drawSimpleButton('Copy Permalink', exploreCopyPermalink, 226, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080').hover) copyButton = 3;
