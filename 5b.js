@@ -9644,13 +9644,14 @@ function draw() {
 
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
 
-				drawMenu0Button(exploreLevelPageType==0?'PLAY LEVEL':'NEW GAME', 30, 379, false, playExploreLevel);
+				ctx.font = 'bold 30px Helvetica';
+				drawSimpleButton(exploreLevelPageType===0?'PLAY LEVEL':'NEW GAME', playExploreLevel, 30, 379, 384, 43, 3, '#ffffff', '#404040', '#808080', '#808080');
 
 				if (exploreLevelPageType != 0) {
-					drawMenu0Button('CONTINUE GAME', 30, 430, typeof levelpackProgress[exploreLevelPageLevel.id] === 'undefined', continueExploreLevelpack);
+					drawSimpleButton('CONTINUE GAME', continueExploreLevelpack, 30, 430, 384, 43, 3, '#ffffff', '#404040', '#808080', '#808080', {enabled:typeof levelpackProgress[exploreLevelPageLevel.id] !== 'undefined'});
 				}
 
-				drawMenu0Button('more by this user', 30, exploreLevelPageType==0?430:481, false, exploreMoreByThisUser);
+				drawSimpleButton('MORE BY THIS USER', exploreMoreByThisUser, 30, exploreLevelPageType==0?430:481, 384, 43, 3, '#ffffff', '#404040', '#808080', '#808080');
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
