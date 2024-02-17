@@ -16,7 +16,39 @@
 			// browser.cookies.set({domain:'coppersalts.github.io',httpOnly:true,name:'access_token',url:'/',value:params.get('access_token')});
 			// browser.cookies.set({domain:'coppersalts.github.io',httpOnly:true,name:'refresh_token',url:'/',value:params.get('refresh_token')});
 			window.close();
+			getCurrentExploreUserID();
 		}
+
+		/*function getCurrentExploreUserID() {
+			return fetch('https://discord.com/api/v10/users/@me', {
+				method: 'GET',
+				headers: {'Authorization': 'Bearer ' + getCookie('access_token')}
+			}).then(async indentity => {
+				const discordId = (await indentity.json()).id;
+				fetch('https://5beam.zelo.dev/api/user?discordId=' + discordId, {method: 'GET'})
+					.then(async response => {
+						loggedInExploreUser5beamID = (await response.json()).id;
+					document.cookie = '5beam_id=' + loggedInExploreUser5beamID + '; path=/';
+					}).catch(err => {console.log(err);});
+			}).catch(err => {console.log(err)});
+		}
+
+		// https://www.w3schools.com/js/js_cookies.asp
+		function getCookie(cname) {
+			let name = cname + '=';
+			let decodedCookie = decodeURIComponent(document.cookie);
+			let ca = decodedCookie.split(';');
+			for (let i = 0; i < ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return '';
+		}*/
 	</script>
 </head>
 <body onload="saveTokens()">

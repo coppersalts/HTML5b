@@ -7593,6 +7593,8 @@ function setup() {
 	window.addEventListener('keyup', keyup);
 	canvas.addEventListener('paste', handlePaste);
 
+	if (getCookie('5beam_id')) loggedInExploreUser5beamID = getCookie('5beam_id');
+
 	if (levelId) {
 		// If the level ID is specified in the URL, load that level.
 		menuScreen = 0;
@@ -10394,8 +10396,12 @@ function logInExplore() {
 
 	// Get access_token once finished
 	newWindow.addEventListener('close', refreshToken);
-	getCurrentExploreUserID();
 }
+
+/*function logInExploreAfter() {
+	getCurrentExploreUserID();
+	refreshToken();
+}*/
 
 function logOutExplore() {
 	loggedInExploreUser5beamID = -1;
@@ -10487,7 +10493,7 @@ function getCookie(cname) {
 }
 //https://stackoverflow.com/questions/2144386/how-to-delete-a-cookie
 function deleteCookie(name) {
-	document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.hostname;
+	document.cookie = name + '=; Max-Age=0; path=/; domain=';
 }
 
 
