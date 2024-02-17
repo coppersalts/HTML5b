@@ -10412,6 +10412,7 @@ function logOutExplore() {
 
 }
 async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
+	await refreshToken();
 	if (levelAlreadySharedToExplore) {
 		setLCMessage('You already shared that level to explore.');
 		return;
@@ -10444,7 +10445,7 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 }
 
 function postExploreModifyLevel(id, title, desc, difficulty, file) {
-	refreshToken();
+	await refreshToken();
 	requestAdded();
 
 	const body = {
