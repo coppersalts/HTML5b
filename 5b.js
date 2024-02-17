@@ -1,4 +1,4 @@
-const version = 'v0.3.2*'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.3.3'; // putting this up here so I can edit the text on the title screen more easily.
 
 /* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
 performanceTest(()=>{
@@ -2023,6 +2023,8 @@ let explorePageLevels = [];
 let exploreUserPageLevels = [];
 let exploreLevelPageLevel;
 let exploreLevelPageType;
+let editingExploreLevel = false;
+let exploreOldLevelData = {};
 let previousMenuExplore = 0;
 let exploreUser;
 let exploreUserPageNumbers = [];
@@ -2411,6 +2413,9 @@ function generateDialogueTextBoxes() {
 function exploreTextBoxes() {
 	textBoxes = [[],[]];
 	textBoxes[0].push(new TextBox('', 28, 75, 839, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
+	textBoxes[0].push(new TextBox('', 430, 98, 500, 387, '#333333', '#ffffff', '#888888', 22, 20, 'Helvetica', true, [5, 5, 5, 5], 0, 10, false));
+	textBoxes[0].push(new TextBox('', 30, 10, 910, 45, '#333333', '#ffffff', '#888888', 30, 30, 'Helvetica', false, [10, 12, 10, 10], 1, 10, false));
+	textBoxes[0].push(new TextBox('', 0, 0, 100, 100, '#ffffff', '#000000', '#a0a0a0', 10, 10, 'monospace', true, [5, 5, 5, 5], 0, 10, false));
 }
 
 function myLevelsTextBoxes() {
@@ -2500,6 +2505,7 @@ function gotoExploreLevelPage(locOnPage) {
 function menuExploreLevelPageBack() {
 	menuScreen = previousMenuExplore;
 	showingExploreNewGame2 = false;
+	cancelEditExploreLevel();
 }
 
 function menuExploreBack() {
@@ -2508,7 +2514,17 @@ function menuExploreBack() {
 	// setExplorePage(1);
 }
 
+function confirmChangeLevelString() {
+	lcPopUp = false;
+	exploreLevelPageLevel.data = textBoxes[0][3].text;
+}
+
+function cancelChangeLevelString() {
+	lcPopUp = false;
+}
+
 function playExploreLevel(continueGame=false) {
+	cancelEditExploreLevel();
 	// increment play counter
 	getExplorePlay(exploreLevelPageLevel.id);
 
@@ -2598,6 +2614,7 @@ function copySavedLevelpackString() {
 }
 
 function exploreMoreByThisUser() {
+	cancelEditExploreLevel();
 	menuScreen = 8;
 	// getExploreUser(exploreLevelPageLevel.creator.id);
 	exploreUser = exploreLevelPageLevel.creator;
@@ -6228,7 +6245,7 @@ function copyLevelString() {
 	copyText(generateLevelString());
 }
 
-function exploreCopyPermalink() {
+function exploreCopyLink() {
 	copyText('https://coppersalts.github.io/HTML5b/?' + (exploreLevelPageType===0?'level=':'levelpack=') + exploreLevelPageLevel.id);
 }
 
@@ -7136,8 +7153,30 @@ function sharePackToExplore() {
 		}
 	}
 }
+
 function editExploreLevel() {
-	//
+	// /modify/level
+	if (editingExploreLevel) {
+		editingExploreLevel = false;
+		exploreLevelPageLevel.description = textBoxes[0][1].text;
+		exploreLevelPageLevel.title = textBoxes[0][2].text;
+
+		postExploreModifyLevel(exploreLevelPageLevel.id, exploreLevelPageLevel.title, exploreLevelPageLevel.description, exploreLevelPageLevel.difficulty, (exploreLevelPageLevel.data == exploreOldLevelData.data)?'':exploreLevelPageLevel.data);
+	} else {
+		exploreOldLevelData = {description: exploreLevelPageLevel.description, title: exploreLevelPageLevel.title, difficulty: exploreLevelPageLevel.difficulty, data: exploreLevelPageLevel.data}
+		editingExploreLevel = true;
+		textBoxes[0][1].text = exploreLevelPageLevel.description;
+		textBoxes[0][2].text = exploreLevelPageLevel.title;
+	}
+}
+
+function cancelEditExploreLevel() {
+	if (!editingExploreLevel) return;
+	editingExploreLevel = false;
+	exploreLevelPageLevel.description = exploreOldLevelData.description;
+	exploreLevelPageLevel.title = exploreOldLevelData.title;
+	exploreLevelPageLevel.difficulty = exploreOldLevelData.difficulty;
+	exploreLevelPageLevel.data = exploreOldLevelData.data;
 }
 
 function saveLevelCreator() {
@@ -7410,7 +7449,7 @@ function mouseup(event) {
 		if (browserCopySolution) {
 			if (copyButton == 1) copyLevelString();
 			else if (copyButton == 2) copySavedLevelpackString();
-			else if (copyButton == 3) exploreCopyPermalink();
+			else if (copyButton == 3) exploreCopyLink();
 		}
 		copyButton = 0;
 	}
@@ -9621,6 +9660,7 @@ function draw() {
 
 		case 7:
 			// Explore level page
+			lcPopUpNextFrame = false;
 
 			ctx.fillStyle = '#666666';
 			ctx.fillRect(0, 0, cwidth, cheight);
@@ -9629,44 +9669,79 @@ function draw() {
 			} else {
 				ctx.textBaseline = 'top';
 				ctx.textAlign = 'left';
-				ctx.fillStyle = '#ffffff';
-				ctx.font = '38px Helvetica';
-				ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
-
 				ctx.fillStyle = '#b0b0b0';
 				ctx.font = '18px Helvetica';
-				ctx.fillText('by ' + exploreLevelPageLevel.creator.username, 31.85, 66.1);
+				ctx.fillText('by ' + exploreLevelPageLevel.creator.username, 31.85, 68);
 
+				let showImpossibleNotice = false;
+				if (editingExploreLevel) {
+					textBoxes[0][1].draw();
+					textBoxes[0][2].draw();
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 30, 347, 188, 26)) {
+						ctx.fillStyle = '#404040';
+						onButton = true;
+						if (pmouseIsDown && !mouseIsDown && onRect(lastClickX, lastClickY, 30, 347, 188, 26)) {
+							exploreLevelPageLevel.difficulty = (exploreLevelPageLevel.difficulty + 1) % difficultyMap.length;
+						}
+						if (exploreLevelPageLevel.difficulty == 7) {
+							showImpossibleNotice = true;
+						}
+					} else ctx.fillStyle = '#333333';
+					ctx.fillRect(30, 347, 188, 26);
+				} else {
+					ctx.fillStyle = '#ffffff';
+					ctx.font = '38px Helvetica';
+					ctx.fillText(exploreLevelPageLevel.title, 29.15, 27.4);
+
+					ctx.fillStyle = '#ffffff';
+					ctx.font = '20px Helvetica';
+					wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
+				}
+
+				ctx.fillStyle = '#333333';
 				ctx.font = 'italic 18px Helvetica';
 				ctx.fillText('created ' + exploreLevelPageLevel.created.slice(0,10), 31.85, 325);
-
-
-				ctx.fillStyle = '#ffffff';
-				ctx.font = '20px Helvetica';
-				wrapText(exploreLevelPageLevel.description, 430, 98, 500, 22);
 
 				// Views icon & counter
 				ctx.fillStyle = '#47cb46';
 				ctx.font = 'bold 18px Helvetica';
-				ctx.textAlign = "right";
+				ctx.textAlign = 'right';
 
 				let pluralViewText = exploreLevelPageLevel.plays === 1
 				ctx.fillText(exploreLevelPageLevel.plays + (pluralViewText ? ' play' : ' plays'), 410, 325);
-				ctx.textAlign = "left";
+				ctx.textAlign = 'left';
 
 				// Difficulty in levelpacks arent supported yet
 				if (exploreLevelPageType === 0) {
 					// difficulty circle
-					ctx.beginPath()
-					ctx.arc(40, 360, 8, 0, 2 * Math.PI)
-					ctx.fillStyle = difficultyMap[exploreLevelPageLevel.difficulty][1]
-					ctx.closePath()
-					ctx.fill()
+					ctx.beginPath();
+					ctx.arc(40, 360, 8, 0, 2 * Math.PI);
+					ctx.fillStyle = (editingExploreLevel && exploreLevelPageLevel.difficulty == 7)?'#ffffff':difficultyMap[exploreLevelPageLevel.difficulty][1];
+					ctx.closePath();
+					ctx.fill();
 
 					ctx.fillText(difficultyMap[exploreLevelPageLevel.difficulty][0], 54, 352);
 				}
 
 				ctx.drawImage(thumbBig, 30, 98, 384, 216);
+				if (editingExploreLevel) {
+					if (!lcPopUp && onRect(_xmouse, _ymouse, 34, 102, 52, 52)) {
+						ctx.fillStyle = '#404040';
+						onButton = true;
+						if (pmouseIsDown && !mouseIsDown && onRect(lastClickX, lastClickY, 34, 102, 52, 52)) {
+							lcPopUpNextFrame = true;
+						}
+						if (exploreLevelPageLevel.difficulty == 7) {
+							showImpossibleNotice = true;
+						}
+					} else ctx.fillStyle = '#333333';
+					ctx.beginPath();
+					ctx.arc(60, 128, 26, 0, 2 * Math.PI);
+					ctx.closePath();
+					ctx.fill();
+					ctx.drawImage(svgTools[0], 40, 108);
+
+				}
 
 				ctx.font = '20px Helvetica';
 				if (!showingExploreNewGame2) {
@@ -9683,17 +9758,75 @@ function draw() {
 					ctx.fillText('Are you sure?', 124, 396);
 				}
 
-				if (drawSimpleButton('Copy Permalink', exploreCopyPermalink, 226, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080').hover) copyButton = 3;
+				if (drawSimpleButton('Copy Link', exploreCopyLink, 226, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080').hover) copyButton = 3;
 				drawSimpleButton('More By This User', exploreMoreByThisUser, 226, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
 
 				if (exploreLevelPageType != 1 && loggedInExploreUser5beamID === exploreLevelPageLevel) {
-					drawSimpleButton('Exit', editExploreLevel, 30, 455, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+					drawSimpleButton(editingExploreLevel?'Save Changes':'Edit', editExploreLevel, 226, 455, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+					if (editingExploreLevel) {
+						drawSimpleButton('Cancel', cancelEditExploreLevel, 226, 493, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+						;
+					}
+				}
+
+				if (showImpossibleNotice && !lcPopUp) {
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect(_xmouse + 10, _ymouse, 400, 73);
+					ctx.font = '16px Helvetica';
+					ctx.fillStyle = '#000000';
+					ctx.textAlign = 'left';
+					ctx.textBaseline = 'top';
+					wrapText('Warning: The "Impossible" difficulty is only for levels which are, without a doubt, impossible to complete. In the future, these levels may be put on a separate page.', _xmouse + 15, _ymouse + 5, 390, 16);
 				}
 			}
 
 			drawMenu2_3Button(1, 837.5, 486.95, menuExploreLevelPageBack);
-			break;
 
+			if (lcPopUp && !lcPopUpNextFrame) {
+				if (lcPopUpType == 0) {
+					ctx.globalAlpha = 0.2;
+					ctx.fillStyle = '#000000';
+					ctx.fillRect(0, 0, cwidth, cheight);
+					ctx.globalAlpha = 1;
+					let lcPopUpW = 750;
+					let lcPopUpH = 540;
+					ctx.fillStyle = '#eaeaea';
+					ctx.fillRect((cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH);
+					if (
+						mouseIsDown &&
+						!pmouseIsDown &&
+						!onRect(_xmouse, _ymouse, (cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH)
+					) {
+						lcPopUp = false;
+						editingTextBox = false;
+						deselectAllTextBoxes();
+						levelLoadString = '';
+					}
+					ctx.fillStyle = '#000000';
+					ctx.font = '20px Helvetica';
+					ctx.textBaseline = 'top';
+					ctx.textAlign = 'left';
+					ctx.fillText(
+						'You can modify your level\'s data for small changes. Paste your new string here:',
+						(cwidth - lcPopUpW) / 2 + 10,
+						(cheight - lcPopUpH) / 2 + 5
+					);
+					textBoxes[0][3].x = (cwidth - lcPopUpW) / 2 + 10;
+					textBoxes[0][3].y = (cheight - lcPopUpH) / 2 + 30;
+					textBoxes[0][3].w = lcPopUpW - 30;
+					textBoxes[0][3].h = lcPopUpH - 80;
+					textBoxes[0][3].draw();
+					// levelLoadString = textBoxes[0][3].text;
+
+					ctx.font = '18px Helvetica';
+					drawSimpleButton('Save', confirmChangeLevelString, (cwidth - lcPopUpW) / 2 + lcPopUpW - 70, (cheight + lcPopUpH) / 2 - 40, 60, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {isOnPopUp:true});
+					drawSimpleButton('Cancel', cancelChangeLevelString, (cwidth - lcPopUpW) / 2 + lcPopUpW - 140, (cheight + lcPopUpH) / 2 - 40, 60, 30, 3, '#ffffff', '#a0a0a0', '#a0a0a0', '#a0a0a0', {isOnPopUp:true});
+				}
+			}
+
+			if (lcPopUpNextFrame) lcPopUp = true;
+			lcPopUpNextFrame = false;
+			break;
 		case 8:
 			// Explore user page
 			ctx.drawImage(svgMenu6, 0, 0, cwidth, cheight);
@@ -10301,6 +10434,37 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 			console.log(err);
 			setLCMessage('Sorry, there was an error while attempting to send the level.');
 			// requestError();
+		});
+}
+
+function postExploreModifyLevel(id, title, desc, difficulty, file) {
+	requestAdded();
+
+	const body = {
+		access_token: getCookie('access_token'),
+		title: title,
+		description: desc,
+		// file: data,
+		difficulty: difficulty,
+		modded: ''
+	}
+	if (file != '') body.file = file;
+
+	return fetch('https://5beam.zelo.dev/api/modify/level?id=' + id, {method: 'POST', body: JSON.stringify(body)})
+		.then(response => {
+			requestResolved();
+			if (response.status == 200) {
+				// setLCMessage('Level successfuly sent to explore!');
+			} else {
+				// setLCMessage('Server responded with status ' + response.status);
+				cancelEditExploreLevel();
+			}
+		})
+		.catch(err => {
+			console.log(err);
+			// setLCMessage('Sorry, there was an error while attempting to send the level.');
+			requestError();
+			cancelEditExploreLevel();
 		});
 }
 
