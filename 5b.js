@@ -9761,7 +9761,7 @@ function draw() {
 				if (drawSimpleButton('Copy Link', exploreCopyLink, 226, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080').hover) copyButton = 3;
 				drawSimpleButton('More By This User', exploreMoreByThisUser, 226, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
 
-				if (exploreLevelPageType != 1 && loggedInExploreUser5beamID === exploreLevelPageLevel) {
+				if (exploreLevelPageType != 1 && loggedInExploreUser5beamID === exploreLevelPageLevel.creator.id) {
 					drawSimpleButton(editingExploreLevel?'Save Changes':'Edit', editExploreLevel, 226, 455, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
 					if (editingExploreLevel) {
 						drawSimpleButton('Cancel', cancelEditExploreLevel, 226, 493, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
@@ -10438,6 +10438,7 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 }
 
 function postExploreModifyLevel(id, title, desc, difficulty, file) {
+	refreshToken();
 	requestAdded();
 
 	const body = {
