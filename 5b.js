@@ -10444,7 +10444,7 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 		});
 }
 
-function postExploreModifyLevel(id, title, desc, difficulty, file) {
+async function postExploreModifyLevel(id, title, desc, difficulty, file) {
 	await refreshToken();
 	requestAdded();
 
