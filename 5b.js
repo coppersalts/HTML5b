@@ -2188,6 +2188,10 @@ function getVB(base64) {
 	return svg.getAttribute('viewBox').split(' ').map(Number);
 }
 
+function getPixelRatio(quality) {
+	return 2**(Math.round(Math.log2(window.devicePixelRatio))+quality)
+}
+
 async function loadingScreen() {
 	// Zoom fix on Windows.
 	// https://danreynolds.ca/tech/2017/10/15/Variable-Browser-Zoom/
@@ -2197,14 +2201,14 @@ async function loadingScreen() {
 	// by default on Firefox, and on Chrome and Safari it's an empty string by default.
 	// So we'll only want to try rescaling if document.body.style.zoom is
 	// an empty string when the page is loaded.
-	pixelRatio = window.devicePixelRatio;
-	if (document.body.style.zoom === '') {
-		if (pixelRatio > 1 && pixelRatio < 2) {
-			addedZoom = pixelRatio;
-			document.body.style.zoom = `${1 / pixelRatio * 100}%`;
-			pixelRatio = window.devicePixelRatio;
-		}
-	}
+	pixelRatio = getPixelRatio(0);
+	// if (document.body.style.zoom === '') {
+	// 	if (pixelRatio > 1 && pixelRatio < 2) {
+	// 		addedZoom = pixelRatio;
+	// 		document.body.style.zoom = `${1 / pixelRatio * 100}%`;
+	// 		pixelRatio = window.devicePixelRatio;
+	// 	}
+	// }
 
 	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
@@ -2684,9 +2688,9 @@ function toggleSound() {
 function setQual() {
 	highQual = !highQual;
 	if (highQual) {
-		pixelRatio = window.devicePixelRatio;
+		pixelRatio = getPixelRatio(0);
 	} else {
-		pixelRatio = window.devicePixelRatio / 2;
+		pixelRatio = getPixelRatio(-1);
 	}
 	canvas.width = cwidth * pixelRatio;
 	canvas.height = cheight * pixelRatio;
