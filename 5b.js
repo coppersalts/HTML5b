@@ -2189,26 +2189,14 @@ function getVB(base64) {
 }
 
 function getPixelRatio(quality) {
+	// Round the device pixel ratio to the nearest integer in log base 2
+	// This is so that if you have the page zoomed or have some scale factor on Windows
+	// there aren't lines between blocks.
 	return 2**(Math.round(Math.log2(window.devicePixelRatio))+quality)
 }
 
 async function loadingScreen() {
-	// Zoom fix on Windows.
-	// https://danreynolds.ca/tech/2017/10/15/Variable-Browser-Zoom/
-	// On Firefox setting document.body.style.zoom doesn't actually zoom anything in.
-	// We don't really need to worry about the dpi scaling on Firefox though,
-	// and it just so happens that "document.body.style.zoom" is undefined
-	// by default on Firefox, and on Chrome and Safari it's an empty string by default.
-	// So we'll only want to try rescaling if document.body.style.zoom is
-	// an empty string when the page is loaded.
 	pixelRatio = getPixelRatio(0);
-	// if (document.body.style.zoom === '') {
-	// 	if (pixelRatio > 1 && pixelRatio < 2) {
-	// 		addedZoom = pixelRatio;
-	// 		document.body.style.zoom = `${1 / pixelRatio * 100}%`;
-	// 		pixelRatio = window.devicePixelRatio;
-	// 	}
-	// }
 
 	// Initialize Canvas Stuff
 	canvas = document.getElementById('cnv');
@@ -3780,8 +3768,8 @@ function drawHPRCBubbleCharImg(dead, sc, xoff) {
 		charimgmat.b,
 		charimgmat.c,
 		charimgmat.d * sc,
-		(charimgmat.tx * sc) / 2 + char[HPRC2].x + xoff,
-		(charimgmat.ty * sc) / 2 + char[HPRC2].y - 107
+		(charimgmat.tx * sc) / 2 + xoff,
+		(charimgmat.ty * sc) / 2 - 44
 	);
 	let charimg = svgChars[char[dead].id];
 	if (Array.isArray(charimg)) charimg = charimg[0];
@@ -8254,17 +8242,21 @@ function draw() {
 							}
 						}
 						// TODO: make this not so hard coded.
+						// let scaleFactor = 1/1.43;
+						ctx.save();
+						ctx.translate(char[i].x, char[i].y - char[i].h - 5);
+						ctx.scale(1.43, 1.43);
 						if (HPRCBubbleFrame == 1) {
 							ctx.drawImage(
 								svgHPRCBubble[0],
-								char[i].x - svgHPRCBubble[0].width / 2,
-								char[i].y - 128 + bounceY(9, 30, _frameCount)
+								-svgHPRCBubble[0].width / 2,
+								bounceY(5.874, 30, _frameCount) - 5.874 - svgHPRCBubble[0].height
 							);
 						} else if (HPRCBubbleFrame == 2) {
-							ctx.drawImage(svgHPRCBubble[1], char[i].x - svgHPRCBubble[1].width / 2, char[i].y - 150);
+							ctx.drawImage(svgHPRCBubble[1], -svgHPRCBubble[1].width / 2, -svgHPRCBubble[1].height);
 							drawHPRCBubbleCharImg(recover2, 1, 0);
 						} else if (HPRCBubbleFrame == 3) {
-							ctx.drawImage(svgHPRCBubble[2], char[i].x - svgHPRCBubble[2].width / 2, char[i].y - 150);
+							ctx.drawImage(svgHPRCBubble[2], -svgHPRCBubble[2].width / 2, -svgHPRCBubble[2].height);
 							if (hprcBubbleAnimationTimer > 0) {
 								drawHPRCBubbleCharImg(
 									nextDeadPerson(recover2, -1),
@@ -8308,11 +8300,12 @@ function draw() {
 							}
 						} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
 							if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer + 64) / 33;
-							ctx.drawImage(svgHPRCBubble[3], char[i].x - svgHPRCBubble[3].width / 2, char[i].y - 120);
+							ctx.drawImage(svgHPRCBubble[3], -svgHPRCBubble[3].width / 2, -svgHPRCBubble[3].height);
 							ctx.globalAlpha = 1;
-							ctx.drawImage(svgHPRCBubble[4], char[i].x - svgHPRCBubble[4].width / 2, char[i].y - 120);
+							ctx.drawImage(svgHPRCBubble[4], -svgHPRCBubble[4].width / 2, -svgHPRCBubble[4].height);
 							hprcBubbleAnimationTimer++;
 						}
+						ctx.restore();
 					}
 					if (char[i].y > levelHeight * 30 + 160 && char[i].charState >= 7) {
 						startDeath(i);
