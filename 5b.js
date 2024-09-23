@@ -1,4 +1,4 @@
-const version = 'v0.3.3'; // putting this up here so I can edit the text on the title screen more easily.
+const version = 'v0.3.4'; // putting this up here so I can edit the text on the title screen more easily.
 
 /* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
 performanceTest(()=>{
@@ -4920,7 +4920,7 @@ function fallOff(i) {
 		char[char[i].standingOn].stoodOnBy.pop();
 		char[i].standingOn = -1;
 		char[i].onob = false;
-		for (let j; j < char[i].stoodOnBy.length; j++) {
+		for (let j = 0; j < char[i].stoodOnBy.length; j++) {
 			fallOff(char[i].stoodOnBy[j]);
 		}
 	}
