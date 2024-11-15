@@ -27,6 +27,7 @@ const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestA
 const browserPasteSolution = typeof navigator.clipboard.readText === "function";
 const browserCopySolution = typeof navigator.clipboard.write === "function";
 let copyButton = 0; // Hack to make copying work on Safari.
+const isMobile = isTouchDevice();
 
 // offscreen canvases
 let osc1, osctx1;
@@ -47,6 +48,7 @@ let lastClickX = 0;
 let lastClickY = 0;
 let valueAtClick = 0;
 let _cursor = 'default';
+let touchCount = 0;
 let hoverText = '';
 const _keysDown = new Array(222).fill(false);
 let _frameCount = 0;
@@ -2174,44 +2176,20 @@ let showingExploreNewGame2 = false;
 let musicSound = new Audio('data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
+const scaleFactor = 3;
+
 // Creates an image object was a base64 src.
-// function createImage(base64) {
-// 	let img = new Image();
-// 	img.src = base64;
-// 	if (base64.split(',')[0] == 'data:image/svg+xml;base64') {
-// 		// img.onload = function() {
-// 		// 	let rasterizerCanvas = document.createElement('canvas');
-// 		// 	rasterizerCanvas.width = img.width;
-// 		// 	rasterizerCanvas.height = img.height;
-// 		// 	let rasterizerCanvasCtx = rasterizerCanvas.getContext('2d');
-// 		// 	rasterizerCanvasCtx.drawImage(img, 0, 0);
-// 		// 	img = rasterizerCanvas;
-// 		// }
-// 		// return img;
-// 		return new Promise((resolve, reject) => {
-// 			// let img = new Image()
-// 			img.onload = () => resolve(img)
-// 			img.onerror = reject
-// 			img.src = src
-// 		}); 
-// 	} else {
-// 		return img;
-// 	}
-// 	// return img;
-// }
 function createImage(base64) {
 	return new Promise((resolve, reject) => {
 		let img = new Image();
 		img.src = base64;
 		if (base64.split(',')[0] == 'data:image/svg+xml;base64') {
-			// return img;
-				// let img = new Image()
 			img.onload = () => {
 				let rasterizerCanvas = document.createElement('canvas');
-				rasterizerCanvas.width = img.width;
-				rasterizerCanvas.height = img.height;
+				rasterizerCanvas.width = img.width*scaleFactor;
+				rasterizerCanvas.height = img.height*scaleFactor;
 				let rasterizerCanvasCtx = rasterizerCanvas.getContext('2d');
-				rasterizerCanvasCtx.drawImage(img, 0, 0);
+				rasterizerCanvasCtx.drawImage(img, 0, 0, img.width*scaleFactor, img.height*scaleFactor);
 				resolve(rasterizerCanvas);
 			}
 			img.onerror = reject;
@@ -2363,6 +2341,13 @@ async function loadingScreen() {
 window.onload = function () {
 	loadingScreen();
 };
+
+// https://stackoverflow.com/a/4819886/22438094
+function isTouchDevice() {
+	return (('ontouchstart' in window) ||
+		(navigator.maxTouchPoints > 0) ||
+		(navigator.msMaxTouchPoints > 0));
+}
 
 function onRect(mx, my, x, y, w, h) {
 	return mx > x && mx < x + w && my > y && my < y + h;
@@ -2923,7 +2908,7 @@ function drawRoundedRect(fill, x, y, w, h, cr) {
 function drawMenu() {
 	ctx.fillStyle = '#666666';
 	ctx.fillRect(0, 0, cwidth, cheight);
-	ctx.drawImage(svgMenu0, 0, 0);
+	ctx.drawImage(svgMenu0, 0, 0, cwidth, cheight);
 	ctx.fillStyle = '#ffffff';
 	ctx.textBaseline = 'bottom';
 	ctx.textAlign = 'left';
@@ -2982,7 +2967,7 @@ function drawLevelMapBorder() {
 	ctx.drawImage(svgMenu2borderimg, 0, 0, cwidth, cheight);
 	ctx.restore();
 
-	ctx.drawImage(svgMenu2border, 0, 0);
+	ctx.drawImage(svgMenu2border, 0, 0, cwidth, cheight);
 
 	drawMenu2_3Button(3, 587, 469, setQual);
 	drawMenu2_3Button(2, 705, 469, toggleSound);
@@ -2991,7 +2976,7 @@ function drawLevelMapBorder() {
 }
 
 function drawLevelMap() {
-	ctx.drawImage(svgMenu2, 0, 0);
+	ctx.drawImage(svgMenu2, 0, 0, svgMenu2.width/scaleFactor, svgMenu2.height/scaleFactor);
 
 	ctx.fillStyle = '#000000';
 	ctx.textAlign = 'left';
@@ -3406,10 +3391,10 @@ function drawStaticTiles() {
 	for (let y = 0; y < levelHeight; y++) {
 		for (let x = 0; x < levelWidth; x++) {
 			for (let i = 0; i < tileShadows[y][x].length; i++) {
-				osctx2.drawImage(svgShadows[tileShadows[y][x][i] - 1], x * 30, y * 30);
+				osctx2.drawImage(svgShadows[tileShadows[y][x][i] - 1], x * 30, y * 30, 30, 30);
 			}
 			for (let i = 0; i < tileBorders[y][x].length; i++) {
-				osctx2.drawImage(svgTileBorders[tileBorders[y][x][i] - 1], x * 30, y * 30);
+				osctx2.drawImage(svgTileBorders[tileBorders[y][x][i] - 1], x * 30, y * 30, 30, 30);
 			}
 		}
 	}
@@ -3469,7 +3454,7 @@ function drawCharacters(context) {
 					burstmat.tx + char[i].x,
 					burstmat.ty + char[i].y
 				);
-				context.drawImage(burstImg, -burstImg.width / 2, -burstImg.height / 2);
+				context.drawImage(burstImg, -burstImg.width / (scaleFactor*2), -burstImg.height / (scaleFactor*2), burstImg.width / scaleFactor, burstImg.height / scaleFactor);
 				context.restore();
 
 				char[i].burstFrame++;
@@ -3503,25 +3488,15 @@ function drawCharacters(context) {
 			if (char[i].deathTimer < 30 && char[i].deathTimer % 6 <= 2 && char[i].charState > 2) context.globalAlpha = 0.3;
 			if (currCharID > 34) {
 				if (charD[currCharID][7] == 1) {
-					drawPossiblyTintedImage(
-						svgChars[currCharID],
-						char[i].x + svgCharsVB[currCharID][0],
-						char[i].y + svgCharsVB[currCharID][1],
-						char[i].temp, context
-					);
+					drawPossiblyTintedImage(svgChars[currCharID], char[i].x + svgCharsVB[currCharID][0], char[i].y + svgCharsVB[currCharID][1], char[i].temp, context);
 				} else {
 					let currCharFrame = _frameCount % charD[currCharID][7];
-					drawPossiblyTintedImage(
-						svgChars[currCharID][currCharFrame],
-						char[i].x + svgCharsVB[currCharID][currCharFrame][0],
-						char[i].y + svgCharsVB[currCharID][currCharFrame][1],
-						char[i].temp, context
-					);
+					drawPossiblyTintedImage(svgChars[currCharID][currCharFrame], char[i].x + svgCharsVB[currCharID][currCharFrame][0], char[i].y + svgCharsVB[currCharID][currCharFrame][1], char[i].temp, context);
 				}
 
 				if (currCharID == 50) {
 					if (char[i].acidDropTimer[0] < 9)
-						context.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 17.7, char[i].y - 1.5);
+						context.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 17.7, char[i].y - 1.5, svgAcidDrop[0].width/scaleFactor, svgAcidDrop[0].height/scaleFactor);
 					char[i].acidDropTimer[0]++;
 					if (char[i].acidDropTimer[0] > 28) {
 						if (Math.random() < 0.8) {
@@ -3532,21 +3507,9 @@ function drawCharacters(context) {
 					}
 				} else if (currCharID == 51) {
 					if (char[i].acidDropTimer[0] < 9)
-						context.drawImage(
-							svgAcidDrop[char[i].acidDropTimer[0]],
-							char[i].x - 25.75,
-							char[i].y + 1.6,
-							svgAcidDrop[0].width * 0.7826,
-							svgAcidDrop[0].height * 0.7826
-						);
+						context.drawImage(svgAcidDrop[char[i].acidDropTimer[0]], char[i].x - 25.75, char[i].y + 1.6, (svgAcidDrop[0].width/scaleFactor) * 0.7826, (svgAcidDrop[0].height/scaleFactor) * 0.7826);
 					if (char[i].acidDropTimer[1] < 9)
-						ctx.drawImage(
-							svgAcidDrop[char[i].acidDropTimer[1]],
-							char[i].x + 18.3,
-							char[i].y + 6.7,
-							svgAcidDrop[0].width * 0.7826,
-							svgAcidDrop[0].height * 0.7826
-						);
+						ctx.drawImage(svgAcidDrop[char[i].acidDropTimer[1]], char[i].x + 18.3, char[i].y + 6.7, (svgAcidDrop[0].width/scaleFactor) * 0.7826, (svgAcidDrop[0].height/scaleFactor) * 0.7826);
 					char[i].acidDropTimer[0]++;
 					char[i].acidDropTimer[1]++;
 					if (char[i].acidDropTimer[0] > 28) {
@@ -3620,7 +3583,7 @@ function drawCharacters(context) {
 						char[i].y + model.legy[0] + legmat[0].ty
 					);
 					let leg1img = svgBodyParts[f[0]];
-					drawPossiblyTintedImage(leg1img, -leg1img.width / 2, -leg1img.height / 2, char[i].temp, context);
+					drawPossiblyTintedImage(leg1img, -leg1img.width / (scaleFactor*2), -leg1img.height / (scaleFactor*2), char[i].temp, context, true);
 					context.restore();
 					context.save();
 					context.transform(
@@ -3632,7 +3595,7 @@ function drawCharacters(context) {
 						char[i].y + model.legy[1] + legmat[1].ty
 					);
 					let leg2img = svgBodyParts[f[1]];
-					drawPossiblyTintedImage(leg2img, -leg2img.width / 2, -leg2img.height / 2, char[i].temp, context);
+					drawPossiblyTintedImage(leg2img, -leg2img.width / (scaleFactor*2), -leg2img.height / (scaleFactor*2), char[i].temp, context, true);
 					context.restore();
 				}
 
@@ -3717,7 +3680,7 @@ function drawCharacters(context) {
 						let mat = diaMouths[model.defaultExpr].frames[dmf].mat;
 						context.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					}
-					drawPossiblyTintedImage(img, -img.width / 2, -img.height / 2, char[i].temp, context);
+					drawPossiblyTintedImage(img, -img.width / (scaleFactor*2), -img.height / (scaleFactor*2), char[i].temp, context, true);
 					context.restore();
 				}
 				context.restore();
@@ -3745,11 +3708,11 @@ function drawCharacters(context) {
 			context.textAlign = 'center';
 			context.font = '6px Helvetica';
 			context.fillText(HPRCText, char[i].x + 12.65, char[i].y - 39.6, 30);
-			let radius = svgHPRCCrank.height / 2;
+			let radius = svgHPRCCrank.height / (scaleFactor*2);
 			context.save();
 			context.translate(char[i].x + hprcCrankPos.x, char[i].y + hprcCrankPos.y - littleJump);
 			context.rotate(HPRCCrankRot);
-			context.drawImage(svgHPRCCrank, -radius, -radius);
+			context.drawImage(svgHPRCCrank, -radius, -radius, svgHPRCCrank.width/scaleFactor, svgHPRCCrank.height/scaleFactor);
 			context.restore();
 		}
 
@@ -3760,7 +3723,7 @@ function drawCharacters(context) {
 			else context.globalAlpha = 0.57;
 			let firemat = charModels[char[i].id].firemat;
 			context.transform(firemat.a, firemat.b, firemat.c, firemat.d, firemat.tx + char[i].x, firemat.ty + char[i].y);
-			context.drawImage(fireImg, -fireImg.width / 2, -fireImg.height / 2);
+			context.drawImage(fireImg, -fireImg.width / (scaleFactor*2), -fireImg.height / (scaleFactor*2), fireImg.width / scaleFactor, fireImg.height / scaleFactor);
 			context.restore();
 		}
 	}
@@ -3772,7 +3735,7 @@ function drawCutScene() {
 	ctx.save();
 	ctx.transform(bubSc, 0, 0, bubSc, bubX, bubY);
 	let bubLoc = {x: -bubWidth / 2, y: -bubHeight / 2};
-	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y);
+	ctx.drawImage(svgCSBubble, bubLoc.x, bubLoc.y, svgCSBubble.width/scaleFactor, svgCSBubble.height/scaleFactor);
 	let textwidth = 386.55;
 	let textx = 106.7;
 	if (currdiachar == 99) {
@@ -3793,7 +3756,7 @@ function drawCutScene() {
 			charimgmat.tx + bubLoc.x + 50,
 			charimgmat.ty + bubLoc.y + 50
 		);
-		ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
+		ctx.drawImage(charimg, -charimg.width / (scaleFactor*2), -charimg.height / (scaleFactor*2), charimg.width / scaleFactor, charimg.height / scaleFactor);
 		ctx.restore();
 	}
 	ctx.fillStyle = '#000000';
@@ -3822,7 +3785,7 @@ function drawHPRCBubbleCharImg(dead, sc, xoff) {
 	);
 	let charimg = svgChars[char[dead].id];
 	if (Array.isArray(charimg)) charimg = charimg[0];
-	ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
+	ctx.drawImage(charimg, -charimg.width / (scaleFactor*2), -charimg.height / (scaleFactor*2), charimg.width / scaleFactor, charimg.height / scaleFactor);
 	ctx.restore();
 }
 
@@ -3857,14 +3820,14 @@ function getTintedCanvasImage(img, a, color) {
 }
 
 function drawPossiblyTintedImage(img, x, y, temp, context) {
-	context.drawImage(img, x, y);
+	context.drawImage(img, x, y, img.width / scaleFactor, img.height / scaleFactor);
 	if (slowTintsEnabled && temp > 0 && temp < 50) {
 		context.drawImage(
 			getTintedCanvasImage(img, temp / 70, 'rgb(255,' + (100 - temp) + ',' + (100 - temp) + ')'),
 			x,
 			y,
-			img.width,
-			img.height
+			img.width / scaleFactor,
+			img.height / scaleFactor
 		);
 	}
 }
@@ -4038,7 +4001,7 @@ function addTileMovieClip(x, y, context) {
 				context.translate(x * 30 + 15, y * 30 + 28);
 				context.rotate(tileFrames[y][x].rotation * (Math.PI / 180));
 				context.translate(-x * 30 - 15, -y * 30 - 28); // TODO: find out how to remove this line
-				context.drawImage(svgLevers[(blockProperties[t][11] - 1) % 6], x * 30, y * 30);
+				context.drawImage(svgLevers[(blockProperties[t][11] - 1) % 6], x * 30, y * 30, svgLevers[0].width / scaleFactor, svgLevers[0].height / scaleFactor);
 				context.restore();
 				// Math.floor(blockProperties[t][11]/6);
 				// Math.floor(blockProperties[t][11]/6)
@@ -4047,7 +4010,7 @@ function addTileMovieClip(x, y, context) {
 			}
 			// context.fillStyle = '#cc33ff';
 			// context.fillRect(x*30, y*30, 30, 30);
-			context.drawImage(svgTiles[t], x * 30 + svgTilesVB[t][0], y * 30 + svgTilesVB[t][1]);
+			context.drawImage(svgTiles[t], x * 30 + svgTilesVB[t][0], y * 30 + svgTilesVB[t][1], svgTiles[t].width / scaleFactor, svgTiles[t].height / scaleFactor);
 		} else if (blockProperties[t][16] > 1) {
 			let frame = 0;
 			if (blockProperties[t][17]) frame = blockProperties[t][18][_frameCount % blockProperties[t][18].length];
@@ -4062,7 +4025,7 @@ function addTileMovieClip(x, y, context) {
 			// context.fillStyle = '#00ffcc';
 			// context.fillRect(x*30, y*30, 30, 30);
 			if (boundingBoxCheck(cameraX, cameraY, 960, 540, x * 30 + svgTilesVB[t][frame][0], y * 30 + svgTilesVB[t][frame][1], svgTilesVB[t][frame][2], svgTilesVB[t][frame][3])) {
-				context.drawImage(svgTiles[t][frame], x * 30 + svgTilesVB[t][frame][0], y * 30 + svgTilesVB[t][frame][1]);
+				context.drawImage(svgTiles[t][frame], x * 30 + svgTilesVB[t][frame][0], y * 30 + svgTilesVB[t][frame][1], svgTiles[t][frame].width / scaleFactor, svgTiles[t][frame].height / scaleFactor);
 			}
 			// context.drawImage(svgTiles[t][0], x*30, y*30);
 		}
@@ -4105,7 +4068,7 @@ function addTileMovieClip(x, y, context) {
 				context.restore();
 			}
 		} else if (tileFrames[y][x].cf < svgCoinGet.length) {
-			context.drawImage(svgCoinGet[tileFrames[y][x].cf], x * 30 - 21, y * 30 - 21);
+			context.drawImage(svgCoinGet[tileFrames[y][x].cf], x * 30 - 21, y * 30 - 21, svgCoinGet[0].width / scaleFactor, svgCoinGet[0].height / scaleFactor);
 			tileFrames[y][x].cf++;
 		}
 	}
@@ -5194,13 +5157,7 @@ function resetLCOSC() {
 	osc2.height = Math.floor(Math.floor(imgBgs.length / bgpr + 1) * bgdist * pixelRatio);
 	osctx2.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 	for (let i = 0; i < imgBgs.length; i++) {
-		osctx2.drawImage(
-			imgBgs[i],
-			bgdist - bgw + (i % bgpr) * bgdist,
-			bgdist - bgh + Math.floor(i / bgpr) * bgdist,
-			bgw,
-			bgh
-		);
+		osctx2.drawImage(imgBgs[i],bgdist - bgw + (i % bgpr) * bgdist,bgdist - bgh + Math.floor(i / bgpr) * bgdist,bgw,bgh);
 	}
 
 	osc3.width = Math.floor(cwidth * pixelRatio);
@@ -5642,7 +5599,7 @@ function drawLCCharInfo(i, y) {
 			(charimgmat.tx * sc) / 2 + 665 + charInfoHeight / 2,
 			(charimgmat.ty * sc) / 2 + y + charInfoHeight / 2
 		);
-		ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
+		ctx.drawImage(charimg, -charimg.width / (scaleFactor*2), -charimg.height / (scaleFactor*2), charimg.width / scaleFactor, charimg.height / scaleFactor);
 		ctx.restore();
 	}
 	ctx.fillStyle = '#ffffff';
@@ -6084,28 +6041,14 @@ function drawLCChars() {
 				let legf = legFrames[0];
 				let f = [legf.bodypart, legf.bodypart];
 				osctx5.save();
-				osctx5.transform(
-					0.3648529052734375 * dire,
-					0,
-					0,
-					0.3648529052734375,
-					char[i].x + model.legx[0] + 0.35,
-					char[i].y + model.legy[0] - 0.35
-				);
+				osctx5.transform(0.3648529052734375 * dire,0,0,0.3648529052734375,char[i].x + model.legx[0] + 0.35,char[i].y + model.legy[0] - 0.35);
 				let leg1img = svgBodyParts[f[0]];
-				osctx5.drawImage(leg1img, -leg1img.width / 2, -leg1img.height / 2);
+				osctx5.drawImage(leg1img, -leg1img.width / (scaleFactor*2), -leg1img.height / (scaleFactor*2), leg1img.width / scaleFactor, leg1img.height / scaleFactor);
 				osctx5.restore();
 				osctx5.save();
-				osctx5.transform(
-					0.3648529052734375 * dire,
-					0,
-					0,
-					0.3648529052734375,
-					char[i].x + model.legx[1] + 0.35,
-					char[i].y + model.legy[1] - 0.35
-				);
+				osctx5.transform(0.3648529052734375 * dire,0,0,0.3648529052734375,char[i].x + model.legx[1] + 0.35,char[i].y + model.legy[1] - 0.35);
 				let leg2img = svgBodyParts[f[1]];
-				osctx5.drawImage(leg2img, -leg2img.width / 2, -leg2img.height / 2);
+				osctx5.drawImage(leg2img, -leg2img.width / (scaleFactor*2), -leg2img.height / (scaleFactor*2), leg2img.width / scaleFactor, leg2img.height / scaleFactor);
 				osctx5.restore();
 
 				let modelFrame = model.frames[dire == 1 ? 3 : 1];
@@ -6148,7 +6091,7 @@ function drawLCChars() {
 						let mat = diaMouths[model.defaultExpr].frames[0].mat;
 						osctx5.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 					}
-					osctx5.drawImage(img, -img.width / 2, -img.height / 2);
+					osctx5.drawImage(img, -img.width / (scaleFactor*2), -img.height / (scaleFactor*2), img.width / scaleFactor, img.height / scaleFactor);
 					osctx5.restore();
 				}
 				osctx5.restore();
@@ -7289,6 +7232,30 @@ function createNewLevelpack() {
 	saveMyLevelpacks();
 }
 
+function touchstart(event) {
+	event.preventDefault();
+	touchCount++;
+	mousemove(event.changedTouches[0]);
+	mousedown(event);
+}
+
+function touchend(event) {
+	event.preventDefault();
+	touchCount--;
+	if (touchCount == 0) mouseup(event);
+}
+
+function touchcancel(event) {
+	event.preventDefault();
+	touchCount--;
+	if (touchCount == 0) mouseIsDown = false;
+}
+
+function touchmove(event) {
+	event.preventDefault();
+	mousemove(event.changedTouches[0]);
+}
+
 function mousemove(event) {
 	_xmouse = event.pageX*addedZoom - canvasReal.getBoundingClientRect().left;
 	_ymouse = event.pageY*addedZoom - canvasReal.getBoundingClientRect().top;
@@ -7632,6 +7599,12 @@ function setup() {
 	window.addEventListener('pointerup', mouseup);
 	window.addEventListener('keydown', keydown);
 	window.addEventListener('keyup', keyup);
+	if (isMobile) {
+		window.addEventListener('touchstart', touchstart);
+		window.addEventListener('touchend', touchend);
+		window.addEventListener('touchcancel', touchcancel);
+		window.addEventListener('touchmove', touchmove);
+	}
 	canvas.addEventListener('paste', handlePaste);
 
 	if (getCookie('5beam_id')) loggedInExploreUser5beamID = getCookie('5beam_id');
@@ -7708,13 +7681,7 @@ function draw() {
 			// 	osc4.width / pixelRatio,
 			// 	osc4.height / pixelRatio
 			// );
-			ctx.drawImage(
-				osc4,
-				-Math.floor(-cameraX + shakeX) + Math.floor( (-cameraX+shakeX)/3),
-				-Math.floor(-cameraY + shakeY) + Math.floor( Math.max( -cameraY/3 - ((bgXScale>bgYScale)?Math.max(0,(bgXScale*5.4-540)/2):0), 540 - osc4.height / pixelRatio) + shakeY/3),
-				osc4.width / pixelRatio,
-				osc4.height / pixelRatio
-			);
+			ctx.drawImage(osc4, -Math.floor(-cameraX + shakeX) + Math.floor( (-cameraX+shakeX)/3), -Math.floor(-cameraY + shakeY) + Math.floor( Math.max( -cameraY/3 - ((bgXScale>bgYScale)?Math.max(0,(bgXScale*5.4-540)/2):0), 540 - osc4.height / pixelRatio) + shakeY/3), osc4.width / pixelRatio, osc4.height / pixelRatio);
 			drawLevel(ctx);
 
 			if (wipeTimer == 30) {
@@ -8290,56 +8257,26 @@ function draw() {
 								HPRCBubbleFrame = 0;
 							}
 						}
-						// TODO: make this not so hard coded.
-						// let scaleFactor = 1/1.43;
 						ctx.save();
 						ctx.translate(char[i].x, char[i].y - char[i].h - 5);
 						ctx.scale(1.43, 1.43);
 						if (HPRCBubbleFrame == 1) {
-							ctx.drawImage(
-								svgHPRCBubble[0],
-								-svgHPRCBubble[0].width / 2,
-								bounceY(5.874, 30, _frameCount) - 5.874 - svgHPRCBubble[0].height
-							);
+							ctx.drawImage(svgHPRCBubble[0], -svgHPRCBubble[0].width / (scaleFactor*2), bounceY(5.874, 30, _frameCount) - 5.874 - svgHPRCBubble[0].height / scaleFactor, svgHPRCBubble[0].width / scaleFactor, svgHPRCBubble[0].height / scaleFactor);
 						} else if (HPRCBubbleFrame == 2) {
-							ctx.drawImage(svgHPRCBubble[1], -svgHPRCBubble[1].width / 2, -svgHPRCBubble[1].height);
+							ctx.drawImage(svgHPRCBubble[1], -svgHPRCBubble[1].width / (scaleFactor*2), -svgHPRCBubble[1].height / scaleFactor, svgHPRCBubble[1].width / scaleFactor, svgHPRCBubble[1].height / scaleFactor);
 							drawHPRCBubbleCharImg(recover2, 1, 0);
 						} else if (HPRCBubbleFrame == 3) {
-							ctx.drawImage(svgHPRCBubble[2], -svgHPRCBubble[2].width / 2, -svgHPRCBubble[2].height);
+							ctx.drawImage(svgHPRCBubble[2], -svgHPRCBubble[2].width / (scaleFactor*2), -svgHPRCBubble[2].height / scaleFactor, svgHPRCBubble[2].width / scaleFactor, svgHPRCBubble[2].height / scaleFactor);
 							if (hprcBubbleAnimationTimer > 0) {
-								drawHPRCBubbleCharImg(
-									nextDeadPerson(recover2, -1),
-									inter(1, 0.6, hprcBubbleAnimationTimer / 16),
-									inter(0, -31.45, hprcBubbleAnimationTimer / 16)
-								);
-								drawHPRCBubbleCharImg(
-									recover2,
-									inter(0.6, 1, hprcBubbleAnimationTimer / 16),
-									inter(31.45, 0, hprcBubbleAnimationTimer / 16)
-								);
-								drawHPRCBubbleCharImg(
-									nextDeadPerson(recover2, 1),
-									inter(0.25, 0.6, hprcBubbleAnimationTimer / 16),
-									inter(44.75, 31.45, hprcBubbleAnimationTimer / 16)
-								);
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(1, 0.6, hprcBubbleAnimationTimer / 16), inter(0, -31.45, hprcBubbleAnimationTimer / 16));
+								drawHPRCBubbleCharImg(recover2, inter(0.6, 1, hprcBubbleAnimationTimer / 16), inter(31.45, 0, hprcBubbleAnimationTimer / 16));
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(0.25, 0.6, hprcBubbleAnimationTimer / 16), inter(44.75, 31.45, hprcBubbleAnimationTimer / 16));
 								hprcBubbleAnimationTimer++;
 								if (hprcBubbleAnimationTimer > 16) hprcBubbleAnimationTimer = 0;
 							} else if (hprcBubbleAnimationTimer < 0) {
-								drawHPRCBubbleCharImg(
-									nextDeadPerson(recover2, -1),
-									inter(0.25, 0.6, -hprcBubbleAnimationTimer / 16),
-									inter(-44.75, -31.45, -hprcBubbleAnimationTimer / 16)
-								);
-								drawHPRCBubbleCharImg(
-									recover2,
-									inter(0.6, 1, -hprcBubbleAnimationTimer / 16),
-									inter(-31.45, 0, -hprcBubbleAnimationTimer / 16)
-								);
-								drawHPRCBubbleCharImg(
-									nextDeadPerson(recover2, 1),
-									inter(1, 0.6, -hprcBubbleAnimationTimer / 16),
-									inter(0, 31.45, -hprcBubbleAnimationTimer / 16)
-								);
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, -1), inter(0.25, 0.6, -hprcBubbleAnimationTimer / 16), inter(-44.75, -31.45, -hprcBubbleAnimationTimer / 16));
+								drawHPRCBubbleCharImg(recover2, inter(0.6, 1, -hprcBubbleAnimationTimer / 16), inter(-31.45, 0, -hprcBubbleAnimationTimer / 16));
+								drawHPRCBubbleCharImg(nextDeadPerson(recover2, 1), inter(1, 0.6, -hprcBubbleAnimationTimer / 16), inter(0, 31.45, -hprcBubbleAnimationTimer / 16));
 								hprcBubbleAnimationTimer--;
 								if (hprcBubbleAnimationTimer < -16) hprcBubbleAnimationTimer = 0;
 							} else {
@@ -8349,9 +8286,9 @@ function draw() {
 							}
 						} else if (HPRCBubbleFrame == 4 && hprcBubbleAnimationTimer <= 64) {
 							if (hprcBubbleAnimationTimer > 30) ctx.globalAlpha = (-hprcBubbleAnimationTimer + 64) / 33;
-							ctx.drawImage(svgHPRCBubble[3], -svgHPRCBubble[3].width / 2, -svgHPRCBubble[3].height);
+							ctx.drawImage(svgHPRCBubble[3], -svgHPRCBubble[3].width / (scaleFactor*2), -svgHPRCBubble[3].height / scaleFactor, svgHPRCBubble[3].width / scaleFactor, svgHPRCBubble[3].height / scaleFactor);
 							ctx.globalAlpha = 1;
-							ctx.drawImage(svgHPRCBubble[4], -svgHPRCBubble[4].width / 2, -svgHPRCBubble[4].height);
+							ctx.drawImage(svgHPRCBubble[4], -svgHPRCBubble[4].width / (scaleFactor*2), -svgHPRCBubble[4].height / scaleFactor, svgHPRCBubble[4].width / scaleFactor, svgHPRCBubble[4].height / scaleFactor);
 							hprcBubbleAnimationTimer++;
 						}
 						ctx.restore();
@@ -8934,16 +8871,8 @@ function draw() {
 									bs
 								);
 							} else {
-								let img =
-									blockProperties[i][16] > 1
-										? svgTiles[i][blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0]
-										: svgTiles[i];
-								let vb =
-									blockProperties[i][16] > 1
-										? svgTilesVB[i][
-												blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0
-										  ]
-										: svgTilesVB[i];
+								let img = blockProperties[i][16] > 1 ? svgTiles[i][blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0] : svgTiles[i];
+								let vb = blockProperties[i][16] > 1 ? svgTilesVB[i][blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0] : svgTilesVB[i];
 								if (vb[2] <= 60) {
 									let sc = bs / 30;
 									let tlx = 660 + (bdist - bs) + (j % bpr) * bdist;
@@ -8958,20 +8887,10 @@ function draw() {
 										ctx.drawImage(svgLevers[(blockProperties[i][11] - 1) % 6], tlx, tly, bs, bs);
 										ctx.restore();
 									}
-									ctx.drawImage(img, tlx + vb[0] * sc, tly + vb[1] * sc, vb[2] * sc, vb[3] * sc);
+									ctx.drawImage(img, tlx + vb[0]*sc, tly + vb[1]*sc, vb[2]*sc, vb[3]*sc);
 								} else {
 									let sc = bs / vb[2];
-									ctx.drawImage(
-										img,
-										660 + (bdist - bs) + (j % bpr) * bdist - (vb[2] * sc) / 2 + bs / 2,
-										(selectedTab + 1) * tabHeight +
-											(bdist - bs) +
-											Math.floor(j / bpr) * bdist -
-											(vb[3] * sc) / 2 +
-											bs / 2,
-										vb[2] * sc,
-										vb[3] * sc
-									);
+									ctx.drawImage(img, 660 + (bdist-bs) + (j%bpr)*bdist - (vb[2]*sc)/2 + bs/2, (selectedTab+1) * tabHeight + (bdist-bs) + Math.floor(j/bpr)*bdist - (vb[3]*sc)/2 + bs/2, vb[2]*sc, vb[3]*sc);
 								}
 							}
 							j++;
@@ -9296,7 +9215,7 @@ function draw() {
 					if (i == tool || (i == 9 && copied)) ctx.fillStyle = '#999999';
 					else ctx.fillStyle = '#666666';
 					ctx.fillRect(35 + i * 50, 490, 40, 40);
-					ctx.drawImage(svgTools[i == 10 && undid ? 8 : i], 35 + i * 50, 490);
+					ctx.drawImage(svgTools[i==10&&undid?8:i], 35 + i*50, 490, svgTools[i].width/scaleFactor, svgTools[i].height/scaleFactor);
 
 					if (!lcPopUp && _ymouse > 480 && onRect(_xmouse, _ymouse, 35 + i * 50, 490, 40, 40)) {
 						onButton = true;
@@ -10041,12 +9960,12 @@ function draw() {
 				// delete button
 				ctx.font = '23px Helvetica';
 				drawSimpleButton('', toggleMyLevelDeleting, 28, 85, 30, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040', {alt:myLevelsTab===0?'Delete levels':'Delete levelpacks'});
-				ctx.drawImage(svgMyLevelsIcons[0], 28, 85);
+				ctx.drawImage(svgMyLevelsIcons[0], 28, 85, svgMyLevelsIcons[0].width/scaleFactor, svgMyLevelsIcons[0].height/scaleFactor);
 				if (myLevelsTab === 1) {
 					// create levelpack button
 					ctx.font = '23px Helvetica';
 					drawSimpleButton('', createNewLevelpack, 68, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Create new levelpack'});
-					ctx.drawImage(svgMyLevelsIcons[1], 68, 85);
+					ctx.drawImage(svgMyLevelsIcons[1], 68, 85, svgMyLevelsIcons[1].width/scaleFactor, svgMyLevelsIcons[1].height/scaleFactor);
 				}
 			}
 
@@ -10123,16 +10042,16 @@ function draw() {
 
 
 			drawSimpleButton('', toggleLevelpackCreatorRemovingLevels, 28, 85, 30, 30, 3, '#ffffff', '#ff0000', '#ff4040', '#ff4040', {alt:'Remove levels'});
-			ctx.drawImage(svgMyLevelsIcons[0], 28, 85);
+			ctx.drawImage(svgMyLevelsIcons[0], 28, 85, svgMyLevelsIcons[0].width/scaleFactor, svgMyLevelsIcons[0].height/scaleFactor);
 
 			drawSimpleButton('', openAddLevelsToLevelpackScreen, 68, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Add levels'});
-			ctx.drawImage(svgMyLevelsIcons[1], 68, 85);
+			ctx.drawImage(svgMyLevelsIcons[1], 68, 85, svgMyLevelsIcons[1].width/scaleFactor, svgMyLevelsIcons[1].height/scaleFactor);
 
 			if (drawSimpleButton('', copySavedLevelpackString, 108, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Copy levelpack string'}).hover) copyButton = 2;
-			ctx.drawImage(svgMyLevelsIcons[2], 108, 85);
+			ctx.drawImage(svgMyLevelsIcons[2], 108, 85, svgMyLevelsIcons[2].width/scaleFactor, svgMyLevelsIcons[2].height/scaleFactor);
 
 			drawSimpleButton('', playSavedLevelpack, 148, 85, 30, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Play levelpack'});
-			ctx.drawImage(svgMyLevelsIcons[4], 148, 85);
+			ctx.drawImage(svgMyLevelsIcons[4], 148, 85, svgMyLevelsIcons[4].width/scaleFactor, svgMyLevelsIcons[4].height/scaleFactor);
 
 			ctx.font = '23px Helvetica';
 			drawSimpleButton('Share to Explore', sharePackToExplore, 188, 85, 200, 30, 3, '#ffffff', '#00a0ff', '#40a0ff', '#40a0ff', {alt:'Share levelpack to exlore'});
