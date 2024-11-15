@@ -14,6 +14,8 @@ performanceTest(()=>{
 // 	}
 // }
 
+let canvasReal;
+let ctxReal;
 let canvas;
 let ctx;
 const cwidth = 960;
@@ -2173,10 +2175,50 @@ let musicSound = new Audio('data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
 // Creates an image object was a base64 src.
+// function createImage(base64) {
+// 	let img = new Image();
+// 	img.src = base64;
+// 	if (base64.split(',')[0] == 'data:image/svg+xml;base64') {
+// 		// img.onload = function() {
+// 		// 	let rasterizerCanvas = document.createElement('canvas');
+// 		// 	rasterizerCanvas.width = img.width;
+// 		// 	rasterizerCanvas.height = img.height;
+// 		// 	let rasterizerCanvasCtx = rasterizerCanvas.getContext('2d');
+// 		// 	rasterizerCanvasCtx.drawImage(img, 0, 0);
+// 		// 	img = rasterizerCanvas;
+// 		// }
+// 		// return img;
+// 		return new Promise((resolve, reject) => {
+// 			// let img = new Image()
+// 			img.onload = () => resolve(img)
+// 			img.onerror = reject
+// 			img.src = src
+// 		}); 
+// 	} else {
+// 		return img;
+// 	}
+// 	// return img;
+// }
 function createImage(base64) {
-	let img = new Image();
-	img.src = base64;
-	return img;
+	return new Promise((resolve, reject) => {
+		let img = new Image();
+		img.src = base64;
+		if (base64.split(',')[0] == 'data:image/svg+xml;base64') {
+			// return img;
+				// let img = new Image()
+			img.onload = () => {
+				let rasterizerCanvas = document.createElement('canvas');
+				rasterizerCanvas.width = img.width;
+				rasterizerCanvas.height = img.height;
+				let rasterizerCanvasCtx = rasterizerCanvas.getContext('2d');
+				rasterizerCanvasCtx.drawImage(img, 0, 0);
+				resolve(rasterizerCanvas);
+			}
+			img.onerror = reject;
+		} else {
+			resolve(img);
+		}
+	});
 }
 
 // Gets the viewbox of an svg from its base64 encoding.
@@ -2199,14 +2241,21 @@ async function loadingScreen() {
 	pixelRatio = getPixelRatio(0);
 
 	// Initialize Canvas Stuff
-	canvas = document.getElementById('cnv');
+	canvasReal = document.getElementById('cnv');
+	ctxReal = canvasReal.getContext('2d');
+	canvasReal.style.width = cwidth + 'px';
+	canvasReal.style.height = cheight + 'px';
+	canvas = document.createElement('canvas');
+	canvas.width = cwidth;
+	canvas.height = cheight;
 	ctx = canvas.getContext('2d');
-	canvas.style.width = cwidth + 'px';
-	canvas.style.height = cheight + 'px';
 	// Account for Pixel Density
 	canvas.width = Math.floor(cwidth * pixelRatio);
 	canvas.height = Math.floor(cheight * pixelRatio);
 	ctx.scale(pixelRatio, pixelRatio);
+	canvasReal.width = Math.floor(cwidth * pixelRatio);
+	canvasReal.height = Math.floor(cheight * pixelRatio);
+	ctxReal.scale(pixelRatio, pixelRatio);
 
 	// Background
 	ctx.fillStyle = '#999966';
@@ -2225,87 +2274,87 @@ async function loadingScreen() {
 	req = await fetch('data/images6.json');
 	let resourceData = await req.json();
 
-	svgCSBubble = createImage(resourceData['ui/csbubble/dia.svg']);
-	svgHPRCCrank = createImage(resourceData['entities/e0035crank.svg']);
-	svgCoin = createImage(resourceData['wintoken.svg']);
-	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
-	svgIceCubeMelt = createImage(resourceData['effects/icecubemelt.svg']);
+	svgCSBubble = await createImage(resourceData['ui/csbubble/dia.svg']);
+	svgHPRCCrank = await createImage(resourceData['entities/e0035crank.svg']);
+	svgCoin = await createImage(resourceData['wintoken.svg']);
+	svgIceCubeMelt = await createImage(resourceData['effects/icecubemelt.svg']);
+	svgIceCubeMelt = await createImage(resourceData['effects/icecubemelt.svg']);
 	for (let i = 0; i < imgBgs.length; i++) {
-		imgBgs[i] = createImage(resourceData['bg/bg' + i.toString().padStart(4, '0') + '.png']);
+		imgBgs[i] = await createImage(resourceData['bg/bg' + i.toString().padStart(4, '0') + '.png']);
 	}
 	for (let i = 0; i < blockProperties.length; i++) {
 		let id = i.toString().padStart(4, '0');
 		if (blockProperties[i][16] == 1 || (blockProperties[i][15] && blockProperties[i][16] == 0)) {
-			svgTiles[i] = createImage(resourceData['blocks/b' + id + '.svg']);
-			svgTilesVB[i] = getVB(svgTiles[i].src);
+			svgTiles[i] = await createImage(resourceData['blocks/b' + id + '.svg']);
+			svgTilesVB[i] = getVB(resourceData['blocks/b' + id + '.svg']);
 		} else if (blockProperties[i][16] > 1) {
 			svgTiles[i] = new Array(blockProperties[i][16]);
 			svgTilesVB[i] = new Array(blockProperties[i][16]);
 			for (let j = 0; j < svgTiles[i].length; j++) {
-				svgTiles[i][j] = createImage(
+				svgTiles[i][j] = await createImage(
 					resourceData['blocks/b' + id + 'f' + j.toString().padStart(4, '0') + '.svg']
 				);
-				svgTilesVB[i][j] = getVB(svgTiles[i][j].src);
+				svgTilesVB[i][j] = getVB(resourceData['blocks/b' + id + 'f' + j.toString().padStart(4, '0') + '.svg']);
 			}
 		}
 	}
 	for (let i = 0; i < svgLevers.length; i++) {
-		svgLevers[i] = createImage(resourceData['blocks/b' + i.toString().padStart(2, '0') + 'lever.svg']);
+		svgLevers[i] = await createImage(resourceData['blocks/b' + i.toString().padStart(2, '0') + 'lever.svg']);
 	}
 	for (let i = 0; i < svgShadows.length; i++) {
-		svgShadows[i] = createImage(resourceData['shadows/s' + i.toString().padStart(4, '0') + '.svg']);
+		svgShadows[i] = await createImage(resourceData['shadows/s' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgTileBorders.length; i++) {
-		svgTileBorders[i] = createImage(resourceData['borders/tb' + i.toString().padStart(4, '0') + '.svg']);
+		svgTileBorders[i] = await createImage(resourceData['borders/tb' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < charD.length; i++) {
 		let id = i.toString().padStart(4, '0');
 		if (charD[i][7] < 1) continue;
 		else if (charD[i][7] == 1) {
-			svgChars[i] = createImage(resourceData['entities/e' + id + '.svg']);
-			svgCharsVB[i] = getVB(svgChars[i].src);
+			svgChars[i] = await createImage(resourceData['entities/e' + id + '.svg']);
+			svgCharsVB[i] = getVB(resourceData['entities/e' + id + '.svg']);
 		} else {
 			svgChars[i] = new Array(charD[i][7]);
 			svgCharsVB[i] = new Array(charD[i][7]);
 			for (let j = 0; j < svgChars[i].length; j++) {
-				svgChars[i][j] = createImage(
+				svgChars[i][j] = await createImage(
 					resourceData['entities/e' + id + 'f' + j.toString().padStart(4, '0') + '.svg']
 				);
-				svgCharsVB[i][j] = getVB(svgChars[i][j].src);
+				svgCharsVB[i][j] = getVB(resourceData['entities/e' + id + 'f' + j.toString().padStart(4, '0') + '.svg']);
 			}
 		}
 	}
 	for (let i = 0; i < svgBodyParts.length; i++) {
-		svgBodyParts[i] = createImage(resourceData['bodyparts/bp' + i.toString().padStart(4, '0') + '.svg']);
+		svgBodyParts[i] = await createImage(resourceData['bodyparts/bp' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgHPRCBubble.length; i++) {
-		svgHPRCBubble[i] = createImage(
+		svgHPRCBubble[i] = await createImage(
 			resourceData['ui/hprcbubble/hprcbubble' + i.toString().padStart(4, '0') + '.svg']
 		);
 	}
 	for (let i = 0; i < svgCoinGet.length; i++) {
-		svgCoinGet[i] = createImage(resourceData['effects/wtgetf' + i.toString().padStart(4, '0') + '.svg']);
+		svgCoinGet[i] = await createImage(resourceData['effects/wtgetf' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgFire.length; i++) {
-		svgFire[i] = createImage(resourceData['effects/fire' + i.toString().padStart(4, '0') + '.svg']);
+		svgFire[i] = await createImage(resourceData['effects/fire' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgBurst.length; i++) {
-		svgBurst[i] = createImage(resourceData['effects/burst' + i.toString().padStart(4, '0') + '.svg']);
+		svgBurst[i] = await createImage(resourceData['effects/burst' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgAcidDrop.length; i++) {
-		svgAcidDrop[i] = createImage(resourceData['effects/aciddrop' + i.toString().padStart(4, '0') + '.svg']);
+		svgAcidDrop[i] = await createImage(resourceData['effects/aciddrop' + i.toString().padStart(4, '0') + '.svg']);
 	}
-	svgMenu0 = createImage(resourceData['menu0.svg']);
-	svgMenu2 = createImage(resourceData['menu2.svg']);
-	svgMenu6 = createImage(resourceData['menu6.svg']);
-	svgMenu2border = createImage(resourceData['menu2border.svg']);
-	svgMenu2borderimg = createImage(resourceData['menu2borderimg.png']);
-	preMenuBG = createImage(resourceData['premenubg.png']);
+	svgMenu0 = await createImage(resourceData['menu0.svg']);
+	svgMenu2 = await createImage(resourceData['menu2.svg']);
+	svgMenu6 = await createImage(resourceData['menu6.svg']);
+	svgMenu2border = await createImage(resourceData['menu2border.svg']);
+	svgMenu2borderimg = await createImage(resourceData['menu2borderimg.png']);
+	preMenuBG = await createImage(resourceData['premenubg.png']);
 	for (let i = 0; i < svgTools.length; i++) {
-		svgTools[i] = createImage(resourceData['lc/tool' + i.toString().padStart(4, '0') + '.svg']);
+		svgTools[i] = await createImage(resourceData['lc/tool' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	for (let i = 0; i < svgMyLevelsIcons.length; i++) {
-		svgMyLevelsIcons[i] = createImage(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
+		svgMyLevelsIcons[i] = await createImage(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
 		// console.log(resourceData['ui/mylevels/icon' + i.toString().padStart(4, '0') + '.svg']);
 	}
 	setup();
@@ -7241,8 +7290,8 @@ function createNewLevelpack() {
 }
 
 function mousemove(event) {
-	_xmouse = event.pageX*addedZoom - canvas.getBoundingClientRect().left;
-	_ymouse = event.pageY*addedZoom - canvas.getBoundingClientRect().top;
+	_xmouse = event.pageX*addedZoom - canvasReal.getBoundingClientRect().left;
+	_ymouse = event.pageY*addedZoom - canvasReal.getBoundingClientRect().top;
 }
 
 function mousedown(event) {
@@ -10202,6 +10251,9 @@ function draw() {
 	else if (onTextBox) setCursor('text');
 	else setCursor('auto');
 	setHoverText();
+
+	ctxReal.drawImage(canvas, 0, 0, cwidth, cheight);
+
 	_frameCount++;
 	pmouseIsDown = mouseIsDown;
 	_pxmouse = _xmouse;
