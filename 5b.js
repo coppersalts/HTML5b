@@ -1,4 +1,3 @@
-const version = 'v0.3.4'; // putting this up here so I can edit the text on the title screen more easily.
 
 /* For testing the performance of any block of code. It averages every 100 runs and prints to the console. To use, simply place the following around the code block you'd like to test:
 performanceTest(()=>{
@@ -2913,7 +2912,6 @@ function drawMenu() {
 	ctx.textBaseline = 'bottom';
 	ctx.textAlign = 'left';
 	ctx.font = '20px Helvetica';
-	ctx.fillText(version, 5, cheight);
 
 	if (levelProgress > 99) drawMenu0Button('WATCH BFDIA 5c', 665.55, 303.75, false, menuWatchC);
 	else drawMenu0Button('WATCH BFDIA 5a', 665.55, 303.75, false, menuWatchA);
