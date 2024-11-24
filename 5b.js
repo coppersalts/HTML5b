@@ -7031,20 +7031,13 @@ function drawExploreThumb(context, size, data, scale) {
 			if (thumbLevelHead[4] == 'H') {
 				for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
 					for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-						exploreDrawThumbTile(
-							context,
-							x,
-							y,
-							111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) +
-							tileIDFromChar(lines[y + 2].charCodeAt(x * 2 + 1)),
-							scale
-						);
+						exploreDrawThumbTile(context, x, y, 111 * tileIDFromChar(lines[y + 2].charCodeAt(x * 2)) + tileIDFromChar(lines[y + 2].charCodeAt(x * 2 + 1)));
 					}
 				}
 			} else {
 				for (let y = 0; y < Math.min(thumbLevelH, 18); y++) {
 					for (let x = 0; x < Math.min(thumbLevelW, 32); x++) {
-						exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)), scale);
+						exploreDrawThumbTile(context, x, y, tileIDFromChar(lines[y + 2].charCodeAt(x)));
 					}
 				}
 			}
@@ -7067,7 +7060,7 @@ function drawExploreThumb(context, size, data, scale) {
 	}
 }
 
-function exploreDrawThumbTile(context, x, y, tile, scale) {
+function exploreDrawThumbTile(context, x, y, tile) {
 	if (blockProperties[tile][16] > 0) {
 		if (blockProperties[tile][16] == 1) {
 			if (
@@ -7078,12 +7071,12 @@ function exploreDrawThumbTile(context, x, y, tile, scale) {
 				context.translate(x * 30 + 15, y * 30 + 28);
 				context.rotate((Math.ceil(blockProperties[tile][11] / 6) == 1 ? -60 : 60) * (Math.PI / 180));
 				context.translate(-x * 30 - 15, -y * 30 - 28);
-				context.drawImage(svgLevers[(blockProperties[tile][11] - 1) % 6], x * 30, y * 30);
+				context.drawImage(svgLevers[(blockProperties[tile][11] - 1) % 6], x * 30, y * 30, svgLevers[0].width / scaleFactor, svgLevers[0].height / scaleFactor);
 				context.restore();
 			}
-			context.drawImage(svgTiles[tile], x * 30 + svgTilesVB[tile][0], y * 30 + svgTilesVB[tile][1]);
+			context.drawImage(svgTiles[tile], x * 30 + svgTilesVB[tile][0], y * 30 + svgTilesVB[tile][1], svgTilesVB[tile][2], svgTilesVB[tile][3]);
 		} else if (blockProperties[tile][16] > 1) {
-			context.drawImage(svgTiles[tile][0], x * 30 + svgTilesVB[tile][0][0], y * 30 + svgTilesVB[tile][0][1]);
+			context.drawImage(svgTiles[tile][0], x * 30 + svgTilesVB[tile][0][0], y * 30 + svgTilesVB[tile][0][1], svgTilesVB[tile][0][2], svgTilesVB[tile][0][3]);
 		}
 	} else if (tile == 6) {
 		// Door
@@ -9273,7 +9266,7 @@ function draw() {
 						(charimgmat.tx * sc) / 2 + 660 + diaInfoHeight,
 						(charimgmat.ty * sc) / 2 + dialogueTabCharHover[1] - 10 - charInfoHeight/2
 					);
-					ctx.drawImage(charimg, -charimg.width / 2, -charimg.height / 2);
+					ctx.drawImage(charimg, -charimg.width / (2*scaleFactor), -charimg.height / (2*scaleFactor), charimg.width / scaleFactor, charimg.height / scaleFactor);
 					ctx.restore();
 				}
 			}
