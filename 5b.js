@@ -7621,7 +7621,7 @@ function setup() {
 		fetch('https://5beam.zelo.dev/api/levelpack?levels=1&id=' + levelpackId, {method: 'GET'})
 			.then(async (res) => {
 				exploreLevelPageLevel = await res.json();
-				if (levelpackProgress[exploreLevelPageLevel.id] === 'undefined') playExploreLevel();
+				if (levelpackProgress[exploreLevelPageLevel.id] === undefined) playExploreLevel();
 				else continueExploreLevelpack();
 				rAF60fps();
 			})
