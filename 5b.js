@@ -10211,6 +10211,10 @@ function requestError() {
 	requestsWaiting--;
 }
 
+function getAuthHeader() {
+	return {'Authorization': 'pb_auth=' + localStorage.getItem('5beam_auth')};
+}
+
 function getExplorePage(p, t, s) {
 	requestAdded();
 	return fetch('https://5beam.zelo.dev/api/page?page=' + p + '&sort=' + s + '&type=' + t, {method: 'GET'})
@@ -10289,7 +10293,7 @@ function getExploreUser(id) {
 
 function getCurrentExploreUserID() {
 	// from zelo: despite the pb_auth cookie having this information, we cannot use it as it is httpOnly
-	return fetch("https://5beam.zelo.dev/api/profile", {method: "GET", credentials: "include"})
+	return fetch("https://5beam.zelo.dev/api/profile", {method: "GET", headers: getAuthHeader()})
 		.then(async response => {
 			loggedInExploreUser5beamID = (await response.json()).id;
 			localStorage.setItem("5beam_id", loggedInExploreUser5beamID);
@@ -10334,7 +10338,8 @@ function logInExplore() {
 
 function logOutExplore() {
 	loggedInExploreUser5beamID = -1;
-	fetch("https://5beam.zelo.dev/logout", {method: "POST", credentials: "include"});
+	localStorage.removeItem('5beam_auth');
+	localStorage.removeItem('5beam_id');
 }
 
 async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
@@ -10353,7 +10358,7 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 		modded: ''
 	}
 
-	return fetch('https://5beam.zelo.dev/api/create/' + (isLevelpack?'levelpack':'level'), {method: 'POST', credentials: "include", body: JSON.stringify(body)})
+	return fetch('https://5beam.zelo.dev/api/create/' + (isLevelpack?'levelpack':'level'), {method: 'POST', headers: getAuthHeader(), body: JSON.stringify(body)})
 		.then(response => {
 			// requestResolved();
 			if (response.status == 200) {
@@ -10381,7 +10386,7 @@ async function postExploreModifyLevel(id, title, desc, difficulty, file) {
 	}
 	if (file != '') body.file = file;
 
-	return fetch('https://5beam.zelo.dev/api/modify/level?id=' + id, {method: 'POST', credentials: "include", body: JSON.stringify(body)})
+	return fetch('https://5beam.zelo.dev/api/modify/level?id=' + id, {method: 'POST', headers: getAuthHeader(), body: JSON.stringify(body)})
 		.then(response => {
 			requestResolved();
 			if (response.status == 200) {
