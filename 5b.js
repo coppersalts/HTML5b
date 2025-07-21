@@ -2105,10 +2105,11 @@ let doorLightFade = [];
 let doorLightFadeDire = [];
 
 function toHMS(i) {
-	const h = Math.floor(i / 3600000);
-	const m = Math.floor(i / 60000) % 60;
-	const s = Math.floor(i / 1000) % 60;
-	const ms = Math.round(i) % 1000;
+	const roundedMs = Math.round(i);
+	const h = Math.floor(roundedMs / 3600000);
+	const m = Math.floor(roundedMs / 60000) % 60;
+	const s = Math.floor(roundedMs / 1000) % 60;
+	const ms = roundedMs % 1000;
 	return (
 		h.toString().padStart(2, '0') + ':' +
 		m.toString().padStart(2, '0') + ':' +
