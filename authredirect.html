@@ -4,8 +4,15 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Discord Auth Redirect</title>
+	<script type="text/javascript">
+		function saveTokens() {
+			const params = new URLSearchParams(window.location.search);
+			localStorage.setItem('5beam_auth', params.get('5beam_auth'));
+			window.close();
+		}
+	</script>
 </head>
-<body onload="window.close()">
+<body onload="saveTokens()">
 	<p>If this window doesn't close automatically, you can just close it yourself.</p>
 </body>
 </html>
