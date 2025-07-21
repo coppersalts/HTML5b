@@ -298,9 +298,6 @@ function loadLevels() {
 			levelName[i] += charAt2(lineLength);
 		}
 
-		// Temporary crash fix for chrome devices on version 117+
-		console.log(levelsString);
-
 		// Read Level Metadata
 		levelStart += lineLength;
 		levelWidth = 10 * charAt(2) + charAt(3);
@@ -2996,8 +2993,11 @@ function drawLevelMap() {
 		// ctx.fillText(exploreLevelPageLevel.title, 55, 35);
 		let titleLineCount = wrapText((levelpackType === 0)?exploreLevelPageLevel.title:lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, 50, 35, 500, 48).length;
 		if (levelpackType === 0) {
+			const isGuest = exploreLevelPageLevel.creator === "";
+			const username = isGuest ? "Guest" : exploreLevelPageLevel.creator.username;
+			
 			ctx.font = 'italic 21px Helvetica';
-			ctx.fillText('by ' + exploreLevelPageLevel.creator.username, 50, 32 + titleLineCount*48);
+			ctx.fillText('by ' + username, 50, 32 + titleLineCount*48);
 		}
 
 		ctx.drawImage(svgTiles[12], 568.5, 29.5, 50, 50);
@@ -6937,10 +6937,13 @@ function drawExploreLevel(x, y, i, levelType, pageType) {
 	// ctx.fillText(fitString(ctx, explorePageLevels[i].title, 195.3), x+6.35, y+119.4);
 	// fitString(ctx, explorePageLevels[i].title, 142.3);
 
+	const isGuest = thisExploreLevel.creator === undefined;
+	const username = isGuest ? "Guest" : thisExploreLevel.creator.username;
+
 	if (pageType < 2) {
 		ctx.fillStyle = '#999999';
 		ctx.font = '10px Helvetica';
-		ctx.fillText('by ' + thisExploreLevel.creator.username, x + 7, y + 138.3);
+		ctx.fillText('by ' + username, x + 7, y + 138.3);
 
 
 		// Views icon & counter
@@ -7111,23 +7114,11 @@ function drawArrow(x, y, w, h, dir) {
 }
 
 function shareToExplore() {
-	if (loggedInExploreUser5beamID !== -1) {
-		logInExplore();
-	} else {
 	postExploreLevelOrPack(myLevelInfo.name, myLevelInfo.desc, generateLevelString(), false);
-	}
 }
 
 function sharePackToExplore() {
-	if (loggedInExploreUser5beamID !== -1) {
-		logInExplore();
-	} else {
-		if (loggedInExploreUser5beamID !== -1) {
-			logInExplore();
-		} else {
-			postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].description, getCurrentLevelpackString(), true);
-		}
-	}
+	postExploreLevelOrPack(lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].title, lcSavedLevelpacks['l' + lcCurrentSavedLevelpack].description, getCurrentLevelpackString(), true);
 }
 
 function editExploreLevel() {
@@ -7599,7 +7590,7 @@ function setup() {
 	}
 	canvas.addEventListener('paste', handlePaste);
 
-	if (getCookie('5beam_id')) loggedInExploreUser5beamID = getCookie('5beam_id');
+	if (localStorage.getItem("5beam_id")) loggedInExploreUser5beamID = localStorage.getItem("5beam_id");
 
 	if (levelId) {
 		// If the level ID is specified in the URL, load that level.
@@ -9167,7 +9158,7 @@ function draw() {
 					drawSimpleButton('My Levels', menuMyLevels, 675, tabWindowY + 170, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					// }
 
-					drawSimpleButton('Share to Explore', shareToExplore, 675, tabWindowY + 210, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
+					drawSimpleButton(loggedInExploreUser5beamID ? 'Share to Explore' : 'Share to Explore as Guest', shareToExplore, 675, tabWindowY + 210, 270, 30, 3, '#ffffff', '#404040', '#666666', '#555555');
 					drawMenu0Button('EXIT', 846, cheight - 50, false, menuExitLevelCreator, 100);
 					// drawMenu2_3Button(0, 837.5, 486.95, menuExitLevelCreator);
 					break;
@@ -9626,11 +9617,14 @@ function draw() {
 			if (exploreLoading) {
 				drawExploreLoadingText();
 			} else {
+				const isGuest = exploreLevelPageLevel.creator === "";
+				const username = isGuest ? "Guest" : exploreLevelPageLevel.creator.username;
+
 				ctx.textBaseline = 'top';
 				ctx.textAlign = 'left';
 				ctx.fillStyle = '#b0b0b0';
 				ctx.font = '18px Helvetica';
-				ctx.fillText('by ' + exploreLevelPageLevel.creator.username, 31.85, 68);
+				ctx.fillText('by ' + username, 31.85, 68);
 
 				let showImpossibleNotice = false;
 				if (editingExploreLevel) {
@@ -9718,7 +9712,10 @@ function draw() {
 				}
 
 				if (drawSimpleButton('Copy Link', exploreCopyLink, 226, 379, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080').hover) copyButton = 3;
-				drawSimpleButton('More By This User', exploreMoreByThisUser, 226, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+
+				if (!isGuest) {
+					drawSimpleButton('More By This User', exploreMoreByThisUser, 226, 417, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
+				}
 
 				if (exploreLevelPageType != 1 && loggedInExploreUser5beamID === exploreLevelPageLevel.creator.id) {
 					drawSimpleButton(editingExploreLevel?'Save Changes':'Edit', editExploreLevel, 226, 455, 188, 30, 3, '#ffffff', '#404040', '#808080', '#808080');
@@ -10291,17 +10288,15 @@ function getExploreUser(id) {
 }
 
 function getCurrentExploreUserID() {
-	return fetch('https://discord.com/api/v10/users/@me', {
-		method: 'GET',
-		headers: {'Authorization': 'Bearer ' + getCookie('access_token')}
-	}).then(async indentity => {
-		const discordId = (await indentity.json()).id;
-		fetch('https://5beam.zelo.dev/api/user?discordId=' + discordId, {method: 'GET'})
-			.then(async response => {
-				loggedInExploreUser5beamID = (await response.json()).id;
-			document.cookie = '5beam_id=' + loggedInExploreUser5beamID + '; path=/';
-			}).catch(err => {console.log(err);});
-	}).catch(err => {console.log(err)});
+	// from zelo: despite the pb_auth cookie having this information, we cannot use it as it is httpOnly
+	return fetch("https://5beam.zelo.dev/api/profile", {method: "GET", credentials: "include"})
+		.then(async response => {
+			loggedInExploreUser5beamID = (await response.json()).id;
+			localStorage.setItem("5beam_id", loggedInExploreUser5beamID);
+		})
+		.catch(err => {
+			console.log(err);
+		});
 }
 
 function getExploreUserPage(id, p, t, s) {
@@ -10319,60 +10314,30 @@ function getExploreUserPage(id, p, t, s) {
 		});
 }
 
-const tokenLifespan = 600000; // milliseconds in 10 minutes
-
-async function refreshToken() {
-	// Checks if we need to refresh.
-	if (Date.now() - parseInt(getCookie('token_created_at')) > tokenLifespan) return;
-
-	const token_body = JSON.stringify({
-		refresh_token: getCookie('refresh_token')
-	})
-
-	const response = await fetch('https://5beam.zelo.dev/api/auth/refresh', {method: 'POST', body: token_body})
-	const data = await response.json()
-	switch (response.status) {
-		case 200:
-			document.cookie = 'access_token=' + data.access_token + ';max-age=' + data.expires_in + ';path=/';
-			document.cookie = 'refresh_token=' + data.refresh_token + ';path=/';
-			if (!getCookie('5beam_id')) getCurrentExploreUserID();
-			break;
-		case 400:
-		default:
-			console.error(data)
-			setLCMessage('Your session has expired. You need to sign in again!');
-	}
-	return response;
-}
-
 function logInExplore() {
 	loggedInExploreUser5beamID = -1;
 	newWindow = window.open(
-		'https://discord.com/api/oauth2/authorize?client_id=747831622556057693&redirect_uri=https%3A%2F%2F5beam.zelo.dev%2Fapi%2Fauth%2Fcallback%2Fhtml5b&response_type=code&scope=identify',
-		'Window Name', // So did I just never set this?
+		'https://5beam.zelo.dev/login/oauth?redirectURI=https://5beam.zelo.dev/login/callback/html5b',
+		'5beam Login',
 		'height=750,width=450'
 	);
 	if (window.focus) newWindow.focus();
 
-	// Get access_token once finished
-	newWindow.addEventListener('close', refreshToken);
+	// We have to poll instead of event because of cross origin policies
+	const closedPoller = setInterval(() => {
+		if (newWindow && newWindow.closed) {
+			clearInterval(closedPoller);
+			getCurrentExploreUserID();
+		}
+	  }, 500);
 }
-
-/*function logInExploreAfter() {
-	getCurrentExploreUserID();
-	refreshToken();
-}*/
 
 function logOutExplore() {
 	loggedInExploreUser5beamID = -1;
-	deleteCookie('access_token');
-	deleteCookie('refresh_token');
-	deleteCookie('token_created_at');
-	deleteCookie('5beam_id');
-
+	fetch("https://5beam.zelo.dev/logout", {method: "POST", credentials: "include"});
 }
+
 async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
-	await refreshToken();
 	if (levelAlreadySharedToExplore) {
 		setLCMessage('You already shared that level to explore.');
 		return;
@@ -10381,14 +10346,14 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 	// requestAdded();
 
 	const body = {
-		access_token: getCookie('access_token'),
 		title: title,
 		description: desc,
+		// from zelo: if you ever make a difficulty slider, it needs return an array in the difficulty property, one number for each level eg [0], [5, 5, 6, 7]
 		file: data,
 		modded: ''
 	}
 
-	return fetch('https://5beam.zelo.dev/api/create/' + (isLevelpack?'levelpack':'level'), {method: 'POST', body: JSON.stringify(body)})
+	return fetch('https://5beam.zelo.dev/api/create/' + (isLevelpack?'levelpack':'level'), {method: 'POST', credentials: "include", body: JSON.stringify(body)})
 		.then(response => {
 			// requestResolved();
 			if (response.status == 200) {
@@ -10405,11 +10370,9 @@ async function postExploreLevelOrPack(title, desc, data, isLevelpack=false) {
 }
 
 async function postExploreModifyLevel(id, title, desc, difficulty, file) {
-	await refreshToken();
 	requestAdded();
 
 	const body = {
-		access_token: getCookie('access_token'),
 		title: title,
 		description: desc,
 		// file: data,
@@ -10418,7 +10381,7 @@ async function postExploreModifyLevel(id, title, desc, difficulty, file) {
 	}
 	if (file != '') body.file = file;
 
-	return fetch('https://5beam.zelo.dev/api/modify/level?id=' + id, {method: 'POST', body: JSON.stringify(body)})
+	return fetch('https://5beam.zelo.dev/api/modify/level?id=' + id, {method: 'POST', credentials: "include", body: JSON.stringify(body)})
 		.then(response => {
 			requestResolved();
 			if (response.status == 200) {
@@ -10435,28 +10398,6 @@ async function postExploreModifyLevel(id, title, desc, difficulty, file) {
 			cancelEditExploreLevel();
 		});
 }
-
-// https://www.w3schools.com/js/js_cookies.asp
-function getCookie(cname) {
-	let name = cname + '=';
-	let decodedCookie = decodeURIComponent(document.cookie);
-	let ca = decodedCookie.split(';');
-	for (let i = 0; i < ca.length; i++) {
-		let c = ca[i];
-		while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return '';
-}
-//https://stackoverflow.com/questions/2144386/how-to-delete-a-cookie
-function deleteCookie(name) {
-	document.cookie = name + '=; Max-Age=0; path=/; domain=';
-}
-
 
 // Before, this was in a separate file like it was in the Flash version, but it made minifying take more steps and I didn't really edit it that often, so I decided it was just easier to move it into the same file.
 class Character {
@@ -10826,9 +10767,4 @@ function deselectAllTextBoxes() {
 		}
 	}
 	canvas.setAttribute('contenteditable', false);
-}
-
-// Refresh token if we can
-if (getCookie('refresh_token') !== '') {
-	refreshToken();
 }
