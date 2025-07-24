@@ -6451,7 +6451,7 @@ function readLevelString(str) {
 				// myLevelChars[1][e] = [0,0.0,0.0,10];
 				return;
 			}
-			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length), 0);
+			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length - 1), 0);
 			myLevelChars[1][e][1] = parseFloat(entityInfo[1], 10);
 			myLevelChars[1][e][2] = parseFloat(entityInfo[2], 10);
 			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3], 10), 10), 3);
@@ -6639,7 +6639,7 @@ function readExploreLevelString(str) {
 				// myLevelChars[1][e] = [0,0.0,0.0,10];
 				return;
 			}
-			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length), 0);
+			myLevelChars[1][e][0] = Math.max(Math.min(parseInt(entityInfo[0], 10), charD.length - 1), 0);
 			myLevelChars[1][e][1] = parseFloat(entityInfo[1], 10);
 			myLevelChars[1][e][2] = parseFloat(entityInfo[2], 10);
 			myLevelChars[1][e][3] = Math.max(Math.min(parseInt(entityInfo[3], 10), 10), 3);
