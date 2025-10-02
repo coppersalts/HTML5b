@@ -5175,6 +5175,7 @@ function resetLCOSC() {
 }
 
 function setLCBG() {
+	lcChangesMade = true;
 	osctx1.drawImage(imgBgs[selectedBg], -97, 0, 854, 480);
 }
 
