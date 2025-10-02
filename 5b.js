@@ -2451,7 +2451,12 @@ function myLevelsTextBoxes() {
 }
 
 function menuExitLevelCreator() {
-	menuScreen = 0;
+	if (!lcChangesMade) {
+		menuScreen = 0;
+	} else {
+		lcPopUpNextFrame = true;
+		lcPopUpType = 1;
+	}
 }
 
 function menuExplore() {
@@ -9379,11 +9384,11 @@ function draw() {
 			// }
 
 			if (lcPopUp && !lcPopUpNextFrame) {
+				ctx.globalAlpha = 0.2;
+				ctx.fillStyle = '#000000';
+				ctx.fillRect(0, 0, cwidth, cheight);
+				ctx.globalAlpha = 1;
 				if (lcPopUpType == 0) {
-					ctx.globalAlpha = 0.2;
-					ctx.fillStyle = '#000000';
-					ctx.fillRect(0, 0, cwidth, cheight);
-					ctx.globalAlpha = 1;
 					let lcPopUpW = 750;
 					let lcPopUpH = 540;
 					ctx.fillStyle = '#eaeaea';
@@ -9476,6 +9481,82 @@ function draw() {
 							editingTextBox = false;
 							deselectAllTextBoxes();
 							levelLoadString = '';
+						}
+					}
+				} else if (lcPopUpType == 1) {
+					let lcPopUpW = 400;
+					let lcPopUpH = 150;
+					ctx.fillStyle = '#eaeaea';
+					ctx.fillRect((cwidth - lcPopUpW) / 2, (cheight - lcPopUpH) / 2, lcPopUpW, lcPopUpH);
+
+					ctx.fillStyle = '#000000';
+					ctx.font = '20px Helvetica';
+					ctx.textBaseline = 'top';
+					ctx.textAlign = 'left';
+					wrapText(
+						"You have unsaved changes. Are you sure you want to exit the level creator and discard all unsaved changes?",
+						(cwidth - lcPopUpW) / 2 + 10,
+						(cheight - lcPopUpH) / 2 + 5,
+						lcPopUpW - 20,
+						25
+					);
+
+					ctx.font = '18px Helvetica';
+					ctx.textAlign = 'center';
+					ctx.fillStyle = '#00a0ff';
+					ctx.fillRect(
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 140,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+						60,
+						30
+					);
+					ctx.fillStyle = '#ffffff';
+					ctx.fillText(
+						'Cancel',
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 110,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 33
+					);
+					ctx.fillStyle = '#a0a0a0';
+					ctx.fillRect(
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 70,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+						60,
+						30
+					);
+					ctx.fillStyle = '#ffffff';
+					ctx.fillText(
+						'Exit',
+						(cwidth - lcPopUpW) / 2 + lcPopUpW - 40,
+						(cheight - lcPopUpH) / 2 + lcPopUpH - 33
+					);
+					if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							(cwidth - lcPopUpW) / 2 + lcPopUpW - 140,
+							(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+							60,
+							30
+						)
+					) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							lcPopUp = false;
+						}
+					} else if (
+						onRect(
+							_xmouse,
+							_ymouse,
+							(cwidth - lcPopUpW) / 2 + lcPopUpW - 70,
+							(cheight - lcPopUpH) / 2 + lcPopUpH - 40,
+							60,
+							30
+						)
+					) {
+						onButton = true;
+						if (mouseIsDown && !pmouseIsDown) {
+							menuScreen = 0;
+							lcPopUp = false;
 						}
 					}
 				}
