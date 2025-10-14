@@ -2736,7 +2736,7 @@ function exitLevel() {
 
 function playGame() {
 	menuScreen = 0;
-	//musicSound.play();
+	musicSound.play();
 	musicSound.loop = true;
 }
 
