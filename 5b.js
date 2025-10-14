@@ -2172,8 +2172,6 @@ let levelButtonClicked = -1;
 let showingNewGame2 = false;
 let showingExploreNewGame2 = false;
 
-const indiffBlocks = [7,15,49,59,66,80,101,104] // some animated blocks that don't really need to be in sync with each other. i like to put a gradient effect on them :) 
-
 let musicSound = new Audio('data/the fiber 16x loop.wav');
 // musicSound.addEventListener('canplaythrough', event => {incrementCounter();});
 
@@ -4030,7 +4028,7 @@ function addTileMovieClip(x, y, context) {
 			context.drawImage(svgTiles[t], x * 30 + svgTilesVB[t][0], y * 30 + svgTilesVB[t][1], svgTiles[t].width / scaleFactor, svgTiles[t].height / scaleFactor);
 		} else if (blockProperties[t][16] > 1) {
 			let frame = 0;
-			if (blockProperties[t][17]) frame = blockProperties[t][18][(_frameCount + (indiffBlocks.includes(t) ? (x+y)*2 : 0)) % blockProperties[t][18].length];
+			if (blockProperties[t][17]) frame = blockProperties[t][18][_frameCount % blockProperties[t][18].length];
 			else {
 				frame = tileFrames[y][x].cf;
 				if (tileFrames[y][x].playing) tileFrames[y][x].cf++;
