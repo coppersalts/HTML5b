@@ -10387,7 +10387,7 @@ function getCurrentExploreUserID() {
 
 function getExploreUserPage(id, p, t, s) {
 	requestAdded();
-	return fetch('https://5beam.zelo.dev/api/user/page?id=' + id + '&page=' + p + '&type=' + t + '&sort=' + s, {method: 'GET'})
+	return fetch('https://5beam.zelo.dev/api/user/page?id=' + id + '&page=' + p + '&type=' + t + '&sort=' + s + '&amount=4', {method: 'GET'})
 		.then(async response => {
 			exploreUserPageLevels[t] = await response.json();
 			if (t === 0) setExploreThumbsUserPage(t);
