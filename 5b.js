@@ -9469,6 +9469,7 @@ function draw() {
 						onButton = true;
 						if (mouseIsDown && !pmouseIsDown) {
 							readLevelString(levelLoadString);
+							lcSetZoom(0);
 							lcPopUp = false;
 							editingTextBox = false;
 							deselectAllTextBoxes();
