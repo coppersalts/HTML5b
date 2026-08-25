@@ -101,7 +101,8 @@ let screenShake = true;
 let screenFlashes = true;
 let frameRateThrottling = true;
 let slowTintsEnabled = true;
-let optionText = ['Screen Shake','Screen Flashes','Quirks Mode','Experimental Features','Frame Rate Throttling', 'Slow Tints'];
+let reduceAnimations = false;
+let optionText = ['Reduce Animations','Screen Shake','Screen Flashes','Quirks Mode','Experimental Features','Frame Rate Throttling', 'Slow Tints'];
 let levelAlreadySharedToExplore = false;
 let lcSavedLevels;
 let nextLevelId;
@@ -121,6 +122,10 @@ const difficultyMap = [
 	["Insane", "#eca2de"],
 	["Impossible", "#3d0000"],
 ];
+
+function tileAnimFrame(n) {
+	return reduceAnimations ? Math.floor(_frameCount / 3) % n : _frameCount % n;
+}
 
 function clearVars() {
 	deathCount = timer = coins = bonusProgress = levelProgress = 0;
@@ -174,7 +179,7 @@ getSavedGame();
 getSavedSettings();
 
 function saveSettings() {
-	bfdia5b.setItem('settings', JSON.stringify([screenShake, screenFlashes, quirksMode, enableExperimentalFeatures, frameRateThrottling, slowTintsEnabled]));
+	bfdia5b.setItem('settings', JSON.stringify([reduceAnimations, screenShake, screenFlashes, quirksMode, enableExperimentalFeatures, frameRateThrottling, slowTintsEnabled]));
 }
 
 function getSavedSettings() {
@@ -182,12 +187,24 @@ function getSavedSettings() {
 		saveSettings();
 	} else {
 		let settingsArray = JSON.parse(bfdia5b.getItem('settings'));
-		screenShake = settingsArray[0];
-		screenFlashes = settingsArray[1];
-		quirksMode = settingsArray[2];
-		enableExperimentalFeatures = settingsArray[3];
-		frameRateThrottling = settingsArray[4];
-		slowTintsEnabled = settingsArray[5];
+		if (settingsArray.length < 7) {
+			reduceAnimations = false;
+			screenShake = settingsArray[0];
+			screenFlashes = settingsArray[1];
+			quirksMode = settingsArray[2];
+			enableExperimentalFeatures = settingsArray[3];
+			frameRateThrottling = settingsArray[4];
+			slowTintsEnabled = settingsArray[5];
+			saveSettings();
+		} else {
+			reduceAnimations = settingsArray[0];
+			screenShake = settingsArray[1];
+			screenFlashes = settingsArray[2];
+			quirksMode = settingsArray[3];
+			enableExperimentalFeatures = settingsArray[4];
+			frameRateThrottling = settingsArray[5];
+			slowTintsEnabled = settingsArray[6];
+		}
 	}
 }
 
@@ -4049,7 +4066,7 @@ function addTileMovieClip(x, y, context) {
 			context.drawImage(svgTiles[t], x * 30 + svgTilesVB[t][0], y * 30 + svgTilesVB[t][1], svgTiles[t].width / scaleFactor, svgTiles[t].height / scaleFactor);
 		} else if (blockProperties[t][16] > 1) {
 			let frame = 0;
-			if (blockProperties[t][17]) frame = blockProperties[t][18][_frameCount % blockProperties[t][18].length];
+			if (blockProperties[t][17]) frame = blockProperties[t][18][tileAnimFrame(blockProperties[t][18].length)];
 			else {
 				frame = tileFrames[y][x].cf;
 				if (tileFrames[y][x].playing) tileFrames[y][x].cf++;
@@ -5300,11 +5317,11 @@ function drawLCTiles() {
 			if (showTile) {
 				let img =
 					blockProperties[tile][16] > 1
-						? svgTiles[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+						? svgTiles[tile][blockProperties[tile][17] ? tileAnimFrame(blockProperties[tile][16]) : 0]
 						: svgTiles[tile];
 				let vb =
 					blockProperties[tile][16] > 1
-						? svgTilesVB[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+						? svgTilesVB[tile][blockProperties[tile][17] ? tileAnimFrame(blockProperties[tile][16]) : 0]
 						: svgTilesVB[tile];
 				osctx5.drawImage(
 					img,
@@ -5575,11 +5592,11 @@ function updateLCtiles() {
 				if (blockProperties[tile][16] == 1) {
 					let img =
 						blockProperties[tile][16] > 1
-							? svgTiles[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+							? svgTiles[tile][blockProperties[tile][17] ? tileAnimFrame(blockProperties[tile][16]) : 0]
 							: svgTiles[tile];
 					let vb =
 						blockProperties[tile][16] > 1
-							? svgTilesVB[tile][blockProperties[tile][17] ? _frameCount % blockProperties[tile][16] : 0]
+							? svgTilesVB[tile][blockProperties[tile][17] ? tileAnimFrame(blockProperties[tile][16]) : 0]
 							: svgTilesVB[tile];
 					osctx3.drawImage(
 						img,
@@ -8931,8 +8948,8 @@ function draw() {
 									bs
 								);
 							} else {
-								let img = blockProperties[i][16] > 1 ? svgTiles[i][blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0] : svgTiles[i];
-								let vb = blockProperties[i][16] > 1 ? svgTilesVB[i][blockProperties[i][17] ? _frameCount % blockProperties[i][16] : 0] : svgTilesVB[i];
+								let img = blockProperties[i][16] > 1 ? svgTiles[i][blockProperties[i][17] ? tileAnimFrame(blockProperties[i][16]) : 0] : svgTiles[i];
+								let vb = blockProperties[i][16] > 1 ? svgTilesVB[i][blockProperties[i][17] ? tileAnimFrame(blockProperties[i][16]) : 0] : svgTilesVB[i];
 								if (vb[2] <= 60) {
 									let sc = bs / 30;
 									let tlx = 660 + (bdist - bs) + (j % bpr) * bdist;
@@ -10133,21 +10150,24 @@ function draw() {
 				let thisOptionValue;
 				switch (i) {
 					case 0:
-						thisOptionValue = screenShake;
+						thisOptionValue = reduceAnimations;
 						break;
 					case 1:
-						thisOptionValue = screenFlashes;
+						thisOptionValue = screenShake;
 						break;
 					case 2:
-						thisOptionValue = quirksMode;
+						thisOptionValue = screenFlashes;
 						break;
 					case 3:
-						thisOptionValue = enableExperimentalFeatures;
+						thisOptionValue = quirksMode;
 						break;
 					case 4:
-						thisOptionValue = frameRateThrottling;
+						thisOptionValue = enableExperimentalFeatures;
 						break;
 					case 5:
+						thisOptionValue = frameRateThrottling;
+						break;
+					case 6:
 						thisOptionValue = slowTintsEnabled;
 				}
 				ctx.fillStyle = thisOptionValue?'#00ff00':'#ff0000';
@@ -10158,21 +10178,24 @@ function draw() {
 					if (mouseIsDown && !pmouseIsDown) {
 						switch (i) {
 							case 0:
-								screenShake = !screenShake;
+								reduceAnimations = !reduceAnimations;
 								break;
 							case 1:
-								screenFlashes = !screenFlashes;
+								screenShake = !screenShake;
 								break;
 							case 2:
-								quirksMode = !quirksMode;
+								screenFlashes = !screenFlashes;
 								break;
 							case 3:
-								enableExperimentalFeatures = !enableExperimentalFeatures;
+								quirksMode = !quirksMode;
 								break;
 							case 4:
-								frameRateThrottling = !frameRateThrottling;
+								enableExperimentalFeatures = !enableExperimentalFeatures;
 								break;
 							case 5:
+								frameRateThrottling = !frameRateThrottling;
+								break;
+							case 6:
 								slowTintsEnabled = !slowTintsEnabled;
 								break;
 						}
