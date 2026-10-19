@@ -57,7 +57,7 @@ let textAfterCursorAtClick = '';
 // let controlOrCommandPress = false;
 
 let levelsString = '';
-let levelCount = 53;
+let levelCount = 54;
 let f = 19;
 let levels = new Array(levelCount);
 let startLocations = new Array(levelCount);
@@ -277,7 +277,7 @@ function tileAt(j, i, y) {
 
 // Load Level Data
 function loadLevels() {
-	levelCount = 53;
+	levelCount = 54;
 	levels = new Array(levelCount);
 	startLocations = new Array(levelCount);
 	bgs = new Array(levelCount);
